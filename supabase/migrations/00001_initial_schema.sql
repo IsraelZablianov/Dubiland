@@ -154,6 +154,7 @@ CREATE POLICY "video_progress_own" ON video_progress
 -- Public read for content tables
 CREATE POLICY "topics_public_read" ON topics FOR SELECT USING (true);
 CREATE POLICY "age_groups_public_read" ON age_groups FOR SELECT USING (true);
-CREATE POLICY "games_public_read" ON games FOR SELECT USING (true);
-CREATE POLICY "game_levels_public_read" ON game_levels FOR SELECT USING (true);
-CREATE POLICY "videos_public_read" ON videos FOR SELECT USING (true);
+CREATE POLICY "games_public_read" ON games FOR SELECT USING (is_published = true);
+CREATE POLICY "game_levels_public_read" ON game_levels FOR SELECT
+  USING (EXISTS (SELECT 1 FROM games WHERE games.id = game_levels.game_id AND games.is_published = true));
+CREATE POLICY "videos_public_read" ON videos FOR SELECT USING (is_published = true);
