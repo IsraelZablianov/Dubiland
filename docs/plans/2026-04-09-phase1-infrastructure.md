@@ -1583,9 +1583,20 @@ pnpm paperclipai agent local-cli qa-engineer --company-id <company-id>
 pnpm paperclipai agent local-cli performance-expert --company-id <company-id>
 ```
 
-This installs Paperclip skills (including the heartbeat skill and PARA memory skill) and prints env vars for each agent.
+This installs Paperclip skills globally (`~/.claude/skills/`) and prints env vars for each agent.
 
-- [ ] **Step 7: Create Phase 2 kickoff tasks**
+- [ ] **Step 7: Copy Paperclip skills into the project**
+
+```bash
+cp -r ~/.claude/skills/paperclip skills/paperclip
+cp -r ~/.claude/skills/para-memory-files skills/para-memory-files
+git add skills/
+git commit -m "feat: add paperclip and para-memory-files skills to project"
+```
+
+This makes the skills version-controlled and available to anyone who clones the repo.
+
+- [ ] **Step 8: Create Phase 2 kickoff tasks**
 
 These tasks cascade work to the entire team. The PM picks them up and breaks them down further.
 
@@ -1635,7 +1646,7 @@ Then run 'yarn generate-audio' to create Hebrew audio files for all new strings.
   --priority medium
 ```
 
-- [ ] **Step 8: Verify the system is alive**
+- [ ] **Step 9: Verify the system is alive**
 
 ```bash
 # Check dashboard
