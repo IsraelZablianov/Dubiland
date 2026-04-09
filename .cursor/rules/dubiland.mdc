@@ -1,0 +1,15 @@
+---
+description: Dubiland project conventions
+globs: "**/*.{ts,tsx}"
+---
+
+# Dubiland Cursor Rules
+
+- All user-facing text must use i18n: `t('key')` from react-i18next. Never hardcode Hebrew.
+- All layouts are RTL Hebrew. Use `dir="rtl"` and test in RTL.
+- Game components implement the `GameProps` interface from `games/engine/types.ts`.
+- Audio files are pre-generated. Reference via manifest keys, not raw paths.
+- Optimistic updates for all Supabase writes.
+- Minimum 44px touch targets for child interactions.
+- Components read the current theme from context — no hardcoded theme references in game logic.
+- See `AGENTS.md` for full project conventions.
