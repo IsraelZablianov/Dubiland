@@ -1,22 +1,76 @@
 {
+  "branding": {
+    "appName": "דובילנד"
+  },
   "feedback": {
     "success": "כל הכבוד!",
     "tryAgain": "נסה שוב!",
-    "almostThere": "כמעט!"
+    "almostThere": "כמעט!",
+    "greatEffort": "מאמץ נהדר!",
+    "excellent": "מצוין!",
+    "keepGoing": "להמשיך, אתה בדרך הנכונה!",
+    "youDidIt": "עשית את זה!"
   },
   "nav": {
     "back": "חזרה",
     "chooseTopic": "בחר נושא",
     "chooseGame": "בחר משחק",
-    "home": "דף הבית"
+    "home": "דף הבית",
+    "next": "הבא",
+    "finish": "סיום",
+    "parentArea": "אזור הורים"
   },
   "profile": {
     "whoPlaysToday": "מי משחק היום?",
-    "addChild": "הוספה"
+    "addChild": "הוספה",
+    "title": "בחירת ילד",
+    "subtitle": "בחרו פרופיל כדי להתחיל לשחק",
+    "continue": "יאללה, מתחילים!",
+    "manageProfiles": "ניהול פרופילים",
+    "guestName": "אורח קטן"
+  },
+  "home": {
+    "title": "ברוכים הבאים!",
+    "greeting": "היי {{name}}, מה נלמד היום?",
+    "chooseTopic": "בחרו נושא למשחק",
+    "dailyGoal": "יעד יומי",
+    "minutes": "{{count}} דקות של למידה",
+    "startLearning": "התחל ללמוד",
+    "dubiWelcome": "שלום! אני דובי, בואו נלמד ונשחק יחד"
   },
   "topics": {
     "math": "מספרים",
     "letters": "אותיות",
     "reading": "קריאה"
+  },
+  "topicDescriptions": {
+    "math": "נספור, נשווה ונפתור חידות מספרים",
+    "letters": "נכיר אותיות, צלילים ומילים ראשונות",
+    "reading": "נחבר הברות ונקרא משפטים קצרים"
+  },
+  "games": {
+    "title": "רשימת משחקים",
+    "subtitle": "בחרו משחק שמתאים לרמה שלכם",
+    "play": "שחקו עכשיו",
+    "difficulty": "רמת קושי",
+    "estimatedTime": "משך משוער: {{minutes}} דקות",
+    "empty": "עוד מעט יופיעו כאן משחקים חדשים",
+    "recommended": "מומלץ עבורך"
+  },
+  "parentDashboard": {
+    "title": "אזור הורים",
+    "subtitle": "מעקב התקדמות בזמן אמת",
+    "todayActivity": "פעילות היום",
+    "weeklyProgress": "התקדמות שבועית",
+    "gamesPlayed": "משחקים שהושלמו",
+    "learningMinutes": "דקות למידה",
+    "streak": "רצף ימים",
+    "manageChildren": "ניהול ילדים",
+    "viewReports": "צפייה בדוחות",
+    "audioSettings": "הגדרות שמע",
+    "logout": "התנתקות"
+  },
+  "errors": {
+    "generic": "שגיאה כללית. נסו שוב."
   }
 }

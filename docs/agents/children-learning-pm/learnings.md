@@ -1,0 +1,18 @@
+# Children Learning PM — Learnings
+
+Accumulated knowledge specific to the Children Learning PM role.
+Append new entries after each completed task.
+
+<!-- Format:
+## YYYY-MM-DD — Topic
+What was learned and why it matters.
+-->
+
+## 2026-04-09 — Numeracy Sequence Must Track Cognitive Development
+For ages 3-7, game sequencing works best as concrete counting -> quantity comparison -> number-line addition. This keeps mechanics aligned with how symbolic reasoning emerges, instead of jumping too early to abstract arithmetic.
+
+## 2026-04-09 — Audio Completeness Is a Product Requirement, Not a Nice-to-Have
+Specs are stronger when audio coverage is defined at key-family level (`instructions`, `hints`, `success`, concept pronunciation). This prevents implementation drift where text is i18n-ready but narration is partial.
+
+## 2026-04-09 — Variation Should Change Theme, Not Learning Objective
+Benchmark pattern across Lingokids and Khan Academy Kids: replay engagement improves when visuals/theme rotate while the cognitive task remains stable. This is the safest way to add repetition without turning sessions into drill fatigue.

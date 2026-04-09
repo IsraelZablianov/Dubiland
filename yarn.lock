@@ -2284,10 +2284,22 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "dubiland@workspace:."
   dependencies:
+    edge-tts: "npm:^1.0.1"
     tsx: "npm:^4.19.0"
     typescript: "npm:^5.7.0"
   languageName: unknown
   linkType: soft
+
+"edge-tts@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "edge-tts@npm:1.0.1"
+  dependencies:
+    ws: "npm:^8.16.0"
+  peerDependencies:
+    typescript: ^5.0.0
+  checksum: 10c0/ae43146490f1942ccda78acebd3e00fb0650123410105094fef698a531e4f94b7e486e5995d2349483b784423a8a9b667fc6f37e6395a262b9d39c8cbbf6345c
+  languageName: node
+  linkType: hard
 
 "electron-to-chromium@npm:^1.5.328":
   version: 1.5.334
@@ -4198,7 +4210,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:^8.18.2":
+"ws@npm:^8.16.0, ws@npm:^8.18.2":
   version: 8.20.0
   resolution: "ws@npm:8.20.0"
   peerDependencies:

@@ -1,22 +1,60 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { Button, Card, useTheme } from '@/components/design-system';
 import { useAuth } from '@/hooks/useAuth';
-import { Navigate } from 'react-router-dom';
+import { isSupabaseConfigured } from '@/lib/supabase';
+import { enableGuestMode, setActiveChildProfile } from '@/lib/session';
 
 export default function Login() {
-  const { t } = useTranslation('onboarding');
+  const { t } = useTranslation(['onboarding', 'common']);
+  const navigate = useNavigate();
+  const { themeConfig } = useTheme();
   const { user, signInWithGoogle, signInWithEmail, signUp } = useAuth();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [pin, setPin] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
   const [error, setError] = useState('');
 
-  if (user) return <Navigate to="/" replace />;
+  const canUseHostedAuth = isSupabaseConfigured;
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  if (user) {
+    return <Navigate to="/profiles" replace />;
+  }
+
+  const handleGuestContinue = () => {
+    enableGuestMode();
+    setActiveChildProfile({ id: 'guest', name: t('common:profile.guestName'), emoji: '🧒' });
+    navigate('/profiles');
+  };
+
+  const handleGoogleSignIn = async () => {
     setError('');
+
+    if (!canUseHostedAuth) {
+      handleGuestContinue();
+      return;
+    }
+
+    try {
+      await signInWithGoogle();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t('common:errors.generic'));
+    }
+  };
+
+  const handleEmailSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError('');
+
+    if (!canUseHostedAuth) {
+      handleGuestContinue();
+      return;
+    }
+
     try {
       if (isSignUp) {
         await signUp(email, password);
@@ -24,110 +62,138 @@ export default function Login() {
         await signInWithEmail(email, password);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'שגיאה');
+      setError(err instanceof Error ? err.message : t('common:errors.generic'));
     }
   };
 
+  const handlePinSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError('');
+
+    if (pin.trim().length < 4) {
+      setError(t('common:errors.generic'));
+      return;
+    }
+
+    handleGuestContinue();
+  };
+
   return (
-    <div
+    <main
       style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
         minHeight: '100vh',
-        padding: '2rem',
-        background: 'linear-gradient(180deg, #FFF8E7, #F5E6C8)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 'var(--space-xl)',
+        background: 'var(--color-theme-bg)',
       }}
     >
-      <span style={{ fontSize: '5rem', marginBottom: '0.5rem' }}>🧸</span>
-      <h1 style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '2rem', color: '#5D3A1A' }}>דובילנד</h1>
-
-      <button
-        type="button"
-        onClick={signInWithGoogle}
+      <Card
+        padding="lg"
         style={{
-          width: '280px',
-          padding: '0.8rem',
-          borderRadius: '30px',
-          border: 'none',
-          background: '#FF6B6B',
-          color: 'white',
-          fontSize: '1.1rem',
-          fontWeight: 600,
-          boxShadow: '0 4px 0 #cc5555',
-          marginBottom: '0.8rem',
-          fontFamily: 'inherit',
+          width: 'min(440px, 100%)',
+          display: 'grid',
+          gap: 'var(--space-md)',
+          border: '2px solid var(--color-bg-secondary)',
         }}
       >
-        {t('loginWithGoogle')}
-      </button>
+        <header style={{ display: 'grid', gap: 'var(--space-xs)', textAlign: 'center' }}>
+          <p style={{ fontSize: 'var(--font-size-3xl)' }}>{themeConfig.mascotEmoji}</p>
+          <h1
+            style={{
+              fontSize: 'var(--font-size-2xl)',
+              color: 'var(--color-text-primary)',
+              fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
+            }}
+          >
+            {t('onboarding:welcome')}
+          </h1>
+          <p style={{ color: 'var(--color-text-secondary)' }}>{t('onboarding:subtitle')}</p>
+        </header>
 
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', width: '280px' }}
-      >
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder={t('emailPlaceholder')}
-          style={{
-            padding: '0.7rem',
-            borderRadius: '12px',
-            border: '2px solid #E8D5B0',
-            fontSize: '1rem',
-            fontFamily: 'inherit',
-            textAlign: 'right',
-          }}
-        />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder={t('passwordPlaceholder')}
-          style={{
-            padding: '0.7rem',
-            borderRadius: '12px',
-            border: '2px solid #E8D5B0',
-            fontSize: '1rem',
-            fontFamily: 'inherit',
-            textAlign: 'right',
-          }}
-        />
-        <button
-          type="submit"
-          style={{
-            padding: '0.8rem',
-            borderRadius: '30px',
-            border: '2px solid #E8D5B0',
-            background: '#fff',
-            color: '#5D3A1A',
-            fontSize: '1rem',
-            fontWeight: 600,
-            fontFamily: 'inherit',
-          }}
-        >
-          {isSignUp ? t('createAccount') : t('loginWithEmail')}
-        </button>
-      </form>
+        <form onSubmit={handlePinSubmit} style={{ display: 'grid', gap: 'var(--space-sm)' }}>
+          <input
+            value={pin}
+            onChange={(event) => setPin(event.target.value.replace(/\D/g, '').slice(0, 4))}
+            inputMode="numeric"
+            type="password"
+            placeholder={t('onboarding:passwordPlaceholder')}
+            aria-label={t('onboarding:passwordLabel')}
+            style={{
+              minHeight: 'var(--touch-min)',
+              borderRadius: 'var(--radius-md)',
+              border: '2px solid var(--color-bg-secondary)',
+              padding: '0 var(--space-md)',
+              fontSize: 'var(--font-size-lg)',
+              fontFamily: 'var(--font-family-primary)',
+              textAlign: 'center',
+              letterSpacing: '0.4rem',
+            }}
+          />
 
-      <button
-        type="button"
-        onClick={() => setIsSignUp(!isSignUp)}
-        style={{
-          background: 'none',
-          border: 'none',
-          color: '#8B7355',
-          marginTop: '1rem',
-          fontSize: '0.9rem',
-          fontFamily: 'inherit',
-        }}
-      >
-        {isSignUp ? t('loginWithEmail') : t('createAccount')}
-      </button>
+          <Button variant="primary" size="lg" type="submit" disabled={pin.trim().length < 4}>
+            {t('onboarding:continueAsGuest')}
+          </Button>
+        </form>
 
-      {error && <p style={{ color: '#FF6B6B', marginTop: '0.5rem' }}>{error}</p>}
-    </div>
+        <Button variant="secondary" size="lg" type="button" onClick={handleGoogleSignIn}>
+          {t('onboarding:loginWithGoogle')}
+        </Button>
+
+        <form onSubmit={handleEmailSubmit} style={{ display: 'grid', gap: 'var(--space-sm)' }}>
+          <input
+            type="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            placeholder={t('onboarding:emailPlaceholder')}
+            aria-label={t('onboarding:emailLabel')}
+            autoComplete="email"
+            style={{
+              minHeight: 'var(--touch-min)',
+              borderRadius: 'var(--radius-md)',
+              border: '2px solid var(--color-bg-secondary)',
+              padding: '0 var(--space-md)',
+              fontSize: 'var(--font-size-md)',
+              fontFamily: 'var(--font-family-primary)',
+            }}
+          />
+          <input
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder={t('onboarding:passwordPlaceholder')}
+            aria-label={t('onboarding:passwordLabel')}
+            autoComplete={isSignUp ? 'new-password' : 'current-password'}
+            style={{
+              minHeight: 'var(--touch-min)',
+              borderRadius: 'var(--radius-md)',
+              border: '2px solid var(--color-bg-secondary)',
+              padding: '0 var(--space-md)',
+              fontSize: 'var(--font-size-md)',
+              fontFamily: 'var(--font-family-primary)',
+            }}
+          />
+
+          <Button variant="secondary" size="lg" type="submit" disabled={!canUseHostedAuth}>
+            {isSignUp ? t('onboarding:createAccount') : t('onboarding:loginWithEmail')}
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="md"
+            type="button"
+            onClick={() => setIsSignUp((current) => !current)}
+            disabled={!canUseHostedAuth}
+          >
+            {isSignUp ? t('onboarding:switchToSignIn') : t('onboarding:switchToSignUp')}
+          </Button>
+        </form>
+
+        {error ? (
+          <p style={{ color: 'var(--color-accent-danger)', fontSize: 'var(--font-size-sm)' }}>{error}</p>
+        ) : null}
+      </Card>
+    </main>
   );
 }

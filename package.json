@@ -8,11 +8,15 @@
     "dev": "yarn workspace @dubiland/web dev",
     "build": "yarn workspace @dubiland/web build",
     "typecheck": "yarn workspaces foreach -A run typecheck",
-    "generate-audio": "tsx scripts/generate-audio.ts"
+    "generate-audio": "tsx scripts/generate-audio.ts",
+    "paperclip": "npx paperclipai run",
+    "cascade": "npx paperclipai heartbeat run --agent-id 9ba06101-670c-4da3-9d57-56fdc8d67b03",
+    "adapter": "bash scripts/switch-adapter.sh"
   },
   "devDependencies": {
-    "typescript": "^5.7.0",
-    "tsx": "^4.19.0"
+    "edge-tts": "^1.0.1",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
   },
   "packageManager": "yarn@4.12.0+sha512.f45ab632439a67f8bc759bf32ead036a1f413287b9042726b7cc4818b7b49e14e9423ba49b18f9e06ea4941c1ad062385b1d8760a8d5091a1a31e5f6219afca8"
 }

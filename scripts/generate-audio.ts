@@ -1,11 +1,11 @@
-import { exec } from 'child_process';
+import { execFile } from 'child_process';
 import { promisify } from 'util';
-import { mkdir, writeFile } from 'fs/promises';
+import { mkdir, readFile, writeFile } from 'fs/promises';
 import { existsSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-const execAsync = promisify(exec);
+const execFileAsync = promisify(execFile);
 
 /** Script directory (Node <21: import.meta.dirname is unavailable). */
 const SCRIPT_DIR =
@@ -15,11 +15,67 @@ const SCRIPT_DIR =
 
 const VOICE = 'he-IL-HilaNeural';
 const OUTPUT_BASE = path.resolve(SCRIPT_DIR, '../packages/web/public/audio/he');
+const PUBLIC_ROOT = path.resolve(SCRIPT_DIR, '../packages/web/public');
+const LOCALE_FILES = [
+  { namespace: 'common', filePath: path.resolve(SCRIPT_DIR, '../packages/web/src/i18n/locales/he/common.json') },
+  { namespace: 'onboarding', filePath: path.resolve(SCRIPT_DIR, '../packages/web/src/i18n/locales/he/onboarding.json') },
+] as const;
 
 interface AudioEntry {
   key: string;
   text: string;
   outputPath: string;
+}
+
+function toKebabCase(value: string): string {
+  return value
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replace(/[^a-zA-Z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .toLowerCase();
+}
+
+function keyToRelativePath(key: string): string {
+  const segments = key.split('.');
+  const namespace = segments[0];
+  const keySegments = namespace === 'common' ? segments.slice(1) : segments;
+  const dirParts = keySegments.slice(0, -1).map(toKebabCase);
+  const filePart = `${toKebabCase(keySegments[keySegments.length - 1] ?? key)}.mp3`;
+  return path.join(...dirParts, filePart);
+}
+
+function flattenStrings(value: unknown, prefix = ''): Array<{ key: string; text: string }> {
+  if (typeof value === 'string') {
+    return [{ key: prefix, text: value }];
+  }
+
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return [];
+  }
+
+  return Object.entries(value).flatMap(([nestedKey, nestedValue]) => {
+    const nextPrefix = prefix ? `${prefix}.${nestedKey}` : nestedKey;
+    return flattenStrings(nestedValue, nextPrefix);
+  });
+}
+
+async function loadLocaleEntries(): Promise<AudioEntry[]> {
+  const entries: AudioEntry[] = [];
+
+  for (const locale of LOCALE_FILES) {
+    const jsonRaw = await readFile(locale.filePath, 'utf8');
+    const flattened = flattenStrings(JSON.parse(jsonRaw), locale.namespace);
+
+    for (const item of flattened) {
+      entries.push({
+        key: item.key,
+        text: item.text,
+        outputPath: path.join(OUTPUT_BASE, keyToRelativePath(item.key)),
+      });
+    }
+  }
+
+  return entries.sort((a, b) => a.key.localeCompare(b.key));
 }
 
 async function generateAudio(entry: AudioEntry): Promise<void> {
@@ -32,53 +88,17 @@ async function generateAudio(entry: AudioEntry): Promise<void> {
   }
 
   try {
-    await execAsync(
-      `edge-tts --voice "${VOICE}" --text "${entry.text}" --write-media "${entry.outputPath}"`
-    );
+    await execFileAsync('edge-tts', ['--voice', VOICE, '--text', entry.text, '--write-media', entry.outputPath]);
     console.log(`  Generated: ${entry.key}`);
   } catch (err) {
     console.error(`  Failed: ${entry.key}`, err);
   }
 }
 
-function getFeedbackEntries(): AudioEntry[] {
-  return [
-    { key: 'feedback.success', text: 'כל הכבוד!', outputPath: path.join(OUTPUT_BASE, 'feedback/success.mp3') },
-    { key: 'feedback.tryAgain', text: 'נסה שוב!', outputPath: path.join(OUTPUT_BASE, 'feedback/try-again.mp3') },
-    { key: 'feedback.almostThere', text: 'כמעט!', outputPath: path.join(OUTPUT_BASE, 'feedback/almost-there.mp3') },
-  ];
-}
-
-function getDubiEntries(): AudioEntry[] {
-  return [
-    { key: 'dubi.welcome', text: 'שלום! אני דובי, ברוכים הבאים לדובילנד!', outputPath: path.join(OUTPUT_BASE, 'dubi/welcome.mp3') },
-    { key: 'dubi.greatJob', text: 'עבודה מצוינת!', outputPath: path.join(OUTPUT_BASE, 'dubi/great-job.mp3') },
-    { key: 'dubi.letsPlay', text: 'בואו נשחק!', outputPath: path.join(OUTPUT_BASE, 'dubi/lets-play.mp3') },
-    { key: 'dubi.chooseTopic', text: 'מה נלמד היום?', outputPath: path.join(OUTPUT_BASE, 'dubi/choose-topic.mp3') },
-  ];
-}
-
-function getNumberEntries(): AudioEntry[] {
-  const hebrewNumbers: Record<number, string> = {
-    1: 'אחת', 2: 'שתיים', 3: 'שלוש', 4: 'ארבע', 5: 'חמש',
-    6: 'שש', 7: 'שבע', 8: 'שמונה', 9: 'תשע', 10: 'עשר',
-  };
-
-  return Object.entries(hebrewNumbers).map(([num, text]) => ({
-    key: `numbers.${num}`,
-    text,
-    outputPath: path.join(OUTPUT_BASE, `numbers/${num}.mp3`),
-  }));
-}
-
 async function main() {
   console.log('Generating Hebrew audio files...\n');
 
-  const entries = [
-    ...getFeedbackEntries(),
-    ...getDubiEntries(),
-    ...getNumberEntries(),
-  ];
+  const entries = await loadLocaleEntries();
 
   console.log(`${entries.length} audio files to process\n`);
 
@@ -87,9 +107,9 @@ async function main() {
   }
 
   const manifest: Record<string, string> = {};
-  const publicRoot = path.resolve(SCRIPT_DIR, '../packages/web/public');
   for (const entry of entries) {
-    manifest[entry.key] = entry.outputPath.replace(publicRoot, '');
+    const relativePath = entry.outputPath.replace(PUBLIC_ROOT, '').split(path.sep).join('/');
+    manifest[entry.key] = relativePath.startsWith('/') ? relativePath : `/${relativePath}`;
   }
 
   const manifestPath = path.join(OUTPUT_BASE, 'manifest.json');

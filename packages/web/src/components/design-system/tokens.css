@@ -1,0 +1,120 @@
+/* Dubiland Design Tokens — CSS Custom Properties */
+/* Bear theme is the default; other themes override via [data-theme] */
+
+:root {
+  /* === Color Palette: Warm Storybook === */
+
+  /* Backgrounds */
+  --color-bg-primary: #FFF8E7;       /* Parchment */
+  --color-bg-secondary: #F5E6C8;     /* Warm tan */
+  --color-bg-card: #FFFFFF;
+  --color-bg-overlay: rgba(93, 58, 26, 0.4);
+
+  /* Text */
+  --color-text-primary: #5D3A1A;     /* Brown */
+  --color-text-secondary: #8B7355;   /* Muted brown */
+  --color-text-light: #B8A48C;       /* Placeholder / hint */
+  --color-text-inverse: #FFFFFF;
+
+  /* Accents */
+  --color-accent-primary: #FF8C42;   /* Warm orange */
+  --color-accent-secondary: #FFD166; /* Golden yellow */
+  --color-accent-success: #6BCB77;   /* Friendly green */
+  --color-accent-danger: #FF6B6B;    /* Soft red */
+  --color-accent-info: #4ECDC4;      /* Teal */
+
+  /* Theme-specific (bear default) */
+  --color-theme-primary: #C47B3B;    /* Bear brown */
+  --color-theme-secondary: #E8A857;  /* Honey gold */
+  --color-theme-bg: linear-gradient(180deg, #FFF8E7, #F5E6C8);
+
+  /* Stars */
+  --color-star-filled: #FFD166;
+  --color-star-empty: #E0D5C3;
+
+  /* === Typography === */
+  --font-family-primary: 'Rubik', 'Heebo', system-ui, sans-serif;
+  --font-family-display: 'Rubik', system-ui, sans-serif;
+
+  --font-size-xs: 0.75rem;   /* 12px */
+  --font-size-sm: 0.875rem;  /* 14px */
+  --font-size-md: 1rem;      /* 16px */
+  --font-size-lg: 1.25rem;   /* 20px */
+  --font-size-xl: 1.5rem;    /* 24px */
+  --font-size-2xl: 2rem;     /* 32px */
+  --font-size-3xl: 2.5rem;   /* 40px */
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  /* === Spacing === */
+  --space-xs: 0.25rem;  /* 4px */
+  --space-sm: 0.5rem;   /* 8px */
+  --space-md: 1rem;     /* 16px */
+  --space-lg: 1.5rem;   /* 24px */
+  --space-xl: 2rem;     /* 32px */
+  --space-2xl: 3rem;    /* 48px */
+  --space-3xl: 4rem;    /* 64px */
+
+  /* === Border Radius === */
+  --radius-sm: 0.5rem;   /* 8px */
+  --radius-md: 0.75rem;  /* 12px */
+  --radius-lg: 1rem;     /* 16px */
+  --radius-xl: 1.5rem;   /* 24px */
+  --radius-full: 9999px;
+
+  /* === Shadows === */
+  --shadow-sm: 0 1px 3px rgba(93, 58, 26, 0.1);
+  --shadow-md: 0 4px 12px rgba(93, 58, 26, 0.12);
+  --shadow-lg: 0 8px 24px rgba(93, 58, 26, 0.15);
+  --shadow-card: 0 2px 8px rgba(93, 58, 26, 0.08);
+
+  /* === Touch Targets === */
+  --touch-min: 44px;
+
+  /* === Transitions === */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow: 400ms ease;
+}
+
+/* === Theme Overrides === */
+
+[data-theme="football"] {
+  --color-theme-primary: #2D6A4F;
+  --color-theme-secondary: #52B788;
+  --color-theme-bg: linear-gradient(180deg, #E8F5E9, #C8E6C9);
+  --color-bg-primary: #E8F5E9;
+  --color-bg-secondary: #C8E6C9;
+}
+
+[data-theme="magic"] {
+  --color-theme-primary: #7B2D8E;
+  --color-theme-secondary: #C77DFF;
+  --color-theme-bg: linear-gradient(180deg, #F3E5F5, #E1BEE7);
+  --color-bg-primary: #F3E5F5;
+  --color-bg-secondary: #E1BEE7;
+}
+
+[data-theme="space"] {
+  --color-theme-primary: #1A237E;
+  --color-theme-secondary: #5C6BC0;
+  --color-theme-bg: linear-gradient(180deg, #E8EAF6, #C5CAE9);
+  --color-bg-primary: #E8EAF6;
+  --color-bg-secondary: #C5CAE9;
+}
+
+[data-theme="ocean"] {
+  --color-theme-primary: #00695C;
+  --color-theme-secondary: #4DB6AC;
+  --color-theme-bg: linear-gradient(180deg, #E0F2F1, #B2DFDB);
+  --color-bg-primary: #E0F2F1;
+  --color-bg-secondary: #B2DFDB;
+}

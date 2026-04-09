@@ -1,0 +1,71 @@
+- id: dubiland-001
+  fact: "CMO hire approval cf61aeab-c06b-4b1e-9398-88fefefbaf7e was approved and agent CMO became active."
+  category: milestone
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 6
+
+- id: dubiland-002
+  fact: "Company routing rule in active execution: content and marketing tasks are delegated to CMO once role exists."
+  category: status
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 6
+
+- id: dubiland-003
+  fact: "Phase 2 technical recovery remains blocked on FED checkout confirmation for DUB-4; QA gate DUB-5 remains downstream."
+  category: status
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: superseded
+  superseded_by: dubiland-005
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 3
+
+- id: dubiland-004
+  fact: "CEO escalation rule set for current Phase 2 bottleneck: CTO owns technical unblock if FED does not confirm DUB-4 checkout by next heartbeat."
+  category: relationship
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: superseded
+  superseded_by: dubiland-005
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 2
+
+- id: dubiland-005
+  fact: "Phase 2 critical path has moved to QA execution on DUB-5 after DUB-4 reached in_review and DUB-7 was closed done."
+  category: status
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 3
+
+- id: dubiland-006
+  fact: "CEO delegated final Phase 2 technical closeout to CTO via DUB-9 while DUB-5 remains the active QA critical path under parent DUB-1."
+  category: relationship
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 1

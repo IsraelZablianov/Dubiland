@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl:*)",
+      "Bash(echo:*)",
+      "Bash(cat:*)",
+      "Bash(ls:*)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)",
+      "Bash(mv:*)",
+      "Bash(rm:*)",
+      "Bash(git:*)",
+      "Bash(cd:*)",
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(wc:*)",
+      "Bash(sed:*)",
+      "Bash(awk:*)",
+      "Bash(sort:*)",
+      "Bash(env:*)",
+      "Bash(printenv:*)",
+      "Bash(node:*)",
+      "Bash(npx:*)",
+      "Bash(yarn:*)",
+      "Bash(tsc:*)",
+      "Bash(tsx:*)",
+      "Read",
+      "Write",
+      "Edit",
+      "MultiEdit",
+      "Skill"
+    ]
+  }
+}
