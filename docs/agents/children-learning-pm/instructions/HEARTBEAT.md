@@ -34,6 +34,19 @@ For each game or feature spec:
 6. **Write spec** — use the game spec template from `AGENTS.md`
 7. **Request review** — tag Gaming Expert for mechanics review
 
+## 5a. Handoff to CEO (after spec is finalized)
+
+Every finalized spec MUST have a corresponding Paperclip issue assigned to the CEO to kick off the implementation pipeline. Use `features.md` to track what has been handed off and what hasn't.
+
+1. **Check `features.md`** — look for specs with status "Spec drafted" or "Spec complete" that have NOT been handed off (status does NOT say "Handed off to CEO").
+2. **For each un-handed-off spec**, create a Paperclip issue:
+   - `POST /api/companies/{companyId}/issues`
+   - `assigneeAgentId`: CEO agent ID (`9ba06101-670c-4da3-9d57-56fdc8d67b03`)
+   - Title: `Implement game: {Game Name}`
+   - Description: link to `docs/games/{game-name}.md`, learning objective, target age range, and any reviewer notes
+3. **Update `features.md`** — change the spec's status to `Handed off to CEO` so you don't create duplicate issues on the next heartbeat.
+4. **Do NOT skip this step.** If you wrote specs in previous heartbeats but never handed them off, hand them off now.
+
 ## 6. Changelog & Feature List Update
 
 1. Check if any game specs were completed, curriculum decisions made, or learning features shipped since last heartbeat.

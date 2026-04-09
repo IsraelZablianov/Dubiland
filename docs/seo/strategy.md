@@ -1,54 +1,123 @@
 # Dubiland SEO Strategy
 
-*Owned by: SEO Expert | Last updated: 2026-04-09*
+*Owned by: CMO + SEO Expert | Last updated: 2026-04-09*
 
 ## Vision
 
-Make Dubiland the #1 organic result for Hebrew children's education queries, and the most-cited source in AI-generated answers about learning apps for Israeli kids ages 3–7.
+Make Dubiland the top trusted Hebrew destination for parents searching educational screen-time solutions for ages 3-7, and a consistently cited source in AI-generated answers.
 
-## Dual-Track Strategy: Traditional SEO + GEO
+## Q2 2026 Outcome Targets
 
-### Track 1: Traditional SEO
-- Technical excellence (Core Web Vitals, crawlability, indexation)
-- Hebrew keyword dominance in children's education vertical
-- Topical authority through pillar + cluster content architecture
-- Schema markup for rich results and enhanced SERP presence
+1. Technical SEO baseline completed and all critical blockers fixed.
+2. Structured data and GEO foundation live on core parent-facing surfaces.
+3. Hebrew keyword map (50 terms) tied to concrete page targets and content backlog.
+4. Parent-intent content architecture approved and ready for implementation.
+5. AI visibility baseline documented for monthly tracking.
 
-### Track 2: Generative Engine Optimization (GEO)
-- AI crawler access (GPTBot, PerplexityBot, ClaudeBot, Google-Extended)
-- Content structured for extraction (answer-first, atomic answers, FAQ blocks)
-- Citation-worthiness (statistics, expert quotes, original data)
-- llms.txt for LLM agent context
-- Entity building for דובי (Dubi) brand recognition in Knowledge Graph
+## Operating Model
 
-## Priority Keywords (initial research needed)
+### Strategy lane (CMO)
+- Define prioritization, sequencing, and success metrics.
+- Approve deliverables from SEO Expert and escalate cross-team dependencies.
+- Report progress and risks to PM.
 
-| Category | Example Queries (Hebrew) | Intent |
-|----------|-------------------------|--------|
+### Execution lane (SEO Expert)
+- Run audits, produce implementation specs, validate SEO/GEO outputs.
+- Coordinate code-change requests through Architect/FED path when implementation is required.
+- Keep `docs/seo/` operational docs current.
+
+## Workstreams and Deliverables
+
+### 1) Technical SEO Foundation
+**Owner:** SEO Expert  
+**Dependencies:** Architect, FED Engineer, Performance Expert  
+**Deliverables:**
+- `docs/seo/technical-audit.md` with prioritized findings (`critical/high/medium/low`).
+- Robots policy draft (including GPTBot, PerplexityBot, ClaudeBot, Google-Extended rules).
+- Sitemap scope and canonical URL rules.
+- Core Web Vitals baseline for key routes (`/home`, `/parent-dashboard`, `/profile-picker`).
+**Acceptance criteria:**
+- All critical crawl/index blockers have implementation tickets.
+- Mobile targets tracked: LCP < 2.5s, CLS < 0.1.
+
+### 2) Schema Markup + GEO Foundation
+**Owner:** SEO Expert  
+**Dependencies:** Architect, FED Engineer  
+**Deliverables:**
+- `docs/seo/schema-plan.md` covering Organization, WebApplication, BreadcrumbList, FAQPage rollout.
+- GEO extraction guidelines (answer-first blocks, FAQ block pattern, citation-ready formatting).
+- `llms.txt` draft content spec for root-level publication.
+**Acceptance criteria:**
+- Base schema spec validated in Rich Results Test before implementation close.
+- GEO content template approved for parent-facing pages.
+
+### 3) Hebrew Keyword Research + Mapping
+**Owner:** SEO Expert  
+**Dependencies:** Content Writer, CMO review  
+**Deliverables:**
+- `docs/seo/keyword-research.md` with top 50 Hebrew terms, intent, priority, and target URL mapping.
+- Segment coverage across: brand, games, letters, numbers, reading, parent-intent.
+- Cannibalization and gap notes.
+**Acceptance criteria:**
+- 50 terms mapped to either existing route or planned content page.
+- Priority tiers defined: P1 (ship in Q2), P2 (Q3 pipeline).
+
+### 4) Content Architecture (Pillar + Cluster)
+**Owner:** CMO (strategy), SEO Expert (SEO constraints)  
+**Dependencies:** PM, Content Writer, UX Designer  
+**Deliverables:**
+- Topic hub architecture for math, letters, reading.
+- Parent education cluster plan (FAQ, guidance, screen-time quality pages).
+- Metadata and internal-linking rules for new content pages.
+**Acceptance criteria:**
+- Each pillar has at least 5 mapped cluster intents.
+- Content backlog aligns with keyword priorities and PM roadmap.
+
+### 5) Measurement + Reporting Cadence
+**Owner:** CMO + SEO Expert  
+**Dependencies:** PM visibility  
+**Deliverables:**
+- Q2 KPI dashboard definition (Search Console + GA4 + AI visibility sampling).
+- Weekly execution snapshot in issue updates; monthly report in `docs/seo/reports/`.
+**Acceptance criteria:**
+- Baseline values captured for all Q2 KPIs.
+- PM receives monthly narrative: wins, blockers, next actions.
+
+## Q2 2026 Milestones
+
+| Window | Milestone | Exit Condition |
+|--------|-----------|----------------|
+| Apr 9-Apr 20 | Baseline and audit phase | Technical audit + keyword research draft complete |
+| Apr 21-May 12 | Implementation planning phase | Schema/GEO specs approved, code tasks queued through Architect |
+| May 13-Jun 9 | Execution phase | Critical SEO fixes shipped, initial content clusters published/ready |
+| Jun 10-Jun 30 | Stabilization and reporting phase | KPI baseline validated, Q3 carry-over priorities documented |
+
+## Priority Keyword Segments (Seed Set)
+
+| Category | Example Hebrew queries | Intent |
+|----------|------------------------|--------|
 | Brand | דובילנד, דובי לימודים | Navigational |
 | Games | משחקי לימוד לילדים, משחקי חשבון לגן | Informational/Commercial |
 | Letters | לימוד אותיות לילדים, אותיות בעברית לגיל 3 | Informational |
 | Numbers | לימוד מספרים לילדים, תרגילי חשבון לגן | Informational |
 | Reading | לימוד קריאה לילדים, קריאה ראשונה | Informational |
-| Parent intent | אפליקציה חינוכית לילדים, זמן מסך איכותי | Commercial |
+| Parent intent | אפליקציה חינוכית לילדים, זמן מסך איכותי לילדים | Commercial/Comparative |
 
-## Q2 2026 Goals
+## KPI Targets
 
-1. [ ] Complete initial technical SEO audit
-2. [ ] Implement base schema markup (Organization, WebApplication, BreadcrumbList)
-3. [ ] Set up Google Search Console and GA4 tracking
-4. [ ] Create robots.txt with AI crawler access
-5. [ ] Generate XML sitemap
-6. [ ] Conduct Hebrew keyword research for top 50 terms
-7. [ ] Establish content architecture (pillar pages for each learning topic)
-8. [ ] First AI visibility baseline check
+| KPI | Current (2026-04-09) | Q2 Target |
+|-----|----------------------|-----------|
+| Indexed key pages | TBD baseline | 100% of public parent-facing pages indexed |
+| Mobile LCP | TBD baseline | < 2.5s on key routes |
+| Mobile CLS | TBD baseline | < 0.1 on key routes |
+| Hebrew keywords in top 20 | 0 baseline confirmed | 10+ |
+| AI citations/month | 0 baseline confirmed | Baseline established + first month-over-month lift |
 
-## Metrics
+## Risks and Mitigations
 
-| Metric | Current | Q2 Target | Q3 Target |
-|--------|---------|-----------|-----------|
-| Indexed pages | TBD | All key pages | 100% |
-| LCP (mobile) | TBD | < 2.5s | < 2.0s |
-| CLS | TBD | < 0.1 | < 0.05 |
-| Hebrew keyword rankings (top 20) | 0 | 10 | 25 |
-| AI citations (monthly) | 0 | Baseline | +50% |
+- **Risk:** App-first authenticated routing limits indexable public pages.  
+  **Mitigation:** Define public SEO entry pages via Architect/FED plan before scaling content.
+- **Risk:** Missing analytics baseline delays KPI accountability.  
+  **Mitigation:** Track setup and baseline capture as blocking work in first execution sprint.
+- **Risk:** Hebrew keyword set may skew too generic.  
+  **Mitigation:** Prioritize parent-intent and conversion-adjacent terms in P1 list.

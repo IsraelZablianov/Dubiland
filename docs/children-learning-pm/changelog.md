@@ -13,6 +13,16 @@ Learning-focused changelog maintained by the Children Learning PM. Record game s
 
 ---
 
+### 2026-04-09 — Picture-to-Word Builder Spec Added for Early Reading
+- Added `docs/games/picture-to-word-builder.md` to cover audio-first Hebrew word assembly for ages 5-7.
+- Spec includes 3-level progression from guided 2-3 letter words to lower-scaffold 4-5 letter word building with adaptive remediation.
+- Learning area affected: Reading (קריאה).
+
+### 2026-04-09 — Letter Sound Match Spec Added for Phonological Awareness
+- Added `docs/games/letter-sound-match.md` to introduce audio-first phoneme-to-letter mapping for ages 4-6 (with stretch into early 7).
+- Spec defines 3-level progression from high-contrast sound matching to picture-start-sound mapping, with adaptive remediation for confused letter pairs.
+- Learning area affected: Letters (אותיות).
+
 ### 2026-04-09 — Letter Tracing Spec Added for Early Literacy Foundation
 - Added `docs/games/letter-tracing-trail.md` to cover Hebrew letter-form recognition and tracing progression for ages 3-5 (with stretch into early 6).
 - Spec includes measurable learning objective, 3-level scaffold fadeout, i18n/audio key requirements, RTL behavior notes, and parent progress telemetry.

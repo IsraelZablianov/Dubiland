@@ -145,6 +145,80 @@ resumed.
 still being written to. Not necessarily broken, but worth flagging. Some
 complex heartbeats legitimately take time — only escalate if > 60 minutes.
 
+## Phase 2b — Detect Idle PM (CEO)
+
+The PM (CEO) drives the entire team. If it's idle for too long without a
+heartbeat, all downstream work stalls. This phase checks whether the PM has
+been sitting idle past its expected heartbeat interval and wakes it up.
+
+**PM Agent ID:** `9ba06101-670c-4da3-9d57-56fdc8d67b03`
+**Expected interval:** 20 minutes (with 5-minute grace → 25 min threshold)
+
+### Detection query
+
+```bash
+PM_ID="9ba06101-670c-4da3-9d57-56fdc8d67b03"
+IDLE_THRESHOLD_MIN=25
+
+cd /tmp && node -e "
+const { Client } = require('pg');
+const c = new Client({ host: '127.0.0.1', port: 54329, user: 'paperclip', database: 'paperclip', password: 'paperclip' });
+c.connect().then(async () => {
+  const r = await c.query(\`
+    SELECT a.status,
+           (SELECT MAX(finished_at) FROM heartbeat_runs
+            WHERE agent_id = a.id AND status = 'completed') as last_completed,
+           (SELECT COUNT(*) FROM heartbeat_runs
+            WHERE agent_id = a.id AND status IN ('queued','running')) as pending_runs
+    FROM agents a WHERE a.id = '$PM_ID'
+  \`);
+  const row = r.rows[0];
+  if (!row) { console.log('PM_NOT_FOUND'); process.exit(0); }
+
+  const lastRun = row.last_completed ? new Date(row.last_completed) : null;
+  const minAgo = lastRun ? (Date.now() - lastRun.getTime()) / 60000 : Infinity;
+  const isIdle = row.status === 'idle';
+  const noPending = parseInt(row.pending_runs) === 0;
+  const overdue = minAgo > $IDLE_THRESHOLD_MIN;
+
+  console.log(JSON.stringify({ status: row.status, last_completed: row.last_completed, minutes_since: Math.round(minAgo), idle: isIdle, overdue, no_pending: noPending }));
+  if (isIdle && overdue && noPending) {
+    console.log('PM_IDLE_NEEDS_WAKE');
+  } else {
+    console.log('PM_OK');
+  }
+  await c.end();
+}).catch(e => console.error(e.message));
+"
+```
+
+**Decision matrix:**
+
+| PM status | Last run > 25 min ago? | Pending runs? | Action |
+|---|---|---|---|
+| `idle` | Yes | None | **Invoke heartbeat** (Procedure E) |
+| `idle` | Yes | Queued/running | Skip — already scheduled |
+| `idle` | No | Any | Skip — recently ran |
+| `running` | Any | Any | Skip — currently working |
+| `error` | Any | Any | Handle via Phase 2 error heuristics |
+
+### Procedure E: Invoke heartbeat for idle agent
+
+```bash
+curl -s -X POST "http://127.0.0.1:3100/api/agents/$PM_ID/heartbeat/invoke" | \
+  python3 -c "import sys,json; d=json.load(sys.stdin); print('Invoked heartbeat for', d.get('agentId', 'unknown'), '— run:', d.get('id', 'unknown'))"
+```
+
+After invoking, wait 10 seconds and verify the PM picked up work:
+
+```bash
+sleep 10
+curl -s "http://127.0.0.1:3100/api/agents/$PM_ID" | \
+  python3 -c "import sys,json; d=json.load(sys.stdin); print('PM status:', d['status'])"
+```
+
+Include the result in your Phase 4 report under a separate "**Idle Agent Probing**" section.
+
 ## Phase 3 — Recovery Procedures
 
 ### Procedure A: Kill hung process

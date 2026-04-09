@@ -28,3 +28,6 @@ A ticket can remain non-checkoutable (`checkout conflict`) because `executionRun
 
 ## 2026-04-09 — QA Closeout Parking Pattern
 When QA is the only remaining critical-path owner and has not yet posted a kickoff checkpoint, post a concrete deadline comment on the QA ticket, mirror blocker status/ETA on the parent, and set the coordinator issue to `blocked` with explicit owner + next update time. This keeps status truthful and preserves audit clarity.
+
+## 2026-04-09 — SEO Route Class Pattern
+For SPA-first products, force an explicit route-class matrix (`public indexable` vs `app/auth noindex`) before metadata implementation. This architecture-first step prevents FED from shipping canonical/hreflang work against unstable route ownership and makes delegation clean (FED builds routes, QA validates route-by-route crawl behavior).

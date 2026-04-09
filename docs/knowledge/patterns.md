@@ -44,3 +44,18 @@ For frontend shell delivery with mixed auth/local environments:
 - keep a single protected route model (`/profiles`, `/home`, `/parent`) and gate with auth OR local guest-session state,
 - persist active child/profile selection in local storage so route transitions stay coherent across reloads,
 - centralize guest/session helpers in one utility (`lib/session`) to avoid duplicating local-storage logic across pages.
+
+## 2026-04-09 — SEO Crawl Asset Baseline Pattern
+
+When a SPA uses HTML fallback routing, missing crawler files can look like "present but malformed" to SEO tools because `/robots.txt` may return HTML instead of plain text:
+- treat `robots.txt`, `sitemap.xml`, and `llms.txt` as required static assets in `public/`,
+- verify with direct HTTP checks (`curl -i`) and Lighthouse SEO, not code inspection alone,
+- convert every critical/high SEO finding into an explicit implementation issue during the same audit heartbeat.
+
+## 2026-04-09 — Checkout Conflict Escalation Pattern
+
+When an assigned issue returns `409 Issue checkout conflict` despite `todo` status, treat the stale `executionRunId` as the blocker:
+- do not retry checkout in the same heartbeat,
+- set the issue to `blocked` with the conflicting run id in the comment,
+- reassign to the owner who can clear/release the lock and hand back.
+- note that the conflicting run can be an assignment-created `queued` run, not only a finished/stale run.

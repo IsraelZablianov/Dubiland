@@ -1,0 +1,71 @@
+- id: clpm-dubiland-001
+  fact: "Children Learning PM delivered three numbers game specs: counting-picnic (3-4), more-or-less-market (5-6), number-line-jumps (6-7)."
+  category: milestone
+  timestamp: "2026-04-09"
+  source: "docs/games/*.md"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 1
+
+- id: clpm-dubiland-002
+  fact: "Numeracy progression decision is concrete counting -> quantity comparison -> number-line addition, aligned to ages 3-7 milestones."
+  category: status
+  timestamp: "2026-04-09"
+  source: "docs/children-learning-pm/changelog.md"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 1
+
+- id: clpm-dubiland-003
+  fact: "Letter Tracing Trail spec added as first letters curriculum milestone, targeting ages 3-5 with scaffolded tracing progression."
+  category: milestone
+  timestamp: "2026-04-09"
+  source: "docs/games/letter-tracing-trail.md"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 1
+
+- id: clpm-dubiland-004
+  fact: "Letter Sound Match spec added to cover Hebrew phoneme-to-letter mapping, extending letters depth for ages 4-6."
+  category: milestone
+  timestamp: "2026-04-09"
+  source: "docs/games/letter-sound-match.md"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 1
+
+- id: clpm-dubiland-005
+  fact: "All drafted game specs are in progress because Gaming Expert mechanics review is pending."
+  category: relationship
+  timestamp: "2026-04-09"
+  source: "docs/children-learning-pm/features.md"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 1
+
+- id: clpm-dubiland-006
+  fact: "Picture-to-Word Builder spec was added as first reading curriculum milestone, targeting audio-first word assembly for ages 5-7."
+  category: milestone
+  timestamp: "2026-04-09"
+  source: "docs/games/picture-to-word-builder.md"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 1

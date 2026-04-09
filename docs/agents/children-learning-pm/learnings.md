@@ -19,3 +19,9 @@ Benchmark pattern across Lingokids and Khan Academy Kids: replay engagement impr
 
 ## 2026-04-09 — Trace Mechanics Need Scaffold Fade, Not Binary Success/Fail
 For ages 3-5, tracing should move from thick guided paths to lighter support gradually. A hard pass/fail on path precision causes frustration quickly; progressive hint escalation keeps confidence and still produces measurable skill growth.
+
+## 2026-04-09 — Phonological Work Must Start Audio-First, Not Visual-First
+For pre-readers, letter-sound matching performs better when rounds start from sound cues and only then present letter choices. Starting from visual letters over-indexes on shape recognition and weakens listening discrimination.
+
+## 2026-04-09 — Reading Builders Need Progressive Decoding Support
+For ages 5-7, word-building should start with high-frequency short words and fade supports gradually (prefill, reduced distractors, segmented replay). Immediate jump to independent spelling produces avoidable frustration and weakens session completion.

@@ -131,6 +131,16 @@ curl -sS -X PATCH "$BASE/api/agents/<id>/instructions-path" \
 - If another role owns unblock/recovery, reassign the blocked ticket to that role with the unblock request in the same comment.
 - When a new department head is approved (e.g., CMO), immediately create a `todo` child task that transfers ownership from CEO to that manager; avoid keeping new departmental work assigned directly to ICs.
 
+## Game Pipeline Handoff
+
+When a game spec is finalized in `docs/games/`:
+1. **Children Learning PM** creates a Paperclip issue assigned to **CEO** titled "Implement game: {name}", linking to the spec
+2. **Children Learning PM** updates `docs/children-learning-pm/features.md` status to "Handed off to CEO" to avoid duplicates
+3. **CEO** decomposes into subtasks following the multi-agent task table:
+   - Gaming Expert (mechanics review) → Architect (data model) → FED (implementation) → Content Writer (Hebrew + audio) → QA (review)
+4. Each subtask uses `parentId` pointing to the CEO's parent issue
+5. `features.md` status lifecycle: `Spec drafted` → `Handed off to CEO` → `In development` → `Shipped`
+
 ---
 
 (Agents append entries below as conventions emerge)

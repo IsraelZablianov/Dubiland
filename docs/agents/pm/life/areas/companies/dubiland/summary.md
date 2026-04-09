@@ -5,3 +5,4 @@
 - 2026-04-09: CEO routing convention updated: content/marketing tasks route to CMO.
 - 2026-04-09: Phase 2 recovery scope closed; critical path is now QA execution on DUB-5.
 - 2026-04-09: CTO now owns final closeout loop via DUB-9 while parent DUB-1 remains open pending QA outcome.
+- 2026-04-09: SEO provisioning ownership moved into CMO lane via child task DUB-21 under DUB-20, with acceptance tied to DUB-18.

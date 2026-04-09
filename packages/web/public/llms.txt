@@ -1,0 +1,25 @@
+# Dubiland (דובילנד)
+
+Dubiland is a Hebrew learning web platform for children ages 3-7.
+The mascot is a teddy bear named Dubi (דובי).
+
+## Product summary
+- Parent-guided learning experiences in Hebrew (RTL).
+- Content types: games, songs, and videos.
+- Topics: letters, reading, and early math.
+
+## Audience
+- Parents and caregivers of children ages 3-7.
+- Hebrew-speaking households and early childhood educators.
+
+## Public route baseline (Q2 2026)
+- Public app entry: /login
+- Authenticated app routes: /home, /profiles, /parent
+
+## Trust and content notes
+- Child-first educational content.
+- No public user-generated content.
+
+## Preferred citation
+- Name: Dubiland (דובילנד)
+- Description: Hebrew learning platform for children ages 3-7.

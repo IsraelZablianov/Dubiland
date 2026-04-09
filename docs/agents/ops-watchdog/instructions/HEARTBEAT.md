@@ -71,6 +71,20 @@ LATEST_LOG=$(ls -t "$LOG_DIR"/*.ndjson 2>/dev/null | head -1)
 LOG_AGE_SEC=$(( $(date +%s) - $(stat -f '%m' "$LATEST_LOG") ))
 ```
 
+### 3b. Check if PM (CEO) is idle
+
+Run Phase 2b from the `agent-watchdog` skill. If the PM's status is `idle`, has no pending/running heartbeat runs, and its last completed run was more than 25 minutes ago, invoke a heartbeat:
+
+```bash
+PM_ID="9ba06101-670c-4da3-9d57-56fdc8d67b03"
+
+# Use the Phase 2b detection query from the skill to check PM idle status.
+# If output contains PM_IDLE_NEEDS_WAKE:
+curl -s -X POST "http://127.0.0.1:3100/api/agents/$PM_ID/heartbeat/invoke"
+```
+
+Include results in your report under an **Idle Agent Probing** section.
+
 ### 4. Recover
 
 For each problem detected, execute the matching recovery procedure from Phase 3 of the skill. Follow this order:

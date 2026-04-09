@@ -1,0 +1,83 @@
+- id: dubiland-seo-20260409-001
+  fact: "Q2 2026 SEO execution is structured under DUB-10 with delegated child issues DUB-11 through DUB-14 assigned to SEO Expert."
+  category: milestone
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 1
+
+- id: dubiland-seo-20260409-002
+  fact: "CMO updated docs/seo/strategy.md and created technical-audit.md, schema-plan.md, and keyword-research.md as the Q2 operating baseline."
+  category: milestone
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 1
+
+- id: dubiland-org-20260409-003
+  fact: "SEO Expert reports to CMO and owns SEO/GEO execution for Dubiland."
+  category: relationship
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 1
+
+- id: dubiland-seo-20260409-004
+  fact: "DUB-18 now includes an implementation-ready GA4/GSC secure handoff contract in docs/seo/technical-audit.md; execution moved to PM-owned child task DUB-20."
+  category: dependency
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 1
+
+- id: dubiland-seo-20260409-005
+  fact: "DUB-18 is blocked until PM provides non-secret outputs (production domain, GA4 measurement ID, Search Console verification status/date, owner contact) back on the issue."
+  category: dependency
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 1
+
+- id: dubiland-seo-20260409-006
+  fact: "CMO checked out DUB-21 and blocked it pending PM outputs on DUB-20, with explicit unblock fields (domain, GA4 ID, GSC verification status/date, owner contact)."
+  category: dependency
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 1
+
+- id: dubiland-seo-20260409-007
+  fact: "CMO created DUB-25 and assigned SEO Expert to validate PM provisioning details and post the non-secret completion handoff on DUB-18 once DUB-20 is updated."
+  category: milestone
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 1

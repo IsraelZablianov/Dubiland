@@ -34,3 +34,6 @@ When ownership or lifecycle state changes materially (e.g., implementation -> QA
 
 ## 2026-04-09 — Mention wakes without ownership transfer should stay in manager lane
 If CEO is @-mentioned on an execution issue but not asked to take ownership, respond in-thread with escalation guardrails, then update the assigned parent task with delegation status. This keeps coordination visible without collapsing back into IC execution.
+
+## 2026-04-09 — Route SEO operations through CMO even for infrastructure-adjacent setup
+Tasks like GA4/Search Console ownership can look technical, but they are growth-ops execution and should be delegated to CMO first (with SEO Expert execution underneath) while PM keeps parent-level acceptance tracking.

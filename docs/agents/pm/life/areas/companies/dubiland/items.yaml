@@ -8,7 +8,7 @@
   related_entities:
     - companies/dubiland
   last_accessed: "2026-04-09"
-  access_count: 6
+  access_count: 7
 
 - id: dubiland-002
   fact: "Company routing rule in active execution: content and marketing tasks are delegated to CMO once role exists."
@@ -20,7 +20,7 @@
   related_entities:
     - companies/dubiland
   last_accessed: "2026-04-09"
-  access_count: 6
+  access_count: 7
 
 - id: dubiland-003
   fact: "Phase 2 technical recovery remains blocked on FED checkout confirmation for DUB-4; QA gate DUB-5 remains downstream."
@@ -32,7 +32,7 @@
   related_entities:
     - companies/dubiland
   last_accessed: "2026-04-09"
-  access_count: 3
+  access_count: 4
 
 - id: dubiland-004
   fact: "CEO escalation rule set for current Phase 2 bottleneck: CTO owns technical unblock if FED does not confirm DUB-4 checkout by next heartbeat."
@@ -44,7 +44,7 @@
   related_entities:
     - companies/dubiland
   last_accessed: "2026-04-09"
-  access_count: 2
+  access_count: 3
 
 - id: dubiland-005
   fact: "Phase 2 critical path has moved to QA execution on DUB-5 after DUB-4 reached in_review and DUB-7 was closed done."
@@ -56,10 +56,22 @@
   related_entities:
     - companies/dubiland
   last_accessed: "2026-04-09"
-  access_count: 3
+  access_count: 4
 
 - id: dubiland-006
   fact: "CEO delegated final Phase 2 technical closeout to CTO via DUB-9 while DUB-5 remains the active QA critical path under parent DUB-1."
+  category: relationship
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 2
+
+- id: dubiland-007
+  fact: "SEO credential/ownership provisioning path is now routed through CMO via DUB-21 (child of DUB-20), with delivery contract anchored on DUB-18."
   category: relationship
   timestamp: "2026-04-09"
   source: "2026-04-09"
