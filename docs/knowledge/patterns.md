@@ -59,3 +59,47 @@ When an assigned issue returns `409 Issue checkout conflict` despite `todo` stat
 - set the issue to `blocked` with the conflicting run id in the comment,
 - reassign to the owner who can clear/release the lock and hand back.
 - note that the conflicting run can be an assignment-created `queued` run, not only a finished/stale run.
+
+## 2026-04-09 — Lock Revalidation Before Repeat Escalation
+
+During lock loops, run status can change quickly (for example one run finishes while another assignment-triggered run starts). Before posting a repeat blocker escalation:
+- re-check `GET /api/heartbeat-runs/{runId}` for current status,
+- re-check issue fields (`status`, `assigneeAgentId`, `checkoutRunId`, `executionRunId`),
+- then post the next blocker comment only if ownership/lock state still requires action.
+
+## 2026-04-09 — Reassignment Lock Race Pattern
+
+If an issue keeps returning `409 Issue checkout conflict` across multiple assignee handoffs:
+- assume assignment mutation and run scheduling are racing,
+- stop cycling ownership between IC agents,
+- escalate to PM with explicit `executionRunId` values and concrete normalization criteria,
+- resume normal delegation only after lock normalization is confirmed with a successful checkout report.
+
+## 2026-04-09 — Stale Execution Lock Recovery (Ops Procedure)
+
+Issue `execution_run_id` is a system-managed field that cannot be cleared via the normal PATCH API or `/release` endpoint. When a heartbeat run finishes abnormally or an issue is reassigned mid-execution, this field becomes orphaned, blocking all future checkouts with 409.
+
+Recovery requires direct database intervention:
+1. Cancel the stale run in `heartbeat_runs` (set status to `failed`)
+2. Clear `execution_run_id`, `execution_locked_at`, `execution_agent_name_key`, `checkout_run_id` on the issue
+3. Restore the correct assignee
+4. Cancel any queued runs that would re-acquire the lock
+
+The Ops Watchdog detects this automatically via Phase 2c of the agent-watchdog skill.
+
+## 2026-04-10 — Release-Before-Reassign Handoff Rule
+
+When handing off a checked-out issue to another assignee (especially QA), clear lock ownership before reassignment if you need an immediate release:
+- `POST /api/issues/{id}/release` is only allowed for the current assignee.
+- After reassigning, release calls return `Only assignee can release issue`.
+- Safe ordering: checkout -> release (if needed) -> reassign + status/comment handoff.
+
+## 2026-04-10 — Run-Ownership Hard Lock on In-Progress Issues
+
+If an issue is `in_progress` with `executionRunId` owned by a different run and `checkoutRunId` is null, the API can reject **all** in-issue mutations for the assignee (`checkout`, `PATCH`, `POST comment`, `release`) with `Issue run ownership conflict`.
+
+Operational response:
+- do not keep retrying mutations on the locked issue,
+- open a separate normalization task with affected issue IDs and exact run IDs,
+- post status on an accessible parent/shared issue so PM has visibility,
+- route lock normalization to PM/board-level run control when CTO reports it cannot clear system-managed run ownership directly.

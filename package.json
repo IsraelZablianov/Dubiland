@@ -15,6 +15,7 @@
     "adapter": "bash scripts/switch-adapter.sh"
   },
   "devDependencies": {
+    "@google/genai": "^1.49.0",
     "tsx": "^4.19.0",
     "typescript": "^5.7.0"
   },

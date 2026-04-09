@@ -66,6 +66,7 @@ Make Dubiland the top trusted Hebrew destination for parents searching education
 **Owner:** CMO (strategy), SEO Expert (SEO constraints)  
 **Dependencies:** PM, Content Writer, UX Designer  
 **Deliverables:**
+- `docs/seo/content-architecture-backlog.md` with Q2 ship list and Q3 carry-over.
 - Topic hub architecture for math, letters, reading.
 - Parent education cluster plan (FAQ, guidance, screen-time quality pages).
 - Metadata and internal-linking rules for new content pages.

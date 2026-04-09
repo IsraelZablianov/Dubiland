@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="breatheBody" x1="120" y1="104" x2="392" y2="420" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d8a170" />
+      <stop offset="1" stop-color="#b27144" />
+    </linearGradient>
+    <linearGradient id="breatheBackpack" x1="274" y1="262" x2="356" y2="374" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#90d6ff" />
+      <stop offset="1" stop-color="#3e88d1" />
+    </linearGradient>
+  </defs>
+
+  <ellipse cx="256" cy="468" rx="136" ry="30" fill="#f0d3b4" opacity="0.5" />
+
+  <circle cx="184" cy="176" r="48" fill="url(#breatheBody)" />
+  <circle cx="328" cy="176" r="48" fill="url(#breatheBody)" />
+  <circle cx="184" cy="176" r="24" fill="#8b5837" opacity="0.45" />
+  <circle cx="328" cy="176" r="24" fill="#8b5837" opacity="0.45" />
+
+  <ellipse cx="256" cy="332" rx="132" ry="118" fill="url(#breatheBody)" />
+  <ellipse cx="348" cy="320" rx="34" ry="66" fill="url(#breatheBackpack)" />
+  <ellipse cx="334" cy="320" rx="16" ry="52" fill="#5ca7e8" />
+  <rect x="308" y="306" width="42" height="8" rx="4" fill="#2f73ba" opacity="0.6" />
+  <rect x="308" y="328" width="42" height="8" rx="4" fill="#2f73ba" opacity="0.6" />
+
+  <ellipse cx="172" cy="334" rx="26" ry="50" fill="url(#breatheBody)" />
+  <ellipse cx="340" cy="334" rx="26" ry="50" fill="url(#breatheBody)" />
+  <ellipse cx="172" cy="372" rx="28" ry="20" fill="#f7deba" />
+  <ellipse cx="340" cy="372" rx="28" ry="20" fill="#f7deba" />
+
+  <circle cx="256" cy="228" r="96" fill="url(#breatheBody)" />
+  <ellipse cx="256" cy="274" rx="66" ry="54" fill="#f5d7b2" />
+  <ellipse cx="220" cy="274" rx="22" ry="18" fill="#f6c2b7" />
+  <ellipse cx="292" cy="274" rx="22" ry="18" fill="#f6c2b7" />
+  <path d="M206 232C214 224 226 224 234 232" stroke="#2f2218" stroke-width="8" stroke-linecap="round" />
+  <path d="M278 232C286 224 298 224 306 232" stroke="#2f2218" stroke-width="8" stroke-linecap="round" />
+  <ellipse cx="256" cy="256" rx="14" ry="10" fill="#513a2b" />
+  <path d="M238 282C246 292 266 292 274 282" stroke="#513a2b" stroke-width="8" stroke-linecap="round" />
+
+  <circle cx="256" cy="230" r="124" stroke="#9fd4ff" stroke-width="8" opacity="0.35" />
+  <circle cx="256" cy="230" r="146" stroke="#9fd4ff" stroke-width="8" opacity="0.2" />
+</svg>

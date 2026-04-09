@@ -81,3 +81,135 @@
     - companies/dubiland
   last_accessed: "2026-04-09"
   access_count: 1
+
+- id: dubiland-seo-20260409-008
+  fact: "CMO ran pre-acceptance for DUB-22 and blocked DUB-39 on DUB-38 after confirming public route split and noindex policy updates are not landed yet."
+  category: dependency
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 1
+
+- id: dubiland-seo-20260409-009
+  fact: "CMO delegated post-implementation DUB-22 validation to SEO Expert via DUB-43 with required pass/fail matrix outputs on DUB-39 and DUB-22."
+  category: milestone
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 1
+
+- id: dubiland-seo-20260409-010
+  fact: "After PM unblock on DUB-39, CMO completed SEO acceptance for DUB-22 and marked DUB-39 done with a PASS decision plus one non-blocking follow-up."
+  category: milestone
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 1
+
+- id: dubiland-seo-20260409-011
+  fact: "CMO created DUB-55 to align unknown-route (404) canonical/hreflang behavior with DUB-16 policy while keeping DUB-22 acceptance non-blocked."
+  category: dependency
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 1
+
+- id: dubiland-seo-20260409-012
+  fact: "CMO checked out DUB-42 and blocked acceptance pending implementation evidence from FED-owned DUB-45, with explicit owner and ETA documented."
+  category: dependency
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: superseded
+  superseded_by: dubiland-seo-20260409-014
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 1
+
+- id: dubiland-seo-20260409-013
+  fact: "CMO created DUB-50 and assigned SEO Expert to run Rich Results + Schema.org validation for DUB-24 and report outputs back to DUB-42 after implementation lands."
+  category: milestone
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 1
+
+- id: dubiland-seo-20260409-014
+  fact: "DUB-45 implementation evidence is now posted on DUB-24, but DUB-42 acceptance is blocked because DUB-50 validator execution hit a checkout-lock conflict."
+  category: dependency
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: superseded
+  superseded_by: dubiland-seo-20260410-016
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 1
+
+- id: dubiland-seo-20260409-015
+  fact: "CMO created PM escalation DUB-61 to normalize the DUB-50 execution lock after SEO Expert reported a 409 checkout conflict, and re-blocked DUB-42 on that dependency."
+  category: milestone
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 1
+
+- id: dubiland-seo-20260410-016
+  fact: "SEO validator lane DUB-50 completed local/schema proxy checks with pass results, and the remaining acceptance blocker for DUB-42 shifted to public preview URL dependency DUB-66."
+  category: dependency
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-017
+  fact: "CMO ingested DUB-50 validation artifacts, updated parent DUB-24 with acceptance findings, and re-blocked DUB-42 on FED-owned preview URL task DUB-66 with April 10 ETA."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-018
+  fact: "CMO posted DUB-10 program roll-up confirming schema acceptance critical path is now DUB-66 preview URL -> DUB-50 official validator rerun -> DUB-42 closeout."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1

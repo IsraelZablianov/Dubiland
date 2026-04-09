@@ -7,3 +7,83 @@ Append new entries after each completed task.
 ## YYYY-MM-DD — Topic
 What was learned and why it matters.
 -->
+
+## 2026-04-09 — Nano Banana (Gemini Image Generation) Setup
+
+Nano Banana is Google's native image generation built into Gemini. Successfully tested via the web UI with enterprise PRO access.
+
+**What works:**
+- Gemini web UI at `gemini.google.com` with `israelz@wix.com` enterprise account
+- **Fast mode** generates images in ~15-25 seconds — use this, NOT Thinking mode
+- Generated a Dubiland teddy bear mascot (דובי) with excellent quality: warm brown fur, blue backpack, children's book style, white background
+- PRO enterprise access provides unlimited image generation
+
+**What doesn't work (yet):**
+- API keys from AI Studio return `limit: 0` (billing account is closed on the personal GCP project)
+- `gcloud auth application-default login` fails — enterprise blocks `cloud-platform` scope consent
+- Vertex AI access blocked by Wix org policy on personal projects
+
+**Next steps to enable API access:**
+1. Reactivate billing at `console.cloud.google.com/billing` on the personal GCP project, OR
+2. Create a new API key from `aistudio.google.com/apikey` in a fresh project with active billing
+
+**Installed in repo:**
+- `@google/genai` npm package (v1.49.0) — ready for API use when key works
+- `gcloud` CLI installed via Homebrew — authenticated as `israelz@wix.com`
+
+**Prompt patterns that work well for Dubiland:**
+- Always include: "children's book illustration style", "soft pastel colors", "clean white background"
+- For mascot: "cute cartoon teddy bear, warm brown fur, big friendly smile, wearing a small blue backpack"
+- For letters: "Large Hebrew letter [X] in playful 3D style, bright colors, child-friendly"
+
+## 2026-04-10 — Remotion letters videos should derive runtime duration from TTS clips via metadata
+
+For Dubiland letter videos, the most reliable setup is: keep episode copy in `common.json`, keep TTS mappings in the audio manifest, then let `calculateMetadata` measure clip durations (`@remotion/media-utils`) and return timeline props.
+
+Why it matters:
+- avoids hardcoded frame counts drifting from narration updates,
+- keeps Hebrew script ownership in i18n while Remotion stays reusable,
+- allows one component template to scale from a single letter to a series without timeline rewrites.
+
+Operational note: exposing `packages/web/public/audio/he` into `packages/remotion/public/audio/he` (symlink) makes `staticFile('audio/he/...')` render-ready without duplicating audio assets.
+
+## 2026-04-10 — P0 web illustration packs can be produced quickly with SVG + scripted WEBP exports
+
+For broad visual delivery tickets (mascot states + topic icons + game thumbnails), a stable workflow is:
+
+- author reusable UI illustrations as compact hand-tuned SVG files,
+- generate sized WEBP backgrounds/thumbnails with Pillow scripts (primary + 2x variants),
+- validate dimensions and syntax immediately (`PIL` size checks, `xmllint` for SVG).
+
+Why it matters:
+- keeps asset paths deterministic for FED wiring,
+- avoids waiting on manual export tooling for every size variant,
+- produces consistent, lightweight files suitable for web integration heartbeats.
+
+## 2026-04-10 — Fast QA pass for mascot SVG tickets
+
+For mascot-asset tasks, a quick and reliable completion gate is:
+
+- verify all required file paths exist,
+- run `xmllint --noout` on each SVG,
+- ensure no `<text>` nodes or opaque background rectangles are present,
+- confirm pose semantics (for RTL hint assets, pointing flow should favor right-to-left interaction cues).
+
+Why it matters:
+- catches invalid markup before FED integration,
+- prevents hidden background fills that break layered UI usage,
+- keeps delivery comments concise with a deterministic file checklist.
+
+## 2026-04-10 — Topic icon QA should avoid literal Latin glyphs in Hebrew-first assets
+
+For `topic-letters` style assets, avoid literal Latin characters (`A`, `B`, etc.) even when paths are vectorized. Use non-text writing motifs or neutral stroke forms so iconography stays locale-safe and avoids violating "no text baked into art."
+
+Fast preview workflow for comment screenshots:
+- generate PNG previews with macOS Quick Look (`qlmanage -t -s <size>`),
+- keep source deliverables as SVG/WEBP unchanged,
+- validate with `xmllint` + `<text>` scan + size checks before closing.
+
+Why it matters:
+- prevents culturally mismatched cues in Hebrew learning surfaces,
+- keeps acceptance reviews smoother for PM/FED,
+- provides reproducible visual proof in task comments without adding heavy tooling.

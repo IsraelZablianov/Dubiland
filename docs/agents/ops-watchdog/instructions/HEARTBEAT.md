@@ -58,6 +58,9 @@ For each agent in the snapshot, apply the heuristics from Phase 2 of the skill:
 4. **Rate-limit stall** — `last_error` mentions rate limit
 5. **Error status** — API status is `error`
 6. **Queued pile-up** — 3+ queued runs
+7. **EPIPE server crash** — 3+ agents in `error` simultaneously + recent failed runs with "Process lost -- child pid" error (see heuristic #18 in AGENTS.md)
+
+**EPIPE early check (do this first):** Before individual agent checks, count how many agents are in `error` status. If 3+ are in `error` at once, query recent heartbeat runs for the "Process lost" pattern. If confirmed, switch to the **Server Crash Recovery** procedure in AGENTS.md — it's more efficient than recovering agents one by one since the root cause is the server, not the agents.
 
 For agents with status `running`, verify:
 
@@ -84,6 +87,24 @@ curl -s -X POST "http://127.0.0.1:3100/api/agents/$PM_ID/heartbeat/invoke"
 ```
 
 Include results in your report under an **Idle Agent Probing** section.
+
+### 3c. Check for stale execution locks on issues
+
+Run Phase 2c from the `agent-watchdog` skill. Query all non-terminal issues that have an `execution_run_id` pointing to a finished, failed, cancelled, or missing heartbeat run. These locks prevent agents from checking out issues.
+
+For each stale lock found:
+1. Cancel the stale run if it's still in `queued`/`running` status
+2. Clear the lock fields (`execution_run_id`, `execution_locked_at`, `execution_agent_name_key`, `checkout_run_id`) via Procedure F
+3. Restore the correct assignee if it was changed during lock confusion
+4. Log the issue identifier, the stale run ID, and the action taken
+
+### 3d. Check for silent agents
+
+Run Phase 2d from the `agent-watchdog` skill. For each idle, non-paused agent whose last heartbeat was more than 3x its configured interval ago:
+1. Flag as `SILENT_AGENT`
+2. Invoke a manual heartbeat via Procedure G
+3. Verify the agent picks up work
+4. If it goes silent again, note for escalation (may need Paperclip server restart)
 
 ### 4. Recover
 

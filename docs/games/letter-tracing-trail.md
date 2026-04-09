@@ -27,6 +27,21 @@
   - Instruction and progress UI aligned RTL.
   - Stroke direction cues presented right-to-left where script context requires it.
 
+## Pre-Literate UX Baseline (Mandatory)
+- Every instruction text shown to the child must include an adjacent `▶` play icon (minimum 44px) that replays the exact instruction audio.
+- Child-facing controls are icon-first, not text-first. Use persistent icons for replay (`▶`), retry (`↻`), hint (`💡`), and next (`→`).
+- Text labels may appear only as supporting parent/teacher UI; gameplay controls for children must remain understandable via icon + audio alone.
+- Feedback and validation are action-based: the game responds immediately to taps, drags, traces, or spoken input and never requires a separate `check` or `test` button.
+- Icon taps trigger short narrated cues from i18n/audio keys so pre-readers can learn each icon meaning by sound.
+
+## Icon Inventory (Mandatory)
+| Action | Icon | Audio on tap | Immediate feedback |
+|---|---|---|---|
+| Replay instruction | `▶` | Replays active `games.letterTracingTrail.instructions.*` clip | Prompt pulse + start-point marker glow. |
+| Retry round | `↻` | Plays `feedback.encouragement.*`, then current prompt replay | Clears current trace path and restarts same letter. |
+| Hint | `💡` | Plays scaffold cue from `games.letterTracingTrail.strokeHint.*` | Ghost-hand stroke segment and directional arrows appear. |
+| Next / continue | `→` | Plays short cue from `games.letterTracingTrail.completionPraise.*` | Advances to the next letter round. |
+
 ## Difficulty Curve
 - Level 1 (Guided Trace):
   - 6 introductory letters.

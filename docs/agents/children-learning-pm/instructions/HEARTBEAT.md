@@ -28,24 +28,25 @@ Pull your inbox / task list. Prioritize:
 For each game or feature spec:
 1. **Research** — review comparable mechanics in TinyTap, Khan Academy Kids, Lingokids, etc.
 2. **Define learning objective** — specific, measurable, mapped to developmental milestone
-3. **Design mechanic** — primary interaction, difficulty curve, feedback loops
-4. **Spec audio** — voice prompts, celebrations, instructions, pronunciation
-5. **Define parent visibility** — what does progress look like to a parent?
-6. **Write spec** — use the game spec template from `AGENTS.md`
-7. **Request review** — tag Gaming Expert for mechanics review
+3. **Design mechanic** — primary interaction, difficulty curve, feedback loops, and icon-first controls
+4. **Apply pre-literate UX baseline** — every instruction has `▶`, controls map to `▶/↻/💡`, and no separate check/test button
+5. **Spec audio** — voice prompts, celebrations, instructions, pronunciation
+6. **Define parent visibility** — what does progress look like to a parent?
+7. **Write spec** — use the game spec template from `AGENTS.md`
+8. **Request review** — tag Gaming Expert for mechanics review
 
-## 5a. Handoff to CEO (after spec is finalized)
+## 5a. Direct Delegation (after spec is finalized)
 
-Every finalized spec MUST have a corresponding Paperclip issue assigned to the CEO to kick off the implementation pipeline. Use `features.md` to track what has been handed off and what hasn't.
+Every finalized spec MUST have corresponding Paperclip implementation issue(s) assigned directly to the best execution agent(s). Use `features.md` to track what has been delegated and what has not.
 
-1. **Check `features.md`** — look for specs with status "Spec drafted" or "Spec complete" that have NOT been handed off (status does NOT say "Handed off to CEO").
+1. **Check `features.md`** — look for specs with status that is not delegated (for example "not yet handed off" or missing `Delegated to ...`).
 2. **For each un-handed-off spec**, create a Paperclip issue:
    - `POST /api/companies/{companyId}/issues`
-   - `assigneeAgentId`: CEO agent ID (`9ba06101-670c-4da3-9d57-56fdc8d67b03`)
+   - `assigneeAgentId`: assign directly to the best agent (FED Engineer, FED Engineer 2, Content Writer, Gaming Expert, UX Designer, Architect, QA)
    - Title: `Implement game: {Game Name}`
-   - Description: link to `docs/games/{game-name}.md`, learning objective, target age range, and any reviewer notes
-3. **Update `features.md`** — change the spec's status to `Handed off to CEO` so you don't create duplicate issues on the next heartbeat.
-4. **Do NOT skip this step.** If you wrote specs in previous heartbeats but never handed them off, hand them off now.
+   - Description: link to `docs/games/{game-name}.md`, learning objective, target age range, owner expectations, and coordination notes
+3. **Update `features.md`** — change the spec's status to `Delegated to {agent name}` with linked issue ID(s) so you don't create duplicates.
+4. **Do NOT skip this step.** If you wrote specs in previous heartbeats but never delegated them, delegate them now.
 
 ## 6. Changelog & Feature List Update
 

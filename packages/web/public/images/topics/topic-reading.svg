@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none">
+  <defs>
+    <linearGradient id="readingBg" x1="24" y1="18" x2="226" y2="232" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffe6c6" />
+      <stop offset="1" stop-color="#b8ecde" />
+    </linearGradient>
+    <linearGradient id="bookLeft" x1="62" y1="84" x2="126" y2="208" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff" />
+      <stop offset="1" stop-color="#f2f7ff" />
+    </linearGradient>
+    <linearGradient id="bookRight" x1="130" y1="84" x2="194" y2="208" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fffaf0" />
+      <stop offset="1" stop-color="#f8f2e6" />
+    </linearGradient>
+  </defs>
+
+  <rect x="20" y="20" width="216" height="216" rx="64" fill="url(#readingBg)" />
+
+  <path d="M58 188V92C82 82 104 82 126 92V188C104 178 82 178 58 188Z" fill="url(#bookLeft)" />
+  <path d="M130 188V92C152 82 174 82 198 92V188C174 178 152 178 130 188Z" fill="url(#bookRight)" />
+  <path d="M126 92V188" stroke="#d4d4d4" stroke-width="6" />
+  <path d="M74 118C90 112 104 112 118 118" stroke="#9ec6ef" stroke-width="6" stroke-linecap="round" />
+  <path d="M74 140C90 134 104 134 118 140" stroke="#9ec6ef" stroke-width="6" stroke-linecap="round" />
+  <path d="M138 118C154 112 168 112 182 118" stroke="#efb58c" stroke-width="6" stroke-linecap="round" />
+  <path d="M138 140C154 134 168 134 182 140" stroke="#efb58c" stroke-width="6" stroke-linecap="round" />
+
+  <path d="M56 170C94 166 116 152 128 130C142 153 164 167 200 172" stroke="#7cc0a7" stroke-width="8" stroke-linecap="round" />
+
+  <path d="M196 64L202 76L216 78L206 88L208 102L196 96L184 102L186 88L176 78L190 76L196 64Z" fill="#ffd56b" />
+</svg>

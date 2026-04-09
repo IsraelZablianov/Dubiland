@@ -2,5 +2,12 @@
   "_comment": "Audio-specific text overrides. Keys match i18n keys from other locale files. When generating audio, this text is spoken instead of the display text. Only add keys here when the spoken version should differ from the displayed version.",
   "common.home.greeting": "היי, מה נלמד היום?",
   "common.home.minutes": "דקות של למידה",
-  "common.games.estimatedTime": "משך משוער, דקות"
+  "common.games.estimatedTime": "משך משוער, דקות",
+  "common.parentDashboard.games.moreOrLessMarket.progressSummary": "איזה יופי. הילד מתקדם יפה בהשוואת כמויות, עם פחות ופחות רמזים.",
+  "common.parentDashboard.games.numberLineJumps.progressSummary": "איזה יופי. הילד מתקדם בקפיצות על קו המספרים, פותר תרגילי חיבור ומסתמך פחות על רמזים.",
+  "common.parentDashboard.games.shapeSafari.progressSummary": "איזה יופי. הילד מתקדם בזיהוי צורות ובמיון שלהן, עם דיוק שהולך ומשתפר.",
+  "common.parentDashboard.games.colorGarden.progressSummary": "איזה יופי. הילד מתקדם בזיהוי צבעים ובמיון לפי צבע, ומתחיל להבחין טוב יותר גם בין גוונים דומים.",
+  "common.parentDashboard.games.letterTracingTrail.progressSummary": "איזה יופי. הילד מתקדם במסלול עקיבת האותיות ומשתמש בפחות רמזים.",
+  "common.parentDashboard.games.letterSoundMatch.progressSummary": "איזה יופי. הילד מתקדם בזיהוי צלילי אותיות ומבלבל פחות בין זוגות דומים.",
+  "common.parentDashboard.games.pictureToWordBuilder.progressSummary": "איזה יופי. הילד מתקדם בבניית מילים מתמונה, משתמש פחות ברמזים ומדייק יותר בסדר האותיות."
 }

@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
+import { MascotIllustration } from '@/components/illustrations';
 import { useAuth } from '@/hooks/useAuth';
 import { isSupabaseConfigured } from '@/lib/supabase';
 import { isGuestModeEnabled } from '@/lib/session';
@@ -26,7 +27,11 @@ export function ProtectedRoute({ children }: { children: ReactNode }) {
           background: 'var(--color-theme-bg)',
         }}
       >
-        <span style={{ fontSize: '3rem' }}>🧸</span>
+        <MascotIllustration
+          variant="loading"
+          size={120}
+          className="floating-element"
+        />
       </div>
     );
   }

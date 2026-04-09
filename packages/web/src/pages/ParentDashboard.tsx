@@ -16,6 +16,12 @@ interface ChildProgressRow {
   stars: number;
 }
 
+const DEFAULT_PROFILE_NAME_KEYS = {
+  maya: 'profile.defaultNames.maya',
+  noam: 'profile.defaultNames.noam',
+  liel: 'profile.defaultNames.liel',
+} as const;
+
 export default function ParentDashboard() {
   const { t } = useTranslation('common');
   const navigate = useNavigate();
@@ -24,8 +30,20 @@ export default function ParentDashboard() {
 
   const activeChild = getActiveChildProfile();
 
+  const getLocalizedChildName = (id: string, fallbackName: string) => {
+    if (id === 'guest') {
+      return t('profile.guestName');
+    }
+
+    const key = DEFAULT_PROFILE_NAME_KEYS[id as keyof typeof DEFAULT_PROFILE_NAME_KEYS];
+    if (!key) return fallbackName;
+    return t(key);
+  };
+
   const children = useMemo<ChildProgressRow[]>(() => {
-    const primaryName = activeChild?.name ?? t('profile.guestName');
+    const primaryName = activeChild
+      ? getLocalizedChildName(activeChild.id, activeChild.name)
+      : t('profile.guestName');
     const primaryEmoji = activeChild?.emoji ?? '🧒';
 
     return [
@@ -40,7 +58,7 @@ export default function ParentDashboard() {
       },
       {
         id: 'maya',
-        name: 'Maya',
+        name: t('profile.defaultNames.maya'),
         emoji: '🦊',
         gamesPlayed: 6,
         learningMinutes: 22,
@@ -48,7 +66,7 @@ export default function ParentDashboard() {
         stars: 2,
       },
     ];
-  }, [activeChild?.emoji, activeChild?.name, t]);
+  }, [activeChild, t]);
 
   const totals = useMemo(() => {
     return children.reduce(
@@ -82,7 +100,7 @@ export default function ParentDashboard() {
   return (
     <main
       style={{
-        minHeight: '100vh',
+        flex: 1,
         background: 'var(--color-bg-primary)',
         padding: 'var(--space-xl)',
         display: 'flex',
@@ -90,36 +108,17 @@ export default function ParentDashboard() {
       }}
     >
       <section style={{ width: 'min(1080px, 100%)', display: 'grid', gap: 'var(--space-lg)' }}>
-        <header
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: 'var(--space-md)',
-            flexWrap: 'wrap',
-          }}
-        >
-          <div style={{ display: 'grid', gap: 'var(--space-xs)' }}>
-            <h1
-              style={{
-                fontSize: 'var(--font-size-2xl)',
-                color: 'var(--color-text-primary)',
-                fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
-              }}
-            >
-              {t('parentDashboard.title')}
-            </h1>
-            <p style={{ color: 'var(--color-text-secondary)' }}>{t('parentDashboard.subtitle')}</p>
-          </div>
-
-          <div style={{ display: 'flex', gap: 'var(--space-sm)', flexWrap: 'wrap' }}>
-            <Button variant="secondary" size="md" onClick={() => navigate('/profiles')}>
-              {t('parentDashboard.manageChildren')}
-            </Button>
-            <Button variant="secondary" size="md" onClick={() => navigate('/home')}>
-              {t('nav.home')}
-            </Button>
-          </div>
+        <header style={{ display: 'grid', gap: 'var(--space-xs)' }}>
+          <h1
+            style={{
+              fontSize: 'var(--font-size-2xl)',
+              color: 'var(--color-text-primary)',
+              fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
+            }}
+          >
+            {t('parentDashboard.title')}
+          </h1>
+          <p style={{ color: 'var(--color-text-secondary)' }}>{t('parentDashboard.subtitle')}</p>
         </header>
 
         <div

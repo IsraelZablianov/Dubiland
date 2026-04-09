@@ -6,4 +6,7 @@
 - 2026-04-09: Letter Tracing Trail spec added as first letters coverage milestone.
 - 2026-04-09: Letter Sound Match spec added, expanding letters coverage into phonological mapping.
 - 2026-04-09: Picture-to-Word Builder spec added as first reading curriculum coverage milestone for ages 5-7.
+- 2026-04-09: All drafted specs were handed off to CEO via implementation issues DUB-27 through DUB-32.
 - 2026-04-09: Drafted specs are pending Gaming Expert mechanics review before FED implementation handoff.
+- 2026-04-10: Shape Safari and Color Garden specs were added, covering remaining Shapes and Colors curriculum gaps.
+- 2026-04-10: New implementation handoff issues created for these specs: DUB-59 and DUB-60.

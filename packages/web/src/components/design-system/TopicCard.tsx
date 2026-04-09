@@ -1,7 +1,7 @@
-import type { HTMLAttributes } from 'react';
+import type { HTMLAttributes, KeyboardEvent, ReactNode } from 'react';
 
 interface TopicCardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
-  icon: string;
+  icon: ReactNode;
   title: string;
   subtitle?: string;
   progress?: number;
@@ -13,12 +13,24 @@ export function TopicCard({
   subtitle,
   progress,
   style,
+  onKeyDown,
   ...props
 }: TopicCardProps) {
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    onKeyDown?.(event);
+    if (event.defaultPrevented) return;
+
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      event.currentTarget.click();
+    }
+  };
+
   return (
     <div
       role="button"
       tabIndex={0}
+      onKeyDown={handleKeyDown}
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -37,7 +49,20 @@ export function TopicCard({
       }}
       {...props}
     >
-      <span style={{ fontSize: 'var(--font-size-3xl)' }}>{icon}</span>
+      <span
+        style={{
+          width: '96px',
+          height: '96px',
+          borderRadius: 'var(--radius-lg)',
+          background: 'color-mix(in srgb, var(--color-bg-card) 64%, var(--color-theme-secondary) 36%)',
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          overflow: 'hidden',
+        }}
+      >
+        {icon}
+      </span>
       <span
         style={{
           fontSize: 'var(--font-size-lg)',

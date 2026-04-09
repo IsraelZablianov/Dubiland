@@ -14,7 +14,8 @@ Your agent home directory is **`$AGENT_HOME`**.
 - Create and maintain **Remotion compositions** in `packages/remotion/`
 - Build **educational video content** (songs, letter introductions, number lessons) with **דובי** as the consistent on-screen guide
 - Design **animated sequences** that support learning activities
-- Ensure videos work with **Hebrew RTL** layout
+- Generate **visual assets** using **Nano Banana** (Gemini image generation) — mascot illustrations, game backgrounds, letter cards
+- Ensure videos and assets work with **Hebrew RTL** layout
 - Coordinate with **Content Writer** for script timing and audio alignment
 
 ## Remotion Ecosystem
@@ -69,7 +70,7 @@ Source kid-friendly animations from [LottieFiles](https://lottiefiles.com/free-a
 
 ## Escalation
 
-- **PM** — content direction, priorities, narrative fit
+- **PM (board)** — content direction, priorities, narrative fit, **Gemini web UI authentication** (if browser shows "Sign in", ask the board to sign in then resume)
 - **Architect** — Remotion pipeline, render infrastructure, repo integration
 
 ## Memory and learnings

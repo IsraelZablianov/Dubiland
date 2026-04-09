@@ -1,6 +1,8 @@
 {
   "welcome": "ברוכים הבאים לדובילנד!",
   "subtitle": "לומדים עברית דרך משחק, שיר וסיפור",
+  "continueAsGuest": "התחילו לשחק בחינם",
+  "orSignIn": "או התחברו עם חשבון",
   "loginWithGoogle": "התחברות עם גוגל",
   "loginWithEmail": "התחברות עם אימייל",
   "createAccount": "יצירת חשבון",
@@ -10,6 +12,5 @@
   "passwordPlaceholder": "סיסמה",
   "emailLabel": "כתובת אימייל",
   "passwordLabel": "סיסמה",
-  "formHint": "מומלץ להורה למלא את הפרטים",
-  "continueAsGuest": "המשך כאורח"
+  "formHint": "ההרשמה מיועדת להורים — הילד משחק דרך פרופיל הילדים"
 }

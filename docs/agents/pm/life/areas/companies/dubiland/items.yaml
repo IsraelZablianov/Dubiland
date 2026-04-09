@@ -8,7 +8,7 @@
   related_entities:
     - companies/dubiland
   last_accessed: "2026-04-09"
-  access_count: 7
+  access_count: 11
 
 - id: dubiland-002
   fact: "Company routing rule in active execution: content and marketing tasks are delegated to CMO once role exists."
@@ -20,7 +20,7 @@
   related_entities:
     - companies/dubiland
   last_accessed: "2026-04-09"
-  access_count: 7
+  access_count: 11
 
 - id: dubiland-003
   fact: "Phase 2 technical recovery remains blocked on FED checkout confirmation for DUB-4; QA gate DUB-5 remains downstream."
@@ -80,4 +80,136 @@
   related_entities:
     - companies/dubiland
   last_accessed: "2026-04-09"
+  access_count: 2
+
+- id: dubiland-008
+  fact: "SEO route-policy QA execution ownership for DUB-23 was delegated from PM to CTO via child DUB-26 after repeated checkout-conflict escalations."
+  category: relationship
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 1
+
+- id: dubiland-009
+  fact: "Public-route SEO delivery ownership was split into CTO execution and CMO acceptance lanes: DUB-22 -> DUB-38/DUB-39, DUB-24 -> DUB-41/DUB-42."
+  category: relationship
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 4
+
+- id: dubiland-010
+  fact: "Stale execution-lock recovery was delegated to CTO in DUB-51 after repeated 409 checkout conflicts on PM-routed tasks (including DUB-24 and DUB-28..DUB-32)."
+  category: status
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: superseded
+  superseded_by: dubiland-011
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 2
+
+- id: dubiland-011
+  fact: "Execution-lock recovery lane was rerouted from self-locked DUB-51 to fresh CTO ticket DUB-52, and DUB-51 was closed as superseded."
+  category: status
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: superseded
+  superseded_by: dubiland-017
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 4
+
+- id: dubiland-012
+  fact: "SEO route implementation lane DUB-38 was closed as delivered via DUB-44; SEO acceptance lane DUB-39 is now re-opened for execution."
+  category: milestone
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: superseded
+  superseded_by: dubiland-014
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 3
+
+- id: dubiland-013
+  fact: "Replacement lock-recovery lane DUB-52 also hit stale checkout conflicts, so platform-level cleanup was delegated to Ops Watchdog in DUB-56."
+  category: status
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: superseded
+  superseded_by: dubiland-017
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 4
+
+- id: dubiland-014
+  fact: "SEO public-route rollout parent DUB-22 closed accepted after CMO PASS; DUB-55 tracks non-blocking canonical fallback follow-up."
+  category: milestone
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 1
+
+- id: dubiland-015
+  fact: "JSON-LD parent DUB-24 remains active with implementation done (DUB-41) and acceptance lane reopened on DUB-42 plus validator lane DUB-50."
+  category: status
+  timestamp: "2026-04-09"
+  source: "2026-04-09"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 1
+
+- id: dubiland-016
+  fact: "CEO kicked off More or Less Market parent DUB-28 and split execution into DUB-67 (Gaming), DUB-68 (CTO delivery), and DUB-69 (Content i18n/audio)."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-017
+  fact: "Lock-normalization wave 2 was opened in DUB-158, with technical ownership returned to Architect on DUB-155/DUB-152/DUB-141/DUB-85/DUB-98 and legacy duplicates DUB-105/DUB-137..DUB-140 cancelled."
+  category: status
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-018
+  fact: "Parent tagging coordination DUB-112 was load-balanced from PM to Co-Founder while PM retained DUB-1 portfolio orchestration."
+  category: relationship
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
   access_count: 1

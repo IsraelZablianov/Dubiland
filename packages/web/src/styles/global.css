@@ -24,3 +24,68 @@ button {
   cursor: pointer;
   font-family: inherit;
 }
+
+.animated-page {
+  animation: var(--motion-page-transition-in);
+  animation-delay: var(--animated-page-delay, 0ms);
+  will-change: transform, opacity;
+}
+
+.floating-element {
+  animation: var(--motion-gentle-float);
+  animation-duration: var(--floating-duration, 3200ms);
+  animation-delay: var(--floating-delay, 0ms);
+  will-change: transform;
+}
+
+.success-celebration {
+  position: relative;
+  inline-size: min(360px, 100%);
+  block-size: 56px;
+  pointer-events: none;
+}
+
+.success-celebration--dense {
+  block-size: 42px;
+}
+
+.success-celebration__spark {
+  position: absolute;
+  inset-inline-start: var(--spark-inline);
+  inset-block-start: var(--spark-top);
+  inline-size: var(--spark-size);
+  block-size: var(--spark-size);
+  border-radius: var(--radius-full);
+  background: var(--gradient-celebration-gold);
+  box-shadow: 0 0 0 3px var(--color-glow-success-soft);
+  animation: spark-pop var(--motion-duration-dramatic) var(--motion-ease-bounce) both infinite;
+  animation-delay: var(--spark-delay);
+}
+
+@keyframes spark-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.7);
+  }
+
+  35% {
+    opacity: 1;
+    transform: translateY(-6px) scale(1.05);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.86);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-element {
+    animation: none;
+  }
+
+  .success-celebration__spark {
+    animation-name: dubi-reduced-fade;
+    transform: none;
+  }
+}

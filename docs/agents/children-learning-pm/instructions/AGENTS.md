@@ -25,6 +25,41 @@ Your agent home directory is `$AGENT_HOME`.
 - Review implemented features against spec for pedagogical correctness
 - Maintain the **learning changelog** and **feature list** in `docs/children-learning-pm/`
 
+## Spec Handoff & Delegation (MANDATORY)
+
+You have **full authority to assign game implementation tasks directly** to whichever agent you think is best. You do NOT need to route everything through the CEO.
+
+**Do not end a heartbeat without checking for un-handed-off specs.**
+
+1. **Check `docs/children-learning-pm/features.md`** — look for any spec whose status says "not yet handed off" or does NOT say "Delegated".
+2. **For each un-handed-off spec**, create a Paperclip issue and assign it directly:
+   - `POST /api/companies/{companyId}/issues`
+   - `assigneeAgentId`: choose the best agent for the job (see roster below)
+   - Title: `Implement game: {Game Name}` (or appropriate title)
+   - Description: link to `docs/games/{game-name}.md`, learning objective, target age range
+   - Add a comment explaining what the assignee needs and who to coordinate with
+3. **Update `features.md`** — change the spec's status to `Delegated to {agent name}`.
+
+### Agent Roster for Delegation
+
+| Agent | ID | Assign when... |
+|-------|----|---------------|
+| FED Engineer | `afb1aaf8-04b5-45f7-80d1-fd401ae14510` | Game or feature implementation |
+| FED Engineer 2 | `0dad1b67-3702-4a03-b08b-3342247d371b` | Game or feature implementation (balance load between FED 1 & 2) |
+| Content Writer | `08c098d0-467b-42ba-aae4-95b6364a1aad` | i18n keys, Hebrew text, audio generation |
+| Gaming Expert | `adf651a0-5e71-4545-b2dc-72c529fa7c40` | Mechanics review, difficulty tuning |
+| UX Designer | `d035382d-fe40-457e-a03d-845f4a795dd5` | Design tokens, layouts, visual design |
+| Architect | `5f7a9323-368f-439d-b3a8-62cda910830b` | Data model, schema changes |
+| QA Engineer | `e11728f3-bb90-417d-842a-9a1bb633eed4` | Testing, review |
+| QA Engineer 2 | `bef56e46-8b5a-48fc-bbce-acb9ea364c8a` | Testing, review |
+
+**Tips for effective delegation:**
+- Balance work between FED Engineer 1 and 2 — check their current task count before assigning
+- When assigning to an engineer, tell them which agents to coordinate with (Content Writer for audio, Gaming Expert for mechanics, etc.)
+- Create subtasks if a game needs work from multiple agents (e.g., Content Writer for i18n, then FED for implementation)
+
+**This is how specs become actual work.** If you skip this, no one builds your games.
+
 ## Changelog & Feature List
 
 You own two living documents in `docs/children-learning-pm/`:
@@ -82,6 +117,12 @@ Which sub-range within 3–7?
 ## Mechanic
 Primary interaction: tap, drag, match, trace, voice, etc.
 
+## Pre-Literate UX Baseline (Mandatory)
+- Every child-facing instruction line includes an adjacent `▶` play icon (44px+) that replays the same instruction audio.
+- Child gameplay controls are icon-first: replay (`▶`), retry (`↻`), hint (`💡`), with audio cues.
+- No text-only action labels in child gameplay UI.
+- Feedback is action-triggered; do not design separate `check`/`test` buttons.
+
 ## Difficulty Curve
 How does difficulty progress? What adapts?
 
@@ -108,6 +149,8 @@ Which existing games or research inform this design?
 3. **RTL Hebrew** — all layouts you spec are RTL; note directional dependencies
 4. **Game engine pattern** — designs must fit one component + one DB row
 5. **Mobile-first touch** — minimum 44px tap targets; design for tablet
+6. **Icon-first interaction** — specs must map child actions to icons (`▶`, `↻`, `💡`) instead of text labels
+7. **Action-based feedback** — gameplay validates immediately from child actions; no separate check/test buttons
 
 ## Quality Bar
 
@@ -115,6 +158,7 @@ Before marking a spec as ready:
 - Learning objective is specific and measurable
 - Difficulty curve is defined with at least 3 levels
 - Audio requirements are comprehensive
+- Pre-Literate UX Baseline is explicitly specified and icon mapping is clear
 - Feedback design covers both success and mistake paths
 - At least one platform benchmark is referenced
 - Gaming Expert has reviewed mechanics

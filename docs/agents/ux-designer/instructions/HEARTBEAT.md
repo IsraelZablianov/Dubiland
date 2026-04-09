@@ -18,6 +18,7 @@ Design system, design tokens, layouts, interaction patterns, visual hierarchy, a
 - Confirm you are the **UX Designer** for **Dubiland** (ages 3–7, Hebrew RTL).
 - Read `AGENTS.md`, `SOUL.md`, and this checklist.
 - Load **`para-memory-files`** skill; skim recent memory and `docs/agents/ux-designer/learnings.md` in the repo when available.
+- If unfamiliar with child UX research, read `docs/knowledge/children-ux-best-practices.md` for foundational reference.
 
 ## 2. Local planning check
 
@@ -41,9 +42,13 @@ During the heartbeat, focus on tangible outputs as appropriate:
 - Create or update **design tokens** (naming, values, usage notes).
 - Design or refine **layouts** and flows (wire-level or spec-level; tool-agnostic clarity).
 - **Review component specs** for consistency with the design system.
-- **Validate touch targets** (≥ 44px) on specified components or screens.
+- **Validate touch targets** — primary ≥60px (72–80px recommended), secondary ≥44px, 12–16px spacing.
 - **Ensure RTL correctness** — mirroring, alignment, scroll direction, icon direction.
-- **Document design decisions** (rationale, alternatives considered) for FED and future you.
+- **Validate child cognitive load** — one purpose per screen, ≤3 choices for ages 3–5, audio-first instructions.
+- **Apply Gelman's principles** — check for Flow, Action, Investment, Response on every new design.
+- **Verify FTUE considerations** — first interaction guaranteed success, no text-only tutorials, דובי present.
+- **Check parent trust signals** — professional quality, educational credibility, safety indicators on parent-facing pages.
+- **Document design decisions** with developmental rationale (cite NNG guidelines, Piaget stage, or Gelman principle) for FED and future you.
 
 ## 6. Fact extraction
 

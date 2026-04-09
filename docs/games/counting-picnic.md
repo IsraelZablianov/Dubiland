@@ -18,13 +18,28 @@
   1. Audio prompt asks for a quantity (for example, "Put 4 apples in the basket" via i18n key + narration).
   2. Child drags items from a right-side source tray (RTL-first layout) into a center basket.
   3. Each drop snaps with visual count feedback (dots + spoken count).
-  4. Game auto-validates when target count is reached or child taps a 44px+ `check` button.
+  4. Game auto-validates on each drop and resolves the round immediately when the target count is reached.
 - Engine fit:
   - One DB row in `games` table (slug: `countingPicnic`, `game_type: drag_drop`).
   - One component: `CountingPicnicGame`.
 - Mobile/RTL requirements:
   - Minimum touch targets: 44px.
   - Source tray starts on the right side; progress and helper UI are right-aligned.
+
+## Pre-Literate UX Baseline (Mandatory)
+- Every instruction text shown to the child must include an adjacent `▶` play icon (minimum 44px) that replays the exact instruction audio.
+- Child-facing controls are icon-first, not text-first. Use persistent icons for replay (`▶`), retry (`↻`), hint (`💡`), and next (`→`).
+- Text labels may appear only as supporting parent/teacher UI; gameplay controls for children must remain understandable via icon + audio alone.
+- Feedback and validation are action-based: the game responds immediately to taps, drags, traces, or spoken input and never requires a separate `check` or `test` button.
+- Icon taps trigger short narrated cues from i18n/audio keys so pre-readers can learn each icon meaning by sound.
+
+## Icon Inventory (Mandatory)
+| Action | Icon | Audio on tap | Immediate feedback |
+|---|---|---|---|
+| Replay instruction | `▶` | Replays active `games.countingPicnic.instructions.*` clip | Prompt pulse + current target highlight. |
+| Retry round | `↻` | Plays `feedback.encouragement.*`, then replays current prompt | Soft round reset with same target quantity. |
+| Hint | `💡` | Plays next scaffold cue from `games.countingPicnic.hints.*` | Highlights the next valid object/count step. |
+| Next / continue | `→` | Plays `games.countingPicnic.roundComplete.*` cue | Transitions into the next round after micro-celebration. |
 
 ## Difficulty Curve
 - Level 1 (Starter): targets 1-3, single object type, no distractors, full audio counting on every drop.

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Avatar, Button, Card, useTheme } from '@/components/design-system';
+import { Avatar, Button, Card } from '@/components/design-system';
 import {
   getActiveChildProfile,
   setActiveChildProfile,
@@ -15,14 +15,13 @@ function cardIsSelected(selectedId: string | null, profileId: string) {
 export default function ProfilePicker() {
   const { t } = useTranslation('common');
   const navigate = useNavigate();
-  const { themeConfig } = useTheme();
 
   const profiles = useMemo<ActiveChildProfile[]>(
     () => [
       { id: 'guest', name: t('profile.guestName'), emoji: '🧒' },
-      { id: 'maya', name: 'Maya', emoji: '🦊' },
-      { id: 'noam', name: 'Noam', emoji: '🐯' },
-      { id: 'liel', name: 'Liel', emoji: '🐼' },
+      { id: 'maya', name: t('profile.defaultNames.maya'), emoji: '🦊' },
+      { id: 'noam', name: t('profile.defaultNames.noam'), emoji: '🐯' },
+      { id: 'liel', name: t('profile.defaultNames.liel'), emoji: '🐼' },
     ],
     [t],
   );
@@ -41,7 +40,7 @@ export default function ProfilePicker() {
   return (
     <main
       style={{
-        minHeight: '100vh',
+        flex: 1,
         background: 'var(--color-theme-bg)',
         padding: 'var(--space-xl)',
         display: 'flex',
@@ -49,41 +48,19 @@ export default function ProfilePicker() {
       }}
     >
       <section style={{ width: 'min(960px, 100%)', display: 'grid', gap: 'var(--space-lg)' }}>
-        <header
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: 'var(--space-md)',
-            flexWrap: 'wrap',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-md)' }}>
-            <span style={{ fontSize: 'var(--font-size-3xl)' }}>{themeConfig.mascotEmoji}</span>
-            <div style={{ display: 'grid', gap: 'var(--space-xs)' }}>
-              <h1
-                style={{
-                  fontSize: 'var(--font-size-2xl)',
-                  fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
-                  color: 'var(--color-text-primary)',
-                }}
-              >
-                {t('profile.whoPlaysToday')}
-              </h1>
-              <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-md)' }}>
-                {t('profile.subtitle')}
-              </p>
-            </div>
-          </div>
-
-          <Button
-            variant="secondary"
-            size="md"
-            onClick={() => navigate('/parent')}
-            aria-label={t('nav.parentArea')}
+        <header style={{ display: 'grid', gap: 'var(--space-xs)' }}>
+          <h1
+            style={{
+              fontSize: 'var(--font-size-2xl)',
+              fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
+              color: 'var(--color-text-primary)',
+            }}
           >
-            {t('nav.parentArea')}
-          </Button>
+            {t('profile.whoPlaysToday')}
+          </h1>
+          <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-md)' }}>
+            {t('profile.subtitle')}
+          </p>
         </header>
 
         <div

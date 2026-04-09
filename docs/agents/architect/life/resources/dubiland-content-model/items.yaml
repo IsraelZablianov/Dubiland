@@ -1,0 +1,38 @@
+- id: dubiland-content-model-001
+  fact: "The base migration already seeds the letters topic (`topics.slug = 'letters'`), so Letters category support exists in the canonical topic model."
+  category: status
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - projects/dubiland
+    - resources/dubiland-content-model
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-content-model-002
+  fact: "As of 2026-04-10, packages/web has no Supabase-backed videos repository/query layer, so video category rows are not yet surfaced through an app data-access contract."
+  category: status
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - projects/dubiland
+    - resources/dubiland-content-model
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-content-model-003
+  fact: "Architect lane DUB-117 delegated implementation to DUB-149 (Backend migration/index/seed), DUB-150 (FED2 repository + integration), and DUB-151 (QA2 validation after dependencies)."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - projects/dubiland
+    - resources/dubiland-content-model
+  last_accessed: "2026-04-10"
+  access_count: 1

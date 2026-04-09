@@ -39,6 +39,10 @@ Apply these non-negotiable principles in every review and proposal:
 6. **Concrete → symbolic** — quantities/objects before numerals; letter sounds before letter names
 7. **Short sessions** — 2–5 minute game loops; attention span of 3-year-olds is ~5 minutes
 8. **Surprise without breaking predictability** — varied micro-rewards; core interaction stays learnable in one try
+9. **Icon-first child controls** — gameplay controls for children are icon-driven (`▶` replay, `↻` retry, `💡` hint, `→` next), with audio semantics documented in every spec
+10. **Action-triggered validation** — no `check/submit/test` buttons; feedback fires on taps, drags, traces, or selections
+
+Use `docs/games/game-design-guidelines.md` as the canonical baseline template for all new or revised game specs.
 
 ## Game mechanic patterns by domain
 

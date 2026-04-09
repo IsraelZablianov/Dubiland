@@ -33,6 +33,20 @@ For each change under review:
 
 Deliver **specific, actionable feedback**. **Approve** or **request changes** explicitly — no ambiguous "maybe fix later."
 
+### Mandatory game review gate (blocking)
+
+For every game PR/review, run this checklist and treat any failure as **request changes**:
+
+- [ ] **Zero text-only instructions** — every visible child-facing instruction has a play (`▶`) icon.
+- [ ] **Zero text-only buttons** — child-facing controls are icon-driven (arrow/retry/hint/check/speaker patterns).
+- [ ] **Zero Check/Submit buttons** — feedback is action-based from tap/drag/selection.
+- [ ] **Audio files exist** — each shown child-facing i18n key has a matching audio asset or approved generation path.
+- [ ] **Icon tap targets >= 44px** — every icon control is at least 44px.
+- [ ] **Instruction audio auto-plays** — when an instruction appears, audio starts automatically.
+- [ ] **Replay icon present** — child can tap play (`▶`) to hear the current instruction again.
+
+If any item fails, reject/request changes explicitly and do not approve the review.
+
 ## 6. Fact extraction
 
 Capture durable facts (recurring gaps, tooling notes, definition of done for QA) via **`para-memory-files`**. Append notable learnings to **`docs/agents/qa-engineer-2/learnings.md`** when useful to you or others.

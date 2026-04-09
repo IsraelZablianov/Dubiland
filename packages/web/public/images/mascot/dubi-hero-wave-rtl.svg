@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="dubiBody" x1="116" y1="108" x2="392" y2="420" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d79f6f" />
+      <stop offset="1" stop-color="#b57245" />
+    </linearGradient>
+    <linearGradient id="dubiMuzzle" x1="212" y1="228" x2="304" y2="320" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f8e0c5" />
+      <stop offset="1" stop-color="#f2cfa8" />
+    </linearGradient>
+    <linearGradient id="dubiBackpack" x1="278" y1="256" x2="366" y2="370" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#8fd5ff" />
+      <stop offset="1" stop-color="#3d88d1" />
+    </linearGradient>
+  </defs>
+
+  <ellipse cx="258" cy="466" rx="132" ry="30" fill="#f4d8bc" opacity="0.5" />
+
+  <circle cx="182" cy="172" r="48" fill="url(#dubiBody)" />
+  <circle cx="328" cy="172" r="48" fill="url(#dubiBody)" />
+  <circle cx="182" cy="172" r="24" fill="#8a5736" opacity="0.45" />
+  <circle cx="328" cy="172" r="24" fill="#8a5736" opacity="0.45" />
+
+  <ellipse cx="256" cy="324" rx="132" ry="124" fill="url(#dubiBody)" />
+  <ellipse cx="208" cy="346" rx="44" ry="58" fill="#a4683d" opacity="0.45" />
+  <ellipse cx="304" cy="346" rx="44" ry="58" fill="#a4683d" opacity="0.45" />
+
+  <ellipse cx="354" cy="308" rx="36" ry="70" fill="url(#dubiBackpack)" />
+  <ellipse cx="338" cy="308" rx="18" ry="58" fill="#5ca6e9" />
+  <rect x="312" y="292" width="44" height="8" rx="4" fill="#2f73ba" opacity="0.6" />
+  <rect x="312" y="316" width="44" height="8" rx="4" fill="#2f73ba" opacity="0.6" />
+
+  <ellipse cx="170" cy="312" rx="30" ry="58" fill="url(#dubiBody)" />
+  <ellipse cx="170" cy="360" rx="30" ry="24" fill="#f6ddb9" />
+  <ellipse cx="348" cy="232" rx="30" ry="66" transform="rotate(-28 348 232)" fill="url(#dubiBody)" />
+  <ellipse cx="392" cy="154" rx="30" ry="24" fill="#f6ddb9" transform="rotate(-12 392 154)" />
+  <path d="M383 116C406 104 426 104 446 118" stroke="#b57245" stroke-width="10" stroke-linecap="round" />
+
+  <circle cx="256" cy="222" r="96" fill="url(#dubiBody)" />
+  <ellipse cx="256" cy="266" rx="64" ry="54" fill="url(#dubiMuzzle)" />
+  <ellipse cx="220" cy="266" rx="22" ry="18" fill="#f7c2b7" />
+  <ellipse cx="292" cy="266" rx="22" ry="18" fill="#f7c2b7" />
+  <ellipse cx="220" cy="220" rx="10" ry="14" fill="#2f2218" />
+  <ellipse cx="292" cy="220" rx="10" ry="14" fill="#2f2218" />
+  <ellipse cx="218" cy="216" rx="3" ry="4" fill="#ffffff" />
+  <ellipse cx="290" cy="216" rx="3" ry="4" fill="#ffffff" />
+  <ellipse cx="256" cy="248" rx="14" ry="10" fill="#513a2b" />
+  <path d="M243 270C250 282 262 282 269 270" stroke="#513a2b" stroke-width="8" stroke-linecap="round" />
+  <path d="M226 198C232 188 242 184 252 186" stroke="#8a5736" stroke-width="8" stroke-linecap="round" />
+  <path d="M260 186C270 184 280 188 286 198" stroke="#8a5736" stroke-width="8" stroke-linecap="round" />
+
+  <path d="M108 112C124 98 142 92 164 94" stroke="#f7c861" stroke-width="8" stroke-linecap="round" />
+  <path d="M128 74L136 92" stroke="#f7c861" stroke-width="8" stroke-linecap="round" />
+  <path d="M154 70L158 92" stroke="#f7c861" stroke-width="8" stroke-linecap="round" />
+</svg>

@@ -1,6 +1,6 @@
 # Dubiland Schema + GEO Plan (Q2 2026)
 
-*Owner: SEO Expert | Reviewer: CMO | Last updated: 2026-04-09*
+*Owner: SEO Expert | Reviewer: CMO | Last updated: 2026-04-10*
 
 ## Objective
 
@@ -19,17 +19,17 @@ Ship implementation-ready structured data and GEO extraction standards for Dubil
 |------|--------|-------------|-------|--------|-----------------|--------------|
 | Phase 0 | Q2 week 1 | Root crawl assets and initial `llms.txt` baseline | FED Engineer 2 | In progress | `curl` 200 + correct MIME + crawl file accessibility | [DUB-15](/DUB/issues/DUB-15) |
 | Phase 1 | Q2 week 2 | Route policy + canonical/noindex readiness for public vs app routes | Architect + FED Engineer | In progress | Route policy matches metadata behavior in browser inspection | [DUB-16](/DUB/issues/DUB-16), [DUB-17](/DUB/issues/DUB-17) |
-| Phase 2 | Q2 week 2-3 | P1 JSON-LD foundation: `Organization`, `WebApplication`, `BreadcrumbList`, `FAQPage` | FED Engineer | Todo | Rich Results + Schema Validator pass with no critical errors | [DUB-24](/DUB/issues/DUB-24) |
+| Phase 2 | Q2 week 2-3 | P1 JSON-LD foundation: `Organization`, `WebApplication`, `BreadcrumbList`, `FAQPage` | FED Engineer | In progress | Rich Results + Schema Validator pass with no critical errors | [DUB-24](/DUB/issues/DUB-24) |
 | Phase 3 | Q2 week 3-4 | P2 schema expansion: `Article/BlogPosting`, `LearningResource/Course`, optional `HowTo` | SEO Expert + FED Engineer | Planned | Syntax valid and page intent alignment confirmed | Follow-up under [DUB-12](/DUB/issues/DUB-12) |
 
 ## Schema Rollout Matrix
 
 | Schema Type | Target pages | Priority | Owner | Status | Validation method | Linked engineering task |
 |-------------|--------------|----------|-------|--------|-------------------|-------------------------|
-| `Organization` | Global parent-facing surface | P1 | FED Engineer | Todo | Schema Validator + page-source JSON-LD check | [DUB-24](/DUB/issues/DUB-24) |
-| `WebApplication` | Public product landing surfaces (`/`, topic pillars) | P1 | FED Engineer | Todo | Schema Validator + Rich Results smoke test | [DUB-24](/DUB/issues/DUB-24) |
-| `BreadcrumbList` | Hierarchy pages (`/letters`, `/numbers`, `/reading`, `/parents`, `/parents/faq`) | P1 | FED Engineer | Todo | Schema Validator + URL breadcrumb correctness | [DUB-24](/DUB/issues/DUB-24) |
-| `FAQPage` | `/parents/faq` and approved FAQ modules only | P1 | FED Engineer + Content Writer | Todo | Rich Results Test + FAQ content accuracy QA | [DUB-24](/DUB/issues/DUB-24) |
+| `Organization` | Global parent-facing surface | P1 | FED Engineer | In progress | Schema Validator + page-source JSON-LD check | [DUB-24](/DUB/issues/DUB-24) |
+| `WebApplication` | Public product landing surfaces (`/`, topic pillars) | P1 | FED Engineer | In progress | Schema Validator + Rich Results smoke test | [DUB-24](/DUB/issues/DUB-24) |
+| `BreadcrumbList` | Hierarchy pages (`/letters`, `/numbers`, `/reading`, `/parents`, `/parents/faq`) | P1 | FED Engineer | In progress | Schema Validator + URL breadcrumb correctness | [DUB-24](/DUB/issues/DUB-24) |
+| `FAQPage` | `/parents/faq` and approved FAQ modules only | P1 | FED Engineer + Content Writer | In progress | Rich Results Test + FAQ content accuracy QA | [DUB-24](/DUB/issues/DUB-24) |
 | `Article` / `BlogPosting` | Blog pages (`/blog/:slug`) | P2 | FED Engineer | Planned | Rich Results + publish/modified date validation | Follow-up under [DUB-12](/DUB/issues/DUB-12) |
 | `LearningResource` / `Course` | Topic pillar and curriculum surfaces | P2 | SEO Expert + FED Engineer | Planned | Schema Validator + educational metadata completeness | Follow-up under [DUB-12](/DUB/issues/DUB-12) |
 
@@ -138,7 +138,46 @@ Rules:
 | Crawl assets + baseline `llms.txt` publication | FED Engineer 2 | In progress | [DUB-15](/DUB/issues/DUB-15) |
 | Public route/indexation architecture | Architect | In progress | [DUB-16](/DUB/issues/DUB-16) |
 | Canonical/hreflang metadata framework | FED Engineer | In progress | [DUB-17](/DUB/issues/DUB-17) |
-| JSON-LD foundation implementation | FED Engineer | Todo | [DUB-24](/DUB/issues/DUB-24) |
+| JSON-LD foundation implementation | FED Engineer | In progress | [DUB-24](/DUB/issues/DUB-24) |
+
+### 2026-04-09 Execution Notes ([DUB-45](/DUB/issues/DUB-45))
+
+- Implemented reusable JSON-LD builders and validation checks in `packages/web/src/seo/jsonLd.ts` for:
+  - `Organization`
+  - `WebApplication`
+  - `BreadcrumbList`
+  - `FAQPage`
+- Wired JSON-LD emission into `packages/web/src/seo/RouteMetadataManager.tsx` with route-policy gating (emit only when route is `public indexable`) and managed `<script type="application/ld+json">` tags in `<head>`.
+- Extended route policy and public route coverage in:
+  - `packages/web/src/seo/routeMetadata.ts`
+  - `packages/web/src/App.tsx`
+- Current route coverage:
+  - `Organization`: all indexable public routes (`/`, `/about`, `/parents`, `/parents/faq`, `/letters`, `/numbers`, `/reading`)
+  - `WebApplication`: `/`, `/letters`, `/numbers`, `/reading`
+  - `BreadcrumbList`: `/parents`, `/parents/faq`, `/letters`, `/numbers`, `/reading`
+  - `FAQPage`: `/parents/faq` (questions/answers sourced from `public` i18n keys)
+
+### 2026-04-10 Validation Notes ([DUB-50](/DUB/issues/DUB-50))
+
+- Local validation completed against implementation from [DUB-45](/DUB/issues/DUB-45):
+  - `yarn typecheck` passed.
+  - Route/schema matrix passed for representative public and non-indexable routes (`/`, `/about`, `/parents`, `/parents/faq`, `/letters`, `/numbers`, `/reading`, `/login`, `/profiles`, `/home`, `/parent`, unknown route), with schema artifacts stored under `/tmp/dubiland-schema/`.
+  - Schema syntax checks passed using `structured-data-testing-tool` (`Schema.org` checks) on generated route artifacts for `/`, `/letters`, `/parents/faq`.
+  - Google structured-data preset checks (Rich Results proxy) passed with 0 warnings/0 failures for `/`, `/letters`, `/parents/faq`.
+- Canonical + language contract check passed in implementation:
+  - Canonical origin is derived from `VITE_SITE_URL` in `RouteMetadataManager`.
+  - `Organization` and `WebApplication` payloads emit `inLanguage: he-IL`.
+- External blocker for final URL-based validator run:
+  - Official live URL checks (`search.google.com/test/rich-results`, `validator.schema.org`) require a publicly reachable preview URL not currently available in this heartbeat.
+  - Follow-up task created: [DUB-66](/DUB/issues/DUB-66) (owner: FED Engineer) to provide public preview URL and route accessibility for final acceptance validation.
+
+### 2026-04-10 FED Route-Coverage Checks ([DUB-24](/DUB/issues/DUB-24))
+
+- Strengthened route-level JSON-LD smoke checks in `packages/web/src/seo/jsonLd.ts`:
+  - Added expected schema-set assertions for `landing`, `about`, `letters`, `parentsFaq`, and non-indexable `login`.
+  - Added indexability gating to `buildJsonLdScripts` (`indexable=false` or missing canonical path emits no schema).
+  - Kept payload-level validation + JSON serialization checks for each emitted script.
+- Wired explicit `indexable` input from `packages/web/src/seo/RouteMetadataManager.tsx` into JSON-LD builder options.
 
 ## Completion Criteria for DUB-12
 

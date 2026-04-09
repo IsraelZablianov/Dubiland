@@ -62,11 +62,23 @@ You own **quality**, **testing**, **code review**, **accessibility**, and **RTL 
 |------|-------------|
 | **i18n** | All user-facing copy via i18n; no stray literals |
 | **audio** | Every string has audio asset or generation path |
+| **audio-first game UX** | Instruction audio auto-plays and replay play icon is always available |
+| **icon-first game controls** | No text-only child-facing instructions/buttons; no Check/Submit button flows |
 | **RTL** | Layout, alignment, icons, flows correct for RTL Hebrew |
 | **accessibility** | axe-core clean + manual keyboard/touch check |
 | **touch targets** | ≥44px on interactive controls |
 | **theme** | UI respects theme/context; no hardcoded visuals |
 | **typecheck** | `yarn typecheck` passes |
+
+### Mandatory game review blockers
+
+In every game review, request changes immediately if any of the following is present:
+
+- Child-facing text shown without a visible replay play icon (`▶`)
+- Text-only child-facing buttons (without a clear icon affordance)
+- Check/Submit-style confirmation buttons instead of action-based feedback
+- Missing instruction auto-play behavior on new instruction appearance
+- Child-facing icon controls smaller than 44px
 
 ## Accessibility for Kids (beyond standard WCAG)
 

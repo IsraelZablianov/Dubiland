@@ -80,19 +80,24 @@ PAPERCLIP_WAKE_REASON (optional), PAPERCLIP_WAKE_COMMENT_ID (optional)
 
 | Agent | Interval | Responsibility |
 |---|---|---|
-| PM | 20min | Product roadmap, feature specs, game ideas. Writes to `docs/games/`. |
-| Children Learning PM | 20min | Expert PM for children's edtech. Game specs, learning objectives, platform benchmarks (TinyTap, Khan Kids, etc.). |
-| Architect | 30min | System design, data models, schema changes. Writes to `docs/architecture/`. |
-| FED Engineer | 20min | Builds UI, games, components. Implements specs. |
-| FED Engineer 2 | 20min | Builds UI, games, components. Implements specs. (Second frontend engineer.) |
-| UX Designer | 45min | Design system, child-friendly layouts, design tokens. |
-| Gaming Expert | 45min | Game mechanics, difficulty, engagement for ages 3-7. |
-| Content Writer | 30min | Hebrew text, audio scripts. Runs `yarn generate-audio`. |
-| Media Expert | 60min | Remotion video compositions. |
-| QA Engineer | 20min | Code review, testing, accessibility, RTL validation. |
-| QA Engineer 2 | 20min | Code review, testing, accessibility, RTL validation. (Second QA.) |
-| Performance Expert | 60min | Bundle size, animations, Lighthouse. |
-| SEO Expert | 45min | Technical SEO, GEO, structured data, keyword research, organic growth. Reports to CMO. |
+| PM | 10min | Product roadmap, feature specs, game ideas. Writes to `docs/games/`. Co-leads with Co-Founder. |
+| Co-Founder | 10min | Shares CEO duties with PM. Same authority, delegation rules, and direct reports. Splits tasks by expertise or load. |
+| Children Learning PM | 10min | Expert PM for children's edtech. Game specs, learning objectives, platform benchmarks (TinyTap, Khan Kids, etc.). |
+| Architect | 10min | System design, data models, schema changes. Writes to `docs/architecture/`. |
+| FED Engineer | 10min | Builds UI, games, components. Implements specs. |
+| FED Engineer 2 | 10min | Builds UI, games, components. Implements specs. (Second frontend engineer.) |
+| UX Designer | 10min | Design system, child-friendly layouts, design tokens. |
+| Gaming Expert | 10min | Game mechanics, difficulty, engagement for ages 3-7. |
+| Content Writer | 10min | Hebrew text, audio scripts. Runs `yarn generate-audio`. |
+| Media Expert | 10min | Remotion video compositions. |
+| QA Engineer | 10min | Code review, testing, accessibility, RTL validation. |
+| QA Engineer 2 | 10min | Code review, testing, accessibility, RTL validation. (Second QA.) |
+| Performance Expert | 10min | Bundle size, animations, Lighthouse. |
+| Backend Engineer | 10min | Database modeling, Supabase configuration, Edge Functions, external API integrations. |
+| SEO Expert | 10min | Technical SEO, GEO, structured data, keyword research, organic growth. Reports to CMO. |
+| CMO | 10min | Marketing strategy, growth, coordinates SEO Expert and content marketing. |
+| UX QA Reviewer | 30min | Visual inspection of running application. Reviews every page for proportions, consistency, layout bugs, responsive quality, and professional polish. Uses browser tools. |
+| Ops Watchdog | 35min | Monitors agent health, detects stuck/crashed agents, alerts on operational issues. |
 
 ## 7. Agent Instructions (External Mode)
 

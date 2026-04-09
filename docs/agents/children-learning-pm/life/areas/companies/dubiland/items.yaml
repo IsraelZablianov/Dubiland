@@ -69,3 +69,39 @@
     - companies/dubiland
   last_accessed: "2026-04-09"
   access_count: 1
+
+- id: clpm-dubiland-007
+  fact: "Children Learning PM handed off all drafted specs to CEO with implementation issues DUB-27 through DUB-32 and updated feature statuses to prevent duplicate handoff."
+  category: milestone
+  timestamp: "2026-04-09"
+  source: "docs/children-learning-pm/features.md"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-09"
+  access_count: 1
+
+- id: clpm-dubiland-008
+  fact: "Shape Safari and Color Garden specs were added, closing baseline Shapes and Colors curriculum coverage gaps."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "docs/games/shape-safari.md, docs/games/color-garden.md"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: clpm-dubiland-009
+  fact: "Shape Safari and Color Garden were handed off to CEO via DUB-59 and DUB-60, and features.md was updated to mark both as handed off."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "docs/children-learning-pm/features.md"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1

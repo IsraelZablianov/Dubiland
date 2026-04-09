@@ -26,6 +26,21 @@
   - Choice cards are minimum 44px and arranged right-to-left.
   - Prompt and helper chips are right-aligned.
 
+## Pre-Literate UX Baseline (Mandatory)
+- Every instruction text shown to the child must include an adjacent `▶` play icon (minimum 44px) that replays the exact instruction audio.
+- Child-facing controls are icon-first, not text-first. Use persistent icons for replay (`▶`), retry (`↻`), hint (`💡`), and next (`→`).
+- Text labels may appear only as supporting parent/teacher UI; gameplay controls for children must remain understandable via icon + audio alone.
+- Feedback and validation are action-based: the game responds immediately to taps, drags, traces, or spoken input and never requires a separate `check` or `test` button.
+- Icon taps trigger short narrated cues from i18n/audio keys so pre-readers can learn each icon meaning by sound.
+
+## Icon Inventory (Mandatory)
+| Action | Icon | Audio on tap | Immediate feedback |
+|---|---|---|---|
+| Replay instruction | `▶` | Replays active `games.moreOrLessMarket.instructions.*` clip | Prompt chip pulse + active comparison focus glow. |
+| Retry round | `↻` | Plays `feedback.encouragement.*`, then current prompt replay | Resets current comparison with reduced load. |
+| Hint | `💡` | Plays next support cue from `games.moreOrLessMarket.hints.*` | Starts recount/highlight scaffold for the same concept. |
+| Next / continue | `→` | Plays short success transition from `feedback.success.*` | Advances directly to next comparison round. |
+
 ## Difficulty Curve
 - Level 1 (Starter Compare):
   - Visual sets 1-6, difference of at least 2.
@@ -50,7 +65,7 @@
   - Praise line from rotating `feedback.success.*` key set.
   - Progress bead fills after each successful round.
 - Mistake path:
-  - Gentle "let's check together" narration, no failure cues.
+  - Gentle "let's count together" narration, no failure cues.
   - Optional visual recount animation that highlights each item in sequence.
   - Child retries immediately with the same concept and reduced cognitive load.
 - Encouragement pattern:

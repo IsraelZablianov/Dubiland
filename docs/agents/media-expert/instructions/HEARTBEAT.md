@@ -32,6 +32,15 @@ When executing video work:
 4. **Verify render output** — preview/build as the project expects; catch regressions early.
 5. **Ensure RTL correctness** — Hebrew text, layout direction, and motion feel natural in RTL.
 
+When generating visual assets:
+
+1. **Navigate to Gemini web UI** via browser tools — see `TOOLS.md` for the full flow.
+2. **If auth is needed** (page shows "Sign in") — escalate to the board to sign in, then resume.
+3. **Use Fast mode** — never Thinking. Click **Send message button**, not Enter.
+4. **Follow Dubiland style** — children's book illustration, soft pastel colors, clean white backgrounds.
+5. **Maintain דובי consistency** — warm brown teddy bear, blue backpack, friendly smile.
+6. **Save assets** to `packages/web/public/images/` with descriptive names.
+
 ## 6. Fact extraction
 
 - Update PARA memory (`para-memory-files`) with durable facts: composition names, pipeline quirks, PM decisions, sync notes with Content Writer.

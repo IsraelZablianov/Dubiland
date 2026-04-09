@@ -1,7 +1,16 @@
-# Dubiland crawl policy baseline (2026-04-09)
+# Dubiland crawl policy
 
 User-agent: *
 Allow: /
+Allow: /letters
+Allow: /numbers
+Allow: /reading
+Allow: /parents
+Allow: /parents/faq
+Disallow: /home
+Disallow: /profiles
+Disallow: /parent
+Disallow: /login
 
 User-agent: Googlebot
 Allow: /
@@ -24,4 +33,4 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
-Sitemap: https://dubiland.example/sitemap.xml
+Sitemap: https://dubiland.co.il/sitemap.xml

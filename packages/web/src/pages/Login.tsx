@@ -13,9 +13,9 @@ export default function Login() {
   const { themeConfig } = useTheme();
   const { user, signInWithGoogle, signInWithEmail, signUp } = useAuth();
 
+  const [showEmailForm, setShowEmailForm] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [pin, setPin] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
   const [error, setError] = useState('');
 
@@ -66,134 +66,148 @@ export default function Login() {
     }
   };
 
-  const handlePinSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setError('');
-
-    if (pin.trim().length < 4) {
-      setError(t('common:errors.generic'));
-      return;
-    }
-
-    handleGuestContinue();
+  const inputStyle: React.CSSProperties = {
+    minHeight: 'var(--touch-min)',
+    borderRadius: 'var(--radius-md)',
+    border: '2px solid var(--color-bg-secondary)',
+    padding: '0 var(--space-md)',
+    fontSize: 'var(--font-size-md)',
+    fontFamily: 'var(--font-family-primary)',
+    outline: 'none',
+    transition: 'var(--transition-fast)',
   };
 
   return (
-    <main
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 'var(--space-xl)',
-        background: 'var(--color-theme-bg)',
-      }}
-    >
-      <Card
-        padding="lg"
-        style={{
-          width: 'min(440px, 100%)',
-          display: 'grid',
-          gap: 'var(--space-md)',
-          border: '2px solid var(--color-bg-secondary)',
-        }}
-      >
-        <header style={{ display: 'grid', gap: 'var(--space-xs)', textAlign: 'center' }}>
-          <p style={{ fontSize: 'var(--font-size-3xl)' }}>{themeConfig.mascotEmoji}</p>
-          <h1
-            style={{
-              fontSize: 'var(--font-size-2xl)',
-              color: 'var(--color-text-primary)',
-              fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
-            }}
-          >
-            {t('onboarding:welcome')}
-          </h1>
-          <p style={{ color: 'var(--color-text-secondary)' }}>{t('onboarding:subtitle')}</p>
-        </header>
+    <div className="login-page">
+      <div className="login-page__content">
+        <Card
+          padding="lg"
+          style={{
+            width: 'min(440px, 100%)',
+            display: 'grid',
+            gap: 'var(--space-lg)',
+            border: '2px solid var(--color-bg-secondary)',
+          }}
+        >
+          {/* Welcome header */}
+          <header style={{ display: 'grid', gap: 'var(--space-sm)', textAlign: 'center' }}>
+            <p style={{ fontSize: '3.5rem' }}>{themeConfig.mascotEmoji}</p>
+            <h1
+              style={{
+                fontSize: 'var(--font-size-2xl)',
+                color: 'var(--color-text-primary)',
+                fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
+              }}
+            >
+              {t('onboarding:welcome')}
+            </h1>
+            <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-md)' }}>
+              {t('onboarding:subtitle')}
+            </p>
+          </header>
 
-        <form onSubmit={handlePinSubmit} style={{ display: 'grid', gap: 'var(--space-sm)' }}>
-          <input
-            value={pin}
-            onChange={(event) => setPin(event.target.value.replace(/\D/g, '').slice(0, 4))}
-            inputMode="numeric"
-            type="password"
-            placeholder={t('onboarding:passwordPlaceholder')}
-            aria-label={t('onboarding:passwordLabel')}
-            style={{
-              minHeight: 'var(--touch-min)',
-              borderRadius: 'var(--radius-md)',
-              border: '2px solid var(--color-bg-secondary)',
-              padding: '0 var(--space-md)',
-              fontSize: 'var(--font-size-lg)',
-              fontFamily: 'var(--font-family-primary)',
-              textAlign: 'center',
-              letterSpacing: '0.4rem',
-            }}
-          />
-
-          <Button variant="primary" size="lg" type="submit" disabled={pin.trim().length < 4}>
+          {/* Primary CTA — try for free (guest mode) */}
+          <Button variant="primary" size="lg" onClick={handleGuestContinue} style={{ width: '100%' }}>
             {t('onboarding:continueAsGuest')}
           </Button>
-        </form>
 
-        <Button variant="secondary" size="lg" type="button" onClick={handleGoogleSignIn}>
-          {t('onboarding:loginWithGoogle')}
-        </Button>
+          {/* Divider */}
+          <div className="login-page__divider">
+            <span>{t('onboarding:orSignIn')}</span>
+          </div>
 
-        <form onSubmit={handleEmailSubmit} style={{ display: 'grid', gap: 'var(--space-sm)' }}>
-          <input
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            placeholder={t('onboarding:emailPlaceholder')}
-            aria-label={t('onboarding:emailLabel')}
-            autoComplete="email"
-            style={{
-              minHeight: 'var(--touch-min)',
-              borderRadius: 'var(--radius-md)',
-              border: '2px solid var(--color-bg-secondary)',
-              padding: '0 var(--space-md)',
-              fontSize: 'var(--font-size-md)',
-              fontFamily: 'var(--font-family-primary)',
-            }}
-          />
-          <input
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            placeholder={t('onboarding:passwordPlaceholder')}
-            aria-label={t('onboarding:passwordLabel')}
-            autoComplete={isSignUp ? 'new-password' : 'current-password'}
-            style={{
-              minHeight: 'var(--touch-min)',
-              borderRadius: 'var(--radius-md)',
-              border: '2px solid var(--color-bg-secondary)',
-              padding: '0 var(--space-md)',
-              fontSize: 'var(--font-size-md)',
-              fontFamily: 'var(--font-family-primary)',
-            }}
-          />
-
-          <Button variant="secondary" size="lg" type="submit" disabled={!canUseHostedAuth}>
-            {isSignUp ? t('onboarding:createAccount') : t('onboarding:loginWithEmail')}
+          {/* Google sign in */}
+          <Button variant="secondary" size="lg" type="button" onClick={handleGoogleSignIn} style={{ width: '100%' }}>
+            {t('onboarding:loginWithGoogle')}
           </Button>
 
-          <Button
-            variant="ghost"
-            size="md"
-            type="button"
-            onClick={() => setIsSignUp((current) => !current)}
-            disabled={!canUseHostedAuth}
-          >
-            {isSignUp ? t('onboarding:switchToSignIn') : t('onboarding:switchToSignUp')}
-          </Button>
-        </form>
+          {/* Email toggle */}
+          {!showEmailForm ? (
+            <Button
+              variant="ghost"
+              size="md"
+              type="button"
+              onClick={() => setShowEmailForm(true)}
+              style={{ width: '100%' }}
+            >
+              {t('onboarding:loginWithEmail')}
+            </Button>
+          ) : (
+            <form onSubmit={handleEmailSubmit} style={{ display: 'grid', gap: 'var(--space-sm)' }}>
+              <input
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder={t('onboarding:emailPlaceholder')}
+                aria-label={t('onboarding:emailLabel')}
+                autoComplete="email"
+                style={inputStyle}
+              />
+              <input
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                placeholder={t('onboarding:passwordPlaceholder')}
+                aria-label={t('onboarding:passwordLabel')}
+                autoComplete={isSignUp ? 'new-password' : 'current-password'}
+                style={inputStyle}
+              />
 
-        {error ? (
-          <p style={{ color: 'var(--color-accent-danger)', fontSize: 'var(--font-size-sm)' }}>{error}</p>
-        ) : null}
-      </Card>
-    </main>
+              <Button variant="secondary" size="lg" type="submit" disabled={!email || !password} style={{ width: '100%' }}>
+                {isSignUp ? t('onboarding:createAccount') : t('onboarding:loginWithEmail')}
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="sm"
+                type="button"
+                onClick={() => setIsSignUp((current) => !current)}
+              >
+                {isSignUp ? t('onboarding:switchToSignIn') : t('onboarding:switchToSignUp')}
+              </Button>
+            </form>
+          )}
+
+          {/* Hint for parents */}
+          <p style={{ color: 'var(--color-text-light)', fontSize: 'var(--font-size-xs)', textAlign: 'center' }}>
+            {t('onboarding:formHint')}
+          </p>
+
+          {error ? (
+            <p style={{ color: 'var(--color-accent-danger)', fontSize: 'var(--font-size-sm)', textAlign: 'center' }}>{error}</p>
+          ) : null}
+        </Card>
+      </div>
+
+      <style>{`
+        .login-page__content {
+          padding: var(--space-xl);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 70vh;
+        }
+
+        .login-page__divider {
+          display: flex;
+          align-items: center;
+          gap: var(--space-md);
+        }
+
+        .login-page__divider::before,
+        .login-page__divider::after {
+          content: '';
+          flex: 1;
+          height: 1px;
+          background: var(--color-bg-secondary);
+        }
+
+        .login-page__divider span {
+          color: var(--color-text-light);
+          font-size: var(--font-size-xs);
+          white-space: nowrap;
+        }
+      `}</style>
+    </div>
   );
 }

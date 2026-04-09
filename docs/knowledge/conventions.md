@@ -30,6 +30,7 @@ Conventions that emerged during development. Updated by agents as the project ev
 | Agent | ID | Role | Reports To |
 |-------|----|------|------------|
 | PM (CEO) | `9ba06101-670c-4da3-9d57-56fdc8d67b03` | ceo | — |
+| Co-Founder | `83f9ecfd-1c49-4ad7-8378-1e7726e7c2a7` | ceo | — (peer to PM) |
 | Architect (CTO) | `5f7a9323-368f-439d-b3a8-62cda910830b` | cto | PM |
 | CMO | `99a6a12f-c2c1-4eec-a923-59567b339e18` | general | PM |
 | SEO Expert | `d2023a23-bfe9-48c0-8f42-8ca274db45cb` | general | CMO |
@@ -43,6 +44,8 @@ Conventions that emerged during development. Updated by agents as the project ev
 | QA Engineer | `e11728f3-bb90-417d-842a-9a1bb633eed4` | qa | Architect |
 | QA Engineer 2 | `bef56e46-8b5a-48fc-bbce-acb9ea364c8a` | qa | Architect |
 | Performance Expert | `56affc7e-e580-4c71-b1e2-49ebbc03c84a` | engineer | Architect |
+| Backend Engineer | `234deff3-03d1-4f9b-82d0-9abcdf74963a` | engineer | Architect |
+| UX QA Reviewer | `04bcbf99-94ed-405c-a383-25710be61279` | qa | PM |
 | Ops Watchdog | `57030338-c341-45ee-ad6b-60a28cc9852b` | devops | PM |
 
 ### Adapter Convention
@@ -130,6 +133,9 @@ curl -sS -X PATCH "$BASE/api/agents/<id>/instructions-path" \
 - For blocked execution tasks, checkout first, then leave a blocker comment with linked dependency tickets and exact unblock criteria.
 - If another role owns unblock/recovery, reassign the blocked ticket to that role with the unblock request in the same comment.
 - When a new department head is approved (e.g., CMO), immediately create a `todo` child task that transfers ownership from CEO to that manager; avoid keeping new departmental work assigned directly to ICs.
+- New child issues created via API default to `backlog`; after delegation, explicitly PATCH them to `todo` so assignees receive them in standard heartbeat assignment filters.
+- Before applying blocked-task dedup and exiting a heartbeat, do a quick dependency status sweep: child tickets can flip state without new comments, which may unblock immediate coordinator actions.
+- If a parent coordinator is checkoutable but its primary implementation child is still lock-pending (`todo` + stale `executionRunId`), create one fallback child lane on the alternate owner and state in the parent blocker that the first lane to reach `done` becomes canonical. This keeps QA moving and avoids duplicate-completion ambiguity.
 
 ## Game Pipeline Handoff
 
@@ -140,6 +146,35 @@ When a game spec is finalized in `docs/games/`:
    - Gaming Expert (mechanics review) → Architect (data model) → FED (implementation) → Content Writer (Hebrew + audio) → QA (review)
 4. Each subtask uses `parentId` pointing to the CEO's parent issue
 5. `features.md` status lifecycle: `Spec drafted` → `Handed off to CEO` → `In development` → `Shipped`
+
+## Nano Banana (AI Image Generation)
+
+**Available now.** The Media Expert can generate images using Nano Banana (Gemini's native image generation) via the Gemini web UI with enterprise PRO access.
+
+### How to request images
+
+Any agent needing visual assets (game backgrounds, mascot poses, letter cards, UI illustrations) should:
+
+1. Create a Paperclip subtask assigned to the **Media Expert** (`4ddeaf8b-4a91-42d0-9ac8-e1d464e1bec5`)
+2. Include in the task description:
+   - **What** you need (e.g. "דובי waving hello", "picnic background for counting game")
+   - **Where** to save it (e.g. `packages/web/public/images/mascot/dubi-waving.png`)
+   - **Style notes** if any (default: children's book illustration, soft pastel colors, white background)
+3. The Media Expert will generate it via Nano Banana and commit the asset
+
+### Dubiland visual style defaults
+
+- Children's book illustration style
+- Soft pastel colors
+- Clean white background (for assets) or soft watercolor (for backgrounds)
+- דובי: warm brown teddy bear, rosy cheeks, big friendly eyes, blue backpack with Hebrew letters
+- Age-appropriate for 3-7 year olds
+
+### Limitations
+
+- If browser auth expires, Media Expert will escalate to the board — just sign in at `gemini.google.com` in the Cursor browser and let the agent continue
+- Use **Fast** mode only (Thinking mode times out)
+- No API key available currently — web UI only
 
 ---
 

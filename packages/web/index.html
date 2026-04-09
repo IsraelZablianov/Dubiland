@@ -3,6 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#FFF8E7" />
+    <meta name="color-scheme" content="light" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="he_IL" />
+    <meta property="og:site_name" content="דובילנד" />
+    <meta property="og:title" content="דובילנד — לומדים עברית בכיף" />
+    <meta property="og:description" content="פלטפורמת למידה ישראלית לילדים בגילאי 3-7. משחקי אותיות, מספרים וקריאה בעברית." />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="דובילנד — לומדים עברית בכיף" />
+    <meta name="twitter:description" content="פלטפורמת למידה ישראלית לילדים בגילאי 3-7. משחקי אותיות, מספרים וקריאה בעברית." />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -22,7 +41,34 @@
         href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&family=Heebo:wght@400;500;700&display=swap"
       />
     </noscript>
-    <title>דובילנד</title>
+
+    <title>דובילנד — לומדים עברית בכיף</title>
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "דובילנד",
+      "alternateName": "Dubiland",
+      "url": "https://dubiland.co.il",
+      "description": "פלטפורמת למידה ישראלית לילדים בגילאי 3-7. משחקי אותיות, מספרים וקריאה בעברית.",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Web",
+      "inLanguage": "he",
+      "audience": {
+        "@type": "EducationalAudience",
+        "educationalRole": "student",
+        "suggestedMinAge": 3,
+        "suggestedMaxAge": 7
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "ILS"
+      }
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>
