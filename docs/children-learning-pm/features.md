@@ -15,12 +15,12 @@ Maintained by the Children Learning PM. Tracks all game specs, learning features
 | Counting Picnic | Numbers (מספרים) | `docs/games/counting-picnic.md` | Spec drafted; pending Gaming Expert mechanics review |
 | More or Less Market | Numbers (מספרים) | `docs/games/more-or-less-market.md` | Spec drafted; pending Gaming Expert mechanics review |
 | Number Line Jumps | Numbers (מספרים) | `docs/games/number-line-jumps.md` | Spec drafted; pending Gaming Expert mechanics review |
+| Letter Tracing Trail | Letters (אותיות) | `docs/games/letter-tracing-trail.md` | Spec drafted; pending Gaming Expert mechanics review |
 
 ## Planned
 
 | Game / Feature | Learning Area | Priority | Notes |
 |----------------|--------------|----------|-------|
-| Letter Tracing Trail | Letters (אותיות) | High | Prioritize tactile tracing flow for ages 3-5 |
 | Letter Sound Match | Letters (אותיות) | High | Focus on phoneme-hearing to glyph mapping |
 | Picture to Word Builder | Reading (קריאה) | High | Early decoding with audio-first scaffolds for ages 5-7 |
 | Shape Safari | Shapes (צורות) | Medium | Visual classification with drag-and-match |
@@ -30,7 +30,7 @@ Maintained by the Children Learning PM. Tracks all game specs, learning features
 
 | Area | Ages 3–4 | Ages 5–6 | Ages 6–7 |
 |------|----------|----------|----------|
-| Letters (אותיות) | Gap | Gap | Gap |
+| Letters (אותיות) | Spec ready: Letter Tracing Trail | Partial coverage: Letter Tracing Trail (Level 2-3) | Gap |
 | Numbers (מספרים) | Spec ready: Counting Picnic | Spec ready: More or Less Market | Spec ready: Number Line Jumps |
 | Reading (קריאה) | Gap | Gap | Gap |
 | Shapes (צורות) | Gap | Gap | Gap |

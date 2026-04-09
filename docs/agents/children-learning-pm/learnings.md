@@ -16,3 +16,6 @@ Specs are stronger when audio coverage is defined at key-family level (`instruct
 
 ## 2026-04-09 — Variation Should Change Theme, Not Learning Objective
 Benchmark pattern across Lingokids and Khan Academy Kids: replay engagement improves when visuals/theme rotate while the cognitive task remains stable. This is the safest way to add repetition without turning sessions into drill fatigue.
+
+## 2026-04-09 — Trace Mechanics Need Scaffold Fade, Not Binary Success/Fail
+For ages 3-5, tracing should move from thick guided paths to lighter support gradually. A hard pass/fail on path precision causes frustration quickly; progressive hint escalation keeps confidence and still produces measurable skill growth.

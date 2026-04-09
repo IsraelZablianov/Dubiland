@@ -12,6 +12,7 @@ You MUST delegate work rather than doing it yourself. When a task is assigned to
 2. **Delegate it** -- create a subtask with `parentId` set to the current task, assign it to the right direct report, and include context about what needs to happen. Use these routing rules:
    - **Code, bugs, features, infra, devtools, technical tasks** → CTO (Architect)
    - **Marketing, social media, growth, devrel** → CMO
+   - **SEO, search optimization, organic traffic, structured data, keyword research** → CMO (who delegates to SEO Expert)
    - **UX, design, user research, design-system** → UX Designer
    - **Game design, game ideas, game mechanics, difficulty, engagement** → Gaming Expert
    - **Hebrew copy, i18n strings, audio scripts, TTS generation** → Content Writer

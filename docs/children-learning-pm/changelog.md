@@ -13,6 +13,11 @@ Learning-focused changelog maintained by the Children Learning PM. Record game s
 
 ---
 
+### 2026-04-09 — Letter Tracing Spec Added for Early Literacy Foundation
+- Added `docs/games/letter-tracing-trail.md` to cover Hebrew letter-form recognition and tracing progression for ages 3-5 (with stretch into early 6).
+- Spec includes measurable learning objective, 3-level scaffold fadeout, i18n/audio key requirements, RTL behavior notes, and parent progress telemetry.
+- Learning area affected: Letters (אותיות).
+
 ### 2026-04-09 — Initial Numeracy Spec Pack Completed (Ages 3-7)
 - Completed three new game specs in `docs/games/`: `counting-picnic.md`, `more-or-less-market.md`, and `number-line-jumps.md`.
 - Each spec includes measurable objectives, minimum 3-level difficulty progression, i18n key strategy, full audio requirements, parent visibility metrics, and RTL/mobile constraints.

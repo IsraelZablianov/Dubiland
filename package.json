@@ -8,13 +8,13 @@
     "dev": "yarn workspace @dubiland/web dev",
     "build": "yarn workspace @dubiland/web build",
     "typecheck": "yarn workspaces foreach -A run typecheck",
-    "generate-audio": "tsx scripts/generate-audio.ts",
+    "generate-audio": "python3 scripts/generate-audio.py",
+    "generate-audio:force": "python3 scripts/generate-audio.py --force",
     "paperclip": "npx paperclipai run",
     "cascade": "npx paperclipai heartbeat run --agent-id 9ba06101-670c-4da3-9d57-56fdc8d67b03",
     "adapter": "bash scripts/switch-adapter.sh"
   },
   "devDependencies": {
-    "edge-tts": "^1.0.1",
     "tsx": "^4.19.0",
     "typescript": "^5.7.0"
   },

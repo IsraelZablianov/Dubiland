@@ -1,0 +1,154 @@
+#!/usr/bin/env python3
+"""
+Generate Hebrew audio files from i18n locale JSON using gTTS (Google Translate TTS).
+
+Reads all locale files, flattens keys, generates .mp3 for each string,
+and writes a manifest mapping i18n keys to audio paths.
+
+Usage:
+    python3 scripts/generate-audio.py [--force]
+
+    --force   Regenerate all files, even if they already exist
+"""
+
+import json
+import os
+import re
+import sys
+from pathlib import Path
+
+from gtts import gTTS
+
+SCRIPT_DIR = Path(__file__).parent
+PROJECT_ROOT = SCRIPT_DIR.parent
+OUTPUT_BASE = PROJECT_ROOT / "packages" / "web" / "public" / "audio" / "he"
+PUBLIC_ROOT = PROJECT_ROOT / "packages" / "web" / "public"
+LOCALE_DIR = PROJECT_ROOT / "packages" / "web" / "src" / "i18n" / "locales" / "he"
+
+LOCALE_FILES = [
+    {"namespace": ns, "path": LOCALE_DIR / f"{ns}.json"}
+    for ns in ["common", "onboarding"]
+    if (LOCALE_DIR / f"{ns}.json").exists()
+]
+
+AUDIO_OVERRIDES_PATH = LOCALE_DIR / "audio-overrides.json"
+
+LANG = "iw"  # gTTS uses 'iw' for Hebrew
+
+
+def load_audio_overrides() -> dict:
+    """Load audio text overrides — keys where spoken text differs from display text."""
+    if not AUDIO_OVERRIDES_PATH.exists():
+        return {}
+    with open(AUDIO_OVERRIDES_PATH, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    data.pop("_comment", None)
+    return data
+
+
+def to_kebab_case(value: str) -> str:
+    s = re.sub(r"([a-z0-9])([A-Z])", r"\1-\2", value)
+    s = re.sub(r"[^a-zA-Z0-9]+", "-", s)
+    return s.strip("-").lower()
+
+
+def key_to_relative_path(key: str) -> str:
+    segments = key.split(".")
+    namespace = segments[0]
+    key_segments = segments[1:] if namespace == "common" else segments
+    dir_parts = [to_kebab_case(s) for s in key_segments[:-1]]
+    file_part = f"{to_kebab_case(key_segments[-1])}.mp3"
+    return os.path.join(*dir_parts, file_part) if dir_parts else file_part
+
+
+def flatten_strings(value, prefix=""):
+    if isinstance(value, str):
+        return [{"key": prefix, "text": value}]
+    if not isinstance(value, dict):
+        return []
+    results = []
+    for k, v in value.items():
+        next_prefix = f"{prefix}.{k}" if prefix else k
+        results.extend(flatten_strings(v, next_prefix))
+    return results
+
+
+def strip_template_vars(text: str) -> str:
+    """Remove {{var}} placeholders — they'd be read aloud as literal text."""
+    return re.sub(r"\{\{.*?\}\}", "", text).strip()
+
+
+def load_locale_entries():
+    overrides = load_audio_overrides()
+    entries = []
+    for locale in LOCALE_FILES:
+        with open(locale["path"], "r", encoding="utf-8") as f:
+            data = json.load(f)
+        flattened = flatten_strings(data, locale["namespace"])
+        for item in flattened:
+            key = item["key"]
+            if key in overrides:
+                audio_text = overrides[key]
+            else:
+                audio_text = strip_template_vars(item["text"])
+            if not audio_text:
+                continue
+            entries.append({
+                "key": key,
+                "text": audio_text,
+                "output_path": str(OUTPUT_BASE / key_to_relative_path(key)),
+            })
+    return sorted(entries, key=lambda e: e["key"])
+
+
+def generate_audio(entry: dict, force: bool = False) -> bool:
+    output = entry["output_path"]
+    os.makedirs(os.path.dirname(output), exist_ok=True)
+
+    if os.path.exists(output) and not force:
+        print(f"  Skipping (exists): {entry['key']}")
+        return True
+
+    try:
+        tts = gTTS(text=entry["text"], lang=LANG)
+        tts.save(output)
+        print(f"  Generated: {entry['key']}")
+        return True
+    except Exception as e:
+        print(f"  Failed: {entry['key']} — {e}")
+        return False
+
+
+def main():
+    force = "--force" in sys.argv
+
+    print("Generating Hebrew audio files (gTTS)...\n")
+
+    overrides = load_audio_overrides()
+    if overrides:
+        print(f"{len(overrides)} audio overrides loaded (spoken text differs from display)\n")
+
+    entries = load_locale_entries()
+    print(f"{len(entries)} audio files to process\n")
+
+    success = 0
+    for entry in entries:
+        if generate_audio(entry, force=force):
+            success += 1
+
+    manifest = {}
+    for entry in entries:
+        rel = os.path.relpath(entry["output_path"], str(PUBLIC_ROOT))
+        rel_posix = "/" + rel.replace(os.sep, "/")
+        manifest[entry["key"]] = rel_posix
+
+    manifest_path = str(OUTPUT_BASE / "manifest.json")
+    with open(manifest_path, "w", encoding="utf-8") as f:
+        json.dump(manifest, f, indent=2, ensure_ascii=False)
+
+    print(f"\nManifest written to {manifest_path}")
+    print(f"Done! {success}/{len(entries)} generated.")
+
+
+if __name__ == "__main__":
+    main()

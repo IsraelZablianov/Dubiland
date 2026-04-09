@@ -23,6 +23,7 @@ Dubiland is a Hebrew learning platform for kids ages 3-7. A teddy bear mascot (�
 - `docs/` — specs, plans, game designs, architecture, knowledge
 - `docs/pm/` — PM (CEO) changelog and feature list
 - `docs/children-learning-pm/` — Children Learning PM changelog and feature list
+- `docs/seo/` — SEO strategy, keyword research, audits, reports (SEO Expert maintains)
 - `docs/agents/{name}/instructions/` — Paperclip agent instructions (AGENTS.md, SOUL.md, HEARTBEAT.md, TOOLS.md)
 - `docs/agents/{name}/` — agent learnings, instincts, mistakes
 
@@ -39,6 +40,8 @@ Dubiland is a Hebrew learning platform for kids ages 3-7. A teddy bear mascot (�
 ## 5. Paperclip Orchestration
 
 All agents are managed by **Paperclip** — an AI agent orchestration platform. You run in **heartbeats**: short execution windows triggered on a schedule or by comments/events. You do not run continuously.
+
+**Quick reference:** Dubiland company ID `107038ed-546d-4c3f-afca-26feea951289`. Local API at `http://127.0.0.1:3100`. Full agent roster, API/CLI cheatsheet, and hiring checklist in `docs/knowledge/conventions.md`.
 
 ### How it works
 
@@ -89,6 +92,7 @@ PAPERCLIP_WAKE_REASON (optional), PAPERCLIP_WAKE_COMMENT_ID (optional)
 | QA Engineer | 20min | Code review, testing, accessibility, RTL validation. |
 | QA Engineer 2 | 20min | Code review, testing, accessibility, RTL validation. (Second QA.) |
 | Performance Expert | 60min | Bundle size, animations, Lighthouse. |
+| SEO Expert | 45min | Technical SEO, GEO, structured data, keyword research, organic growth. Reports to CMO. |
 
 ## 7. Agent Instructions (External Mode)
 
@@ -134,7 +138,7 @@ At heartbeat start, read your memory + `docs/knowledge/` for context.
 
 ## 10. Tech Stack
 
-React 19, TypeScript, Vite, Yarn workspaces, Supabase, i18next, Edge TTS, Remotion, Paperclip
+React 19, TypeScript, Vite, Yarn workspaces, Supabase, i18next, gTTS (Google Translate TTS), Remotion, Paperclip
 
 ## 11. Verification
 

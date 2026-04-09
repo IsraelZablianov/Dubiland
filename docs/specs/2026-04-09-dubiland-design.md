@@ -148,7 +148,7 @@ dubiland/
 | **i18n** | i18next + react-i18next |
 | **Backend** | Supabase (Auth, Postgres, Storage) |
 | **Video** | Remotion (build-time generation) |
-| **TTS** | Edge TTS — `he-IL-HilaNeural` (free, female Hebrew voice) |
+| **TTS** | gTTS (Google Translate TTS) — free, natural Hebrew voice |
 | **Image Generation** | Nano Banana (Gemini) — game thumbnails, illustrations, backgrounds, storybook art |
 | **Monorepo** | Yarn workspaces |
 | **Orchestration** | Paperclip (AI agent management) |
@@ -317,8 +317,8 @@ interface GameProps {
 ## 9. Audio & TTS Pipeline
 
 ### Generation
-- **Tool:** Edge TTS — `he-IL-HilaNeural` (free, female Hebrew voice)
-- **Process:** Build-time script (`scripts/generate-audio.ts`) reads i18n JSON → generates `.mp3` files → saves to `public/audio/he/`
+- **Tool:** gTTS (Google Translate TTS) — free, natural Hebrew voice
+- **Process:** Build-time script (`scripts/generate-audio.py`) reads i18n JSON → generates `.mp3` files → saves to `public/audio/he/`
 - **Ownership:** Content Writer agent writes text, runs generation script
 
 ### Audio categories

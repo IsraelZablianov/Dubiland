@@ -1,0 +1,6 @@
+{
+  "_comment": "Audio-specific text overrides. Keys match i18n keys from other locale files. When generating audio, this text is spoken instead of the display text. Only add keys here when the spoken version should differ from the displayed version.",
+  "common.home.greeting": "היי, מה נלמד היום?",
+  "common.home.minutes": "דקות של למידה",
+  "common.games.estimatedTime": "משך משוער, דקות"
+}
