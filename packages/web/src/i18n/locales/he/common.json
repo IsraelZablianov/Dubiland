@@ -1,0 +1,22 @@
+{
+  "feedback": {
+    "success": "כל הכבוד!",
+    "tryAgain": "נסה שוב!",
+    "almostThere": "כמעט!"
+  },
+  "nav": {
+    "back": "חזרה",
+    "chooseTopic": "בחר נושא",
+    "chooseGame": "בחר משחק",
+    "home": "דף הבית"
+  },
+  "profile": {
+    "whoPlaysToday": "מי משחק היום?",
+    "addChild": "הוספה"
+  },
+  "topics": {
+    "math": "מספרים",
+    "letters": "אותיות",
+    "reading": "קריאה"
+  }
+}
