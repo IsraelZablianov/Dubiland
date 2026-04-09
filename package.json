@@ -1,0 +1,17 @@
+{
+  "name": "dubiland",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "yarn workspace @dubiland/web dev",
+    "build": "yarn workspace @dubiland/web build",
+    "typecheck": "yarn workspaces foreach -A run typecheck",
+    "generate-audio": "tsx scripts/generate-audio.ts"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "tsx": "^4.19.0"
+  }
+}

@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.env
+.superpowers/
+.DS_Store
+*.local
+
+# Yarn Berry — keep state local; commit yarn.lock only
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
