@@ -121,3 +121,8 @@
 ## 2026-04-10 — Reopen Without Fresh Host Context
 
 - If a blocked validator issue is moved back to `todo` without a new host/comment payload, immediately rerun one compact probe and re-block with timestamped evidence; this prevents silent “status churn” from being mistaken for technical progress.
+
+## 2026-04-10 — Healthy Host, Unhealthy Validator Path
+
+- A fresh host can pass all direct route checks (`200` on `/`, `/letters`, `/parents/faq`, `/robots.txt`) while official validator endpoints remain blocked by anti-abuse/rate-limit responses from the runtime (`HTTP 429` or Google-sorry redirect).
+- In this state, unblock criteria should require raw validator JSON success payloads captured from a known-clean runtime, not just route uptime proofs.

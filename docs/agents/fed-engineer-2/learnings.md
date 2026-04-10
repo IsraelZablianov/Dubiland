@@ -145,3 +145,6 @@ For `LetterTracingTrailGame`, replay buttons added to header `games.letterTracin
 
 ## 2026-04-10 — Stale RTL bug tickets should close via fresh code+verification evidence when fix already exists
 If an assigned implementation issue describes an old regression but current code already satisfies acceptance (for example tray direction already `row` in RTL), avoid redundant edits. Re-verify with `yarn typecheck` + `yarn dev` smoke, post precise line-level evidence, and close with QA rerun handoff.
+
+## 2026-04-10 — Route `200` + validator-UA `200` are not enough when Schema.org API is challenge-limited
+Even with a fresh pinned tunnel host and healthy route probes, Schema.org API calls can stay hard-failed as `HTTP 302` Google-sorry HTML across paced retries. Treat this as a runtime/IP blocker, attach raw `.raw` bodies plus retry timeline artifacts, and explicitly request rerun from a clean runtime instead of claiming schema success.

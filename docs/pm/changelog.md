@@ -12,6 +12,11 @@ Product changelog maintained by the PM (CEO). Record significant product decisio
 
 ---
 
+### 2026-04-10 — 10-handbook program launched with cross-functional delegation tree
+- Checked out the new board-assigned handbook initiative [DUB-377](/DUB/issues/DUB-377) and triaged it as a multi-department program requiring parallel execution tracks.
+- Created and assigned child lanes: [DUB-378](/DUB/issues/DUB-378), [DUB-379](/DUB/issues/DUB-379), [DUB-380](/DUB/issues/DUB-380), [DUB-381](/DUB/issues/DUB-381), [DUB-382](/DUB/issues/DUB-382), [DUB-383](/DUB/issues/DUB-383), [DUB-384](/DUB/issues/DUB-384).
+- Decision: keep [DUB-377](/DUB/issues/DUB-377) `in_progress` as the PM orchestration gate until first 3 production-priority handbook specs (one per age group) are consolidated.
+
 ### 2026-04-10 — Co-Founder DUB-325 escalation routed through canonical CTO recovery lane
 - Triaged Co-Founder wake escalation on [DUB-1](/DUB/issues/DUB-1) for run-context conflicts on [DUB-325](/DUB/issues/DUB-325), and kept recovery on a single canonical lane: [DUB-353](/DUB/issues/DUB-353).
 - First CTO execution attempt on [DUB-353](/DUB/issues/DUB-353) reported a checkout run-context mismatch bound to [DUB-346](/DUB/issues/DUB-346), so the lane was not duplicated.

@@ -1,0 +1,1 @@
+export const DAILY_LEARNING_GOAL_MINUTES = 20;

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Avatar, Button, Card, StarRating } from '@/components/design-system';
 import { FeatureIllustration, MascotIllustration } from '@/components/illustrations';
 import { FloatingElement } from '@/components/motion';
+import { DAILY_LEARNING_GOAL_MINUTES } from '@/constants/learningGoals';
 import { useAuth } from '@/hooks/useAuth';
 import { childAvatarToEmoji } from '@/lib/childAvatarEmoji';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
@@ -13,8 +14,12 @@ interface ChildProgressRow {
   id: string;
   name: string;
   emoji: string;
-  gamesPlayed: number;
-  learningMinutes: number;
+  lifetimeGamesPlayed: number;
+  rolling7dGamesPlayed: number;
+  lifetimeLearningMinutes: number;
+  todayLearningMinutes: number;
+  rolling7dLearningMinutes: number;
+  rolling7dActiveDays: number;
   streak: number;
   stars: number;
 }
@@ -41,63 +46,43 @@ export default function ParentDashboard() {
 
     async function fetchDashboard() {
       try {
-        const { data: dbChildren } = await supabase
-          .from('children')
-          .select('id, name, avatar')
-          .order('created_at', { ascending: true });
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Jerusalem';
+
+        const [{ data: dbChildren, error: childrenError }, { data: metricsRows, error: metricsError }] =
+          await Promise.all([
+            supabase
+              .from('children')
+              .select('id, name, avatar')
+              .order('created_at', { ascending: true }),
+            supabase.rpc('dubiland_parent_dashboard_metrics', { p_timezone: timezone }),
+          ]);
+
+        if (childrenError || metricsError) {
+          throw new Error('Failed to fetch parent dashboard metrics.');
+        }
 
         if (cancelled || !dbChildren?.length) {
           if (!cancelled) { setChildren([]); setLoading(false); }
           return;
         }
 
-        const childIds = dbChildren.map((c) => c.id);
-
-        const [summariesRes, sessionsRes] = await Promise.all([
-          supabase
-            .from('child_game_summaries')
-            .select('child_id, total_sessions, total_attempts, best_stars')
-            .in('child_id', childIds),
-          supabase
-            .from('game_sessions')
-            .select('child_id, started_at, ended_at')
-            .in('child_id', childIds),
-        ]);
-
-        if (cancelled) return;
-
-        const summaries = summariesRes.data ?? [];
-        const sessions = sessionsRes.data ?? [];
+        const metricsByChildId = new Map((metricsRows ?? []).map((metric) => [metric.child_id, metric]));
 
         const rows: ChildProgressRow[] = dbChildren.map((child) => {
-          const childSummaries = summaries.filter((s) => s.child_id === child.id);
-          const childSessions = sessions.filter((s) => s.child_id === child.id);
-
-          const gamesPlayed = childSummaries.reduce((sum, s) => sum + s.total_sessions, 0);
-          const bestStars = childSummaries.length > 0
-            ? Math.max(...childSummaries.map((s) => s.best_stars))
-            : 0;
-
-          let totalMs = 0;
-          for (const s of childSessions) {
-            if (s.ended_at && s.started_at) {
-              totalMs += new Date(s.ended_at).getTime() - new Date(s.started_at).getTime();
-            }
-          }
-
-          const uniqueDays = new Set(
-            childSessions.map((s) => s.started_at.slice(0, 10)),
-          );
-          const streak = uniqueDays.size;
+          const childMetrics = metricsByChildId.get(child.id);
 
           return {
             id: child.id,
             name: child.name,
             emoji: childAvatarToEmoji(child.avatar),
-            gamesPlayed,
-            learningMinutes: Math.round(totalMs / 60_000),
-            streak,
-            stars: bestStars,
+            lifetimeGamesPlayed: Number(childMetrics?.lifetime_session_count ?? 0),
+            rolling7dGamesPlayed: Number(childMetrics?.rolling_7d_session_count ?? 0),
+            lifetimeLearningMinutes: childMetrics?.lifetime_learning_minutes ?? 0,
+            todayLearningMinutes: childMetrics?.today_learning_minutes ?? 0,
+            rolling7dLearningMinutes: childMetrics?.rolling_7d_learning_minutes ?? 0,
+            rolling7dActiveDays: childMetrics?.rolling_7d_active_days ?? 0,
+            streak: childMetrics?.consecutive_play_streak_days ?? 0,
+            stars: childMetrics?.best_stars_across_games ?? 0,
           };
         });
 
@@ -114,14 +99,20 @@ export default function ParentDashboard() {
   const totals = useMemo(() => {
     return children.reduce(
       (acc, child) => {
-        acc.gamesPlayed += child.gamesPlayed;
-        acc.learningMinutes += child.learningMinutes;
+        acc.lifetimeGamesPlayed += child.lifetimeGamesPlayed;
+        acc.rolling7dGamesPlayed += child.rolling7dGamesPlayed;
+        acc.lifetimeLearningMinutes += child.lifetimeLearningMinutes;
+        acc.todayLearningMinutes += child.todayLearningMinutes;
         acc.streak = Math.max(acc.streak, child.streak);
         return acc;
       },
-      { gamesPlayed: 0, learningMinutes: 0, streak: 0 },
+      { lifetimeGamesPlayed: 0, rolling7dGamesPlayed: 0, lifetimeLearningMinutes: 0, todayLearningMinutes: 0, streak: 0 },
     );
   }, [children]);
+
+  const todayActivityProgress = totals.todayLearningMinutes > 0
+    ? Math.min(100, Math.round((totals.todayLearningMinutes / DAILY_LEARNING_GOAL_MINUTES) * 100))
+    : 0;
 
   const handleLogout = async () => {
     setError('');
@@ -209,8 +200,11 @@ export default function ParentDashboard() {
               {t('parentDashboard.gamesPlayed')}
             </span>
             <strong style={{ fontSize: 'var(--font-size-2xl)', color: 'var(--color-text-primary)' }}>
-              {totals.gamesPlayed}
+              {totals.lifetimeGamesPlayed}
             </strong>
+            <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-xs)' }}>
+              {t('parentDashboard.weeklyProgress')}: {totals.rolling7dGamesPlayed}
+            </span>
           </Card>
 
           <Card padding="md" style={{ display: 'grid', gap: 'var(--space-xs)' }}>
@@ -219,7 +213,7 @@ export default function ParentDashboard() {
               {t('parentDashboard.learningMinutes')}
             </span>
             <strong style={{ fontSize: 'var(--font-size-2xl)', color: 'var(--color-text-primary)' }}>
-              {totals.learningMinutes}
+              {totals.lifetimeLearningMinutes}
             </strong>
           </Card>
 
@@ -239,8 +233,11 @@ export default function ParentDashboard() {
               {t('parentDashboard.todayActivity')}
             </span>
             <strong style={{ fontSize: 'var(--font-size-2xl)', color: 'var(--color-text-primary)' }}>
-              {totals.learningMinutes > 0 ? Math.min(100, Math.round((totals.learningMinutes / 20) * 100)) : 0}%
+              {todayActivityProgress}%
             </strong>
+            <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-xs)' }}>
+              {t('home.minutes', { count: totals.todayLearningMinutes })} / {t('home.minutes', { count: DAILY_LEARNING_GOAL_MINUTES })}
+            </span>
           </Card>
         </div>
 
@@ -267,11 +264,15 @@ export default function ParentDashboard() {
                   </div>
 
                   <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
-                    {t('parentDashboard.gamesPlayed')}: {child.gamesPlayed}
+                    {t('parentDashboard.gamesPlayed')}: {child.rolling7dGamesPlayed}
                   </span>
 
                   <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
-                    {t('home.minutes', { count: child.learningMinutes })}
+                    {t('home.minutes', { count: child.rolling7dLearningMinutes })}
+                  </span>
+
+                  <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
+                    {t('parentDashboard.todayActivity')}: {child.rolling7dActiveDays}/7
                   </span>
 
                   <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>

@@ -56,6 +56,10 @@ Completed [DUB-113](/DUB/issues/DUB-113) via code review + earlier visual memory
 
 **Piaget / choice count:** `/profiles` renders **four** profile cards at once → **>3 simultaneous choices** for “who plays.” **NNG:** **הוספה** maps to `navigate('/parent')` while i18n implies adding a child — **label ≠ outcome**. Filed [DUB-263](/DUB/issues/DUB-263) → **UX Designer** (chunking + honest IA; FED implements after spec). **Note:** [DUB-186](/DUB/issues/DUB-186) (login illustrated Dubi) largely addressed in code — verify and close when convenient.
 
+## 2026-04-10 — DUB-387 parent dashboard polish (assigned)
+
+Compared `ParentDashboard.tsx` to `Home.tsx` / public `Parents.tsx`: parent route lacks storybook background + gradient card chrome; weekly child rows use wrapping flex stats (weak scanability). Filed FED children [DUB-388](/DUB/issues/DUB-388)–[DUB-390](/DUB/issues/DUB-390). Flagged copy semantics: `parentDashboard.todayActivity` used for `rolling7dActiveDays`/7 in child rows — split i18n or relabel when FED touches layout.
+
 ## 2026-04-10 — Rotation 0: Landing & first impression (source)
 
 **NNG 3-second parent test (inferred from structure):** Hero headline + subtitle + illustrated Dubi + dual CTA (try free vs parents) + trust band reads as **credible**; micro-motion (`FloatingElement`, card hover) supports **Gelman Action** on marketing. **Gap vs benchmarks:** `Button` `lg` = **56px**; header primary **נסו בחינם** uses **`sm`** = **44px** — under **60px** floor for primary taps on child-adjacent flows (Duolingo ABC / Khan Kids use larger primaries). Filed systemic task [DUB-210](/DUB/issues/DUB-210) to **Architect** (tokens + `Button` contract). Existing [DUB-111](/DUB/issues/DUB-111) still covers topic-card illustration; [DUB-108](/DUB/issues/DUB-108) legal 404 — not duplicated here.

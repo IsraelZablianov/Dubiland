@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { AgeRangeFilterBar, Button, Card, GameCard, TopicCard } from '@/components/design-system';
 import { MascotIllustration, TopicIllustration } from '@/components/illustrations';
 import { FloatingElement, SuccessCelebration } from '@/components/motion';
+import { DAILY_LEARNING_GOAL_MINUTES } from '@/constants/learningGoals';
 import { useAudioManager } from '@/hooks/useAudioManager';
 import { useChildProgress } from '@/hooks/useChildProgress';
 import { getPersistedAgeBandOverride, persistAgeBandOverride } from '@/lib/ageFilterPreferences';
@@ -413,7 +414,7 @@ export default function Home() {
 
   const selectedTopicProgress = topics.find((topic) => topic.slug === selectedTopic)?.progress ?? 0;
   const dailyGoalMinutes = childProgress.dailyMinutes;
-  const dailyGoalTarget = 20;
+  const dailyGoalTarget = DAILY_LEARNING_GOAL_MINUTES;
   const dailyGoalProgress = Math.min(100, Math.round((dailyGoalMinutes / dailyGoalTarget) * 100));
 
   const fallbackGames = useMemo(

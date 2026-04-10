@@ -172,3 +172,9 @@ When an existing game relies mostly on inline styles (like RootFamilyStickers), 
 
 ## 2026-04-10 — Midpoint next-arrow cues should block round transition briefly
 For midpoint `→` controls in narrated games, play an existing `feedback.success.*` clip with interrupt mode and delay the next-round state swap by a short fixed window (~520ms), guarded by a timeout ref; this preserves audible confirmation before the next instruction audio starts and prevents double-tap races.
+
+## 2026-04-10 — Add one timeout owner per transient animation lane in reading games
+When adding board success/miss choreography plus score-pill pulse in reading games, give each transient effect its own timeout ref (`advance`, `feedback`, `pulse`) and clear all refs on retry/unmount; this prevents stale callbacks from firing into the next round and keeps reduced-motion toggles predictable.
+
+## 2026-04-10 — Parent dashboard honesty requires one RPC contract and one shared daily-goal constant
+For `/parent`, avoid recomputing metrics from raw `game_sessions` in the client; consume `dubiland_parent_dashboard_metrics` once, map by `child_id`, and drive today/weekly/streak cards directly from the RPC fields. Keep the daily-goal denominator in a shared web constant used by both Home and Parent Dashboard so product can tune one source instead of diverging hardcoded values.

@@ -333,6 +333,56 @@ export default function ProfilePicker() {
     );
   }
 
+  const hostedAddChildForm = useHostedChildProfiles ? (
+    <Card
+      padding="md"
+      style={{
+        display: 'grid',
+        gap: 'var(--space-sm)',
+        border: '1px solid var(--color-bg-secondary)',
+      }}
+    >
+      <form
+        onSubmit={handleAddChild}
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'minmax(0, 1fr) auto',
+          gap: 'var(--space-sm)',
+          alignItems: 'center',
+        }}
+      >
+        <input
+          type="text"
+          value={newChildName}
+          onChange={(e) => setNewChildName(e.target.value)}
+          placeholder={t('profile.childNamePlaceholder')}
+          aria-label={t('profile.childNamePlaceholder')}
+          autoComplete="nickname"
+          style={{
+            minHeight: 'var(--touch-min)',
+            borderRadius: 'var(--radius-md)',
+            border: '2px solid var(--color-bg-secondary)',
+            padding: '0 var(--space-md)',
+            fontSize: 'var(--font-size-md)',
+            fontFamily: 'var(--font-family-primary)',
+          }}
+        />
+        <Button
+          variant="primary"
+          size="lg"
+          type="submit"
+          disabled={!newChildName.trim() || addBusy}
+          style={{ minHeight: 'var(--touch-min)' }}
+        >
+          {t('profile.addChild')}
+        </Button>
+      </form>
+      {addError ? (
+        <p style={{ color: 'var(--color-accent-danger)', fontSize: 'var(--font-size-sm)' }}>{addError}</p>
+      ) : null}
+    </Card>
+  ) : null;
+
   return (
     <main
       style={{
@@ -556,6 +606,8 @@ export default function ProfilePicker() {
               })}
             </div>
           ) : null}
+
+          {hostedAddChildForm}
         </div>
 
         <footer

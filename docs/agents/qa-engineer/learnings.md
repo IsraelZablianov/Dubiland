@@ -124,3 +124,6 @@ When a lane is re-opened after targeted replay-affordance fixes, close QA only a
 
 ## 2026-04-10 — Treat icon inventory narration rules as explicit QA gates
 When a game spec marks icon inventory as mandatory (for example replay/hint/retry/next), QA should verify each icon tap has its required narrated cue, not just icon presence and control wiring. A next/continue icon without tap narration is a blocker even if navigation logic works.
+
+## 2026-04-10 — Midpoint/transition cue fixes should prove audio-before-navigation sequencing
+For icon-driven continue flows, QA should verify the button handler triggers narrated cue audio first and advances screen state only after a guarded delay (timeout + re-entry guard). This catches silent or truncated cue regressions that static icon presence checks miss.
