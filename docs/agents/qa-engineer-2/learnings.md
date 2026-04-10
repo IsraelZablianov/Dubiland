@@ -142,3 +142,30 @@ For `/api/companies/{companyId}/issues?identifier=...`, do not assume server-sid
 
 ## 2026-04-10 — Same-run task switch needs `release`, and release can mutate issue ownership/state
 When a heartbeat run is context-bound to one issue, switching to another assigned issue may require `POST /api/issues/{issueId}/release` on the bound issue first. That release call can reset checkout fields and may alter assignment/status routing, so always re-fetch the released issue immediately after switching to confirm it still reflects the intended blocker/owner state.
+
+## 2026-04-10 — Checkpoint overlays must meet full game gate parity, not just normal-round controls
+For game QA, treat checkpoint/midpoint overlays as first-class instruction states: they must auto-play newly shown instruction audio, include a visible replay `▶`, and avoid text-only child CTAs. In this heartbeat, `MoreOrLessMarketGame` checkpoint violated all three despite normal-round controls being icon-first.
+
+## 2026-04-10 — Comment-triggered wakes can target stale thread state; compare against latest comment before acting
+When `PAPERCLIP_WAKE_COMMENT_ID` points to an older handoff but the thread already has a newer QA blocker update from you, apply blocked-dedup and skip checkout/comment noise unless there is newer external context after your latest blocker note.
+
+## 2026-04-10 — Word-first handbook refactors can silently invalidate regression assertions
+After handbook word-first changes, rerun the dedicated runtime regression script before signoff. If behavior intent changes (for example, single target-word hero), require tests to be updated to encode the new contract explicitly; treat stale failing assertions as a blocker with a FED follow-up issue.
+
+## 2026-04-10 — SVG replay-icon refactors can still fail the mandatory `▶` gate
+When toolbar controls are migrated from literal glyphs to semantic SVG icons, verify the replay affordance still reads as explicit play (`▶`) for child-facing use. A speaker-style replay icon should remain a blocker until the visible play cue is restored.
+
+## 2026-04-10 — DB-driven handbook QA can run a code-path matrix when local DB is down, but must stay explicit
+When Supabase runtime probes are blocked by local Docker outages, still execute a strict code-level matrix (published-query wiring, fail-soft `blocks_json`, progress upsert path, age-band visibility, audio parity) and document the runtime limitation directly in the ticket. If any canonical UX blocker already exists (for example replay `▶`), link it and keep the QA lane blocked with clear rerun criteria.
+
+## 2026-04-10 — `release` may reset issue state without clearing run snapshot binding
+Using `POST /release` to switch tasks can unexpectedly reset lane status/assignee and still leave checkout context pinned to the prior `snapshotIssueId` for the rest of the run. After any release, immediately re-fetch and restore intended lane state, then avoid repeated same-run checkout retries on other issues.
+
+## 2026-04-10 — Missing role-skill files should be logged and QA gates applied manually
+If referenced QA skill paths (for example `skills/coding-standards/SKILL.md`, `skills/tdd-workflow/SKILL.md`, `skills/verification-loop/SKILL.md`) are absent in workspace, document the missing paths in the issue comment and continue with explicit manual gate evidence (typecheck/build/audio parity + scope checks) instead of blocking the heartbeat.
+
+## 2026-04-10 — Reading parity checks must treat mode toggles and answer chips as child gameplay controls
+In icon-first parity lanes, validate not only toolbar controls but also mode toggles and answer-choice buttons. If these remain text-only, fail the lane immediately and map blockers to script/UI parity work even when replay/retry/hint/next icons already meet touch and RTL requirements.
+
+## 2026-04-10 — Critical blocked reruns need explicit owner/action/ETA after partial unblock
+When child fix tickets land on a critical blocked QA lane, rerun only the previously failing checks and post a pass/fail checklist that separates fixed blockers from remaining cross-lane failures. Always include concrete unblock owner, action, and absolute ETA in the same comment so manager escalation lanes can consume it directly.

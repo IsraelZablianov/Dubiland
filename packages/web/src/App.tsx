@@ -1,9 +1,9 @@
 import { lazy, Suspense, type ReactNode } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { AppLayout, PublicLayout } from '@/components/layout';
-import { AnimatedPage } from '@/components/motion';
+import { ChildPlayShell, MarketingShell, ParentShell } from '@/components/layout';
+import { MascotIllustration } from '@/components/illustrations';
+import { AnimatedPage, FloatingElement, SuccessCelebration } from '@/components/motion';
 import { ScrollToTop } from '@/components/routing/ScrollToTop';
-import { RouteMetadataManager } from '@/seo/RouteMetadataManager';
 
 const Landing = lazy(() => import('@/pages/Landing'));
 const About = lazy(() => import('@/pages/About'));
@@ -35,12 +35,20 @@ const ConfusableLetterContrast = lazy(() => import('@/pages/ConfusableLetterCont
 const LetterSoundMatch = lazy(() => import('@/pages/LetterSoundMatch'));
 const LetterTracingTrail = lazy(() => import('@/pages/LetterTracingTrail'));
 const LetterSkyCatcher = lazy(() => import('@/pages/LetterSkyCatcher'));
+const RouteMetadataManager = lazy(async () => {
+  const module = await import('@/seo/RouteMetadataManager');
+  return { default: module.RouteMetadataManager };
+});
 
 function RouteFallback() {
   return (
     <div className="route-fallback" aria-busy="true" aria-live="polite">
       <span className="route-fallback__halo" aria-hidden="true" />
       <div className="route-fallback__panel">
+        <FloatingElement className="route-fallback__mascot-wrap" durationMs={2800}>
+          <MascotIllustration variant="loading" size={132} />
+        </FloatingElement>
+        <SuccessCelebration dense className="route-fallback__celebration" />
         <div className="route-fallback__skeleton" aria-hidden="true">
           <span className="route-fallback__skeleton-pill route-fallback__skeleton-pill--title" />
           <span className="route-fallback__skeleton-pill route-fallback__skeleton-pill--line" />
@@ -65,30 +73,32 @@ export default function App() {
   return (
     <>
       <ScrollToTop />
-      <RouteMetadataManager />
+      <Suspense fallback={null}>
+        <RouteMetadataManager />
+      </Suspense>
 
       <Suspense fallback={<RouteFallback />}>
         <Routes>
           {/* Public marketing pages */}
-          <Route path="/" element={<PublicLayout>{withAnimatedPage(<Landing />, 'public')}</PublicLayout>} />
-          <Route path="/about" element={<PublicLayout>{withAnimatedPage(<About />, 'public')}</PublicLayout>} />
-          <Route path="/parents" element={<PublicLayout>{withAnimatedPage(<Parents />, 'public')}</PublicLayout>} />
-          <Route path="/parents/faq" element={<PublicLayout>{withAnimatedPage(<ParentsFaq />, 'public')}</PublicLayout>} />
-          <Route path="/terms" element={<PublicLayout>{withAnimatedPage(<Terms />, 'public')}</PublicLayout>} />
-          <Route path="/privacy" element={<PublicLayout>{withAnimatedPage(<Privacy />, 'public')}</PublicLayout>} />
-          <Route path="/letters" element={<PublicLayout>{withAnimatedPage(<TopicPillar topic="letters" />, 'public')}</PublicLayout>} />
-          <Route path="/numbers" element={<PublicLayout>{withAnimatedPage(<TopicPillar topic="numbers" />, 'public')}</PublicLayout>} />
-          <Route path="/reading" element={<PublicLayout>{withAnimatedPage(<TopicPillar topic="reading" />, 'public')}</PublicLayout>} />
+          <Route path="/" element={<MarketingShell>{withAnimatedPage(<Landing />, 'public')}</MarketingShell>} />
+          <Route path="/about" element={<MarketingShell>{withAnimatedPage(<About />, 'public')}</MarketingShell>} />
+          <Route path="/parents" element={<MarketingShell>{withAnimatedPage(<Parents />, 'public')}</MarketingShell>} />
+          <Route path="/parents/faq" element={<MarketingShell>{withAnimatedPage(<ParentsFaq />, 'public')}</MarketingShell>} />
+          <Route path="/terms" element={<MarketingShell>{withAnimatedPage(<Terms />, 'public')}</MarketingShell>} />
+          <Route path="/privacy" element={<MarketingShell>{withAnimatedPage(<Privacy />, 'public')}</MarketingShell>} />
+          <Route path="/letters" element={<MarketingShell>{withAnimatedPage(<TopicPillar topic="letters" />, 'public')}</MarketingShell>} />
+          <Route path="/numbers" element={<MarketingShell>{withAnimatedPage(<TopicPillar topic="numbers" />, 'public')}</MarketingShell>} />
+          <Route path="/reading" element={<MarketingShell>{withAnimatedPage(<TopicPillar topic="reading" />, 'public')}</MarketingShell>} />
 
           {/* Login — public header/footer */}
-          <Route path="/login" element={<PublicLayout>{withAnimatedPage(<Login />, 'public')}</PublicLayout>} />
+          <Route path="/login" element={<MarketingShell>{withAnimatedPage(<Login />, 'public')}</MarketingShell>} />
 
           {/* App pages — app header with child info + navigation */}
           <Route
             path="/profiles"
             element={
               <ProtectedRoute>
-                <AppLayout>{withAnimatedPage(<ProfilePicker />, 'app')}</AppLayout>
+                <ChildPlayShell>{withAnimatedPage(<ProfilePicker />, 'app')}</ChildPlayShell>
               </ProtectedRoute>
             }
           />
@@ -96,7 +106,7 @@ export default function App() {
             path="/games"
             element={
               <ProtectedRoute>
-                <AppLayout>{withAnimatedPage(<Home />, 'app')}</AppLayout>
+                <ChildPlayShell>{withAnimatedPage(<Home />, 'app')}</ChildPlayShell>
               </ProtectedRoute>
             }
           />
@@ -104,7 +114,7 @@ export default function App() {
             path="/parent"
             element={
               <ProtectedRoute>
-                <AppLayout>{withAnimatedPage(<ParentDashboard />, 'app')}</AppLayout>
+                <ParentShell>{withAnimatedPage(<ParentDashboard />, 'app')}</ParentShell>
               </ProtectedRoute>
             }
           />
@@ -112,7 +122,7 @@ export default function App() {
             path="/games/numbers/counting-picnic"
             element={
               <ProtectedRoute>
-                <AppLayout>{withAnimatedPage(<CountingPicnic />, 'app')}</AppLayout>
+                <ChildPlayShell>{withAnimatedPage(<CountingPicnic />, 'app')}</ChildPlayShell>
               </ProtectedRoute>
             }
           />
@@ -120,7 +130,7 @@ export default function App() {
             path="/games/numbers/more-or-less-market"
             element={
               <ProtectedRoute>
-                <AppLayout>{withAnimatedPage(<MoreOrLessMarket />, 'app')}</AppLayout>
+                <ChildPlayShell>{withAnimatedPage(<MoreOrLessMarket />, 'app')}</ChildPlayShell>
               </ProtectedRoute>
             }
           />
@@ -128,7 +138,7 @@ export default function App() {
             path="/games/numbers/shape-safari"
             element={
               <ProtectedRoute>
-                <AppLayout>{withAnimatedPage(<ShapeSafari />, 'app')}</AppLayout>
+                <ChildPlayShell>{withAnimatedPage(<ShapeSafari />, 'app')}</ChildPlayShell>
               </ProtectedRoute>
             }
           />
@@ -136,7 +146,7 @@ export default function App() {
             path="/games/numbers/number-line-jumps"
             element={
               <ProtectedRoute>
-                <AppLayout>{withAnimatedPage(<NumberLineJumps />, 'app')}</AppLayout>
+                <ChildPlayShell>{withAnimatedPage(<NumberLineJumps />, 'app')}</ChildPlayShell>
               </ProtectedRoute>
             }
           />
@@ -144,7 +154,7 @@ export default function App() {
             path="/games/colors/color-garden"
             element={
               <ProtectedRoute>
-                <AppLayout>{withAnimatedPage(<ColorGarden />, 'app')}</AppLayout>
+                <ChildPlayShell>{withAnimatedPage(<ColorGarden />, 'app')}</ChildPlayShell>
               </ProtectedRoute>
             }
           />
@@ -152,7 +162,7 @@ export default function App() {
             path="/games/reading/picture-to-word-builder"
             element={
               <ProtectedRoute>
-                <AppLayout>{withAnimatedPage(<PictureToWordBuilder />, 'app')}</AppLayout>
+                <ChildPlayShell>{withAnimatedPage(<PictureToWordBuilder />, 'app')}</ChildPlayShell>
               </ProtectedRoute>
             }
           />
@@ -160,7 +170,7 @@ export default function App() {
             path="/games/reading/sight-word-sprint"
             element={
               <ProtectedRoute>
-                <AppLayout>{withAnimatedPage(<SightWordSprint />, 'app')}</AppLayout>
+                <ChildPlayShell>{withAnimatedPage(<SightWordSprint />, 'app')}</ChildPlayShell>
               </ProtectedRoute>
             }
           />
@@ -168,7 +178,7 @@ export default function App() {
             path="/games/reading/decodable-micro-stories"
             element={
               <ProtectedRoute>
-                <AppLayout>{withAnimatedPage(<DecodableMicroStories />, 'app')}</AppLayout>
+                <ChildPlayShell>{withAnimatedPage(<DecodableMicroStories />, 'app')}</ChildPlayShell>
               </ProtectedRoute>
             }
           />
@@ -176,7 +186,7 @@ export default function App() {
             path="/games/reading/interactive-handbook"
             element={
               <ProtectedRoute>
-                <AppLayout><InteractiveHandbook /></AppLayout>
+                <ChildPlayShell><InteractiveHandbook /></ChildPlayShell>
               </ProtectedRoute>
             }
           />
@@ -184,7 +194,7 @@ export default function App() {
             path="/games/reading/root-family-stickers"
             element={
               <ProtectedRoute>
-                <AppLayout>{withAnimatedPage(<RootFamilyStickers />, 'app')}</AppLayout>
+                <ChildPlayShell>{withAnimatedPage(<RootFamilyStickers />, 'app')}</ChildPlayShell>
               </ProtectedRoute>
             }
           />
@@ -192,7 +202,7 @@ export default function App() {
             path="/games/reading/confusable-letter-contrast"
             element={
               <ProtectedRoute>
-                <AppLayout>{withAnimatedPage(<ConfusableLetterContrast />, 'app')}</AppLayout>
+                <ChildPlayShell>{withAnimatedPage(<ConfusableLetterContrast />, 'app')}</ChildPlayShell>
               </ProtectedRoute>
             }
           />
@@ -200,7 +210,7 @@ export default function App() {
             path="/games/letters/letter-sound-match"
             element={
               <ProtectedRoute>
-                <AppLayout>{withAnimatedPage(<LetterSoundMatch />, 'app')}</AppLayout>
+                <ChildPlayShell>{withAnimatedPage(<LetterSoundMatch />, 'app')}</ChildPlayShell>
               </ProtectedRoute>
             }
           />
@@ -208,7 +218,7 @@ export default function App() {
             path="/games/letters/letter-tracing-trail"
             element={
               <ProtectedRoute>
-                <AppLayout>{withAnimatedPage(<LetterTracingTrail />, 'app')}</AppLayout>
+                <ChildPlayShell>{withAnimatedPage(<LetterTracingTrail />, 'app')}</ChildPlayShell>
               </ProtectedRoute>
             }
           />
@@ -216,13 +226,13 @@ export default function App() {
             path="/games/letters/letter-sky-catcher"
             element={
               <ProtectedRoute>
-                <AppLayout>{withAnimatedPage(<LetterSkyCatcher />, 'app')}</AppLayout>
+                <ChildPlayShell>{withAnimatedPage(<LetterSkyCatcher />, 'app')}</ChildPlayShell>
               </ProtectedRoute>
             }
           />
 
           {/* 404 */}
-          <Route path="*" element={<PublicLayout>{withAnimatedPage(<NotFound />, 'public')}</PublicLayout>} />
+          <Route path="*" element={<MarketingShell>{withAnimatedPage(<NotFound />, 'public')}</MarketingShell>} />
         </Routes>
       </Suspense>
     </>

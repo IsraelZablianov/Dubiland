@@ -7,6 +7,11 @@ export interface ParentSummaryMetrics {
   highestStableRange: StableRange;
   firstAttemptSuccessRate: number;
   hintTrend: HintTrend;
+  ageBand?: '3-4' | '5-6' | '6-7';
+  listenParticipation?: number;
+  decodeAccuracy?: number;
+  sequenceEvidenceScore?: number;
+  gatePassed?: boolean;
 }
 
 export interface ReadingGateStatus {

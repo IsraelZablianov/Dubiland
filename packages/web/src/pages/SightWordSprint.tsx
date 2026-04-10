@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import type { Child, Game, GameLevel } from '@dubiland/shared';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Button, Card } from '@/components/design-system';
+import { Card } from '@/components/design-system';
 import type { GameCompletionResult } from '@/games/engine';
 import { SightWordSprintGame } from '@/games/reading/SightWordSprintGame';
 import { useAudioManager } from '@/hooks/useAudioManager';
@@ -70,6 +70,11 @@ export default function SightWordSprintPage() {
     }, 450);
   }, []);
 
+  const handleBackToGames = useCallback(() => {
+    void audio.playNow('/audio/he/nav/back.mp3');
+    navigate('/games');
+  }, [audio, navigate]);
+
   return (
     <main
       style={{
@@ -104,10 +109,6 @@ export default function SightWordSprintPage() {
             </h1>
             <p style={{ margin: 0, color: 'var(--color-text-secondary)' }}>{t('games.sightWordSprint.subtitle')}</p>
           </div>
-
-          <Button variant="ghost" size="md" onClick={() => navigate('/games')} aria-label={t('nav.back')}>
-            {t('nav.back')}
-          </Button>
         </header>
 
         <SightWordSprintGame
@@ -116,6 +117,7 @@ export default function SightWordSprintPage() {
           child={child}
           onComplete={handleComplete}
           audio={audio}
+          onRequestBack={handleBackToGames}
         />
 
         {completionResult && (

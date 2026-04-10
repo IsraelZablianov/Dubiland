@@ -279,7 +279,7 @@ function toneIcon(tone: StatusTone): string {
   if (tone === 'success') return '✅';
   if (tone === 'hint') return '💡';
   if (tone === 'error') return '🔁';
-  return '🔊';
+  return '▶';
 }
 
 const visuallyHiddenStyle: CSSProperties = {
@@ -1263,7 +1263,7 @@ export function RootFamilyStickersGame({ onComplete, audio }: GameProps) {
         }
 
         .root-family-stickers__score-pill {
-          min-height: 44px;
+          min-height: 48px;
           border-radius: var(--radius-full);
           border: 1px solid color-mix(in srgb, var(--color-accent-primary) 34%, transparent);
           background: color-mix(in srgb, var(--color-accent-primary) 12%, transparent);

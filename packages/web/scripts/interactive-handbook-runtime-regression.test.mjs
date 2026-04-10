@@ -36,7 +36,7 @@ test('renderer normalizes target-word and question block aliases', () => {
   assert.ok(promptBlock, 'expected question block to normalize to prompt text');
 });
 
-test('runtime interaction overrides align page question and choices with runtime payload', () => {
+test('runtime interaction choices override while story-depth prompt stays on base CTA flow', () => {
   const basePages = [
     {
       id: 'p01',
@@ -95,8 +95,8 @@ test('runtime interaction overrides align page question and choices with runtime
 
   assert.equal(
     mergedPage.promptKey,
-    'handbooks.mikaSoundGarden.interactions.literalChoice.prompt',
-    'runtime page question should drive visible prompt key',
+    'handbooks.mikaSoundGarden.scriptPackage.prompts.firstSound',
+    'story-depth pages should keep base prompt key when runtime blocks use legacy question keys',
   );
   assert.equal(mergedPage.interaction?.choices[0]?.id, 'dag', 'runtime choices should override static fallback choices');
 });
@@ -128,5 +128,51 @@ test('fallback renderer includes target-word text blocks for interaction choices
   const targetBlocks = blocks.filter(
     (block) => block.type === 'text' && block.role === 'target',
   );
-  assert.equal(targetBlocks.length, 2);
+  assert.equal(targetBlocks.length, 1);
+});
+
+test('story-depth pages keep chaptered narration/cta keys when runtime rows still carry legacy narration keys', () => {
+  const basePages = [
+    {
+      id: 'p01',
+      narrationKey: 'handbooks.yoavLetterMap.pages.page01.narration',
+      promptKey: 'handbooks.yoavLetterMap.pages.page01.cta',
+      interaction: {
+        id: 'decodePointedWord',
+        required: true,
+        promptKey: 'handbooks.yoavLetterMap.interactions.decodePointedWord.prompt',
+        hintKey: 'handbooks.yoavLetterMap.interactions.decodePointedWord.hint',
+        successKey: 'handbooks.yoavLetterMap.interactions.decodePointedWord.success',
+        retryKey: 'handbooks.yoavLetterMap.interactions.decodePointedWord.retry',
+        choices: [
+          { id: 'dag', labelKey: 'games.interactiveHandbook.choices.words.dag', isCorrect: true },
+          { id: 'dubi', labelKey: 'games.interactiveHandbook.choices.words.dubi', isCorrect: false },
+        ],
+      },
+    },
+  ];
+
+  const runtimeContent = {
+    pages: [
+      {
+        pageId: 'p01',
+        pageNumber: 1,
+        layoutKind: 'picture_book',
+        narrationKey: 'handbooks.yoavLetterMap.scriptPackage.narration.intro',
+        estimatedReadSec: 40,
+        blocks: [
+          {
+            type: 'question',
+            questionKey: 'handbooks.yoavLetterMap.interactions.decodePointedWord.prompt',
+          },
+        ],
+        interactions: [],
+      },
+    ],
+    mediaAssets: [],
+  };
+
+  const mergedPages = mergeRuntimePageDefinitions(basePages, runtimeContent, 'yoavLetterMap');
+  assert.equal(mergedPages[0].narrationKey, basePages[0].narrationKey);
+  assert.equal(mergedPages[0].promptKey, basePages[0].promptKey);
 });

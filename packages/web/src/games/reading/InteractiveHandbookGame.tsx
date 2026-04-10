@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Card } from '@/components/design-system';
+import { Card, GameTopBar } from '@/components/design-system';
 import { SuccessCelebration } from '@/components/motion';
 import type { GameProps, ParentSummaryMetrics, ReadingGateStatus, StableRange } from '@/games/engine';
 import { HandbookPageRenderer, type HandbookMediaAssetSlot } from '@/games/reading/HandbookPageRenderer';
@@ -47,6 +47,8 @@ interface ChoiceDefinition {
   audioKey?: string;
 }
 
+type AgeBandNumericPolicy = Partial<Record<AgeBand, number>>;
+
 interface InteractionDefinition {
   id: string;
   required: boolean;
@@ -54,6 +56,12 @@ interface InteractionDefinition {
   hintKey: string;
   successKey: string;
   retryKey: string;
+  isScored: boolean;
+  requiresTextActionBeforeChoice: boolean;
+  allowImageBeforeAnswer: boolean;
+  choiceLockUntilTextAction: boolean;
+  hintTriggerByBand: AgeBandNumericPolicy;
+  maxChoicesByBand: AgeBandNumericPolicy;
   choices: ChoiceDefinition[];
 }
 
@@ -80,7 +88,7 @@ interface ReadingHighlightState {
   mode: ReadingHighlightMode;
 }
 
-type HandbookControlIconKind = 'replay' | 'play' | 'pause' | 'retry' | 'hint' | 'next';
+type HandbookControlIconKind = 'replay' | 'play' | 'pause' | 'retry' | 'hint' | 'previous' | 'next' | 'complete';
 
 interface HandbookControlIconProps {
   kind: HandbookControlIconKind;
@@ -88,6 +96,30 @@ interface HandbookControlIconProps {
 }
 
 function HandbookControlIcon({ kind, isRtl = false }: HandbookControlIconProps) {
+  if (kind === 'replay') {
+    return (
+      <svg className="interactive-handbook__icon-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path
+          d="M16.8 7.2C15.6 6 13.9 5.2 12 5.2C8.2 5.2 5.2 8.2 5.2 12C5.2 15.8 8.2 18.8 12 18.8C15.8 18.8 18.8 15.8 18.8 12"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M18.8 7.2V10.8M18.8 7.2H15.2M18.8 7.2L15.8 10.2"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path d="M10 9.1L14.7 12L10 14.9V9.1Z" fill="currentColor" />
+      </svg>
+    );
+  }
+
   if (kind === 'play') {
     return (
       <svg className="interactive-handbook__icon-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -136,6 +168,27 @@ function HandbookControlIcon({ kind, isRtl = false }: HandbookControlIconProps) 
     );
   }
 
+  if (kind === 'previous') {
+    return (
+      <svg
+        className="interactive-handbook__icon-svg"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        focusable="false"
+        style={{ transform: isRtl ? 'none' : 'scaleX(-1)' }}
+      >
+        <path
+          d="M5.5 12H18.5M13.5 7L18.5 12L13.5 17"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
+  }
+
   if (kind === 'next') {
     return (
       <svg
@@ -147,6 +200,21 @@ function HandbookControlIcon({ kind, isRtl = false }: HandbookControlIconProps) 
       >
         <path
           d="M5.5 12H18.5M13.5 7L18.5 12L13.5 17"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
+  }
+
+  if (kind === 'complete') {
+    return (
+      <svg className="interactive-handbook__icon-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path
+          d="M8.2 12.4L10.9 15.1L15.8 9.9M12 21C7 21 3 17 3 12S7 3 12 3S21 7 21 12S17 21 12 21Z"
           fill="none"
           stroke="currentColor"
           strokeWidth="1.8"
@@ -187,6 +255,7 @@ interface InteractiveHandbookGameProps extends GameProps {
   onProgressChange?: (snapshot: InteractiveHandbookProgressSnapshot) => void;
   preloadManifest?: HandbookPreloadManifest | null;
   runtimeContent?: HandbookRuntimeContent | null;
+  onRequestBack?: () => void;
 }
 
 export interface HandbookPreloadManifest {
@@ -213,6 +282,8 @@ type HandbookSlug =
   | 'guyClassNewspaper'
   | 'almaRootFamilies'
   | 'magicLetterMap';
+type StoryDepthHandbookSlug = 'mikaSoundGarden' | 'yoavLetterMap' | 'tamarWordTower';
+type StoryArcChapterId = 'chapterA' | 'chapterB' | 'chapterC';
 type InteractionChoicePresetId =
   | 'letters_bet'
   | 'letters_pe'
@@ -341,6 +412,27 @@ const BOOK_TO_DEFAULT_AGE_BAND: Record<LadderBookId, AgeBand> = {
   book9: '6-7',
   book10: '6-7',
 };
+const STORY_DEPTH_SLUG_BY_BOOK: Partial<Record<LadderBookId, StoryDepthHandbookSlug>> = {
+  book1: 'mikaSoundGarden',
+  book7: 'tamarWordTower',
+};
+const STORY_ARC_CHAPTER_PAGES: Partial<Record<LadderBookId, Record<StoryArcChapterId, PageId[]>>> = {
+  book1: {
+    chapterA: ['p01', 'p02', 'p03'],
+    chapterB: ['p04', 'p05', 'p06'],
+    chapterC: ['p07', 'p08'],
+  },
+  book4: {
+    chapterA: ['p01', 'p02', 'p03'],
+    chapterB: ['p04', 'p05', 'p06', 'p07'],
+    chapterC: ['p08', 'p09', 'p10'],
+  },
+  book7: {
+    chapterA: ['p01', 'p02', 'p03', 'p04'],
+    chapterB: ['p05', 'p06', 'p07', 'p08'],
+    chapterC: ['p09', 'p10', 'p11', 'p12'],
+  },
+};
 const DEFAULT_QUALITY_GATE_BY_BOOK: Record<LadderBookId, { firstTryAccuracyMin: number; hintRateMax: number }> = {
   book1: { firstTryAccuracyMin: 60, hintRateMax: 55 },
   book4: { firstTryAccuracyMin: 80, hintRateMax: 35 },
@@ -422,13 +514,10 @@ const INTERACTION_FLOW_BY_BOOK: Record<
     { pageId: 'p06', interactionId: 'literalChoice', presetId: 'words_dubi' },
   ],
   book4: [
-    { pageId: 'p02', interactionId: 'firstSound', presetId: 'letters_bet' },
-    { pageId: 'p03', interactionId: 'chooseLetter', presetId: 'letters_pe' },
-    { pageId: 'p05', interactionId: 'simpleAdd', presetId: 'numbers_four' },
-    { pageId: 'p06', interactionId: 'decodePointedWord', presetId: 'words_gan' },
-    { pageId: 'p07', interactionId: 'literalComprehension', presetId: 'words_dubi' },
-    { pageId: 'p08', interactionId: 'sortObjects', presetId: 'baskets_fruit' },
-    { pageId: 'p10', interactionId: 'recapSkill', presetId: 'recap_letters' },
+    { pageId: 'p02', interactionId: 'decodePointedWord', presetId: 'words_gan' },
+    { pageId: 'p04', interactionId: 'chooseWordByNikud', presetId: 'words_dubi' },
+    { pageId: 'p06', interactionId: 'confusableContrast', presetId: 'letters_pe' },
+    { pageId: 'p08', interactionId: 'literalAfterDecoding', presetId: 'literal_bread_delivery' },
   ],
   book5: [
     { pageId: 'p02', interactionId: 'buildCV', presetId: 'syllable_build_cv' },
@@ -819,6 +908,92 @@ function handbookSentenceKey(slug: HandbookSlug, group: string, key: string): st
   return `handbooks.${slug}.sentenceBank.${group}.${key}`;
 }
 
+function resolveStoryDepthSlugForBook(activeBookId: LadderBookId, handbookSlug: HandbookSlug): StoryDepthHandbookSlug | null {
+  const bookSpecificSlug = STORY_DEPTH_SLUG_BY_BOOK[activeBookId];
+  if (bookSpecificSlug) {
+    return bookSpecificSlug;
+  }
+
+  if (handbookSlug === 'mikaSoundGarden' || handbookSlug === 'yoavLetterMap' || handbookSlug === 'tamarWordTower') {
+    return handbookSlug;
+  }
+
+  return null;
+}
+
+function resolveStoryDepthSlugForRuntime(handbookSlug: HandbookSlug): StoryDepthHandbookSlug | null {
+  if (handbookSlug === 'mikaSoundGarden' || handbookSlug === 'yoavLetterMap' || handbookSlug === 'tamarWordTower') {
+    return handbookSlug;
+  }
+
+  return null;
+}
+
+function storyPageToken(pageId: PageId): string {
+  return `page${pageId.slice(1)}`;
+}
+
+function handbookStoryPageKey(
+  slug: StoryDepthHandbookSlug,
+  pageId: PageId,
+  field: 'narration' | 'cta',
+): string {
+  return `handbooks.${slug}.pages.${storyPageToken(pageId)}.${field}`;
+}
+
+function handbookStoryArcKey(
+  slug: StoryDepthHandbookSlug,
+  chapterId: StoryArcChapterId,
+  field: 'title' | 'transition',
+): string {
+  return `handbooks.${slug}.storyArc.${chapterId}.${field}`;
+}
+
+function handbookChapterRecapKey(
+  slug: StoryDepthHandbookSlug,
+  field: 'title' | 'summary' | 'nextStep',
+): string {
+  return `handbooks.${slug}.chapterRecap.${field}`;
+}
+
+function resolveStoryArcChapterId(activeBookId: LadderBookId, pageId: PageId): StoryArcChapterId | null {
+  const chapterPagesById = STORY_ARC_CHAPTER_PAGES[activeBookId];
+  if (!chapterPagesById) {
+    return null;
+  }
+
+  if (chapterPagesById.chapterA.includes(pageId)) return 'chapterA';
+  if (chapterPagesById.chapterB.includes(pageId)) return 'chapterB';
+  if (chapterPagesById.chapterC.includes(pageId)) return 'chapterC';
+  return null;
+}
+
+function countCompletedStoryArcChapters(activeBookId: LadderBookId, visitedPages: Set<PageId>): number {
+  const chapterPagesById = STORY_ARC_CHAPTER_PAGES[activeBookId];
+  if (!chapterPagesById) {
+    return 0;
+  }
+
+  const chapterIds: StoryArcChapterId[] = ['chapterA', 'chapterB', 'chapterC'];
+  return chapterIds.filter((chapterId) => chapterPagesById[chapterId].every((pageId) => visitedPages.has(pageId))).length;
+}
+
+function isStoryDepthPageKey(
+  key: string,
+  slug: StoryDepthHandbookSlug,
+  field?: 'narration' | 'cta',
+): boolean {
+  if (!key.startsWith(`handbooks.${slug}.pages.page`)) {
+    return false;
+  }
+
+  if (!field) {
+    return key.endsWith('.narration') || key.endsWith('.cta');
+  }
+
+  return key.endsWith(`.${field}`);
+}
+
 const INTERACTION_KEY_ALIAS_BY_SLUG: Partial<Record<HandbookSlug, Record<string, string>>> = {
   tamarWordTower: {
     decodePhraseA: 'decodePointedPhrase',
@@ -849,7 +1024,18 @@ function handbookInteractionKey(slug: HandbookSlug, interactionId: string, field
   return `handbooks.${slug}.interactions.${normalizedInteractionId}.${field}`;
 }
 
-function parentHandbookKey(slug: HandbookSlug, field: 'progressSummary' | 'nextStep' | 'readingSignal' | 'confusionFocus'): string {
+function parentHandbookKey(
+  slug: HandbookSlug,
+  field:
+    | 'progressSummary'
+    | 'nextStep'
+    | 'readingSignal'
+    | 'confusionFocus'
+    | 'storyEngagement'
+    | 'decodeInStoryAccuracy'
+    | 'evidenceReading'
+    | 'independenceTrend',
+): string {
   if (slug === 'magicLetterMap') {
     if (field === 'progressSummary' || field === 'nextStep') {
       return `parentDashboard.games.interactiveHandbook.${field}`;
@@ -860,6 +1046,11 @@ function parentHandbookKey(slug: HandbookSlug, field: 'progressSummary' | 'nextS
 }
 
 function completionPraiseKey(slug: HandbookSlug, activeBookId: LadderBookId): string {
+  const storyDepthSlug = resolveStoryDepthSlugForBook(activeBookId, slug);
+  if (storyDepthSlug) {
+    return handbookChapterRecapKey(storyDepthSlug, 'title');
+  }
+
   if (slug === 'magicLetterMap') {
     return 'games.interactiveHandbook.handbooks.magicLetterMap.completion.title';
   }
@@ -873,13 +1064,32 @@ function completionPraiseKey(slug: HandbookSlug, activeBookId: LadderBookId): st
   return handbookScriptKey(slug, 'praise', 'independent');
 }
 
+function completionSummaryKey(slug: HandbookSlug, activeBookId: LadderBookId): string {
+  const storyDepthSlug = resolveStoryDepthSlugForBook(activeBookId, slug);
+  if (storyDepthSlug) {
+    return handbookChapterRecapKey(storyDepthSlug, 'summary');
+  }
+
+  return parentHandbookKey(slug, 'progressSummary');
+}
+
+function completionNextStepKey(slug: HandbookSlug, activeBookId: LadderBookId): string {
+  const storyDepthSlug = resolveStoryDepthSlugForBook(activeBookId, slug);
+  if (storyDepthSlug) {
+    return handbookChapterRecapKey(storyDepthSlug, 'nextStep');
+  }
+
+  return parentHandbookKey(slug, 'nextStep');
+}
+
 function buildNarrationSentenceKeys(
   activeBookId: LadderBookId,
   handbookSlug: HandbookSlug,
   pageIds: PageId[],
 ): string[] {
-  if (activeBookId === 'book4' && handbookSlug === 'magicLetterMap') {
-    return pageIds.map((pageId) => handbookSentenceKey(handbookSlug, 'pages', pageId));
+  const storyDepthSlug = resolveStoryDepthSlugForBook(activeBookId, handbookSlug);
+  if (storyDepthSlug) {
+    return pageIds.map((pageId) => handbookStoryPageKey(storyDepthSlug, pageId, 'narration'));
   }
 
   if (activeBookId === 'book1') {
@@ -946,6 +1156,12 @@ function buildInteractionDefinition(
     hintKey: handbookInteractionKey(handbookSlug, interactionId, 'hint'),
     successKey: handbookInteractionKey(handbookSlug, interactionId, 'success'),
     retryKey: handbookInteractionKey(handbookSlug, interactionId, 'retry'),
+    isScored: false,
+    requiresTextActionBeforeChoice: false,
+    allowImageBeforeAnswer: true,
+    choiceLockUntilTextAction: false,
+    hintTriggerByBand: {},
+    maxChoicesByBand: {},
     choices: CHOICE_PRESETS[presetId],
   };
 }
@@ -953,12 +1169,23 @@ function buildInteractionDefinition(
 function buildPageDefinitions(activeBookId: LadderBookId, handbookSlug: HandbookSlug): HandbookPageDefinition[] {
   const pageIds = PAGE_IDS_BY_BOOK[activeBookId];
   const interactionFlow = INTERACTION_FLOW_BY_BOOK[activeBookId];
+  const storyDepthSlug = resolveStoryDepthSlugForBook(activeBookId, handbookSlug);
+  const interactionSlug: HandbookSlug = storyDepthSlug ?? handbookSlug;
   const interactionByPage = new Map(
     interactionFlow.map((item) => [
       item.pageId,
-      buildInteractionDefinition(handbookSlug, item.interactionId, item.presetId, item.required ?? true),
+      buildInteractionDefinition(interactionSlug, item.interactionId, item.presetId, item.required ?? true),
     ]),
   );
+
+  if (storyDepthSlug) {
+    return pageIds.map((pageId) => ({
+      id: pageId,
+      narrationKey: handbookStoryPageKey(storyDepthSlug, pageId, 'narration'),
+      promptKey: handbookStoryPageKey(storyDepthSlug, pageId, 'cta'),
+      interaction: interactionByPage.get(pageId),
+    }));
+  }
 
   if (activeBookId === 'book4' && handbookSlug === 'magicLetterMap') {
     return pageIds.map((pageId) => ({
@@ -996,10 +1223,15 @@ export function mergeRuntimePageDefinitions(
 
   const runtimePageById = new Map(runtimeContent.pages.map((page) => [page.pageId, page]));
   const sharedMediaAssets = runtimeContent.mediaAssets.length > 0 ? runtimeContent.mediaAssets : undefined;
+  const storyDepthSlug = resolveStoryDepthSlugForRuntime(handbookSlug);
 
   return basePages.map((basePage) => {
     const runtimePage = runtimePageById.get(basePage.id);
-    const runtimeInteraction = mergeRuntimeInteractionDefinition(basePage.interaction, runtimePage?.interactions, handbookSlug);
+    const runtimeInteraction = mergeRuntimeInteractionDefinition(
+      basePage.interaction,
+      runtimePage?.interactions,
+      storyDepthSlug ?? handbookSlug,
+    );
     const runtimePromptKey = extractPromptKeyFromRuntimeBlocks(runtimePage?.blocks);
 
     if (!runtimePage) {
@@ -1014,10 +1246,21 @@ export function mergeRuntimePageDefinitions(
       };
     }
 
+    const narrationKey = storyDepthSlug
+      ? runtimePage.narrationKey && isStoryDepthPageKey(runtimePage.narrationKey, storyDepthSlug, 'narration')
+        ? runtimePage.narrationKey
+        : basePage.narrationKey
+      : runtimePage.narrationKey ?? basePage.narrationKey;
+    const promptKey = storyDepthSlug
+      ? runtimePromptKey && isStoryDepthPageKey(runtimePromptKey, storyDepthSlug, 'cta')
+        ? runtimePromptKey
+        : basePage.promptKey
+      : runtimePromptKey ?? runtimeInteraction?.promptKey ?? basePage.promptKey;
+
     return {
       ...basePage,
-      narrationKey: runtimePage.narrationKey ?? basePage.narrationKey,
-      promptKey: runtimePromptKey ?? runtimeInteraction?.promptKey ?? basePage.promptKey,
+      narrationKey,
+      promptKey,
       blocks: runtimePage.blocks,
       interaction: runtimeInteraction,
       mediaAssets: sharedMediaAssets,
@@ -1047,6 +1290,10 @@ function toChoiceDefinition(runtimeChoice: HandbookRuntimeChoice): ChoiceDefinit
   };
 }
 
+function hasPolicyEntries(policy: AgeBandNumericPolicy | undefined): boolean {
+  return Boolean(policy && Object.keys(policy).length > 0);
+}
+
 function buildRuntimeInteractionDefinition(
   runtimeInteraction: HandbookRuntimeInteraction,
   handbookSlug: HandbookSlug,
@@ -1068,6 +1315,18 @@ function buildRuntimeInteractionDefinition(
       runtimeInteraction.successKey ?? baseInteraction?.successKey ?? handbookInteractionKey(handbookSlug, fallbackInteractionId, 'success'),
     retryKey:
       runtimeInteraction.retryKey ?? baseInteraction?.retryKey ?? handbookInteractionKey(handbookSlug, fallbackInteractionId, 'retry'),
+    isScored: runtimeInteraction.isScored ?? baseInteraction?.isScored ?? false,
+    requiresTextActionBeforeChoice:
+      runtimeInteraction.requiresTextActionBeforeChoice ?? baseInteraction?.requiresTextActionBeforeChoice ?? false,
+    allowImageBeforeAnswer: runtimeInteraction.allowImageBeforeAnswer ?? baseInteraction?.allowImageBeforeAnswer ?? true,
+    choiceLockUntilTextAction:
+      runtimeInteraction.choiceLockUntilTextAction ?? baseInteraction?.choiceLockUntilTextAction ?? false,
+    hintTriggerByBand: hasPolicyEntries(runtimeInteraction.hintTriggerByBand)
+      ? runtimeInteraction.hintTriggerByBand
+      : (baseInteraction?.hintTriggerByBand ?? {}),
+    maxChoicesByBand: hasPolicyEntries(runtimeInteraction.maxChoicesByBand)
+      ? runtimeInteraction.maxChoicesByBand
+      : (baseInteraction?.maxChoicesByBand ?? {}),
     choices: choiceDefinitions,
   };
 }
@@ -1168,6 +1427,11 @@ function resolveActiveLadderBookId(levelConfig: Record<string, unknown>): Ladder
 }
 
 function resolveHandbookSlug(levelConfig: Record<string, unknown>, activeBookId: LadderBookId): HandbookSlug {
+  const storyDepthSlug = STORY_DEPTH_SLUG_BY_BOOK[activeBookId];
+  if (storyDepthSlug) {
+    return storyDepthSlug;
+  }
+
   const readingLadderConfig = isRecord(levelConfig.readingLadder) ? levelConfig.readingLadder : null;
   const booksConfig = readingLadderConfig && isRecord(readingLadderConfig.books) ? readingLadderConfig.books : null;
   const activeBookConfig = booksConfig && isRecord(booksConfig[activeBookId]) ? booksConfig[activeBookId] : null;
@@ -1369,6 +1633,62 @@ function shouldHideOptionalInteraction(mode: HandbookMode, interaction: Interact
   return mode === 'calmReplay' && interaction?.required === false;
 }
 
+function shouldLockChoicesUntilTextAction(interaction: InteractionDefinition | undefined): boolean {
+  if (!interaction) {
+    return false;
+  }
+
+  return interaction.isScored && interaction.requiresTextActionBeforeChoice && interaction.choiceLockUntilTextAction;
+}
+
+function resolvePolicyValueByAgeBand(policy: AgeBandNumericPolicy | undefined, activeAgeBand: AgeBand): number | null {
+  if (!policy) {
+    return null;
+  }
+
+  const value = policy[activeAgeBand];
+  if (typeof value !== 'number' || !Number.isFinite(value)) {
+    return null;
+  }
+
+  return value;
+}
+
+function resolveHintTriggerTimeoutMs(interaction: InteractionDefinition | undefined, activeAgeBand: AgeBand): number | null {
+  if (!interaction) {
+    return null;
+  }
+
+  const threshold = resolvePolicyValueByAgeBand(interaction.hintTriggerByBand, activeAgeBand);
+  if (threshold === null || threshold <= 0) {
+    return null;
+  }
+
+  const interpretedMs = threshold <= 60 ? threshold * 1000 : threshold;
+  return Math.round(interpretedMs);
+}
+
+function applyChoiceCap(choices: ChoiceDefinition[], maxChoices: number): ChoiceDefinition[] {
+  if (!Number.isFinite(maxChoices)) {
+    return choices;
+  }
+
+  const boundedCap = Math.max(1, Math.floor(maxChoices));
+  if (choices.length <= boundedCap) {
+    return choices;
+  }
+
+  const correctChoice = choices.find((choice) => choice.isCorrect);
+  const distractors = choices.filter((choice) => !choice.isCorrect);
+
+  if (!correctChoice) {
+    return choices.slice(0, boundedCap);
+  }
+
+  const capped = [correctChoice, ...distractors.slice(0, Math.max(0, boundedCap - 1))];
+  return capped.slice(0, boundedCap);
+}
+
 function isPageId(value: string): value is PageId {
   return PAGE_ID_SET.has(value as PageId);
 }
@@ -1563,6 +1883,7 @@ export function InteractiveHandbookGame({
   onProgressChange,
   preloadManifest = null,
   runtimeContent = null,
+  onRequestBack,
 }: InteractiveHandbookGameProps) {
   const { t, i18n } = useTranslation('common');
   const isRtl = i18n.dir() === 'rtl';
@@ -1603,6 +1924,7 @@ export function InteractiveHandbookGame({
   const [pageHintUsage, setPageHintUsage] = useState<Record<string, number>>({});
   const [selectedChoiceByPage, setSelectedChoiceByPage] = useState<Record<string, string>>({});
   const [highlightChoiceByPage, setHighlightChoiceByPage] = useState<Record<string, string>>({});
+  const [textActionReadyByPage, setTextActionReadyByPage] = useState<Record<string, boolean>>({});
   const [statusKey, setStatusKey] = useState('games.interactiveHandbook.instructions.intro');
   const [statusTone, setStatusTone] = useState<StatusTone>('neutral');
   const [completionSummary, setCompletionSummary] = useState<CompletionSummary | null>(null);
@@ -1616,24 +1938,44 @@ export function InteractiveHandbookGame({
   const preloadedAssetsRef = useRef<Set<string>>(new Set());
   const swipeStartRef = useRef<{ x: number; y: number } | null>(null);
   const hasPassedStartupNarrationGateRef = useRef(false);
+  const chapterTransitionCueRef = useRef<string | null>(null);
 
   const qualityGate = useMemo(
     () => resolveQualityGate(level.configJson, activeLadderBookId),
     [activeLadderBookId, level.configJson],
   );
+  const activeStoryDepthSlug = useMemo(
+    () => resolveStoryDepthSlugForBook(activeLadderBookId, activeHandbookSlug),
+    [activeHandbookSlug, activeLadderBookId],
+  );
   const handbookCompletionTitleKey = useMemo(
     () => completionPraiseKey(activeHandbookSlug, activeLadderBookId),
     [activeHandbookSlug, activeLadderBookId],
   );
+  const handbookCompletionSummaryKey = useMemo(
+    () => completionSummaryKey(activeHandbookSlug, activeLadderBookId),
+    [activeHandbookSlug, activeLadderBookId],
+  );
   const handbookCompletionNextStepKey = useMemo(
-    () => parentHandbookKey(activeHandbookSlug, 'nextStep'),
-    [activeHandbookSlug],
+    () => completionNextStepKey(activeHandbookSlug, activeLadderBookId),
+    [activeHandbookSlug, activeLadderBookId],
   );
   const isMagicLetterMapListenExploreMode = activeHandbookSlug === 'magicLetterMap' && activeAgeBand === '3-4';
   const isMagicLetterMapStretchMode = activeHandbookSlug === 'magicLetterMap' && activeAgeBand === '6-7';
 
   const currentPage = (pageDefinitions[currentPageIndex] ?? pageDefinitions[0]) as HandbookPageDefinition;
   const nextPage = (pageDefinitions[currentPageIndex + 1] ?? null) as HandbookPageDefinition | null;
+  const currentStoryArcChapterId = useMemo(
+    () => resolveStoryArcChapterId(activeLadderBookId, currentPage.id),
+    [activeLadderBookId, currentPage.id],
+  );
+  const chapterTransitionKey = useMemo(
+    () =>
+      activeStoryDepthSlug && currentStoryArcChapterId
+        ? handbookStoryArcKey(activeStoryDepthSlug, currentStoryArcChapterId, 'transition')
+        : null,
+    [activeStoryDepthSlug, currentStoryArcChapterId],
+  );
   const currentIllustration = useMemo(
     () => buildIllustrationAsset(activeHandbookSlug, currentPage.id),
     [activeHandbookSlug, currentPage.id],
@@ -1647,6 +1989,9 @@ export function InteractiveHandbookGame({
   }, [currentPage.interaction, mode]);
   const activeInteractionReplayTextKey = resolveInteractionReplayTextKey(activeInteraction);
   const activeInteractionReplayAudioKey = resolveInteractionReplayAudioKey(activeInteraction);
+  const activeInteractionRequiresTextActionLock = shouldLockChoicesUntilTextAction(activeInteraction);
+  const isChoiceLocked =
+    activeInteractionRequiresTextActionLock && !Boolean(textActionReadyByPage[currentPage.id]);
 
   const currentPromptPreloadPath = useMemo(
     () => {
@@ -1703,6 +2048,7 @@ export function InteractiveHandbookGame({
   }, [pageDefinitions, solvedPages]);
 
   const canAdvanceCurrentPage = !activeInteraction || solvedPages.has(currentPage.id) || !activeInteraction.required;
+  const canReturnToPreviousPage = currentPageIndex > 0 && canAdvanceCurrentPage;
   const isLastPage = currentPageIndex === totalPages - 1;
   const isNarrationHighlightActive =
     readingHighlightState?.pageId === currentPage.id && readingHighlightState.mode === 'narration';
@@ -1841,11 +2187,26 @@ export function InteractiveHandbookGame({
     },
     [audio, audioDegraded, handleAudioPlaybackFailure],
   );
+  const markTextActionReady = useCallback((pageId: PageId) => {
+    setTextActionReadyByPage((previous) => {
+      if (previous[pageId]) {
+        return previous;
+      }
+
+      return {
+        ...previous,
+        [pageId]: true,
+      };
+    });
+  }, []);
   const playRendererAudioKey = useCallback(
     (audioKey: string) => {
+      if (activeInteractionRequiresTextActionLock) {
+        markTextActionReady(currentPage.id);
+      }
       playAudioKey(audioKey, true);
     },
-    [playAudioKey],
+    [activeInteractionRequiresTextActionLock, currentPage.id, markTextActionReady, playAudioKey],
   );
   const handleRendererHotspotPress = useCallback(
     (interactionId: string) => {
@@ -1855,12 +2216,44 @@ export function InteractiveHandbookGame({
 
       const replayTextKey = activeInteractionReplayTextKey ?? activeInteraction.promptKey;
       const replayAudioKey = activeInteractionReplayAudioKey ?? activeInteraction.promptKey;
+
+      const shouldBlockImageFirstTap =
+        shouldLockChoicesUntilTextAction(activeInteraction) &&
+        !activeInteraction.allowImageBeforeAnswer &&
+        !textActionReadyByPage[currentPage.id];
+      if (shouldBlockImageFirstTap) {
+        setStatusKey(activeInteraction.hintKey);
+        setStatusTone('hint');
+        setReadingHighlightState({ pageId: currentPage.id, mode: 'prompt' });
+        playAudioKey(activeInteraction.hintKey, true);
+
+        window.setTimeout(() => {
+          setStatusKey(replayTextKey);
+          setStatusTone('neutral');
+          setReadingHighlightState({ pageId: currentPage.id, mode: 'prompt' });
+          playAudioKey(replayAudioKey);
+        }, 180);
+        return;
+      }
+
+      if (shouldLockChoicesUntilTextAction(activeInteraction)) {
+        markTextActionReady(currentPage.id);
+      }
+
       setStatusKey(replayTextKey);
       setStatusTone('neutral');
       setReadingHighlightState({ pageId: currentPage.id, mode: 'prompt' });
       playAudioKey(replayAudioKey, true);
     },
-    [activeInteraction, activeInteractionReplayAudioKey, activeInteractionReplayTextKey, currentPage.id, playAudioKey],
+    [
+      activeInteraction,
+      activeInteractionReplayAudioKey,
+      activeInteractionReplayTextKey,
+      currentPage.id,
+      markTextActionReady,
+      playAudioKey,
+      textActionReadyByPage,
+    ],
   );
   const rendererBlocks = useMemo(() => {
     if (Array.isArray(currentPage.blocks) && currentPage.blocks.length > 0) {
@@ -2189,6 +2582,13 @@ export function InteractiveHandbookGame({
   ]);
 
   const goToPreviousPage = useCallback(() => {
+    if (activeInteraction?.required && !solvedPages.has(currentPage.id)) {
+      setStatusKey('games.interactiveHandbook.status.completeInteractionFirst');
+      setStatusTone('error');
+      playAudioKey('games.interactiveHandbook.status.completeInteractionFirst', true);
+      return;
+    }
+
     if (currentPageIndex <= 0) {
       return;
     }
@@ -2196,10 +2596,11 @@ export function InteractiveHandbookGame({
     const previousIndex = Math.max(currentPageIndex - 1, 0);
     const previousPage = pageDefinitions[previousIndex] as HandbookPageDefinition;
 
+    playAudioKey('nav.back', true);
     setPageTurnDirection('backward');
     markPageVisited(previousPage.id);
     setCurrentPageIndex(previousIndex);
-  }, [currentPageIndex, markPageVisited, pageDefinitions]);
+  }, [activeInteraction, currentPage.id, currentPageIndex, markPageVisited, pageDefinitions, playAudioKey, solvedPages]);
 
   const clearSwipeGesture = useCallback(() => {
     swipeStartRef.current = null;
@@ -2276,7 +2677,9 @@ export function InteractiveHandbookGame({
 
   useEffect(() => {
     markPageVisited(currentPage.id);
-    setStatusKey(activeInteractionReplayTextKey ?? currentPage.promptKey);
+    const shouldAnnounceChapterTransition = Boolean(chapterTransitionKey) && chapterTransitionCueRef.current !== chapterTransitionKey;
+    chapterTransitionCueRef.current = chapterTransitionKey;
+    setStatusKey(shouldAnnounceChapterTransition ? chapterTransitionKey ?? currentPage.promptKey : activeInteractionReplayTextKey ?? currentPage.promptKey);
     setStatusTone('neutral');
     setReadingHighlightState(null);
     setHighlightChoiceByPage((previous) => {
@@ -2339,6 +2742,7 @@ export function InteractiveHandbookGame({
     activeInteraction,
     activeInteractionReplayAudioKey,
     activeInteractionReplayTextKey,
+    chapterTransitionKey,
     currentPage.id,
     currentPage.narrationKey,
     currentPage.promptKey,
@@ -2380,11 +2784,6 @@ export function InteractiveHandbookGame({
     onProgressChange?.(progressSnapshot);
   }, [onProgressChange, progressSnapshot]);
 
-  const progressSegments = useMemo(
-    () => pageDefinitions.map((page, index) => ({ index, id: page.id })),
-    [pageDefinitions],
-  );
-
   const summaryHintKey = completionSummary
     ? completionSummary.hints === 'improving'
       ? 'games.interactiveHandbook.summary.hintTrend.improving'
@@ -2392,75 +2791,68 @@ export function InteractiveHandbookGame({
         ? 'games.interactiveHandbook.summary.hintTrend.steady'
         : 'games.interactiveHandbook.summary.hintTrend.needsSupport'
     : null;
+  const parentSummarySlug: HandbookSlug = activeStoryDepthSlug ?? activeHandbookSlug;
+  const storyArcChaptersTotal = activeStoryDepthSlug ? 3 : 0;
+  const storyArcChaptersCompleted = activeStoryDepthSlug ? countCompletedStoryArcChapters(activeLadderBookId, visitedPages) : 0;
+  const independenceTrendLabel = summaryHintKey ? t(summaryHintKey as any) : '';
 
   return (
     <Card padding="lg" className="interactive-handbook">
-      <div className="interactive-handbook__header">
-        <p className="interactive-handbook__subtitle">{t(handbookMetaKey(activeHandbookSlug, 'subtitle') as any)}</p>
-
-        <div className="interactive-handbook__mode-switch" role="group" aria-label={t('games.interactiveHandbook.controls.modeGroup')}>
-          <button
-            type="button"
-            className={`interactive-handbook__mode-button ${mode === 'readToMe' ? 'is-active' : ''}`}
-            onClick={() => {
-              setMode('readToMe');
-              playAudioKey('games.interactiveHandbook.modes.readToMe', true);
-            }}
-            aria-label={t('games.interactiveHandbook.modes.readToMe')}
-          >
-            {t('games.interactiveHandbook.modes.readToMe')}
-          </button>
-          <button
-            type="button"
-            className={`interactive-handbook__mode-button ${mode === 'readAndPlay' ? 'is-active' : ''}`}
-            onClick={() => {
-              setMode('readAndPlay');
-              playAudioKey('games.interactiveHandbook.modes.readAndPlay', true);
-            }}
-            aria-label={t('games.interactiveHandbook.modes.readAndPlay')}
-          >
-            {t('games.interactiveHandbook.modes.readAndPlay')}
-          </button>
-          <button
-            type="button"
-            className={`interactive-handbook__mode-button ${mode === 'calmReplay' ? 'is-active' : ''}`}
-            onClick={() => {
-              setMode('calmReplay');
-              playAudioKey('games.interactiveHandbook.modes.calmReplay', true);
-            }}
-            aria-label={t('games.interactiveHandbook.modes.calmReplay')}
-          >
-            {t('games.interactiveHandbook.modes.calmReplay')}
-          </button>
-        </div>
-      </div>
-
-      <div className="interactive-handbook__progress-row">
-        <p className="interactive-handbook__progress-label" aria-live="polite">
-          {t('games.interactiveHandbook.reader.pageLabel', {
-            current: currentPageIndex + 1,
-            total: totalPages,
-          })}
-        </p>
-
-        <div className="interactive-handbook__progress-rail" aria-hidden="true">
-          {progressSegments.map((segment) => {
-            const state =
-              segment.index < currentPageIndex
-                ? 'done'
-                : segment.index === currentPageIndex
-                  ? 'active'
-                  : 'pending';
-
-            return (
-              <span
-                key={segment.id}
-                className={`interactive-handbook__progress-dot interactive-handbook__progress-dot--${state}`}
-              />
-            );
-          })}
-        </div>
-      </div>
+      <GameTopBar
+        isRtl={isRtl}
+        subtitle={t(handbookMetaKey(parentSummarySlug, 'subtitle') as any)}
+        progressLabel={t('games.interactiveHandbook.reader.pageLabel', {
+          current: currentPageIndex + 1,
+          total: totalPages,
+        })}
+        progressAriaLabel={t('games.interactiveHandbook.reader.pageLabel', {
+          current: currentPageIndex + 1,
+          total: totalPages,
+        })}
+        currentStep={currentPageIndex + 1}
+        totalSteps={totalPages}
+        onReplayInstruction={replayCurrentPrompt}
+        replayAriaLabel={t('games.interactiveHandbook.controls.replay')}
+        onBack={onRequestBack}
+        backAriaLabel={t('nav.back')}
+        rightSlot={
+          <div className="interactive-handbook__mode-switch" role="group" aria-label={t('games.interactiveHandbook.controls.modeGroup')}>
+            <button
+              type="button"
+              className={`interactive-handbook__mode-button ${mode === 'readToMe' ? 'is-active' : ''}`}
+              onClick={() => {
+                setMode('readToMe');
+                playAudioKey('games.interactiveHandbook.modes.readToMe', true);
+              }}
+              aria-label={t('games.interactiveHandbook.modes.readToMe')}
+            >
+              {t('games.interactiveHandbook.modes.readToMe')}
+            </button>
+            <button
+              type="button"
+              className={`interactive-handbook__mode-button ${mode === 'readAndPlay' ? 'is-active' : ''}`}
+              onClick={() => {
+                setMode('readAndPlay');
+                playAudioKey('games.interactiveHandbook.modes.readAndPlay', true);
+              }}
+              aria-label={t('games.interactiveHandbook.modes.readAndPlay')}
+            >
+              {t('games.interactiveHandbook.modes.readAndPlay')}
+            </button>
+            <button
+              type="button"
+              className={`interactive-handbook__mode-button ${mode === 'calmReplay' ? 'is-active' : ''}`}
+              onClick={() => {
+                setMode('calmReplay');
+                playAudioKey('games.interactiveHandbook.modes.calmReplay', true);
+              }}
+              aria-label={t('games.interactiveHandbook.modes.calmReplay')}
+            >
+              {t('games.interactiveHandbook.modes.calmReplay')}
+            </button>
+          </div>
+        }
+      />
 
       <div className="interactive-handbook__stage">
         <div key={currentPage.id} className={storyFlipClassName}>
@@ -2549,11 +2941,20 @@ export function InteractiveHandbookGame({
           <button
             type="button"
             className="interactive-handbook__icon-button"
+            onClick={goToPreviousPage}
+            disabled={!canReturnToPreviousPage}
+            aria-label={t('nav.back')}
+          >
+            <HandbookControlIcon kind="previous" isRtl={isRtl} />
+          </button>
+          <button
+            type="button"
+            className="interactive-handbook__icon-button"
             onClick={goToNextPage}
             disabled={!canAdvanceCurrentPage && !isLastPage}
-            aria-label={t('games.interactiveHandbook.controls.next')}
+            aria-label={isLastPage ? t('games.interactiveHandbook.instructions.completion') : t('games.interactiveHandbook.controls.next')}
           >
-            <HandbookControlIcon kind="next" isRtl={isRtl} />
+            <HandbookControlIcon kind={isLastPage ? 'complete' : 'next'} isRtl={isRtl} />
           </button>
         </div>
 
@@ -2593,11 +2994,38 @@ export function InteractiveHandbookGame({
             <SuccessCelebration dense />
             <h3 className="interactive-handbook__completion-title">{t(handbookCompletionTitleKey as any)}</h3>
             <p className="interactive-handbook__completion-line">
-              {t(parentHandbookKey(activeHandbookSlug, 'progressSummary') as any, {
+              {t(handbookCompletionSummaryKey as any, {
                 successRate: completionSummary.firstAttemptRate,
                 pagesVisited: completionSummary.visitedCount,
+                chaptersCompleted: storyArcChaptersCompleted,
+                chaptersTotal: storyArcChaptersTotal,
               })}
             </p>
+            {activeStoryDepthSlug ? (
+              <>
+                <p className="interactive-handbook__completion-line">
+                  {t(parentHandbookKey(parentSummarySlug, 'storyEngagement') as any, {
+                    chaptersCompleted: storyArcChaptersCompleted,
+                    chaptersTotal: storyArcChaptersTotal,
+                  })}
+                </p>
+                <p className="interactive-handbook__completion-line">
+                  {t(parentHandbookKey(parentSummarySlug, 'decodeInStoryAccuracy') as any, {
+                    decodeAccuracy: completionSummary.firstAttemptRate,
+                  })}
+                </p>
+                <p className="interactive-handbook__completion-line">
+                  {t(parentHandbookKey(parentSummarySlug, 'evidenceReading') as any, {
+                    evidenceAccuracy: completionSummary.metrics.sequenceEvidenceScore ?? completionSummary.firstAttemptRate,
+                  })}
+                </p>
+                <p className="interactive-handbook__completion-line">
+                  {t(parentHandbookKey(parentSummarySlug, 'independenceTrend') as any, {
+                    independenceTrend: independenceTrendLabel,
+                  })}
+                </p>
+              </>
+            ) : null}
             <p className="interactive-handbook__completion-line">
               {t(
                 completionSummary.readingGate.passed
@@ -2616,7 +3044,7 @@ export function InteractiveHandbookGame({
                 hintRateThreshold: completionSummary.readingGate.hintRateMax,
               })}
             </p>
-            {summaryHintKey && <p className="interactive-handbook__completion-line">{t(summaryHintKey as any)}</p>}
+            {summaryHintKey && !activeStoryDepthSlug && <p className="interactive-handbook__completion-line">{t(summaryHintKey as any)}</p>}
             <p className="interactive-handbook__completion-line">
               {completionSummary.readingGate.nextBookId
                 ? t('games.interactiveHandbook.gates.nextBookReady', {
@@ -2637,19 +3065,6 @@ export function InteractiveHandbookGame({
           background:
             radial-gradient(circle at 85% 18%, color-mix(in srgb, var(--color-theme-secondary) 22%, transparent), transparent 40%),
             linear-gradient(180deg, color-mix(in srgb, var(--color-bg-card) 92%, var(--color-theme-bg) 8%), var(--color-bg-card));
-        }
-
-        .interactive-handbook__header {
-          display: grid;
-          grid-template-columns: 1fr auto;
-          align-items: center;
-          gap: var(--space-md);
-        }
-
-        .interactive-handbook__subtitle {
-          margin: 0;
-          color: color-mix(in srgb, var(--color-text-primary) 82%, var(--color-text-secondary));
-          font-size: var(--font-size-sm);
         }
 
         .interactive-handbook__mode-switch {
@@ -2674,39 +3089,6 @@ export function InteractiveHandbookGame({
           border-color: color-mix(in srgb, var(--color-theme-primary) 72%, transparent);
           color: var(--color-text-primary);
           background: color-mix(in srgb, var(--color-theme-primary) 16%, var(--color-surface));
-        }
-
-        .interactive-handbook__progress-row {
-          display: grid;
-          gap: var(--space-2xs);
-        }
-
-        .interactive-handbook__progress-label {
-          margin: 0;
-          color: color-mix(in srgb, var(--color-text-primary) 90%, var(--color-text-secondary));
-          font-size: var(--font-size-xs);
-        }
-
-        .interactive-handbook__progress-rail {
-          display: grid;
-          grid-template-columns: repeat(${totalPages}, minmax(8px, 1fr));
-          gap: 6px;
-        }
-
-        .interactive-handbook__progress-dot {
-          inline-size: 100%;
-          block-size: 8px;
-          border-radius: var(--radius-full);
-          background: color-mix(in srgb, var(--color-border) 72%, transparent);
-        }
-
-        .interactive-handbook__progress-dot--done {
-          background: color-mix(in srgb, var(--color-accent-success) 88%, white 12%);
-        }
-
-        .interactive-handbook__progress-dot--active {
-          background: color-mix(in srgb, var(--color-theme-primary) 80%, white 20%);
-          animation: interactive-handbook-progress-pulse 900ms ease-in-out infinite alternate;
         }
 
         .interactive-handbook__stage {
@@ -2950,8 +3332,9 @@ export function InteractiveHandbookGame({
         }
 
         .interactive-handbook__text-block--prompt {
-          font-size: var(--font-size-lg);
+          font-size: 1.25rem;
           font-weight: var(--font-weight-semibold);
+          line-height: 1.5;
           color: color-mix(in srgb, var(--color-theme-primary) 80%, var(--color-text-primary));
         }
 
@@ -2967,8 +3350,9 @@ export function InteractiveHandbookGame({
         }
 
         .interactive-handbook__text-strip.is-word-focus .interactive-handbook__text-block--prompt {
-          font-size: var(--font-size-md);
-          font-weight: var(--font-weight-medium);
+          font-size: 1.25rem;
+          font-weight: var(--font-weight-semibold);
+          line-height: 1.5;
           color: color-mix(in srgb, var(--color-text-primary) 78%, var(--color-text-secondary));
         }
 
@@ -2992,7 +3376,7 @@ export function InteractiveHandbookGame({
           border: 1px solid color-mix(in srgb, var(--color-border) 72%, transparent);
           background: color-mix(in srgb, var(--color-surface-muted) 84%, transparent);
           padding: var(--space-sm);
-          min-height: 56px;
+          min-height: max(60px, var(--touch-primary-action));
           display: flex;
           align-items: center;
         }
@@ -3018,7 +3402,8 @@ export function InteractiveHandbookGame({
         .interactive-handbook__message {
           margin: 0;
           color: var(--color-text-primary);
-          font-size: var(--font-size-md);
+          font-size: 1.25rem;
+          line-height: 1.5;
         }
 
         .interactive-handbook__message--hint {
@@ -3035,13 +3420,13 @@ export function InteractiveHandbookGame({
 
         .interactive-handbook__controls {
           display: grid;
-          grid-template-columns: repeat(5, minmax(var(--touch-min), 1fr));
+          grid-template-columns: repeat(auto-fit, minmax(max(60px, var(--touch-primary-action)), 1fr));
           gap: var(--space-xs);
         }
 
         .interactive-handbook__icon-button {
-          min-height: 52px;
-          min-width: 52px;
+          min-height: max(60px, var(--touch-primary-action));
+          min-width: max(60px, var(--touch-primary-action));
           border: 1px solid color-mix(in srgb, var(--color-border) 72%, transparent);
           border-radius: var(--radius-md);
           background: var(--color-surface);
@@ -3089,7 +3474,8 @@ export function InteractiveHandbookGame({
         .interactive-handbook__interaction-title {
           margin: 0;
           color: var(--color-text-primary);
-          font-size: var(--font-size-md);
+          font-size: 1.25rem;
+          line-height: 1.5;
           font-weight: var(--font-weight-semibold);
         }
 
@@ -3100,7 +3486,7 @@ export function InteractiveHandbookGame({
         }
 
         .interactive-handbook__choice {
-          min-height: 56px;
+          min-height: max(60px, var(--touch-primary-action));
           border-radius: var(--radius-md);
           border: 1px solid color-mix(in srgb, var(--color-border) 72%, transparent);
           background: var(--color-bg-card);
@@ -3185,15 +3571,6 @@ export function InteractiveHandbookGame({
           }
         }
 
-        @keyframes interactive-handbook-progress-pulse {
-          from {
-            transform: scaleX(0.95);
-          }
-          to {
-            transform: scaleX(1);
-          }
-        }
-
         @keyframes interactive-handbook-hotspot-pulse {
           from {
             transform: scale(0.96);
@@ -3208,10 +3585,6 @@ export function InteractiveHandbookGame({
           .interactive-handbook__story-flip--forward.is-rtl,
           .interactive-handbook__story-flip--backward.is-ltr,
           .interactive-handbook__story-flip--backward.is-rtl {
-            animation: none;
-          }
-
-          .interactive-handbook__progress-dot--active {
             animation: none;
           }
 
@@ -3231,10 +3604,6 @@ export function InteractiveHandbookGame({
         }
 
         @media (max-width: 960px) {
-          .interactive-handbook__header {
-            grid-template-columns: 1fr;
-          }
-
           .interactive-handbook__mode-switch {
             grid-template-columns: repeat(3, minmax(0, 1fr));
           }

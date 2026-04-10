@@ -1,9 +1,9 @@
-import type { HTMLAttributes } from 'react';
+import type { ButtonHTMLAttributes } from 'react';
 import { MascotIllustration } from '@/components/illustrations';
 import { assetUrl } from '@/lib/assetUrl';
 import { StarRating } from './StarRating';
 
-interface GameCardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
+interface GameCardProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'type'> {
   title: string;
   thumbnailUrl?: string;
   difficulty?: number;
@@ -17,13 +17,13 @@ interface GameCardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'>
   progressPercent?: number;
   progressAriaLabel?: string;
   progressValueLabel?: string;
+  playLabel?: string;
 }
 
 interface TagChipProps {
-  tone: 'agePrimary' | 'ageSupport' | 'topic' | 'difficulty';
+  tone: 'topic' | 'support';
   label: string;
   icon?: string;
-  trailingVisual?: string;
 }
 
 function clampDifficulty(value: number): number {
@@ -42,13 +42,11 @@ function clampProgress(value: number): number {
 }
 
 function tagChipBackground(tone: TagChipProps['tone']): string {
-  if (tone === 'agePrimary') return 'var(--color-tag-age-primary-bg)';
-  if (tone === 'ageSupport') return 'var(--color-tag-age-support-bg)';
-  if (tone === 'topic') return 'var(--color-tag-topic-bg)';
-  return 'var(--color-tag-difficulty-bg)';
+  if (tone === 'support') return 'var(--color-tag-age-primary-bg)';
+  return 'var(--color-tag-topic-bg)';
 }
 
-function TagChip({ tone, label, icon, trailingVisual }: TagChipProps) {
+function TagChip({ tone, label, icon }: TagChipProps) {
   return (
     <span
       style={{
@@ -62,7 +60,7 @@ function TagChip({ tone, label, icon, trailingVisual }: TagChipProps) {
         border: '1px solid var(--color-tag-border)',
         background: tagChipBackground(tone),
         color: 'var(--color-tag-text)',
-        fontSize: 'var(--font-size-xs)',
+        fontSize: 'var(--font-size-sm)',
         fontWeight: 'var(--font-weight-medium)' as unknown as number,
         whiteSpace: 'nowrap',
       }}
@@ -81,11 +79,6 @@ function TagChip({ tone, label, icon, trailingVisual }: TagChipProps) {
       >
         {label}
       </span>
-      {trailingVisual && (
-        <span aria-hidden="true" style={{ letterSpacing: '0.08em' }}>
-          {trailingVisual}
-        </span>
-      )}
     </span>
   );
 }
@@ -104,29 +97,42 @@ export function GameCard({
   progressPercent,
   progressAriaLabel,
   progressValueLabel,
+  playLabel,
   style,
   ...props
 }: GameCardProps) {
-  const hasTagRow = Boolean(agePrimaryLabel && topicLabel && difficulty != null && difficultyLabel);
   const supportLabels = (ageSupportLabels ?? []).filter((label) => label.trim().length > 0);
-  const supportBadgeLabel =
-    supportLabels.length === 0 ? null : supportLabels.length === 1 ? `+${supportLabels[0]}` : `+${supportLabels.length}`;
+  const supportBadgeLabel = agePrimaryLabel
+    ? supportLabels.length > 0
+      ? `${agePrimaryLabel} · +${supportLabels.length}`
+      : agePrimaryLabel
+    : difficulty != null && difficultyLabel
+      ? `${difficultyLabel} ${meterDots(difficulty)}`
+      : null;
+
+  const hasTagRow = Boolean(topicLabel || supportBadgeLabel);
   const normalizedProgress = clampProgress(progressPercent ?? 0);
+  const progressSegments = 5;
+  const completedSegments = Math.round((normalizedProgress / 100) * progressSegments);
+  const playCueLabel = playLabel?.trim() || '▶';
 
   return (
-    <div
-      role="button"
-      tabIndex={0}
+    <button
+      type="button"
       style={{
         display: 'flex',
         flexDirection: 'column',
         background: 'var(--color-bg-card)',
         borderRadius: 'var(--radius-lg)',
-        boxShadow: 'var(--shadow-md)',
+        border: '1px solid var(--color-border-subtle)',
+        boxShadow: 'var(--shadow-card)',
         overflow: 'hidden',
         cursor: 'pointer',
-        transition: 'var(--transition-fast)',
-        minHeight: 'var(--touch-min)',
+        transition: 'transform var(--motion-duration-fast) var(--motion-ease-standard), box-shadow var(--motion-duration-fast) var(--motion-ease-standard), border-color var(--motion-duration-fast) var(--motion-ease-standard)',
+        minHeight: '260px',
+        inlineSize: '100%',
+        textAlign: 'start',
+        padding: 0,
         ...style,
       }}
       {...props}
@@ -154,10 +160,11 @@ export function GameCard({
 
       <div
         style={{
-          padding: 'var(--space-sm) var(--space-md)',
+          padding: 'var(--space-sm) var(--space-md) var(--space-sm)',
           display: 'flex',
           flexDirection: 'column',
-          gap: 'var(--space-xs)',
+          gap: 'var(--space-sm)',
+          flex: 1,
         }}
       >
         <span
@@ -165,6 +172,7 @@ export function GameCard({
             fontSize: 'var(--font-size-md)',
             fontWeight: 'var(--font-weight-semibold)' as unknown as number,
             color: 'var(--color-text-primary)',
+            lineHeight: 'var(--line-height-normal)',
           }}
         >
           {title}
@@ -182,19 +190,18 @@ export function GameCard({
               direction: 'rtl',
             }}
           >
-            <TagChip tone="agePrimary" label={agePrimaryLabel!} />
-            {supportBadgeLabel && <TagChip tone="ageSupport" label={supportBadgeLabel} />}
-            <TagChip tone="topic" icon={topicIcon} label={topicLabel!} />
-            <TagChip
-              tone="difficulty"
-              icon="⭐"
-              label={difficultyLabel!}
-              trailingVisual={difficulty != null ? meterDots(difficulty) : undefined}
-            />
+            {topicLabel && <TagChip tone="topic" icon={topicIcon} label={topicLabel} />}
+            {supportBadgeLabel && <TagChip tone="support" icon="✨" label={supportBadgeLabel} />}
           </div>
         )}
 
         <div
+          role="progressbar"
+          aria-label={progressAriaLabel}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={normalizedProgress}
+          aria-valuetext={progressValueLabel ?? `${normalizedProgress}%`}
           style={{
             display: 'grid',
             gap: 'var(--space-2xs)',
@@ -209,7 +216,7 @@ export function GameCard({
           >
             <span
               style={{
-                fontSize: 'var(--font-size-xs)',
+                fontSize: 'var(--font-size-sm)',
                 color: 'var(--color-text-secondary)',
               }}
             >
@@ -217,7 +224,7 @@ export function GameCard({
             </span>
             <span
               style={{
-                fontSize: 'var(--font-size-xs)',
+                fontSize: 'var(--font-size-sm)',
                 color: 'var(--color-text-primary)',
                 fontWeight: 'var(--font-weight-semibold)' as unknown as number,
               }}
@@ -227,29 +234,31 @@ export function GameCard({
           </div>
 
           <div
-            role="progressbar"
-            aria-label={progressAriaLabel}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={normalizedProgress}
-            aria-valuetext={progressValueLabel ?? `${normalizedProgress}%`}
             style={{
-              inlineSize: '100%',
-              blockSize: '10px',
-              borderRadius: 'var(--radius-full)',
-              background: 'var(--color-star-empty)',
-              overflow: 'hidden',
+              display: 'grid',
+              gridTemplateColumns: `repeat(${progressSegments}, minmax(0, 1fr))`,
+              gap: 'var(--space-xs)',
+              minBlockSize: '16px',
+              alignItems: 'center',
             }}
           >
-            <div
-              style={{
-                inlineSize: `${normalizedProgress}%`,
-                blockSize: '100%',
-                borderRadius: 'var(--radius-full)',
-                background:
-                  'linear-gradient(90deg, var(--color-accent-success), color-mix(in srgb, var(--color-accent-info) 70%, var(--color-accent-success) 30%))',
-              }}
-            />
+            {Array.from({ length: progressSegments }, (_, index) => (
+              <span
+                key={`progress-pill-${index}`}
+                aria-hidden="true"
+                style={{
+                  display: 'block',
+                  inlineSize: '100%',
+                  blockSize: '12px',
+                  borderRadius: 'var(--radius-full)',
+                  border: '1px solid var(--color-border-subtle)',
+                  background:
+                    index < completedSegments
+                      ? 'linear-gradient(90deg, var(--color-accent-success), color-mix(in srgb, var(--color-accent-info) 70%, var(--color-accent-success) 30%))'
+                      : 'color-mix(in srgb, var(--color-surface-muted) 72%, white 28%)',
+                }}
+              />
+            ))}
           </div>
         </div>
 
@@ -258,13 +267,46 @@ export function GameCard({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
+            minBlockSize: 'var(--touch-min)',
+            borderTop: '1px solid var(--color-border-subtle)',
+            paddingBlockStart: 'var(--space-2xs)',
+            marginBlockStart: 'auto',
+            gap: 'var(--space-sm)',
           }}
         >
-          <StarRating value={stars} max={maxStars} size="sm" />
+          <span
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 'var(--space-xs)',
+              minBlockSize: '52px',
+              fontSize: 'var(--font-size-sm)',
+              fontWeight: 'var(--font-weight-bold)' as unknown as number,
+              color: 'var(--color-theme-primary)',
+            }}
+          >
+            <span
+              aria-hidden="true"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                inlineSize: '1.75em',
+                blockSize: '1.75em',
+                borderRadius: 'var(--radius-full)',
+                background: 'color-mix(in srgb, var(--color-accent-secondary) 78%, white 22%)',
+                animation: 'var(--motion-gentle-float)',
+              }}
+            >
+              ▶
+            </span>
+            {playCueLabel}
+          </span>
+          <StarRating value={stars} max={maxStars} size="md" />
           {!hasTagRow && difficulty != null && (
             <span
               style={{
-                fontSize: 'var(--font-size-xs)',
+                fontSize: 'var(--font-size-sm)',
                 color: 'var(--color-text-light)',
               }}
             >
@@ -273,6 +315,6 @@ export function GameCard({
           )}
         </div>
       </div>
-    </div>
+    </button>
   );
 }

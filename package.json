@@ -7,8 +7,13 @@
   "scripts": {
     "dev": "yarn workspace @dubiland/web dev",
     "build": "yarn workspace @dubiland/web build",
+    "assets:optimize": "yarn workspace @dubiland/web images:optimize",
+    "assets:budgets": "yarn workspace @dubiland/web images:budgets",
+    "assets:pipeline": "yarn workspace @dubiland/web images:pipeline",
     "typecheck": "yarn workspaces foreach -A run typecheck",
+    "audio:validate-manifest": "node scripts/validate-audio-manifest.mjs",
     "generate-audio": "python3 scripts/generate-audio.py",
+    "generate-audio:audit-punctuation": "python3 scripts/generate-audio.py --audit-punctuation",
     "generate-audio:force": "python3 scripts/generate-audio.py --force",
     "paperclip": "npx paperclipai run",
     "cascade": "npx paperclipai heartbeat run --agent-id 9ba06101-670c-4da3-9d57-56fdc8d67b03",

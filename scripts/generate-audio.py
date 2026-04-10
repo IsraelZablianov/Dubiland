@@ -17,7 +17,10 @@ import re
 import sys
 from pathlib import Path
 
-from gtts import gTTS
+try:
+    from gtts import gTTS
+except ModuleNotFoundError:
+    gTTS = None
 
 SCRIPT_DIR = Path(__file__).parent
 PROJECT_ROOT = SCRIPT_DIR.parent
@@ -36,7 +39,8 @@ LANG = "iw"  # gTTS uses 'iw' for Hebrew
 
 RANGE_PATTERN = re.compile(r"\b(\d{1,2})\s*[–—-]\s*(\d{1,2})\b")
 STANDALONE_NUMBER_PATTERN = re.compile(r"\b(10|[0-9])\b")
-PUNCTUATION_PATTERN = re.compile(r"[!?,.:;…\"'׳״`“”„()\[\]{}<>\\|]")
+PROBLEMATIC_PUNCTUATION_PATTERN = re.compile(r"[!?,.:;…\"'׳״`“”„()\[\]{}<>\\|־׃׀]")
+PUNCTUATION_PATTERN = re.compile(r"[!?,.:;…\"'׳״`“”„()\[\]{}<>\\|־׃׀]")
 MULTI_DASH_PATTERN = re.compile(r"[–—-]+")
 
 SYMBOL_REPLACEMENTS = {
@@ -127,6 +131,10 @@ def normalize_audio_text(text: str) -> str:
     return normalized
 
 
+def has_problematic_punctuation(text: str) -> bool:
+    return bool(PROBLEMATIC_PUNCTUATION_PATTERN.search(text))
+
+
 def load_locale_entries():
     overrides = load_audio_overrides()
     entries = []
@@ -145,8 +153,10 @@ def load_locale_entries():
                 continue
             entries.append({
                 "key": key,
+                "source_text": source_text,
                 "text": audio_text,
                 "output_path": str(OUTPUT_BASE / key_to_relative_path(key)),
+                "has_problematic_punctuation": has_problematic_punctuation(source_text),
             })
     return sorted(entries, key=lambda e: e["key"])
 
@@ -158,6 +168,10 @@ def generate_audio(entry: dict, force: bool = False) -> bool:
     if os.path.exists(output) and not force:
         print(f"  Skipping (exists): {entry['key']}")
         return True
+
+    if gTTS is None:
+        print("  Failed: gTTS is not installed. Run `pip install gTTS` in your audio env.")
+        return False
 
     try:
         tts = gTTS(text=entry["text"], lang=LANG)
@@ -171,6 +185,7 @@ def generate_audio(entry: dict, force: bool = False) -> bool:
 
 def main():
     force = "--force" in sys.argv
+    audit_punctuation = "--audit-punctuation" in sys.argv
 
     print("Generating Hebrew audio files (gTTS)...\n")
 
@@ -180,6 +195,23 @@ def main():
 
     entries = load_locale_entries()
     print(f"{len(entries)} audio files to process\n")
+
+    if audit_punctuation:
+        punctuated_entries = [entry for entry in entries if entry["has_problematic_punctuation"]]
+        normalized_changed = [
+            entry for entry in punctuated_entries if entry["source_text"].strip() != entry["text"].strip()
+        ]
+
+        print("Punctuation audit mode (--audit-punctuation)")
+        print(f"Entries containing punctuation: {len(punctuated_entries)}")
+        print(f"Entries changed by normalization: {len(normalized_changed)}\n")
+
+        for entry in normalized_changed[:60]:
+            print(f"- {entry['key']}")
+            print(f"  source: {entry['source_text']}")
+            print(f"  spoken: {entry['text']}")
+
+        return
 
     success = 0
     for entry in entries:

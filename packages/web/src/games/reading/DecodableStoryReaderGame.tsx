@@ -5,9 +5,12 @@ import { SuccessCelebration } from '@/components/motion';
 import type { GameProps, ParentSummaryMetrics, StableRange } from '@/games/engine';
 
 type HintTrend = ParentSummaryMetrics['hintTrend'];
+type DecodableAgeBand = '3-4' | '5-6' | '6-7';
+type DecodableProfileAgeBand = DecodableAgeBand | '4-5';
 type MessageTone = 'neutral' | 'hint' | 'success' | 'error';
 type CheckpointFeedbackTone = 'idle' | 'success' | 'error';
 type PageId = 'p01' | 'p02' | 'p03' | 'p04' | 'p05' | 'p06';
+type CheckpointType = 'literal' | 'sequence' | 'evidence';
 type WordId =
   | 'dubi'
   | 'halach'
@@ -36,150 +39,190 @@ type PhraseId =
 
 interface ComprehensionOption {
   id: string;
-  key: string;
+  fallbackOptionId: string;
   isCorrect: boolean;
 }
 
 interface StoryPage {
   id: PageId;
+  fallbackPageId: PageId;
   sceneEmoji: string;
-  narrationKey: string;
-  decodePromptKey: string;
   phraseId: PhraseId;
   words: WordId[];
   targetWordId: WordId;
-  comprehensionPromptKey: string;
+  checkpointType: CheckpointType;
   comprehensionOptions: ComprehensionOption[];
 }
 
-const STORY_PAGES: StoryPage[] = [
+interface StoryPack {
+  ageBand: DecodableAgeBand;
+  storyId: string;
+  pages: StoryPage[];
+  supportMissThreshold: number;
+  maxHintStep: number;
+  decodeWithinTwoAttemptsTarget: number;
+  sequenceEvidenceTarget: number;
+  participationTarget: number;
+}
+
+const BASE_STORY_PAGES: StoryPage[] = [
   {
     id: 'p01',
+    fallbackPageId: 'p01',
     sceneEmoji: '🌿',
-    narrationKey: 'games.decodableMicroStories.pages.p01.narration.text',
-    decodePromptKey: 'games.decodableMicroStories.pages.p01.decodePrompt.text',
     phraseId: 'dubiHalachLagan',
     words: ['dubi', 'halach', 'lagan'],
     targetWordId: 'dubi',
-    comprehensionPromptKey: 'games.decodableMicroStories.pages.p01.comprehension.prompt',
+    checkpointType: 'literal',
     comprehensionOptions: [
-      { id: 'dubi', key: 'games.decodableMicroStories.pages.p01.comprehension.options.dubi', isCorrect: true },
-      { id: 'dag', key: 'games.decodableMicroStories.pages.p01.comprehension.options.dag', isCorrect: false },
-      { id: 'kelev', key: 'games.decodableMicroStories.pages.p01.comprehension.options.kelev', isCorrect: false },
+      { id: 'dubi', fallbackOptionId: 'dubi', isCorrect: true },
+      { id: 'dag', fallbackOptionId: 'dag', isCorrect: false },
+      { id: 'kelev', fallbackOptionId: 'kelev', isCorrect: false },
     ],
   },
   {
     id: 'p02',
+    fallbackPageId: 'p02',
     sceneEmoji: '🐟',
-    narrationKey: 'games.decodableMicroStories.pages.p02.narration.text',
-    decodePromptKey: 'games.decodableMicroStories.pages.p02.decodePrompt.text',
     phraseId: 'dubiRaahDagKatan',
     words: ['dubi', 'raah', 'dag', 'katan'],
     targetWordId: 'dag',
-    comprehensionPromptKey: 'games.decodableMicroStories.pages.p02.comprehension.prompt',
+    checkpointType: 'literal',
     comprehensionOptions: [
       {
         id: 'dagKatan',
-        key: 'games.decodableMicroStories.pages.p02.comprehension.options.dagKatan',
+        fallbackOptionId: 'dagKatan',
         isCorrect: true,
       },
       {
         id: 'etsGadol',
-        key: 'games.decodableMicroStories.pages.p02.comprehension.options.etsGadol',
+        fallbackOptionId: 'etsGadol',
         isCorrect: false,
       },
       {
         id: 'kovaKahol',
-        key: 'games.decodableMicroStories.pages.p02.comprehension.options.kovaKahol',
+        fallbackOptionId: 'kovaKahol',
         isCorrect: false,
       },
     ],
   },
   {
     id: 'p03',
+    fallbackPageId: 'p03',
     sceneEmoji: '🪨',
-    narrationKey: 'games.decodableMicroStories.pages.p03.narration.text',
-    decodePromptKey: 'games.decodableMicroStories.pages.p03.decodePrompt.text',
     phraseId: 'hadagSamTikAlSela',
     words: ['vehadag', 'sam', 'tik', 'al', 'sela'],
     targetWordId: 'tik',
-    comprehensionPromptKey: 'games.decodableMicroStories.pages.p03.comprehension.prompt',
+    checkpointType: 'literal',
     comprehensionOptions: [
-      { id: 'alSela', key: 'games.decodableMicroStories.pages.p03.comprehension.options.alSela', isCorrect: true },
+      { id: 'alSela', fallbackOptionId: 'alSela', isCorrect: true },
       {
         id: 'baMayim',
-        key: 'games.decodableMicroStories.pages.p03.comprehension.options.baMayim',
+        fallbackOptionId: 'baMayim',
         isCorrect: false,
       },
       {
         id: 'alEts',
-        key: 'games.decodableMicroStories.pages.p03.comprehension.options.alEts',
+        fallbackOptionId: 'alEts',
         isCorrect: false,
       },
     ],
   },
   {
     id: 'p04',
+    fallbackPageId: 'p04',
     sceneEmoji: '👋',
-    narrationKey: 'games.decodableMicroStories.pages.p04.narration.text',
-    decodePromptKey: 'games.decodableMicroStories.pages.p04.decodePrompt.text',
     phraseId: 'dubiKaraShalomDag',
     words: ['dubi', 'kara', 'shalom', 'dag'],
     targetWordId: 'shalom',
-    comprehensionPromptKey: 'games.decodableMicroStories.pages.p04.comprehension.prompt',
+    checkpointType: 'literal',
     comprehensionOptions: [
       {
         id: 'shalomDag',
-        key: 'games.decodableMicroStories.pages.p04.comprehension.options.shalomDag',
+        fallbackOptionId: 'shalomDag',
         isCorrect: true,
       },
       {
         id: 'boLagan',
-        key: 'games.decodableMicroStories.pages.p04.comprehension.options.boLagan',
+        fallbackOptionId: 'boLagan',
         isCorrect: false,
       },
       {
         id: 'lehitraot',
-        key: 'games.decodableMicroStories.pages.p04.comprehension.options.lehitraot',
+        fallbackOptionId: 'lehitraot',
         isCorrect: false,
       },
     ],
   },
   {
     id: 'p05',
+    fallbackPageId: 'p05',
     sceneEmoji: '🥖',
-    narrationKey: 'games.decodableMicroStories.pages.p05.narration.text',
-    decodePromptKey: 'games.decodableMicroStories.pages.p05.decodePrompt.text',
     phraseId: 'hadagHeviLehemLedubi',
     words: ['vehadag', 'hevi', 'lehem', 'dubi'],
     targetWordId: 'lehem',
-    comprehensionPromptKey: 'games.decodableMicroStories.pages.p05.comprehension.prompt',
+    checkpointType: 'literal',
     comprehensionOptions: [
-      { id: 'lehem', key: 'games.decodableMicroStories.pages.p05.comprehension.options.lehem', isCorrect: true },
-      { id: 'sefer', key: 'games.decodableMicroStories.pages.p05.comprehension.options.sefer', isCorrect: false },
-      { id: 'kadur', key: 'games.decodableMicroStories.pages.p05.comprehension.options.kadur', isCorrect: false },
+      { id: 'lehem', fallbackOptionId: 'lehem', isCorrect: true },
+      { id: 'sefer', fallbackOptionId: 'sefer', isCorrect: false },
+      { id: 'kadur', fallbackOptionId: 'kadur', isCorrect: false },
     ],
   },
   {
     id: 'p06',
+    fallbackPageId: 'p06',
     sceneEmoji: '✨',
-    narrationKey: 'games.decodableMicroStories.pages.p06.narration.text',
-    decodePromptKey: 'games.decodableMicroStories.pages.p06.decodePrompt.text',
     phraseId: 'dubiVehadagSamchuBagan',
     words: ['dubi', 'vehadag', 'samchu', 'bagan'],
     targetWordId: 'samchu',
-    comprehensionPromptKey: 'games.decodableMicroStories.pages.p06.comprehension.prompt',
+    checkpointType: 'literal',
     comprehensionOptions: [
       {
         id: 'dubiVehadag',
-        key: 'games.decodableMicroStories.pages.p06.comprehension.options.dubiVehadag',
+        fallbackOptionId: 'dubiVehadag',
         isCorrect: true,
       },
-      { id: 'rakHadag', key: 'games.decodableMicroStories.pages.p06.comprehension.options.rakHadag', isCorrect: false },
-      { id: 'rakDubi', key: 'games.decodableMicroStories.pages.p06.comprehension.options.rakDubi', isCorrect: false },
+      { id: 'rakHadag', fallbackOptionId: 'rakHadag', isCorrect: false },
+      { id: 'rakDubi', fallbackOptionId: 'rakDubi', isCorrect: false },
     ],
   },
 ];
+
+const STORY_PACKS: Record<DecodableAgeBand, StoryPack> = {
+  '3-4': {
+    ageBand: '3-4',
+    storyId: 'lostSound',
+    pages: BASE_STORY_PAGES.slice(0, 4),
+    supportMissThreshold: 1,
+    maxHintStep: 2,
+    decodeWithinTwoAttemptsTarget: 70,
+    sequenceEvidenceTarget: 0,
+    participationTarget: 70,
+  },
+  '5-6': {
+    ageBand: '5-6',
+    storyId: 'yoavHintMap',
+    pages: BASE_STORY_PAGES,
+    supportMissThreshold: 2,
+    maxHintStep: 3,
+    decodeWithinTwoAttemptsTarget: 85,
+    sequenceEvidenceTarget: 0,
+    participationTarget: 75,
+  },
+  '6-7': {
+    ageBand: '6-7',
+    storyId: 'tamarLockedFloor',
+    pages: BASE_STORY_PAGES.map((page, pageIndex) => ({
+      ...page,
+      checkpointType: pageIndex === 3 ? 'evidence' : pageIndex % 2 === 1 ? 'sequence' : 'literal',
+    })),
+    supportMissThreshold: 2,
+    maxHintStep: 3,
+    decodeWithinTwoAttemptsTarget: 88,
+    sequenceEvidenceTarget: 80,
+    participationTarget: 80,
+  },
+};
 
 const SUCCESS_MESSAGE_ROTATION = [
   'games.decodableMicroStories.feedback.success.decodeExact',
@@ -193,11 +236,34 @@ const RETRY_MESSAGE_ROTATION = [
   'games.decodableMicroStories.feedback.retry.oneMoreTry',
 ] as const;
 
-function createPageCounterRecord(initialValue: number): Record<PageId, number> {
-  return STORY_PAGES.reduce<Record<PageId, number>>(
+function createPageCounterRecord(storyPages: StoryPage[], initialValue: number): Record<PageId, number> {
+  return storyPages.reduce<Record<PageId, number>>(
     (accumulator, page) => ({ ...accumulator, [page.id]: initialValue }),
     {} as Record<PageId, number>,
   );
+}
+
+function createPageFlagRecord(storyPages: StoryPage[], initialValue: boolean): Record<PageId, boolean> {
+  return storyPages.reduce<Record<PageId, boolean>>(
+    (accumulator, page) => ({ ...accumulator, [page.id]: initialValue }),
+    {} as Record<PageId, boolean>,
+  );
+}
+
+function toDecodableAgeBand(value: unknown): DecodableAgeBand {
+  if (value === '3-4') return '3-4';
+  if (value === '6-7') return '6-7';
+  return '5-6';
+}
+
+function toAgeBandSuffixFromFallbackKey(key: string): string {
+  if (key.startsWith('games.decodableMicroStories.')) {
+    return key.replace('games.decodableMicroStories.', '');
+  }
+  if (key.startsWith('parentDashboard.games.decodableMicroStories.')) {
+    return key.replace('parentDashboard.games.decodableMicroStories.', '');
+  }
+  return key;
 }
 
 function toKebabCase(value: string): string {
@@ -247,22 +313,60 @@ function toMessageClassName(tone: MessageTone): string {
   return 'decodable-story__message';
 }
 
-export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
-  const { t } = useTranslation('common');
+export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps) {
+  const { t, i18n } = useTranslation('common');
+
+  const activeAgeBand = useMemo(() => {
+    const config = level.configJson;
+    if (config && typeof config === 'object' && !Array.isArray(config)) {
+      const rawAgeBand = (config as Record<string, unknown>).ageBand as DecodableProfileAgeBand | undefined;
+      return toDecodableAgeBand(rawAgeBand);
+    }
+    return '5-6';
+  }, [level.configJson]);
+
+  const activeStoryPack = useMemo(() => STORY_PACKS[activeAgeBand], [activeAgeBand]);
+  const activeStoryPages = activeStoryPack.pages;
+
+  const resolveAgeBandGameKey = useCallback(
+    (suffix: string, fallbackKey: string): string => {
+      const candidate = `games.decodableMicroStories.ageBand.${activeAgeBand}.${suffix}`;
+      return i18n.exists(candidate, { ns: 'common' }) ? candidate : fallbackKey;
+    },
+    [activeAgeBand, i18n],
+  );
+
+  const resolveAgeBandParentKey = useCallback(
+    (suffix: string, fallbackKey: string): string => {
+      const candidate = `parentDashboard.games.decodableMicroStories.ageBand.${activeAgeBand}.${suffix}`;
+      return i18n.exists(candidate, { ns: 'common' }) ? candidate : fallbackKey;
+    },
+    [activeAgeBand, i18n],
+  );
 
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
   const [locked, setLocked] = useState(false);
   const [hintStep, setHintStep] = useState(0);
   const [messageTone, setMessageTone] = useState<MessageTone>('neutral');
-  const [messageKey, setMessageKey] = useState('games.decodableMicroStories.instructions.intro');
+  const [messageKey, setMessageKey] = useState(() =>
+    resolveAgeBandGameKey('instructions.intro', 'games.decodableMicroStories.instructions.intro'),
+  );
   const [hintUsageByPage, setHintUsageByPage] = useState<Record<PageId, number>>(() =>
-    createPageCounterRecord(0),
+    createPageCounterRecord(activeStoryPages, 0),
   );
   const [wrongAttemptsByPage, setWrongAttemptsByPage] = useState<Record<PageId, number>>(() =>
-    createPageCounterRecord(0),
+    createPageCounterRecord(activeStoryPages, 0),
+  );
+  const [decodeReadyByPage, setDecodeReadyByPage] = useState<Record<PageId, boolean>>(() =>
+    createPageFlagRecord(activeStoryPages, false),
+  );
+  const [participationByPage, setParticipationByPage] = useState<Record<PageId, boolean>>(() =>
+    createPageFlagRecord(activeStoryPages, false),
   );
   const [firstAttemptSuccessCount, setFirstAttemptSuccessCount] = useState(0);
+  const [decodeWithinTwoAttemptsCount, setDecodeWithinTwoAttemptsCount] = useState(0);
+  const [sequenceEvidenceSuccessCount, setSequenceEvidenceSuccessCount] = useState(0);
   const [consecutiveMisses, setConsecutiveMisses] = useState(0);
   const [independentStreak, setIndependentStreak] = useState(0);
   const [supportMode, setSupportMode] = useState(false);
@@ -274,8 +378,106 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
 
   const completionSentRef = useRef(false);
   const timeoutIdsRef = useRef<number[]>([]);
-  const currentPage = STORY_PAGES[currentPageIndex];
-  const independentMode = !supportMode && independentStreak >= 3;
+  const currentPage = activeStoryPages[Math.min(currentPageIndex, activeStoryPages.length - 1)] ?? activeStoryPages[0];
+  const independentMode = activeAgeBand !== '3-4' && !supportMode && independentStreak >= 3;
+
+  const chooseAnswerKey = useMemo(
+    () => resolveAgeBandGameKey('instructions.chooseAnswer', 'games.decodableMicroStories.instructions.chooseAnswer'),
+    [resolveAgeBandGameKey],
+  );
+  const supportInstructionKey = useMemo(
+    () => resolveAgeBandGameKey('instructions.supportMode', 'games.decodableMicroStories.instructions.supportMode'),
+    [resolveAgeBandGameKey],
+  );
+  const independentInstructionKey = useMemo(
+    () => resolveAgeBandGameKey('instructions.independentTurn', 'games.decodableMicroStories.instructions.independentTurn'),
+    [resolveAgeBandGameKey],
+  );
+  const modelReplayKey = useMemo(
+    () => resolveAgeBandGameKey('instructions.modelReplay', 'games.decodableMicroStories.instructions.modelReplay'),
+    [resolveAgeBandGameKey],
+  );
+  const decodeFirstInstructionKey = useMemo(
+    () => resolveAgeBandGameKey('instructions.decodeFirst', 'games.decodableMicroStories.instructions.decodeFirst'),
+    [resolveAgeBandGameKey],
+  );
+  const completionSummaryKey = useMemo(
+    () => resolveAgeBandGameKey('completion.summary', 'games.decodableMicroStories.completion.summary'),
+    [resolveAgeBandGameKey],
+  );
+  const completionTitleKey = useMemo(
+    () => resolveAgeBandGameKey('completion.title', 'games.decodableMicroStories.completion.title'),
+    [resolveAgeBandGameKey],
+  );
+  const completionNextStepKey = useMemo(
+    () => resolveAgeBandGameKey('completion.nextStep', 'games.decodableMicroStories.completion.nextStep'),
+    [resolveAgeBandGameKey],
+  );
+  const retryControlKey = useMemo(
+    () => resolveAgeBandGameKey('controls.retry', 'games.decodableMicroStories.controls.retry'),
+    [resolveAgeBandGameKey],
+  );
+  const replayPhraseHintKey = useMemo(
+    () => resolveAgeBandGameKey('hints.replayPhrase', 'games.decodableMicroStories.hints.replayPhrase'),
+    [resolveAgeBandGameKey],
+  );
+
+  const pageNarrationKey = useMemo(() => {
+    return resolveAgeBandGameKey(
+      `stories.${activeStoryPack.storyId}.pages.${currentPage.id}.narration.text`,
+      `games.decodableMicroStories.pages.${currentPage.fallbackPageId}.narration.text`,
+    );
+  }, [activeStoryPack.storyId, currentPage.fallbackPageId, currentPage.id, resolveAgeBandGameKey]);
+
+  const pageDecodePromptKey = useMemo(() => {
+    return resolveAgeBandGameKey(
+      `stories.${activeStoryPack.storyId}.pages.${currentPage.id}.decodePrompt.text`,
+      `games.decodableMicroStories.pages.${currentPage.fallbackPageId}.decodePrompt.text`,
+    );
+  }, [activeStoryPack.storyId, currentPage.fallbackPageId, currentPage.id, resolveAgeBandGameKey]);
+
+  const pageComprehensionPromptKey = useMemo(() => {
+    return resolveAgeBandGameKey(
+      `stories.${activeStoryPack.storyId}.pages.${currentPage.id}.comprehension.prompt`,
+      `games.decodableMicroStories.pages.${currentPage.fallbackPageId}.comprehension.prompt`,
+    );
+  }, [activeStoryPack.storyId, currentPage.fallbackPageId, currentPage.id, resolveAgeBandGameKey]);
+
+  const resolveOptionKey = useCallback(
+    (page: StoryPage, option: ComprehensionOption): string => {
+      return resolveAgeBandGameKey(
+        `stories.${activeStoryPack.storyId}.pages.${page.id}.comprehension.options.${option.id}`,
+        `games.decodableMicroStories.pages.${page.fallbackPageId}.comprehension.options.${option.fallbackOptionId}`,
+      );
+    },
+    [activeStoryPack.storyId, resolveAgeBandGameKey],
+  );
+
+  const phrasePronunciationKey = `phrases.pronunciation.${currentPage.phraseId}`;
+  const sequenceEvidenceTotal = useMemo(
+    () => activeStoryPages.filter((page) => page.checkpointType !== 'literal').length,
+    [activeStoryPages],
+  );
+  const participationRate = useMemo(() => {
+    const engagedPages = activeStoryPages.filter((page) => participationByPage[page.id]).length;
+    return Math.round((engagedPages / activeStoryPages.length) * 100);
+  }, [activeStoryPages, participationByPage]);
+  const decodeAccuracy = useMemo(
+    () => Math.round((decodeWithinTwoAttemptsCount / activeStoryPages.length) * 100),
+    [activeStoryPages.length, decodeWithinTwoAttemptsCount],
+  );
+  const sequenceEvidenceScore = useMemo(
+    () =>
+      sequenceEvidenceTotal === 0 ? 0 : Math.round((sequenceEvidenceSuccessCount / Math.max(1, sequenceEvidenceTotal)) * 100),
+    [sequenceEvidenceSuccessCount, sequenceEvidenceTotal],
+  );
+  const completionPrimaryScore = useMemo(() => {
+    if (activeAgeBand === '3-4') return participationRate;
+    if (activeAgeBand === '6-7') {
+      return Math.round((decodeAccuracy + sequenceEvidenceScore) / 2);
+    }
+    return decodeAccuracy;
+  }, [activeAgeBand, decodeAccuracy, participationRate, sequenceEvidenceScore]);
 
   const playKey = useCallback(
     (key: string, interrupt = false) => {
@@ -294,15 +496,33 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
     timeoutIdsRef.current.push(timeoutId);
   }, []);
 
+  const markParticipation = useCallback((pageId: PageId) => {
+    setParticipationByPage((previous) => {
+      if (previous[pageId]) return previous;
+      return { ...previous, [pageId]: true };
+    });
+  }, []);
+
+  const markDecodeReady = useCallback(
+    (pageId: PageId) => {
+      setDecodeReadyByPage((previous) => {
+        if (previous[pageId]) return previous;
+        return { ...previous, [pageId]: true };
+      });
+      markParticipation(pageId);
+    },
+    [markParticipation],
+  );
+
   const playPageNarration = useCallback(
     (interrupt = false) => {
-      const queue = [currentPage.narrationKey];
+      const queue = [pageNarrationKey];
       if (!independentMode) {
-        queue.push(currentPage.decodePromptKey);
+        queue.push(pageDecodePromptKey);
       }
       if (supportMode) {
-        queue.push('games.decodableMicroStories.hints.replayPhrase');
-        queue.push(`phrases.pronunciation.${currentPage.phraseId}`);
+        queue.push(replayPhraseHintKey);
+        queue.push(phrasePronunciationKey);
       }
 
       const [firstKey, ...remainingKeys] = queue;
@@ -313,7 +533,15 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
         playKey(key);
       });
     },
-    [currentPage.decodePromptKey, currentPage.narrationKey, currentPage.phraseId, independentMode, playKey, supportMode],
+    [
+      independentMode,
+      pageDecodePromptKey,
+      pageNarrationKey,
+      phrasePronunciationKey,
+      playKey,
+      replayPhraseHintKey,
+      supportMode,
+    ],
   );
 
   useEffect(() => {
@@ -324,6 +552,33 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
   }, []);
 
   useEffect(() => {
+    completionSentRef.current = false;
+    timeoutIdsRef.current.forEach((timeoutId) => window.clearTimeout(timeoutId));
+    timeoutIdsRef.current = [];
+    setCurrentPageIndex(0);
+    setSelectedOptionId(null);
+    setLocked(false);
+    setHintStep(0);
+    setMessageTone('neutral');
+    setMessageKey(resolveAgeBandGameKey('instructions.intro', 'games.decodableMicroStories.instructions.intro'));
+    setHintUsageByPage(createPageCounterRecord(activeStoryPages, 0));
+    setWrongAttemptsByPage(createPageCounterRecord(activeStoryPages, 0));
+    setDecodeReadyByPage(createPageFlagRecord(activeStoryPages, false));
+    setParticipationByPage(createPageFlagRecord(activeStoryPages, false));
+    setFirstAttemptSuccessCount(0);
+    setDecodeWithinTwoAttemptsCount(0);
+    setSequenceEvidenceSuccessCount(0);
+    setConsecutiveMisses(0);
+    setIndependentStreak(0);
+    setSupportMode(false);
+    setSupportModeActivations(0);
+    setCompleted(false);
+    setShowCelebration(false);
+    setScorePulse(false);
+    setCheckpointFeedback('idle');
+  }, [activeAgeBand, activeStoryPages, resolveAgeBandGameKey]);
+
+  useEffect(() => {
     if (completed) return;
 
     setSelectedOptionId(null);
@@ -331,35 +586,68 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
     setHintStep(0);
     setScorePulse(false);
     setCheckpointFeedback('idle');
+    setDecodeReadyByPage((previous) => ({ ...previous, [currentPage.id]: false }));
     setMessageTone(supportMode ? 'hint' : 'neutral');
-    setMessageKey(
-      supportMode
-        ? 'games.decodableMicroStories.instructions.supportMode'
-        : 'games.decodableMicroStories.instructions.chooseAnswer',
-    );
+    setMessageKey(supportMode ? supportInstructionKey : chooseAnswerKey);
     playPageNarration(true);
-  }, [completed, currentPage.id, playPageNarration, supportMode]);
+  }, [
+    chooseAnswerKey,
+    completed,
+    currentPage.id,
+    playPageNarration,
+    supportInstructionKey,
+    supportMode,
+  ]);
 
   const instructionKey = useMemo(() => {
-    if (completed) return 'games.decodableMicroStories.completion.summary';
+    if (completed) return completionSummaryKey;
     if (messageTone !== 'neutral') return messageKey;
-    if (supportMode) return 'games.decodableMicroStories.instructions.supportMode';
-    if (independentMode) return 'games.decodableMicroStories.instructions.independentTurn';
-    return 'games.decodableMicroStories.instructions.chooseAnswer';
-  }, [completed, independentMode, messageKey, messageTone, supportMode]);
+    if (supportMode) return supportInstructionKey;
+    if (independentMode) return independentInstructionKey;
+    return chooseAnswerKey;
+  }, [
+    chooseAnswerKey,
+    completed,
+    completionSummaryKey,
+    independentInstructionKey,
+    independentMode,
+    messageKey,
+    messageTone,
+    supportInstructionKey,
+    supportMode,
+  ]);
 
   const hintTrend = useMemo(
-    () => getHintTrend(STORY_PAGES.map((page) => hintUsageByPage[page.id] ?? 0)),
-    [hintUsageByPage],
+    () => getHintTrend(activeStoryPages.map((page) => hintUsageByPage[page.id] ?? 0)),
+    [activeStoryPages, hintUsageByPage],
   );
-  const hintTrendSummaryKey = useMemo(() => toHintTrendSummaryKey(hintTrend), [hintTrend]);
-  const successRate = Math.round((firstAttemptSuccessCount / STORY_PAGES.length) * 100);
+
+  const hintTrendSummaryKey = useMemo(() => {
+    const fallback = toHintTrendSummaryKey(hintTrend);
+    return resolveAgeBandGameKey(toAgeBandSuffixFromFallbackKey(fallback), fallback);
+  }, [hintTrend, resolveAgeBandGameKey]);
 
   const adaptiveBadgeKey = useMemo(() => {
-    if (supportMode) return 'games.decodableMicroStories.adaptive.supportMode';
-    if (independentMode) return 'games.decodableMicroStories.adaptive.independentMode';
+    if (supportMode) {
+      return resolveAgeBandGameKey('adaptive.supportMode', 'games.decodableMicroStories.adaptive.supportMode');
+    }
+    if (independentMode) {
+      return resolveAgeBandGameKey('adaptive.independentMode', 'games.decodableMicroStories.adaptive.independentMode');
+    }
     return null;
-  }, [independentMode, supportMode]);
+  }, [independentMode, resolveAgeBandGameKey, supportMode]);
+
+  const reduceChoicesThreshold = activeAgeBand === '3-4' ? 1 : activeStoryPack.maxHintStep;
+  const shouldReduceChoices = supportMode || hintStep >= reduceChoicesThreshold;
+  const visibleComprehensionOptions = useMemo(() => {
+    if (!shouldReduceChoices) return currentPage.comprehensionOptions;
+    const correctOption = currentPage.comprehensionOptions.find((option) => option.isCorrect);
+    const firstDistractor = currentPage.comprehensionOptions.find((option) => !option.isCorrect);
+    if (correctOption && firstDistractor) {
+      return [correctOption, firstDistractor];
+    }
+    return currentPage.comprehensionOptions;
+  }, [currentPage.comprehensionOptions, shouldReduceChoices]);
 
   const completeSession = useCallback(() => {
     if (completionSentRef.current) return;
@@ -368,56 +656,90 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
     setCompleted(true);
     setLocked(true);
     setMessageTone('success');
-    setMessageKey('games.decodableMicroStories.completion.summary');
+    setMessageKey(completionSummaryKey);
 
-    const hintVector = STORY_PAGES.map((page) => hintUsageByPage[page.id] ?? 0);
-    const firstAttemptSuccessRate = Math.round((firstAttemptSuccessCount / STORY_PAGES.length) * 100);
+    const hintVector = activeStoryPages.map((page) => hintUsageByPage[page.id] ?? 0);
     const totalHints = hintVector.reduce((sum, value) => sum + value, 0) + supportModeActivations;
     const summaryHintTrend = getHintTrend(hintVector);
+    const passedGate =
+      activeAgeBand === '3-4'
+        ? participationRate >= activeStoryPack.participationTarget
+        : activeAgeBand === '6-7'
+          ? decodeAccuracy >= activeStoryPack.decodeWithinTwoAttemptsTarget &&
+            sequenceEvidenceScore >= activeStoryPack.sequenceEvidenceTarget
+          : decodeAccuracy >= activeStoryPack.decodeWithinTwoAttemptsTarget;
 
     onComplete({
       completed: true,
-      score: firstAttemptSuccessRate,
-      stars: toStars(firstAttemptSuccessRate, totalHints),
-      roundsCompleted: STORY_PAGES.length,
+      score: completionPrimaryScore,
+      stars: toStars(completionPrimaryScore, totalHints),
+      roundsCompleted: activeStoryPages.length,
       summaryMetrics: {
-        highestStableRange: toStableRange(firstAttemptSuccessRate),
-        firstAttemptSuccessRate,
+        highestStableRange: toStableRange(completionPrimaryScore),
+        firstAttemptSuccessRate: completionPrimaryScore,
         hintTrend: summaryHintTrend,
+        ageBand: activeAgeBand,
+        listenParticipation: activeAgeBand === '3-4' ? participationRate : undefined,
+        decodeAccuracy: activeAgeBand !== '3-4' ? decodeAccuracy : undefined,
+        sequenceEvidenceScore: activeAgeBand === '6-7' ? sequenceEvidenceScore : undefined,
+        gatePassed: passedGate,
       },
     });
 
-    playKey('games.decodableMicroStories.completion.title', true);
-    playKey('games.decodableMicroStories.completion.nextStep');
-  }, [firstAttemptSuccessCount, hintUsageByPage, onComplete, playKey, supportModeActivations]);
+    playKey(completionTitleKey, true);
+    playKey(completionNextStepKey);
+  }, [
+    activeAgeBand,
+    activeStoryPages,
+    activeStoryPack.decodeWithinTwoAttemptsTarget,
+    activeStoryPack.participationTarget,
+    activeStoryPack.sequenceEvidenceTarget,
+    completionNextStepKey,
+    completionPrimaryScore,
+    completionSummaryKey,
+    completionTitleKey,
+    decodeAccuracy,
+    hintUsageByPage,
+    onComplete,
+    participationRate,
+    playKey,
+    sequenceEvidenceScore,
+    supportModeActivations,
+  ]);
 
   const handleReplayInstruction = useCallback(() => {
     playKey(instructionKey, true);
-  }, [instructionKey, playKey]);
+    markParticipation(currentPage.id);
+  }, [currentPage.id, instructionKey, markParticipation, playKey]);
 
   const handleReplayNarration = useCallback(() => {
     setMessageTone('neutral');
-    setMessageKey('games.decodableMicroStories.instructions.modelReplay');
+    setMessageKey(modelReplayKey);
+    markParticipation(currentPage.id);
     playPageNarration(true);
-  }, [playPageNarration]);
+  }, [currentPage.id, markParticipation, modelReplayKey, playPageNarration]);
 
   const handleReplayPhrase = useCallback(() => {
-    playKey(`phrases.pronunciation.${currentPage.phraseId}`, true);
-  }, [currentPage.phraseId, playKey]);
+    markDecodeReady(currentPage.id);
+    playKey(phrasePronunciationKey, true);
+  }, [currentPage.id, markDecodeReady, phrasePronunciationKey, playKey]);
 
   const handleReplayDecodePrompt = useCallback(() => {
-    playKey(currentPage.decodePromptKey, true);
-  }, [currentPage.decodePromptKey, playKey]);
+    markDecodeReady(currentPage.id);
+    playKey(pageDecodePromptKey, true);
+  }, [currentPage.id, markDecodeReady, pageDecodePromptKey, playKey]);
 
   const handleReplayComprehensionPrompt = useCallback(() => {
-    playKey(currentPage.comprehensionPromptKey, true);
-  }, [currentPage.comprehensionPromptKey, playKey]);
+    markParticipation(currentPage.id);
+    playKey(pageComprehensionPromptKey, true);
+  }, [currentPage.id, markParticipation, pageComprehensionPromptKey, playKey]);
 
   const handlePlayWord = useCallback(
     (wordId: WordId) => {
+      markDecodeReady(currentPage.id);
       playKey(`words.pronunciation.${wordId}`, true);
     },
-    [playKey],
+    [currentPage.id, markDecodeReady, playKey],
   );
 
   const handleRetryCheckpoint = useCallback(() => {
@@ -426,14 +748,35 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
     setHintStep(0);
     setCheckpointFeedback('idle');
     setMessageTone('neutral');
-    setMessageKey('games.decodableMicroStories.instructions.chooseAnswer');
-    playKey('games.decodableMicroStories.controls.retry', true);
-  }, [completed, playKey]);
+    setMessageKey(chooseAnswerKey);
+    playKey(retryControlKey, true);
+  }, [chooseAnswerKey, completed, playKey, retryControlKey]);
+
+  const hintKeysByStep = useMemo(() => {
+    if (activeAgeBand === '3-4') {
+      return [
+        resolveAgeBandGameKey('hints.replayPhrase', 'games.decodableMicroStories.hints.replayPhrase'),
+        resolveAgeBandGameKey('hints.reduceChoices', 'games.decodableMicroStories.hints.reduceChoices'),
+      ];
+    }
+    if (activeAgeBand === '6-7') {
+      return [
+        resolveAgeBandGameKey('hints.replayPhrase', 'games.decodableMicroStories.hints.replayPhrase'),
+        resolveAgeBandGameKey('hints.decodeBeforeAnswer', 'games.decodableMicroStories.hints.decodeBeforeAnswer'),
+        resolveAgeBandGameKey('hints.reduceChoices', 'games.decodableMicroStories.hints.reduceChoices'),
+      ];
+    }
+    return [
+      resolveAgeBandGameKey('hints.replayPhrase', 'games.decodableMicroStories.hints.replayPhrase'),
+      resolveAgeBandGameKey('hints.syllableCue', 'games.decodableMicroStories.hints.syllableCue'),
+      resolveAgeBandGameKey('hints.graphemeHighlight', 'games.decodableMicroStories.hints.graphemeHighlight'),
+    ];
+  }, [activeAgeBand, resolveAgeBandGameKey]);
 
   const handleHint = useCallback(() => {
     if (completed || locked) return;
 
-    const nextHintStep = Math.min(3, hintStep + 1);
+    const nextHintStep = Math.min(activeStoryPack.maxHintStep, hintStep + 1);
     if (nextHintStep === hintStep) return;
 
     setHintStep(nextHintStep);
@@ -442,57 +785,81 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
       [currentPage.id]: (previous[currentPage.id] ?? 0) + 1,
     }));
 
-    const hintKey =
-      nextHintStep === 1
-        ? 'games.decodableMicroStories.hints.replayPhrase'
-        : nextHintStep === 2
-          ? 'games.decodableMicroStories.hints.syllableCue'
-          : 'games.decodableMicroStories.hints.graphemeHighlight';
-
+    const hintKey = hintKeysByStep[nextHintStep - 1] ?? hintKeysByStep[hintKeysByStep.length - 1];
     setMessageTone('hint');
     setMessageKey(hintKey);
+    markDecodeReady(currentPage.id);
     playKey(hintKey, true);
 
     if (nextHintStep === 1) {
-      playKey(`phrases.pronunciation.${currentPage.phraseId}`);
+      playKey(phrasePronunciationKey);
     }
-  }, [completed, currentPage.id, currentPage.phraseId, hintStep, locked, playKey]);
+  }, [
+    activeStoryPack.maxHintStep,
+    completed,
+    currentPage.id,
+    hintKeysByStep,
+    hintStep,
+    locked,
+    markDecodeReady,
+    phrasePronunciationKey,
+    playKey,
+  ]);
 
   const handleSelectOption = useCallback(
     (option: ComprehensionOption) => {
       if (locked || completed) return;
+
+      if (!(decodeReadyByPage[currentPage.id] ?? false)) {
+        setMessageTone('hint');
+        setMessageKey(decodeFirstInstructionKey);
+        playKey(decodeFirstInstructionKey, true);
+        return;
+      }
 
       setSelectedOptionId(option.id);
       const wrongAttempts = wrongAttemptsByPage[currentPage.id] ?? 0;
 
       if (option.isCorrect) {
         const firstTrySuccess = wrongAttempts === 0 && hintStep === 0;
+        const solvedWithinTwoAttempts = wrongAttempts <= 1;
         setLocked(true);
         setConsecutiveMisses(0);
         setShowCelebration(true);
         setCheckpointFeedback('success');
+        markParticipation(currentPage.id);
         scheduleTimeout(() => {
           setCheckpointFeedback('idle');
         }, 540);
 
+        if (solvedWithinTwoAttempts) {
+          setDecodeWithinTwoAttemptsCount((count) => count + 1);
+        }
         if (firstTrySuccess) {
           setFirstAttemptSuccessCount((count) => count + 1);
           setScorePulse(true);
           scheduleTimeout(() => {
             setScorePulse(false);
           }, 420);
-          setIndependentStreak((streak) => {
-            const nextStreak = streak + 1;
-            if (nextStreak >= 3) {
-              setSupportMode(false);
-            }
-            return nextStreak;
-          });
+          if (activeAgeBand !== '3-4') {
+            setIndependentStreak((streak) => {
+              const nextStreak = streak + 1;
+              if (nextStreak >= 3) {
+                setSupportMode(false);
+              }
+              return nextStreak;
+            });
+          }
         } else {
           setIndependentStreak(0);
         }
 
-        const successKey = SUCCESS_MESSAGE_ROTATION[currentPageIndex % SUCCESS_MESSAGE_ROTATION.length];
+        if (currentPage.checkpointType !== 'literal') {
+          setSequenceEvidenceSuccessCount((count) => count + 1);
+        }
+
+        const successFallbackKey = SUCCESS_MESSAGE_ROTATION[currentPageIndex % SUCCESS_MESSAGE_ROTATION.length];
+        const successKey = resolveAgeBandGameKey(toAgeBandSuffixFromFallbackKey(successFallbackKey), successFallbackKey);
         setMessageTone('success');
         setMessageKey(successKey);
         playKey(successKey, true);
@@ -502,11 +869,11 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
         }, 850);
 
         scheduleTimeout(() => {
-          if (currentPageIndex === STORY_PAGES.length - 1) {
+          if (currentPageIndex === activeStoryPages.length - 1) {
             completeSession();
             return;
           }
-          setCurrentPageIndex((index) => Math.min(index + 1, STORY_PAGES.length - 1));
+          setCurrentPageIndex((index) => Math.min(index + 1, activeStoryPages.length - 1));
         }, 950);
         return;
       }
@@ -524,7 +891,7 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
       }, 420);
       setConsecutiveMisses((previousMisses) => {
         const nextMisses = previousMisses + 1;
-        if (nextMisses >= 2) {
+        if (nextMisses >= activeStoryPack.supportMissThreshold) {
           setSupportMode((wasSupportMode) => {
             if (!wasSupportMode) {
               setSupportModeActivations((count) => count + 1);
@@ -535,7 +902,8 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
         return nextMisses;
       });
 
-      const retryKey = RETRY_MESSAGE_ROTATION[Math.min(nextWrongAttempts - 1, RETRY_MESSAGE_ROTATION.length - 1)];
+      const retryFallbackKey = RETRY_MESSAGE_ROTATION[Math.min(nextWrongAttempts - 1, RETRY_MESSAGE_ROTATION.length - 1)];
+      const retryKey = resolveAgeBandGameKey(toAgeBandSuffixFromFallbackKey(retryFallbackKey), retryFallbackKey);
       setMessageTone('error');
       setMessageKey(retryKey);
       playKey(retryKey, true);
@@ -547,15 +915,30 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
           [currentPage.id]: (previous[currentPage.id] ?? 0) + 1,
         }));
       }
+
+      if (nextWrongAttempts >= 3) {
+        setHintStep(activeStoryPack.maxHintStep);
+        playKey(phrasePronunciationKey);
+      }
     },
     [
-      completed,
+      activeAgeBand,
+      activeStoryPack.maxHintStep,
+      activeStoryPack.supportMissThreshold,
+      activeStoryPages.length,
       completeSession,
+      completed,
+      currentPage.checkpointType,
       currentPage.id,
       currentPageIndex,
+      decodeFirstInstructionKey,
+      decodeReadyByPage,
       hintStep,
       locked,
+      markParticipation,
+      phrasePronunciationKey,
       playKey,
+      resolveAgeBandGameKey,
       scheduleTimeout,
       wrongAttemptsByPage,
     ],
@@ -563,7 +946,12 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
 
   const hintCount = hintUsageByPage[currentPage.id] ?? 0;
   const wrongAttempts = wrongAttemptsByPage[currentPage.id] ?? 0;
-  const displayedPage = completed ? STORY_PAGES.length : currentPageIndex + 1;
+  const displayedPage = completed ? activeStoryPages.length : currentPageIndex + 1;
+  const parentProgressSummaryKey = resolveAgeBandParentKey(
+    'progressSummary',
+    'parentDashboard.games.decodableMicroStories.progressSummary',
+  );
+  const parentNextStepKey = resolveAgeBandParentKey('nextStep', 'parentDashboard.games.decodableMicroStories.nextStep');
 
   return (
     <Card padding="lg" className="decodable-story__shell">
@@ -581,11 +969,11 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
         <p className="decodable-story__progress-label" aria-live="polite">
           {t('games.decodableMicroStories.status.pageLabel', {
             current: displayedPage,
-            total: STORY_PAGES.length,
+            total: activeStoryPages.length,
           })}
         </p>
         <div className="decodable-story__progress-track" aria-hidden="true">
-          {STORY_PAGES.map((page, index) => {
+          {activeStoryPages.map((page, index) => {
             const state = completed || index < currentPageIndex ? 'done' : index === currentPageIndex ? 'active' : 'pending';
             return (
               <span
@@ -601,7 +989,7 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
           ⭐ {firstAttemptSuccessCount}
         </span>
         <span className="decodable-story__score-pill">
-          🎯 {displayedPage}/{STORY_PAGES.length}
+          🎯 {displayedPage}/{activeStoryPages.length}
         </span>
         {!completed && supportMode && <span className="decodable-story__score-pill">💡 {hintCount}</span>}
       </div>
@@ -613,7 +1001,7 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
               <p className="decodable-story__scene" aria-hidden="true">
                 {currentPage.sceneEmoji}
               </p>
-              <p className="decodable-story__narration">{t(currentPage.narrationKey as any)}</p>
+              <p className="decodable-story__narration">{t(pageNarrationKey as any)}</p>
               <button
                 type="button"
                 className="decodable-story__audio-inline"
@@ -625,7 +1013,7 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
             </div>
 
             <div className="decodable-story__story-row">
-              <p className="decodable-story__decode-prompt">{t(currentPage.decodePromptKey as any)}</p>
+              <p className="decodable-story__decode-prompt">{t(pageDecodePromptKey as any)}</p>
               <button
                 type="button"
                 className="decodable-story__audio-inline"
@@ -637,7 +1025,7 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
             </div>
 
             <div className="decodable-story__story-row decodable-story__story-row--phrase">
-              <p className="decodable-story__phrase">{t(`phrases.pronunciation.${currentPage.phraseId}` as any)}</p>
+              <p className="decodable-story__phrase">{t(phrasePronunciationKey as any)}</p>
               <button
                 type="button"
                 className="decodable-story__audio-inline"
@@ -653,9 +1041,10 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
                 <button
                   key={`${currentPage.id}-${wordId}`}
                   type="button"
-                  className={`decodable-story__word-button ${hintStep >= 3 && wordId === currentPage.targetWordId ? 'is-highlight' : ''}`}
+                  className={`decodable-story__word-button ${
+                    hintStep >= activeStoryPack.maxHintStep && wordId === currentPage.targetWordId ? 'is-highlight' : ''
+                  }`}
                   onClick={() => handlePlayWord(wordId)}
-                  aria-label={t('games.decodableMicroStories.instructions.tapWord')}
                 >
                   {t(`words.pronunciation.${wordId}` as any)}
                 </button>
@@ -716,7 +1105,7 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
               }`}
             >
               <div className="decodable-story__story-row">
-                <p className="decodable-story__checkpoint-prompt">{t(currentPage.comprehensionPromptKey as any)}</p>
+                <p className="decodable-story__checkpoint-prompt">{t(pageComprehensionPromptKey as any)}</p>
                 <button
                   type="button"
                   className="decodable-story__audio-inline"
@@ -728,7 +1117,7 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
               </div>
 
               <div className="decodable-story__options-grid" role="group" aria-label={t('games.decodableMicroStories.instructions.chooseAnswer')}>
-                {currentPage.comprehensionOptions.map((option) => {
+                {visibleComprehensionOptions.map((option) => {
                   const isSelected = selectedOptionId === option.id;
                   const optionTone = isSelected
                     ? option.isCorrect
@@ -744,7 +1133,7 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
                       aria-pressed={isSelected}
                       disabled={locked}
                     >
-                      {t(option.key as any)}
+                      {t(resolveOptionKey(currentPage, option) as any)}
                     </button>
                   );
                 })}
@@ -756,15 +1145,22 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
 
       {completed && (
         <section className="decodable-story__completion">
-          <h3 className="decodable-story__completion-title">{t('games.decodableMicroStories.completion.title')}</h3>
+          <h3 className="decodable-story__completion-title">{t(completionTitleKey as any)}</h3>
           <p className="decodable-story__completion-line">
-            {t('parentDashboard.games.decodableMicroStories.progressSummary', {
-              successRate,
+            {t(parentProgressSummaryKey as any, {
+              successRate: completionPrimaryScore,
               hintTrend: t(hintTrendSummaryKey as any),
             })}
           </p>
+          <p className="decodable-story__completion-line">
+            {activeAgeBand === '3-4'
+              ? `👂 ${participationRate}%`
+              : activeAgeBand === '6-7'
+                ? `📖 ${decodeAccuracy}% · 🧩 ${sequenceEvidenceScore}%`
+                : `📖 ${decodeAccuracy}%`}
+          </p>
           <p className="decodable-story__completion-line">{t(hintTrendSummaryKey as any)}</p>
-          <p className="decodable-story__completion-line">{t('parentDashboard.games.decodableMicroStories.nextStep')}</p>
+          <p className="decodable-story__completion-line">{t(parentNextStepKey as any)}</p>
         </section>
       )}
 
@@ -849,7 +1245,7 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
 
         .decodable-story__progress-track {
           display: grid;
-          grid-template-columns: repeat(${STORY_PAGES.length}, minmax(0, 1fr));
+          grid-template-columns: repeat(${activeStoryPages.length}, minmax(0, 1fr));
           gap: var(--space-2xs);
         }
 

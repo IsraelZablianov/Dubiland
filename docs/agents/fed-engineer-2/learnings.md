@@ -199,3 +199,18 @@ In this Paperclip local execution adapter, `cloudflared` and `vite preview` chil
 
 ## 2026-04-10 — Word-first handbook reinforcement should bind replay to the correct-choice key
 For InteractiveHandbook fallback pages, deriving the hero word and replay audio from the active interaction’s correct choice (`labelKey` / `audioKey`) avoids new i18n key churn, keeps word repetition aligned with answer targets, and lets support sentences stay secondary or hidden by age/layout.
+
+## 2026-04-10 — Shared audio queue should live outside React hook instances
+When each screen creates its own `useAudioManager` queue, cross-screen playback can overlap despite per-screen FIFO behavior. Moving queue state to a shared controller module and ref-counting consumers in the hook prevents overlap while preserving `playNow` interruption semantics.
+
+## 2026-04-10 — Audio punctuation audits must not hard-require gTTS
+`scripts/generate-audio.py --audit-punctuation` should run in lightweight environments that do not have `gTTS` installed. Importing `gTTS` lazily (or tolerating missing import) keeps punctuation/normalization QA available without blocking on synthesis dependencies.
+
+## 2026-04-10 — Home choice-density rollback can be solved without new copy/audio debt
+For age bands up to 5-6, cap Home featured cards at 3 and gate section grids behind an explicit reveal button that reuses an existing i18n/audio key (`home.chooseTopic`). This satisfies progressive reveal requirements without introducing new untranslated text or missing-audio keys.
+
+## 2026-04-10 — GameCard V2 should be a semantic button with two-chip max metadata
+`GameCard` works better for child UX and accessibility when the whole card is a native `<button type="button">`, metadata is constrained to two chips (topic + support), and progress uses chunked pills plus a clear play cue row (`▶` + localized label) with 52px+ touch-safe height.
+
+## 2026-04-10 — Story-depth handbook migrations need canonical per-book slug routing plus legacy-runtime key guards
+When migrating handbook narrative quality without immediately rewriting seeded DB rows, route Books `1/4/7` through canonical story slugs (`mikaSoundGarden` / `yoavLetterMap` / `tamarWordTower`) at runtime and ignore legacy runtime narration/prompt overrides unless they already match the new `handbooks.<slug>.pages.pageXX.{narration,cta}` contract. This keeps story-depth copy live immediately while preserving runtime compatibility. Also regenerate/validate audio manifest in the same heartbeat so newly introduced `storyArc`, `pages`, `chapterRecap`, and parent-summary keys remain audio-complete.

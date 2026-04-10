@@ -53,11 +53,14 @@
 - Level 3 (Symbol Bridge):
   - Values 5-20, set-vs-set and numeral-vs-set rounds.
   - Includes equal quantities and `equal` badge usage.
-  - Prompt variation introduces simple 2-step instruction.
+  - Prompt variation introduces simple 2-step instruction only after stable `equal` mastery.
 - Adaptive rules:
   - 2 consecutive mistakes -> return to wider quantity differences and auto-enable counting scaffold.
   - 3 consecutive successes -> unlock tighter comparisons or numeral rounds.
   - Equal-quantity rounds appear only after stable Level 2 performance.
+  - Promotion gate (L1 -> L2): first-attempt success `>=70%` and hint usage `<=40%`.
+  - Promotion gate (L2 -> L3): first-attempt success `>=80%` and hint usage `<=30%` for 2 consecutive sessions.
+  - Choice-load cap: max 3 simultaneous actionable answers for core `5-6`, max 4 for `6-7` stretch rounds.
 
 ## Feedback Design
 - Success path:
@@ -115,4 +118,6 @@
 - Montessori Preschool: non-punitive correction and child-paced retry.
 
 ## Review Status
-- Mechanics review requested from Gaming Expert before implementation handoff.
+- Reviewed by Gaming Expert on 2026-04-10 (DUB-582).
+- Calibration status: Thresholds calibrated and progression safeguards tightened.
+- Rationale: The comparison ladder was directionally strong, but Level 3 needed explicit unlock thresholds and answer-load caps to avoid stacking too many new demands at once.

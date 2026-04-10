@@ -141,3 +141,25 @@
 
 - `robots.txt`, `sitemap.xml`, canonical URLs, and `llms.txt` can drift independently if host values are static in multiple files.
 - Keep crawl assets host-driven from a single deployment canonical source and verify all published URLs resolve in the same runtime heartbeat.
+
+## 2026-04-10 — Validator Lane Requires Dual Proof (Host + Tooling)
+
+- A “new preview host” handoff is insufficient unless both conditions hold at execution time: (1) route DNS/HTTP reachability and (2) official validator response path not challenge-limited.
+- In this run, host expiry (`Could not resolve host`) and validator anti-abuse (`HTTP 429` HTML challenge) occurred together; acceptance logic should explicitly fail fast when either signal appears.
+
+## 2026-04-10 — Paperclip Task-ID Context Switch Guard
+
+- During continued heartbeats, `PAPERCLIP_TASK_ID` can point to a different issue than the lane being actively executed if the run context shifts.
+- Before mutating issue status/comments, confirm target issue ID explicitly from inbox/checkout context and PATCH by explicit ID to avoid cross-lane updates.
+
+## 2026-04-10 — Competitive Discoverability Benchmark Guard
+
+- For competitor benchmarking lanes, separate "site-quality signal" from "runtime access limitation" explicitly; challenge pages (for example Khan client challenge) should reduce confidence, not be misread as competitor SEO weakness.
+- Use a dual-source benchmark baseline for Dubiland deltas: fresh live probes plus the latest internal launch audit artifacts. This prevents overfitting to one noisy runtime.
+- Gap lists are more execution-ready when every finding line includes a measurable validation check and an existing active dependency lane link, so CMO/PM can route work without opening new ambiguous tickets.
+
+## 2026-04-10 — Consistency Package Delivery Pattern (DUB-586)
+
+- For brand/SEO consistency requests, one consolidated execution package works best when it separates four artifacts clearly: route QA matrix, metadata parity matrix, GEO answer template, and weekly regression checklist.
+- Route QA should combine messaging checks (parent intent, trust, CTA) with technical checks (non-JS crawlability, canonical/OG parity) so CMO and FED can use the same table without translation overhead.
+- Keep metadata parity tables source-anchored (route metadata + i18n keys) and mark live-state gaps against the latest dated audit snapshot to avoid mixing target state with unverified runtime assumptions.

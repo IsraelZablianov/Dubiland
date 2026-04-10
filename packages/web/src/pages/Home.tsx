@@ -376,6 +376,68 @@ function toStars(progressPercent: number): number {
   return 0;
 }
 
+function toConcurrentChoiceLimit(selectedAgeBand: AgeBand, profileAgeBand?: ProfileAgeBand): number {
+  const effectiveBand = selectedAgeBand === 'all' ? profileAgeBand : selectedAgeBand;
+
+  if (effectiveBand === '3-4' || effectiveBand === '4-5' || effectiveBand === '5-6') {
+    return 3;
+  }
+
+  if (effectiveBand === '6-7') {
+    return 5;
+  }
+
+  return 4;
+}
+
+interface ProgressPillsProps {
+  percent: number;
+  segments?: number;
+  ariaLabel: string;
+  ariaValueText: string;
+}
+
+function ProgressPills({ percent, segments = 6, ariaLabel, ariaValueText }: ProgressPillsProps) {
+  const normalized = Math.max(0, Math.min(100, Math.round(percent)));
+  const completed = Math.round((normalized / 100) * segments);
+
+  return (
+    <div
+      role="progressbar"
+      aria-label={ariaLabel}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={normalized}
+      aria-valuetext={ariaValueText}
+      style={{
+        display: 'grid',
+        gridTemplateColumns: `repeat(${segments}, minmax(0, 1fr))`,
+        gap: 'var(--space-xs)',
+        minBlockSize: '14px',
+        alignItems: 'center',
+      }}
+    >
+      {Array.from({ length: segments }, (_, index) => (
+        <span
+          key={`progress-pill-${index}`}
+          aria-hidden="true"
+          style={{
+            display: 'block',
+            inlineSize: '100%',
+            blockSize: '12px',
+            borderRadius: 'var(--radius-full)',
+            border: '1px solid var(--color-border-subtle)',
+            background:
+              index < completed
+                ? 'linear-gradient(90deg, var(--color-accent-success), var(--color-accent-info))'
+                : 'color-mix(in srgb, var(--color-surface-muted) 72%, white 28%)',
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 export default function Home() {
   const { t } = useTranslation('common');
   const navigate = useNavigate();
@@ -412,6 +474,14 @@ export default function Home() {
   const [catalogGames, setCatalogGames] = useState<HomeGameCardItem[] | null>(null);
   const [catalogLoadStatus, setCatalogLoadStatus] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
   const pendingNavigationTimeoutRef = useRef<number | null>(null);
+  const lastDailyGoalProgressRef = useRef<number | null>(null);
+
+  const maxConcurrentChoices = useMemo(
+    () => toConcurrentChoiceLimit(selectedAgeBand, profileAgeBand),
+    [profileAgeBand, selectedAgeBand],
+  );
+  const requiresProgressiveReveal = maxConcurrentChoices <= 3;
+  const [showExpandedChoices, setShowExpandedChoices] = useState<boolean>(() => !requiresProgressiveReveal);
 
   const clearPendingNavigation = useCallback(() => {
     if (pendingNavigationTimeoutRef.current !== null) {
@@ -428,6 +498,15 @@ export default function Home() {
     setSelectedAgeBand(nextSelectedBand);
     setIsManualOverride(shouldUseManualOverride(profileAgeBand, nextSelectedBand));
   }, [childId, profileAgeBand]);
+
+  useEffect(() => {
+    if (requiresProgressiveReveal) {
+      setShowExpandedChoices(false);
+      return;
+    }
+
+    setShowExpandedChoices(true);
+  }, [requiresProgressiveReveal, selectedAgeBand]);
 
   useEffect(() => {
     let active = true;
@@ -494,6 +573,18 @@ export default function Home() {
   const dailyGoalTarget = DAILY_LEARNING_GOAL_MINUTES;
   const dailyGoalProgress = Math.min(100, Math.round((dailyGoalMinutes / dailyGoalTarget) * 100));
 
+  useEffect(() => {
+    if (lastDailyGoalProgressRef.current == null) {
+      lastDailyGoalProgressRef.current = dailyGoalProgress;
+      return;
+    }
+
+    if (lastDailyGoalProgressRef.current !== dailyGoalProgress) {
+      lastDailyGoalProgressRef.current = dailyGoalProgress;
+      void audio.play(resolveCommonAudioPath('home.progressValue'));
+    }
+  }, [audio, dailyGoalProgress]);
+
   const fallbackGames = useMemo(
     () => buildFallbackGames(selectedAgeBand, profileAgeBand),
     [profileAgeBand, selectedAgeBand],
@@ -536,8 +627,8 @@ export default function Home() {
           a.sortOrder - b.sortOrder
         );
       })
-      .slice(0, 4);
-  }, [allVisibleGames, childProgress.gameProgressBySlug]);
+      .slice(0, maxConcurrentChoices);
+  }, [allVisibleGames, childProgress.gameProgressBySlug, maxConcurrentChoices]);
 
   const sectionProgressBySlug = useMemo(() => {
     const result: Record<HomeSectionSlug, number> = {
@@ -624,10 +715,17 @@ export default function Home() {
     [navigateWithLeadAudio],
   );
 
+  const handleRevealChoices = useCallback(() => {
+    setShowExpandedChoices(true);
+    playCommonAudioNow('home.chooseTopic');
+  }, [playCommonAudioNow]);
+
   const startFeaturedRoute = featuredGames[0]?.route ?? allVisibleGames[0]?.route ?? '/games';
   const startFeaturedAudioKey = featuredGames[0] ? `games.${featuredGames[0].slug}.title` : 'home.startLearning';
 
   const showEmptyState = allVisibleGames.length === 0;
+  const showSectionChoices = !requiresProgressiveReveal || showExpandedChoices;
+  const remainingChoiceCount = Math.max(0, allVisibleGames.length - featuredGames.length);
 
   return (
     <main
@@ -691,17 +789,12 @@ export default function Home() {
             </Button>
           </div>
 
-          <div
-            className="home__daily-goal-track"
-            role="progressbar"
-            aria-label={t('home.dailyGoal')}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={dailyGoalProgress}
-            aria-valuetext={`${dailyGoalProgress}%`}
-          >
-            <div className="home__daily-goal-fill" style={{ width: `${dailyGoalProgress}%` }} />
-          </div>
+          <ProgressPills
+            percent={dailyGoalProgress}
+            segments={8}
+            ariaLabel={t('home.dailyGoal')}
+            ariaValueText={t('home.progressValue', { count: dailyGoalProgress })}
+          />
         </Card>
 
         <Card
@@ -717,6 +810,7 @@ export default function Home() {
           <div style={{ display: 'grid', gap: 'var(--space-2xs)' }}>
             <h2 style={{ color: 'var(--color-text-primary)', fontSize: 'var(--font-size-xl)' }}>{t('home.featured.title')}</h2>
             <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>{t('home.featured.subtitle')}</p>
+            <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-xs)' }}>{t('home.featured.badge')}</p>
           </div>
 
           {featuredGames.length > 0 ? (
@@ -740,16 +834,11 @@ export default function Home() {
                     progressPercent={progressPercent}
                     progressAriaLabel={t('home.progressLabel')}
                     progressValueLabel={t('home.progressValue', { count: progressPercent })}
+                    playLabel={t('games.play')}
                     onClick={() => handleOpenGame(game.route, gameTitleKey)}
-                    onKeyDown={(event) => {
-                      if (event.key === 'Enter' || event.key === ' ') {
-                        event.preventDefault();
-                        handleOpenGame(game.route, gameTitleKey);
-                      }
-                    }}
                     aria-label={t(gameTitleKey as any)}
                     style={{
-                      minHeight: '264px',
+                      minHeight: '280px',
                       animationDelay: `${index * 70}ms`,
                     }}
                   />
@@ -805,7 +894,7 @@ export default function Home() {
           <Card padding="lg" style={{ display: 'grid', placeItems: 'center' }}>
             <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>{t('home.emptyByAge')}</p>
           </Card>
-        ) : (
+        ) : showSectionChoices ? (
           <div className="home__sections-grid">
             {SECTION_ORDER.map((sectionSlug) => {
               const sectionGames = sectionedGames[sectionSlug];
@@ -839,6 +928,15 @@ export default function Home() {
                     <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-xs)' }}>
                       {t('home.sectionProgressValue', { count: sectionProgress })}
                     </p>
+                    <ProgressPills
+                      percent={sectionProgress}
+                      segments={5}
+                      ariaLabel={t(`home.sections.${sectionSlug}.title` as any)}
+                      ariaValueText={t('home.sectionProgressValue', { count: sectionProgress })}
+                    />
+                    <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-xs)' }}>
+                      {t('home.sectionGameCount', { count: sectionGames.length })}
+                    </p>
                   </div>
 
                   <div className="home__section-games-grid">
@@ -861,16 +959,11 @@ export default function Home() {
                           progressPercent={progressPercent}
                           progressAriaLabel={t('home.progressLabel')}
                           progressValueLabel={t('home.progressValue', { count: progressPercent })}
+                          playLabel={t('games.play')}
                           onClick={() => handleOpenGame(game.route, gameTitleKey)}
-                          onKeyDown={(event) => {
-                            if (event.key === 'Enter' || event.key === ' ') {
-                              event.preventDefault();
-                              handleOpenGame(game.route, gameTitleKey);
-                            }
-                          }}
                           aria-label={t(gameTitleKey as any)}
                           style={{
-                            minHeight: '252px',
+                            minHeight: '270px',
                             animationDelay: `${index * 55}ms`,
                           }}
                         />
@@ -881,6 +974,32 @@ export default function Home() {
               );
             })}
           </div>
+        ) : (
+          <Card
+            padding="md"
+            style={{
+              display: 'grid',
+              gap: 'var(--space-sm)',
+              border: '2px solid color-mix(in srgb, var(--color-theme-primary) 20%, transparent)',
+              background:
+                'linear-gradient(160deg, color-mix(in srgb, var(--color-bg-card) 82%, var(--color-theme-secondary) 18%), var(--color-bg-card))',
+            }}
+          >
+            <div style={{ display: 'grid', gap: 'var(--space-2xs)' }}>
+              <h3 style={{ color: 'var(--color-text-primary)', fontSize: 'var(--font-size-lg)' }}>{t('home.chooseTopic')}</h3>
+              <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
+                {t('home.sectionGameCount', { count: remainingChoiceCount })}
+              </p>
+            </div>
+            <Button
+              variant="secondary"
+              size="lg"
+              aria-label={t('home.chooseTopic')}
+              onClick={handleRevealChoices}
+            >
+              {t('home.chooseTopic')}
+            </Button>
+          </Card>
         )}
       </section>
 
@@ -909,23 +1028,6 @@ export default function Home() {
           gap: var(--space-sm);
         }
 
-        .home__daily-goal-track {
-          inline-size: 100%;
-          block-size: 14px;
-          border-radius: var(--radius-full);
-          background: var(--color-star-empty);
-          overflow: hidden;
-          display: flex;
-          justify-content: flex-start;
-        }
-
-        .home__daily-goal-fill {
-          block-size: 100%;
-          border-radius: var(--radius-full);
-          transition: width var(--motion-duration-normal) var(--motion-ease-standard);
-          background: linear-gradient(90deg, var(--color-accent-success), var(--color-accent-info));
-        }
-
         .home__featured-grid {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -941,14 +1043,6 @@ export default function Home() {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
           gap: var(--space-sm);
-        }
-
-        html[dir='rtl'] .home__daily-goal-track {
-          justify-content: flex-end;
-        }
-
-        html[dir='rtl'] .home__daily-goal-fill {
-          background: linear-gradient(270deg, var(--color-accent-success), var(--color-accent-info));
         }
 
         @media (max-width: 900px) {

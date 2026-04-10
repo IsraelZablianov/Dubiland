@@ -1,6 +1,8 @@
 import type { HandbookMediaAssetSlot } from '@/games/reading/HandbookPageRenderer';
 
 const DEFAULT_LAYOUT_KIND = 'picture_book';
+type RuntimeAgeBand = '3-4' | '5-6' | '6-7';
+type RuntimeAgeBandNumberMap = Partial<Record<RuntimeAgeBand, number>>;
 
 export interface HandbookRuntimePageRow {
   page_number: number | null;
@@ -31,6 +33,12 @@ export interface HandbookRuntimeInteraction {
   hintKey: string | null;
   successKey: string | null;
   retryKey: string | null;
+  isScored: boolean;
+  requiresTextActionBeforeChoice: boolean;
+  allowImageBeforeAnswer: boolean;
+  choiceLockUntilTextAction: boolean;
+  hintTriggerByBand: RuntimeAgeBandNumberMap;
+  maxChoicesByBand: RuntimeAgeBandNumberMap;
   choices: HandbookRuntimeChoice[];
 }
 
@@ -60,6 +68,55 @@ function asTrimmedString(value: unknown): string | null {
 
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : null;
+}
+
+function asBoolean(value: unknown): boolean | null {
+  if (typeof value !== 'boolean') {
+    return null;
+  }
+
+  return value;
+}
+
+function asFiniteNumber(value: unknown): number | null {
+  if (typeof value !== 'number' || !Number.isFinite(value)) {
+    return null;
+  }
+
+  return value;
+}
+
+function normalizeAgeBand(value: unknown): RuntimeAgeBand | null {
+  const rawValue = asTrimmedString(value);
+  if (!rawValue) {
+    return null;
+  }
+
+  const normalized = rawValue.replace(/_/g, '-').replace(/\s+/g, '').toLowerCase();
+  if (normalized === '3-4' || normalized === '34') return '3-4';
+  if (normalized === '5-6' || normalized === '56') return '5-6';
+  if (normalized === '6-7' || normalized === '67') return '6-7';
+  return null;
+}
+
+function normalizeAgeBandNumberMap(rawValue: unknown): RuntimeAgeBandNumberMap {
+  if (!isRecord(rawValue)) {
+    return {};
+  }
+
+  const byBand: RuntimeAgeBandNumberMap = {};
+
+  Object.entries(rawValue).forEach(([rawBand, rawNumber]) => {
+    const normalizedBand = normalizeAgeBand(rawBand);
+    const normalizedValue = asFiniteNumber(rawNumber);
+    if (!normalizedBand || normalizedValue === null) {
+      return;
+    }
+
+    byBand[normalizedBand] = normalizedValue;
+  });
+
+  return byBand;
 }
 
 function normalizeAssetPath(path: string): string {
@@ -117,6 +174,25 @@ function normalizeInteraction(rawInteraction: unknown): HandbookRuntimeInteracti
   const hintKey = asTrimmedString(rawInteraction.hintKey) ?? asTrimmedString(rawInteraction.hint);
   const successKey = asTrimmedString(rawInteraction.successKey) ?? asTrimmedString(rawInteraction.success);
   const retryKey = asTrimmedString(rawInteraction.retryKey) ?? asTrimmedString(rawInteraction.retry);
+  const isScored = asBoolean(rawInteraction.isScored) ?? asBoolean(rawInteraction.is_scored) ?? false;
+  const requiresTextActionBeforeChoice =
+    asBoolean(rawInteraction.requiresTextActionBeforeChoice) ??
+    asBoolean(rawInteraction.requires_text_action_before_choice) ??
+    false;
+  const allowImageBeforeAnswer =
+    asBoolean(rawInteraction.allowImageBeforeAnswer) ??
+    asBoolean(rawInteraction.allow_image_before_answer) ??
+    true;
+  const choiceLockUntilTextAction =
+    asBoolean(rawInteraction.choiceLockUntilTextAction) ??
+    asBoolean(rawInteraction.choice_lock_until_text_action) ??
+    false;
+  const hintTriggerByBand = normalizeAgeBandNumberMap(
+    rawInteraction.hintTriggerByBand ?? rawInteraction.hint_trigger_by_band,
+  );
+  const maxChoicesByBand = normalizeAgeBandNumberMap(
+    rawInteraction.maxChoicesByBand ?? rawInteraction.max_choices_by_band,
+  );
   const rawChoices = Array.isArray(rawInteraction.choices)
     ? rawInteraction.choices
     : Array.isArray(rawInteraction.options)
@@ -168,6 +244,12 @@ function normalizeInteraction(rawInteraction: unknown): HandbookRuntimeInteracti
     hintKey,
     successKey,
     retryKey,
+    isScored,
+    requiresTextActionBeforeChoice,
+    allowImageBeforeAnswer,
+    choiceLockUntilTextAction,
+    hintTriggerByBand,
+    maxChoicesByBand,
     choices,
   };
 }

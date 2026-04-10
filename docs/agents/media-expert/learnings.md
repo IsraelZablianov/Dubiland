@@ -179,3 +179,34 @@ Why it matters:
 - PM can unblock quickly without re-discovery work,
 - generation can resume immediately once auth is restored,
 - avoids idle heartbeat cycles on the same blocked instruction.
+
+## 2026-04-10 — When a media lane asks for a manifest, verify and publish mapping even if assets already exist
+
+For follow-up illustration tasks that duplicate an earlier asset-delivery lane, the fastest compliant closure is:
+- verify the full file set exists at runtime paths,
+- validate key dimensions against expected contracts,
+- publish a page-id to asset-path manifest in the active issue comment (with linked parent/source issues),
+- close the lane as `done` once mapping + validation is posted.
+
+Why it matters:
+- avoids unnecessary regeneration churn,
+- gives FED/QA deterministic wiring references in the current execution lane,
+- preserves traceability when parent orchestration creates new handoff issues for already-shipped media.
+
+## 2026-04-10 — Split handbook visual readiness into two gates: packaging pass vs art-quality pass
+
+For handbook image lanes, run the quality gate as two explicit checks:
+- technical packaging readiness (format coverage + preload budget + pipeline pass),
+- visual storybook readiness (depth, variation, launch-grade art direction).
+
+Why it matters:
+- prevents false "ready" calls when file budgets pass but artwork is still placeholder quality,
+- gives PM a clean unblock plan (auth + handbook-only replacement lane) without stalling on full-system art backlog.
+
+## 2026-04-10 — Cross-surface media consistency work needs one shared Dubi contract before asset replacement
+
+For consistency directives that span web images, mascot assets, and Remotion, define one explicit Dubi identity contract first (shape, palette, backpack signature, role policy, RTL gesture direction), then audit every surface against it.
+
+Why it matters:
+- reveals drift quickly (for example, inline Remotion mascot vs SVG mascot pack vs handbook scene mascot),
+- keeps replacement work focused on a single visual target instead of parallel style experiments.

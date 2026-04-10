@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Child, Game, GameLevel } from '@dubiland/shared';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -6,9 +6,10 @@ import { Button, Card } from '@/components/design-system';
 import type { GameCompletionResult } from '@/games/engine';
 import { NumberLineJumpsGame } from '@/games/numbers/NumberLineJumpsGame';
 import { useAudioManager } from '@/hooks/useAudioManager';
+import { createGameAttemptId, createGameSessionId, persistGameAttempt } from '@/lib/gameAttemptPersistence';
 import { getActiveChildProfile } from '@/lib/session';
 
-type SyncState = 'idle' | 'syncing' | 'synced';
+type SyncState = 'idle' | 'syncing' | 'synced' | 'error';
 
 const NUMBER_LINE_JUMPS_GAME: Game = {
   id: 'local-number-line-jumps',
@@ -59,15 +60,65 @@ export default function NumberLineJumpsPage() {
 
   const [completionResult, setCompletionResult] = useState<GameCompletionResult | null>(null);
   const [syncState, setSyncState] = useState<SyncState>('idle');
+  const sessionStartedAtMsRef = useRef<number>(Date.now());
+  const clientSessionIdRef = useRef<string>(createGameSessionId());
+  const attemptIndexRef = useRef(0);
+  const pendingAttemptIdRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    sessionStartedAtMsRef.current = Date.now();
+    clientSessionIdRef.current = createGameSessionId();
+    attemptIndexRef.current = 0;
+    pendingAttemptIdRef.current = null;
+    setSyncState('idle');
+    setCompletionResult(null);
+  }, [child.id]);
+
+  const syncCompletion = useCallback(
+    async (result: GameCompletionResult, attemptIndex: number, attemptId: string) => {
+      const persistOutcome = await persistGameAttempt({
+        childId: child.id,
+        childAgeBand: activeProfile?.ageBand,
+        game: NUMBER_LINE_JUMPS_GAME,
+        level: NUMBER_LINE_JUMPS_LEVEL,
+        completion: result,
+        clientSessionId: clientSessionIdRef.current,
+        startedAt: new Date(sessionStartedAtMsRef.current).toISOString(),
+        durationMs: Math.max(0, Date.now() - sessionStartedAtMsRef.current),
+        attemptIndex,
+        attemptId,
+      });
+
+      if (persistOutcome.status === 'failed') {
+        setSyncState('error');
+        return;
+      }
+
+      pendingAttemptIdRef.current = null;
+      setSyncState('synced');
+    },
+    [activeProfile?.ageBand, child.id],
+  );
 
   const handleComplete = useCallback((result: GameCompletionResult) => {
     setCompletionResult(result);
     setSyncState('syncing');
+    attemptIndexRef.current += 1;
+    const attemptId = createGameAttemptId();
+    pendingAttemptIdRef.current = attemptId;
+    void syncCompletion(result, attemptIndexRef.current, attemptId);
+  }, [syncCompletion]);
 
-    window.setTimeout(() => {
-      setSyncState('synced');
-    }, 450);
-  }, []);
+  const handleRetrySync = useCallback(() => {
+    if (!completionResult) {
+      return;
+    }
+
+    const attemptId = pendingAttemptIdRef.current ?? createGameAttemptId();
+    pendingAttemptIdRef.current = attemptId;
+    setSyncState('syncing');
+    void syncCompletion(completionResult, attemptIndexRef.current, attemptId);
+  }, [completionResult, syncCompletion]);
 
   return (
     <main
@@ -130,8 +181,19 @@ export default function NumberLineJumpsPage() {
               })}
             </p>
             <p style={{ color: 'var(--color-text-secondary)' }}>
-              {syncState === 'syncing' ? t('feedback.keepGoing') : t('feedback.excellent')}
+              {syncState === 'error'
+                ? t('errors.generic')
+                : syncState === 'syncing'
+                  ? t('feedback.keepGoing')
+                  : t('feedback.excellent')}
             </p>
+            {syncState === 'error' && (
+              <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                <Button variant="secondary" size="md" onClick={handleRetrySync} aria-label={t('profile.retry')}>
+                  {t('profile.retry')}
+                </Button>
+              </div>
+            )}
           </Card>
         )}
       </section>

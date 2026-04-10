@@ -6,6 +6,7 @@ Primary runtime coordination threads:
 - Reading PM lane: [DUB-379](/DUB/issues/DUB-379)
 - FED runtime gates lane: [DUB-392](/DUB/issues/DUB-392)
 - Content lane (this pack): [DUB-393](/DUB/issues/DUB-393)
+- Story-depth overhaul lane: [DUB-525](/DUB/issues/DUB-525)
 
 ## Implemented Book Slugs
 - Book 1 (`3-4`): `mikaSoundGarden`
@@ -23,6 +24,9 @@ Primary runtime coordination threads:
 - `scriptPackage.praise.*`
 - `sentenceBank.*`
 - `interactions.<interactionId>.{prompt,hint,success,retry}`
+- `storyArc.chapter{A|B|C}.{title,transition}`
+- `pages.pageXX.{narration,cta}` (Book 1: `page01-page08`, Book 4: `page01-page10`, Book 7: `page01-page12`)
+- `chapterRecap.{title,summary,nextStep}`
 - `readingProgression.*` (Books 4 and 7)
 
 ### `common.parentDashboard.handbooks.<slug>.*`
@@ -30,6 +34,10 @@ Primary runtime coordination threads:
 - `nextStep`
 - `readingSignal`
 - `confusionFocus`
+- `storyEngagement`
+- `decodeInStoryAccuracy`
+- `evidenceReading`
+- `independenceTrend`
 
 ## Audio Output Pattern
 Generated path shape for all above keys:

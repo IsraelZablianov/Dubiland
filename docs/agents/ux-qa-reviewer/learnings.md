@@ -72,6 +72,28 @@ Compared `ParentDashboard.tsx` to `Home.tsx` / public `Parents.tsx`: parent rout
 
 Parent [DUB-433](/DUB/issues/DUB-433): board wanted browser screenshots — when MCP is missing, still deliver the **checklist** against `InteractiveHandbook` + `InteractiveHandbookGame` and flag **pixel confirmation**. Findings: **no illustration slot** in `interactive-handbook__story-card`, **instant** page changes, **duplicate title** (page header + in-card), **LTR `→`/`▶`** in RTL product. Filed [DUB-470](/DUB/issues/DUB-470) (UX spec) and [DUB-471](/DUB/issues/DUB-471) (FED). Did **not** advance rotation past index 7 — full RTL pass (area 8) still pending.
 
+## 2026-04-10 — DUB-508: RTL wedge under critical visual audit (assigned)
+
+**Focus:** Parent [DUB-508](/DUB/issues/DUB-508) required full-browser inspection; this heartbeat delivered the **RTL & Hebrew authenticity** slice via **static repo scan** (no browser MCP). **Major systemic pattern:** literal **`▶`/`→`** in many game shells + **`linear-gradient(90deg, …)`** on **`Home`**, **`GameCard`**, **`LetterSkyCatcherGame`**, **`MoreOrLessMarketGame`**. Filed consolidation [DUB-523](/DUB/issues/DUB-523); Paperclip **rejected `assigneeAgentId` to FED** from this agent — use **unassigned + comment** or PM assigns. Leave umbrella **in_progress** until screenshot pass completes.
+
 ## 2026-04-10 — Rotation 0: Landing & first impression (source)
 
 **NNG 3-second parent test (inferred from structure):** Hero headline + subtitle + illustrated Dubi + dual CTA (try free vs parents) + trust band reads as **credible**; micro-motion (`FloatingElement`, card hover) supports **Gelman Action** on marketing. **Gap vs benchmarks:** `Button` `lg` = **56px**; header primary **נסו בחינם** uses **`sm`** = **44px** — under **60px** floor for primary taps on child-adjacent flows (Duolingo ABC / Khan Kids use larger primaries). Filed systemic task [DUB-210](/DUB/issues/DUB-210) to **Architect** (tokens + `Button` contract). Existing [DUB-111](/DUB/issues/DUB-111) still covers topic-card illustration; [DUB-108](/DUB/issues/DUB-108) legal 404 — not duplicated here.
+
+## 2026-04-10 — DUB-555 + rotation 9: Cognitive load vs hub scaffolding
+
+**Assigned:** [DUB-555](/DUB/issues/DUB-555) (CEO header/footer visual pass). [DUB-548](/DUB/issues/DUB-548) still **todo** → correctly **blocked** DUB-555; delivered **static** `App.tsx` shell map proving mismatch persists (`MarketingShell` vs `ChildPlayShell` vs `ParentShell`).
+
+**Rotation 9:** `Home.tsx` `toConcurrentChoiceLimit` + featured slice already implement **Piaget-aligned hub density** (3-up for 3–6, 5 for 6–7). **In-game** choice cardinality is **not** coupled the same way — e.g. Shape Safari up to **5** tiles, Letter Sound Match **4** at higher levels, Number Line Jumps wide numeric palettes. Filed [DUB-570](/DUB/issues/DUB-570). **Correction for implementers:** `@dubiland/shared` `Child` has **no `ageBand`**; age band today flows via **session / profile** (`ProfilePicker`, catalog) — thread the same source games already use for difficulty, not the bare `Child` row alone.
+
+**Paperclip:** `POST /api/issues/:id/release` on a **blocked** issue reset this run’s [DUB-555](/DUB/issues/DUB-555) to **`todo`** and cleared assignee — had to **PATCH** back to `blocked` + `blockedByIssueIds` + assignee. Prefer **not** calling `release` when the terminal state is blocked; exit the heartbeat with status as-is.
+
+## 2026-04-10 — DUB-508 + rotation 10: Delight & micro-interactions
+
+**Assigned** [DUB-508](/DUB/issues/DUB-508) (critical visual audit). Delivered **area 10** slice via **static** scan: `AnimatedPage` / `dubi-page-enter-inline` and `RouteFallback` are **above average** for a young-kids web app; **`SuccessCelebration`** is widely reused **except** `MoreOrLessMarketGame` and `NumberLineJumpsGame` (audio-only success feedback). Filed [DUB-592](/DUB/issues/DUB-592). **Paperclip:** `assigneeAgentId` on **create** returned **Assignee agent not found** for FED UUID from `docs/knowledge/conventions.md` — created **unassigned** + PATCH may work; PM should assign FED.
+
+**Playwright:** AGENTS.md references Playwright MCP; this Cursor session had **no browser tool** — explicitly stated on DUB-508 comment so board does not assume screenshot matrix shipped.
+
+## 2026-04-10 — DUB-508 + rotation 11: דובי effectiveness
+
+**Area 11** via static grep: **9** `*Game.tsx` files import `MascotIllustration`; **5** do not — **MoreOrLessMarket**, **NumberLineJumps**, **LetterTracingTrail**, **DecodableStoryReader**, **InteractiveHandbook**. That is a clean **systemic** gap (Khan Kodi / Duo always on-screen during activities). Filed [DUB-597](/DUB/issues/DUB-597) under DUB-493; **dedup** with [DUB-185](/DUB/issues/DUB-185) called out in ticket body. **Paperclip FED UUID** from `GET /api/companies/:id/agents` matches `conventions.md` — “assignee not found” on create is likely **role ACL**, not stale docs.

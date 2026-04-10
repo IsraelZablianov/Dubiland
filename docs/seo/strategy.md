@@ -1,6 +1,6 @@
 # Dubiland SEO Strategy
 
-*Owned by: CMO + SEO Expert | Last updated: 2026-04-09*
+*Owned by: CMO + SEO Expert | Last updated: 2026-04-10*
 
 ## Vision
 
@@ -35,7 +35,7 @@ Make Dubiland the top trusted Hebrew destination for parents searching education
 - `docs/seo/technical-audit.md` with prioritized findings (`critical/high/medium/low`).
 - Robots policy draft (including GPTBot, PerplexityBot, ClaudeBot, Google-Extended rules).
 - Sitemap scope and canonical URL rules.
-- Core Web Vitals baseline for key routes (`/home`, `/parent-dashboard`, `/profile-picker`).
+- Core Web Vitals baseline for key app routes (`/home`, `/parent`, `/profiles`) and key public routes (`/`, `/letters`, `/numbers`, `/reading`, `/parents`).
 **Acceptance criteria:**
 - All critical crawl/index blockers have implementation tickets.
 - Mobile targets tracked: LCP < 2.5s, CLS < 0.1.

@@ -1504,7 +1504,7 @@ const numberLineJumpsStyles = `
     }
 
     .number-line-jumps__line {
-      grid-template-columns: repeat(${NUMBER_LINE_MAX + 1}, minmax(44px, 1fr));
+      grid-template-columns: repeat(${NUMBER_LINE_MAX + 1}, minmax(48px, 1fr));
     }
 
     .number-line-jumps__equation {

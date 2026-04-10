@@ -231,7 +231,7 @@ function toneIcon(tone: Tone): string {
   if (tone === 'success') return '✅';
   if (tone === 'hint') return '💡';
   if (tone === 'error') return '↻';
-  return '🔊';
+  return '▶';
 }
 
 const visuallyHiddenStyle: CSSProperties = {
@@ -991,7 +991,7 @@ export function ConfusableLetterContrastGame({ onComplete, audio }: GameProps) {
                 onClick={handleReplayInstruction}
                 aria-label={t('games.confusableLetterContrast.instructions.tapReplay')}
                 title={t('games.confusableLetterContrast.instructions.tapReplay')}
-                style={{ minInlineSize: '44px', minBlockSize: '44px', paddingInline: 'var(--space-xs)' }}
+                style={{ minInlineSize: '48px', minBlockSize: '48px', paddingInline: 'var(--space-xs)' }}
               >
                 <span aria-hidden="true">▶</span>
               </Button>
@@ -1219,7 +1219,7 @@ export function ConfusableLetterContrastGame({ onComplete, audio }: GameProps) {
         }
 
         .confusable-contrast__score-pill {
-          min-height: 44px;
+          min-height: 48px;
           border-radius: var(--radius-full);
           border: 1px solid color-mix(in srgb, var(--color-accent-primary) 34%, transparent);
           background: color-mix(in srgb, var(--color-accent-primary) 12%, transparent);

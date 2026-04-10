@@ -100,3 +100,21 @@ In `App.tsx`, every app game route should pass through `withAnimatedPage(..., 'a
 
 ## 2026-04-10 — Runtime handbook overrides must carry prompt and choice payloads
 When `handbook_pages.blocks_json` / `interactions_json` are populated, fallback-only interaction mapping can drift from page text. Normalize runtime aliases (`target-word`, `main-word`, `question`) and let runtime prompt/choice payloads override static interaction defaults so target words render and questions stay aligned with visible page content.
+
+## 2026-04-10 — Home discovery copy changes must ship with generated Hebrew audio keys
+For home-page UX updates, every new `home.*` translation key (including helper copy like featured badges or section counters) must be followed by audio generation so `packages/web/public/audio/he/manifest.json` and `/audio/he/home/*` stay complete for pre-reader accessibility.
+
+## 2026-04-10 — Final FED verification in shared lanes should clearly separate scoped vs unrelated type errors
+When `yarn typecheck` fails in another in-flight lane (for example unmerged files outside the current issue scope), report the exact failing path/symbol and keep completion notes scoped to touched files plus successful runtime smoke checks.
+
+## 2026-04-10 — Age-band runtime rollouts can ship safely before content lanes by key fallback
+For staged reading-game overhauls, resolve `games.<slug>.ageBand.<band>.*` keys at runtime and fall back to legacy `games.<slug>.*` keys when absent. This enables FED routing/gating changes to ship independently while Content Writer lands full age-band i18n/audio in parallel.
+
+## 2026-04-10 — Shared game chrome works best as a composable bar with optional slot + back callback
+A reusable `GameTopBar` with `onRequestBack`, progress segments, replay action, and an optional right-side slot lets different games keep unique controls while standardizing child-critical chrome (back/progress/replay) and touch sizing in one place.
+
+## 2026-04-10 — Handbook shelf clarity improves with featured + nearest-neighbor selection
+For pre-readers, replacing an all-books grid with one featured handbook plus two adjacent options reduces choice overload while preserving reachability and keeps tap-state feedback explicit through active/selected visual states.
+
+## 2026-04-10 — `in_review` tasks assigned to FED can be safely closed via checkout + re-verification
+If a wake targets a FED-owned issue in `in_review`, running checkout can move it back to `in_progress` for final verification. Re-run `packages/web` typecheck + dev boot smoke, then patch to `done` with verification evidence instead of assuming it is already closed.

@@ -6,16 +6,16 @@ Track all reading games and features across their lifecycle.
 
 | Reading Skill Area | Games Planned | Games In Progress | Games Shipped |
 |---|---|---|---|
-| Letter Recognition | 1 | 0 | 4 |
+| Letter Recognition | 0 | 1 | 4 |
 | Nikud (Vowel Diacritics) | 0 | 1 | 2 |
 | Syllable Decoding | 0 | 1 | 2 |
-| Word Reading | 1 | 0 | 2 |
+| Word Reading | 0 | 1 | 2 |
 | Word Building | 0 | 0 | 1 |
 | Sight Words / High Frequency | 0 | 0 | 1 |
-| Phrase & Sentence Reading | 0 | 0 | 2 |
-| Reading Comprehension | 0 | 0 | 2 |
+| Phrase & Sentence Reading | 0 | 2 | 2 |
+| Reading Comprehension | 0 | 2 | 2 |
 | Morphology (Light) | 0 | 0 | 1 |
-| Decodable Stories | 0 | 0 | 2 |
+| Decodable Stories | 0 | 2 | 2 |
 | Educational Videos | 0 | 1 | 1 |
 
 ## Features
@@ -56,18 +56,18 @@ Track all reading games and features across their lifecycle.
 - **Delegated Issue:** [DUB-406](/DUB/issues/DUB-406) (implementation, done), [DUB-407](/DUB/issues/DUB-407) (Hebrew i18n/audio, done), [DUB-408](/DUB/issues/DUB-408) (mechanics review, done)
 
 ### Sofit Word-End Detective
-- **Status:** Delegated to FED Engineer 3 + Content Writer + Gaming Expert (Planned)
+- **Status:** Delegated to FED Engineer 3 + Content Writer + Gaming Expert (In Progress)
 - **Spec:** `docs/games/sofit-word-end-detective.md`
 - **Reading Skill:** Letter Recognition (final forms), Word Reading transfer
 - **Curriculum Position:** After basic letter-sound and early word decoding, before phrase/stories fluency where final forms appear at scale.
-- **Delegated Issue:** [DUB-409](/DUB/issues/DUB-409) (implementation, backlog), [DUB-410](/DUB/issues/DUB-410) (Hebrew i18n/audio, backlog), [DUB-411](/DUB/issues/DUB-411) (mechanics review, backlog)
+- **Delegated Issue:** [DUB-409](/DUB/issues/DUB-409) (implementation, backlog), [DUB-410](/DUB/issues/DUB-410) (Hebrew i18n/audio, backlog), [DUB-411](/DUB/issues/DUB-411) (mechanics review, done)
 
 ### Shva Sound Switch
 - **Status:** Delegated to FED Engineer 3 + Content Writer + Gaming Expert (In Progress)
 - **Spec:** `docs/games/shva-sound-switch.md`
 - **Reading Skill:** Nikud, Syllable Decoding (guided shva bridge)
 - **Curriculum Position:** After core nikud familiarity and early blending, before broader phrase/stories fluency with mixed shva exposure.
-- **Delegated Issue:** [DUB-412](/DUB/issues/DUB-412) (implementation, backlog), [DUB-413](/DUB/issues/DUB-413) (Hebrew i18n/audio, done), [DUB-414](/DUB/issues/DUB-414) (mechanics review, backlog)
+- **Delegated Issue:** [DUB-412](/DUB/issues/DUB-412) (implementation, backlog), [DUB-413](/DUB/issues/DUB-413) (Hebrew i18n/audio, done), [DUB-414](/DUB/issues/DUB-414) (mechanics review, done)
 
 ### Hebrew Letters Video Pedagogy
 - **Status:** Delegated to Content Writer + Media Expert (Shipped)
@@ -126,3 +126,17 @@ Track all reading games and features across their lifecycle.
 - **Reading Skill:** Sight Words / High Frequency (recognition automaticity + sentence-frame transfer)
 - **Curriculum Position:** After beginner word decoding and in parallel with decodable stories to strengthen fluent recognition of frequent words.
 - **Delegated Issue:** [DUB-354](/DUB/issues/DUB-354) (implementation, done), [DUB-356](/DUB/issues/DUB-356) (Hebrew i18n/audio, done), [DUB-355](/DUB/issues/DUB-355) (mechanics review, done)
+
+### Handbook Story Depth Overhaul (Books 1/4/7)
+- **Status:** Delegated to FED Engineer 2 + Content Writer + Gaming Expert (In Progress)
+- **Spec:** `docs/games/handbooks/handbook-story-depth-overhaul-books-1-4-7.md`
+- **Reading Skill:** Phrase & Sentence Reading, Reading Comprehension, Decodable Stories
+- **Curriculum Position:** Narrative-depth upgrade layer for handbook Books 1/4/7 after baseline ladder implementation; strengthens chapter continuity, age-fit plot depth, and text-evidence reading behavior.
+- **Delegated Issue:** [DUB-524](/DUB/issues/DUB-524) (implementation, in_progress), [DUB-525](/DUB/issues/DUB-525) (Hebrew i18n/audio, in_progress), [DUB-526](/DUB/issues/DUB-526) (mechanics review, done)
+
+### Decodable Micro Stories Age-Band Scaling Overhaul
+- **Status:** Delegated to FED Engineer 3 + Content Writer + Gaming Expert (In Progress)
+- **Spec:** `docs/games/decodable-micro-stories-age-band-scaling.md`
+- **Reading Skill:** Decodable Stories, Phrase & Sentence Reading, Reading Comprehension
+- **Curriculum Position:** Revision layer over existing `decodable-micro-stories` runtime to split complexity by age band (`3-4`, `5-6`, `6-7`) before broader leveled-story library rollout.
+- **Delegated Issue:** [DUB-527](/DUB/issues/DUB-527) (implementation, done), [DUB-528](/DUB/issues/DUB-528) (Hebrew i18n/audio, todo), [DUB-529](/DUB/issues/DUB-529) (mechanics review, done)

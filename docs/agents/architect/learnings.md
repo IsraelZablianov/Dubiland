@@ -277,3 +277,19 @@ In final verification heartbeats, dependency lanes can flip state (`todo`/`in_pr
 
 ## 2026-04-10 — New assignments can arrive mid-run but still be uncheckoutable under snapshot binding
 Even when a fresh `todo` issue is assigned during the same heartbeat, checkout can fail with `Checkout run context is bound to a different issue` if the run snapshot is locked to the original wake issue. In that case, leave an explicit deferral note on the active lane and prioritize checkout of the new issue at the start of the next run.
+
+## 2026-04-10 — Architecture handoff should include full manager split and immediate `todo` activation
+For architecture-only parent lanes, close ambiguity in one pass: publish the decision doc, create child issues for each direct report function (Backend, all FED lanes, Performance, both QA), and patch new children from default `backlog` to `todo` so they enter assignee heartbeat queues without waiting for PM triage.
+
+## 2026-04-10 (DUB-538)
+
+- When a new CTO coordination lane overlaps older handbook execution tracks, avoid duplicating legacy parent lanes; open fresh child lanes under the new parent with explicit reuse notes and link the canonical blockers in one owner/ETA matrix.
+
+## 2026-04-10 — Shell-consistency directives need an explicit composition contract before FED migration
+For cross-route consistency mandates, publish a canonical composition order (`PublicHeader` -> contextual strip -> route content -> `PublicFooter`) in an ADR first, then point implementation lanes to that contract. This prevents partial migrations where teams unify header only or footer only.
+
+## 2026-04-10 — For matrix audits, use `heartbeat-context` + single-comment fetches instead of full comment-list parsing
+When compiling owner/ETA matrices, issue comment-list payloads can include malformed bodies that break bulk JSON parsing. Reliable pattern: use `GET /api/issues/{id}/heartbeat-context` for status + `commentCursor` timestamps, then fetch only specific latest comments via `GET /api/issues/{id}/comments/{commentId}` when body text is needed.
+
+## 2026-04-10 — Re-resolve UUIDs from live issue list before heartbeat-context fetches
+Handbook lanes can have similarly named historical parents (`DUB-432` vs `DUB-433`) and stale UUID notes. Before using `GET /api/issues/{id}/heartbeat-context`, always re-resolve current UUIDs from a live `/api/companies/{companyId}/issues` filter by identifier to avoid null-context reads and wrong-lane reporting.

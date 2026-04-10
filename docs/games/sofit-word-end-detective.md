@@ -71,9 +71,47 @@
   - Mix words with/without sofit to enforce position rule.
   - Optional partial nikud fade only after stable mastery.
 - Adaptive logic:
-  - 2 repeated errors on same final form -> temporary side-by-side model and replay.
-  - 3 hints in one round -> slow mode with segmented word audio.
-  - 6 first-try correct actions with <=1 hint -> move pair to spaced review.
+  - Use the calibrated promotion/regression/slow-mode thresholds below as the single source of truth.
+  - Struggle handling is family-local (fallback only for the current final-form family).
+  - Mastered families move to spaced review; do not remove all review exposure in-session.
+
+### Final-Form Family Sequence And Distractor Policy (Calibrated)
+- Family order for first ship:
+  1. `מ/ם` (large visual closure contrast, easiest onboarding).
+  2. `נ/ן` (vertical extension contrast with clear end-slot behavior).
+  3. `פ/ף` (descender contrast after rule is established).
+  4. `כ/ך` (tail extension with more confusable body shape).
+  5. `צ/ץ` (most visually complex, hold for late blocks).
+- Distractor policy by level:
+  - Level 1: exactly 2 options (`base` vs `final`) for one family; no unrelated letters.
+  - Level 2 early: 3 options (`target final`, `base counterpart`, `far decoy final` from mastered family).
+  - Level 2 late: 4 options (`target final`, `base counterpart`, `near decoy final`, `no-sofit decoy`).
+  - Level 3 transfer: cap to 3 options per phrase item and include a "no sofit needed" case in 40-50% of items.
+- Isolation rule: only one new challenge variable per block (new family, more options, or highlight fade).
+
+### Adaptive Thresholds (Calibrated)
+- Promotion gate (L1 -> L2):
+  - First-try accuracy `>=80%` across last 10 completion attempts for the active family, and
+  - Hint usage `<=2` across those attempts.
+- Promotion gate (L2 -> L3):
+  - First-try accuracy `>=85%` across last 12 mixed attempts, and
+  - Sort accuracy `>=80%`, and
+  - No more than 1 random-tap intervention in that window.
+- Regression gate (any level):
+  - First-try accuracy `<60%` across 8 attempts, or
+  - 3 consecutive errors on one family, or
+  - 3 level-3 hints in one block.
+  - If triggered, step down one level for next 4 attempts, then re-evaluate.
+- Slow mode behavior:
+  - Trigger: 2 hints in one block or 2 consecutive errors.
+  - Effect: segmented word audio at `0.85x`, end-slot pulse +400ms, choice count reduced by 1 for next 2 attempts.
+  - Exit: 2 first-try correct responses in slow mode.
+
+### Transfer Anti-Guessing Rules (Calibrated)
+- In Level 3, at least 50% of items must require decoding the full pointed word/phrase before ending selection (not just end-slot spotting).
+- Include one minimal-pair contrast every 4 items where only final/base ending changes the correct answer.
+- Ensure option position is shuffled each trial; correct final form cannot stay in a fixed edge position.
+- If child answers correctly but with <600ms response time on 3 consecutive transfer trials, inject one "explain by audio cue" scaffold trial before continuing.
 
 ## Feedback Design
 - Success:
@@ -82,18 +120,23 @@
 - Mistakes:
   - No negative buzzer or failure screens.
   - Wrong choice slides back; correct position re-emphasized with brief narration.
-  - Repeated rapid random taps trigger one modeled example before retry.
+  - Repeated rapid random taps are handled by the anti-random tapping guardrail below.
 - Hint progression:
   1. Audio reminder: final form comes at the end of the word.
   2. Visual end-slot highlight + base/final pair contrast.
   3. One solved word with immediate retry on similar word.
+- Anti-random tapping guardrail:
+  - Detect random tapping as 3 incorrect taps within 2 seconds.
+  - On trigger: freeze choices for 1200ms, replay instruction, and run one non-punitive 2-choice recovery trial.
+  - Recovery trial keeps reward/streak state unchanged.
+  - Max 2 interventions per round to avoid flow break.
 
 ## Session Design
-- Session length: 10-12 minutes.
+- Session length: 6-8 minutes.
 - Structure:
-  - Warm-up (2 min): one known final-form family.
-  - Core (6-7 min): ending completion + sorting across 2-3 families.
-  - Transfer (2-3 min): pointed phrase reading with completed words.
+  - Warm-up (1-1.5 min): one known final-form family.
+  - Core (3.5-4 min): ending completion + sorting across 2 families.
+  - Transfer (1.5-2 min): pointed phrase reading with completed words.
 - Natural stopping points:
   - After each final-form family cluster.
   - After transfer phrase recap card.
@@ -140,5 +183,7 @@
 - Ji Alef-Bet: Hebrew-specific orthography emphasis.
 - Hebrew reading progression practice: final forms taught as positional allographs with repeated decoding exposure.
 
-## Review Request
-- Request Gaming Expert review for final-form family order, distractor design, and adaptive thresholds before implementation starts.
+## Review Status
+- Reviewed by Gaming Expert on 2026-04-10 ([DUB-411](/DUB/issues/DUB-411)).
+- Calibration status: Family sequencing, distractor density, anti-guessing transfer rules, and adaptive thresholds are implementation-ready.
+- Rationale: The base draft was pedagogically sound but left progression and anti-guess controls under-specified; numeric gates and deterministic safeguards now make FED/QA behavior testable.

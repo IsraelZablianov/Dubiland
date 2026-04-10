@@ -10,11 +10,12 @@ import { getActiveChildProfile } from '@/lib/session';
 
 type SyncState = 'idle' | 'syncing' | 'synced';
 type HintTrend = ParentSummaryMetrics['hintTrend'];
+type DecodableAgeBand = '3-4' | '5-6' | '6-7';
 
 const DECODABLE_MICRO_STORIES_GAME: Game = {
   id: 'local-decodable-micro-stories',
   topicId: 'reading',
-  ageGroupId: '5-6',
+  ageGroupId: '3-7',
   slug: 'decodableMicroStories',
   nameKey: 'games.decodableMicroStories.title',
   descriptionKey: 'games.decodableMicroStories.subtitle',
@@ -46,11 +47,24 @@ function toHintTrendSummaryKey(hintTrend: HintTrend): string {
   return 'games.decodableMicroStories.summary.hintTrend.needsSupport';
 }
 
+function toDecodableAgeBand(value: unknown): DecodableAgeBand {
+  if (value === '3-4') return '3-4';
+  if (value === '6-7') return '6-7';
+  return '5-6';
+}
+
+function toAgeBandLabelKey(ageBand: DecodableAgeBand): 'contentFilters.age.band.3_4' | 'contentFilters.age.band.5_6' | 'contentFilters.age.band.6_7' {
+  if (ageBand === '3-4') return 'contentFilters.age.band.3_4';
+  if (ageBand === '6-7') return 'contentFilters.age.band.6_7';
+  return 'contentFilters.age.band.5_6';
+}
+
 export default function DecodableMicroStoriesPage() {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const navigate = useNavigate();
   const audio = useAudioManager();
   const activeProfile = getActiveChildProfile();
+  const runtimeAgeBand = useMemo(() => toDecodableAgeBand(activeProfile?.ageBand), [activeProfile?.ageBand]);
 
   const child = useMemo<Child>(
     () => ({
@@ -63,6 +77,18 @@ export default function DecodableMicroStoriesPage() {
       createdAt: '2026-04-10T00:00:00.000Z',
     }),
     [activeProfile?.emoji, activeProfile?.id, activeProfile?.name, t],
+  );
+
+  const runtimeLevel = useMemo<GameLevel>(
+    () => ({
+      ...DECODABLE_MICRO_STORIES_LEVEL,
+      configJson: {
+        ...(DECODABLE_MICRO_STORIES_LEVEL.configJson as Record<string, unknown>),
+        ageBand: runtimeAgeBand,
+        pages: runtimeAgeBand === '3-4' ? 4 : 6,
+      },
+    }),
+    [runtimeAgeBand],
   );
 
   const [completionResult, setCompletionResult] = useState<GameCompletionResult | null>(null);
@@ -82,6 +108,38 @@ export default function DecodableMicroStoriesPage() {
     if (!trend) return null;
     return toHintTrendSummaryKey(trend);
   }, [completionResult?.summaryMetrics?.hintTrend]);
+
+  const parentProgressSummaryKey = useMemo(() => {
+    const candidate = `parentDashboard.games.decodableMicroStories.ageBand.${runtimeAgeBand}.progressSummary`;
+    return i18n.exists(candidate, { ns: 'common' })
+      ? candidate
+      : 'parentDashboard.games.decodableMicroStories.progressSummary';
+  }, [i18n, runtimeAgeBand]);
+
+  const parentNextStepKey = useMemo(() => {
+    const candidate = `parentDashboard.games.decodableMicroStories.ageBand.${runtimeAgeBand}.nextStep`;
+    return i18n.exists(candidate, { ns: 'common' }) ? candidate : 'parentDashboard.games.decodableMicroStories.nextStep';
+  }, [i18n, runtimeAgeBand]);
+
+  const completionMetrics = completionResult?.summaryMetrics;
+  const metricBadgeLine = useMemo(() => {
+    if (!completionMetrics) return null;
+
+    if (completionMetrics.ageBand === '3-4' && typeof completionMetrics.listenParticipation === 'number') {
+      return `👂 ${completionMetrics.listenParticipation}%`;
+    }
+    if (completionMetrics.ageBand === '6-7') {
+      const decodePart =
+        typeof completionMetrics.decodeAccuracy === 'number' ? `📖 ${completionMetrics.decodeAccuracy}%` : null;
+      const evidencePart =
+        typeof completionMetrics.sequenceEvidenceScore === 'number' ? `🧩 ${completionMetrics.sequenceEvidenceScore}%` : null;
+      return [decodePart, evidencePart].filter(Boolean).join(' · ');
+    }
+    if (typeof completionMetrics.decodeAccuracy === 'number') {
+      return `📖 ${completionMetrics.decodeAccuracy}%`;
+    }
+    return null;
+  }, [completionMetrics]);
 
   return (
     <main
@@ -118,6 +176,9 @@ export default function DecodableMicroStoriesPage() {
             <p style={{ margin: 0, color: 'var(--color-text-secondary)' }}>
               {t('games.decodableMicroStories.subtitle')}
             </p>
+            <p style={{ margin: 0, color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
+              {t(toAgeBandLabelKey(runtimeAgeBand))}
+            </p>
           </div>
 
           <Button variant="secondary" size="lg" onClick={() => navigate('/games')} aria-label={t('nav.back')}>
@@ -127,7 +188,7 @@ export default function DecodableMicroStoriesPage() {
 
         <DecodableStoryReaderGame
           game={DECODABLE_MICRO_STORIES_GAME}
-          level={DECODABLE_MICRO_STORIES_LEVEL}
+          level={runtimeLevel}
           child={child}
           onComplete={handleComplete}
           audio={audio}
@@ -136,13 +197,14 @@ export default function DecodableMicroStoriesPage() {
         {completionResult?.summaryMetrics && (
           <Card padding="md" style={{ display: 'grid', gap: 'var(--space-xs)' }}>
             <p style={{ margin: 0, color: 'var(--color-text-primary)' }}>
-              {t('parentDashboard.games.decodableMicroStories.progressSummary', {
+              {t(parentProgressSummaryKey as any, {
                 successRate: completionResult.summaryMetrics.firstAttemptSuccessRate,
                 hintTrend: hintTrendSummaryKey ? t(hintTrendSummaryKey as any) : '',
               })}
             </p>
+            {metricBadgeLine && <p style={{ margin: 0, color: 'var(--color-text-secondary)' }}>{metricBadgeLine}</p>}
             <p style={{ margin: 0, color: 'var(--color-text-secondary)' }}>
-              {t('parentDashboard.games.decodableMicroStories.nextStep')}
+              {t(parentNextStepKey as any)}
             </p>
             <p style={{ margin: 0, color: 'var(--color-text-secondary)' }}>
               {syncState === 'syncing' ? t('feedback.keepGoing') : t('feedback.excellent')}

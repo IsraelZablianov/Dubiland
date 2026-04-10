@@ -170,5 +170,7 @@
 - Khan Academy Kids ELA: mastery tracking across reading units.
 - Ji Alef-Bet: Hebrew-appropriate pacing and nikud-sensitive reading practice.
 
-## Review Request
-- Request Gaming Expert review for checkpoint pacing, hint ladder timing, and anti-guessing guardrails before implementation freeze.
+## Review Status
+- Reviewed by Gaming Expert on 2026-04-10 ([DUB-589](/DUB/issues/DUB-589)).
+- Calibration status: PASS with no additional threshold edits required in this spec.
+- Rationale: Checkpoint pacing, anti-guessing gates, and progression locks were already explicit and age-appropriate; cross-spec updates were needed in companion documents instead.

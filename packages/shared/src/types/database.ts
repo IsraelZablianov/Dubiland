@@ -255,43 +255,64 @@ export type Database = {
       }
       game_attempts: {
         Row: {
+          age_band: string | null
           attempt_index: number
           child_id: string
           created_at: string
+          difficulty_profile_id: string | null
           duration_ms: number | null
           game_id: string
           id: string
+          in_support_mode: boolean
           level_id: string | null
+          mastery_outcome: string | null
           payload: Json
           score: number
           session_id: string
           stars: number
+          starting_level_id: string | null
+          support_flags: Json
+          updated_at: string
         }
         Insert: {
+          age_band?: string | null
           attempt_index?: number
           child_id: string
           created_at?: string
+          difficulty_profile_id?: string | null
           duration_ms?: number | null
           game_id: string
           id?: string
+          in_support_mode?: boolean
           level_id?: string | null
+          mastery_outcome?: string | null
           payload?: Json
           score?: number
           session_id: string
           stars?: number
+          starting_level_id?: string | null
+          support_flags?: Json
+          updated_at?: string
         }
         Update: {
+          age_band?: string | null
           attempt_index?: number
           child_id?: string
           created_at?: string
+          difficulty_profile_id?: string | null
           duration_ms?: number | null
           game_id?: string
           id?: string
+          in_support_mode?: boolean
           level_id?: string | null
+          mastery_outcome?: string | null
           payload?: Json
           score?: number
           session_id?: string
           stars?: number
+          starting_level_id?: string | null
+          support_flags?: Json
+          updated_at?: string
         }
         Relationships: [
           {
@@ -299,6 +320,13 @@ export type Database = {
             columns: ["child_id"]
             isOneToOne: false
             referencedRelation: "children"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "game_attempts_difficulty_profile_id_fkey"
+            columns: ["difficulty_profile_id"]
+            isOneToOne: false
+            referencedRelation: "game_difficulty_profiles"
             referencedColumns: ["id"]
           },
           {
@@ -320,6 +348,57 @@ export type Database = {
             columns: ["session_id"]
             isOneToOne: false
             referencedRelation: "game_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "game_attempts_starting_level_id_fkey"
+            columns: ["starting_level_id"]
+            isOneToOne: false
+            referencedRelation: "game_levels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      game_difficulty_profiles: {
+        Row: {
+          age_band: string
+          config_json: Json
+          created_at: string
+          game_id: string
+          id: string
+          is_published: boolean
+          profile_version: number
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          age_band: string
+          config_json?: Json
+          created_at?: string
+          game_id: string
+          id?: string
+          is_published?: boolean
+          profile_version?: number
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          age_band?: string
+          config_json?: Json
+          created_at?: string
+          game_id?: string
+          id?: string
+          is_published?: boolean
+          profile_version?: number
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "game_difficulty_profiles_game_id_fkey"
+            columns: ["game_id"]
+            isOneToOne: false
+            referencedRelation: "games"
             referencedColumns: ["id"]
           },
         ]
@@ -568,6 +647,7 @@ export type Database = {
       handbook_pages: {
         Row: {
           blocks_json: Json
+          content_revision: number
           created_at: string
           estimated_read_sec: number | null
           handbook_id: string
@@ -580,6 +660,7 @@ export type Database = {
         }
         Insert: {
           blocks_json?: Json
+          content_revision?: number
           created_at?: string
           estimated_read_sec?: number | null
           handbook_id: string
@@ -592,6 +673,7 @@ export type Database = {
         }
         Update: {
           blocks_json?: Json
+          content_revision?: number
           created_at?: string
           estimated_read_sec?: number | null
           handbook_id?: string
@@ -983,6 +1065,26 @@ export type Database = {
       }
     }
     Views: {
+      dubiland_child_game_mastery_latest: {
+        Row: {
+          age_band: string | null
+          attempt_created_at: string | null
+          attempt_updated_at: string | null
+          child_id: string | null
+          difficulty_profile_id: string | null
+          game_id: string | null
+          in_support_mode: boolean | null
+          last_activity_at: string | null
+          latest_attempt_id: string | null
+          latest_score: number | null
+          latest_stars: number | null
+          mastery_outcome: string | null
+          served_level_id: string | null
+          starting_level_id: string | null
+          support_flags: Json | null
+        }
+        Relationships: []
+      }
       game_tags_expanded: {
         Row: {
           assignment_role: string | null

@@ -118,3 +118,6 @@ When `PAPERCLIP_WAKE_REASON=issue_checked_out` arrives with `PAPERCLIP_TASK_ID` 
 
 ## 2026-04-10 — Word-first handbook audits should be code-derived from `choices` keys
 For handbook reinforcement checks (like [DUB-490](/DUB/issues/DUB-490)), derive the exact target-word set from `InteractiveHandbookGame.tsx` `labelKey` definitions (`games.interactiveHandbook.choices.*`), then run three parity checks together: (1) no hardcoded Hebrew in handbook runtime/page files, (2) locale presence in `common.json`, and (3) on-disk audio file existence from key-to-path mapping. Report counts (`total/missing`) for both full handbook key usage and the reinforced-word subset so PM/FED can confirm word-first readiness without manual spot checks.
+
+## 2026-04-10 — Global Hebrew TTS cleanup works best in generator + targeted content rewrite
+For system-wide pronunciation bugs, combine a generator-level normalization pass (`strip template vars`, range/number normalization, symbol replacement, punctuation cleanup) with focused copy rewrites for `games.*.instructions` and `handbooks.*.scriptPackage.narration`. This fixes thousands of clips consistently while keeping child-facing instructions short, action-first, and easier to follow.

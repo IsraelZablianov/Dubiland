@@ -61,6 +61,19 @@
 - 1 decode checkpoint every page; sequence/evidence check every 2 pages.
 - No simultaneous introduction of new pointing reduction and new comprehension format in same page block.
 
+## Consistency Gates (Calibrated For QA)
+
+| Band | Checkpoint density (per story) | Distractor load cap | Anti-guess guard | Transition lock |
+|---|---|---|---|---|
+| `3-4` | `1` scored check every `2` pages (`max 2` scored checks/story) | `2` options max, no near-decoy text foils | `>=3` non-target taps in `<2s` -> input pause `800ms` + prompt replay | No partial-pointing transition in scored child tasks; narrator-modeled text only |
+| `5-6` | Decode check every page (`5-6`) + literal checks `2`/story (`max 8` scored checks/story) | `2` options for first 2 sessions, then `3` max with only `1` near decoy | `>=4` non-target taps in `<2s` -> pause `1000ms`, replay, then reduce options by `1` on retry | Keep fully pointed text in all scored checkpoints; comprehension stays literal during this band |
+| `6-7` | Decode every page (`6-8`) + sequence/evidence every `2` pages (`max 3` sequence/evidence checks/story) | `3` options max; only `1` same-pattern foil per check | Trigger on `>=4` non-target taps in `<2s` OR `3` consecutive answers `<600ms`; inject one scaffold trial with forced full replay | When pointing density is reduced in a page cluster, keep comprehension format unchanged for next `2` pages (no simultaneous pointing fade + new format jump) |
+
+### Transition Integrity Rule (`5-6` -> `6-7`)
+- In the first two `6-7` stories, keep sequence/evidence format fixed while partial-pointing is introduced.
+- Cap pointing reduction to `<=10` percentage points per chapter cluster.
+- Allow new comprehension format only after one full cluster with stable decode accuracy `>=85%`.
+
 ## Feedback Design
 - Success lines mention both reading effort and story progress.
 - Mistake handling never interrupts with fail states; provide single actionable cue and quick retry.
@@ -123,6 +136,11 @@
 - Content Writer: deliver full Hebrew i18n/audio packs for all 3 age bands.
 - FED: integrate age-band content routing and progression gates in decodable runtime.
 - Gaming Expert: review distractor load, hint ladders, and anti-guessing safeguards by band.
+
+## Review Status
+- Reviewed by Gaming Expert on 2026-04-10 ([DUB-589](/DUB/issues/DUB-589)).
+- Calibration status: Checkpoint density, distractor caps, anti-guess gates, and transition locks are now QA-testable by age band.
+- Rationale: The prior draft had clear pedagogy but not enough numeric limits for consistent runtime gating and QA assertions.
 
 ## Inspiration / References
 - Reading Rockets decodable guidance (explicit text-to-instruction alignment): https://www.readingrockets.org/classroom/classroom-strategies/decodable-text

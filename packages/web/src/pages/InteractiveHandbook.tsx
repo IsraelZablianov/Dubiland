@@ -41,6 +41,7 @@ type HandbookSlug =
   | 'guyClassNewspaper'
   | 'almaRootFamilies'
   | 'magicLetterMap';
+type StoryDepthHandbookSlug = 'mikaSoundGarden' | 'yoavLetterMap' | 'tamarWordTower';
 type ProfileAgeBand = '3-4' | '4-5' | '5-6' | '6-7';
 type LadderAgeBand = '3-4' | '5-6' | '6-7';
 
@@ -101,6 +102,10 @@ const BOOK_TO_HANDBOOK_SLUG: Record<LadderBookId, HandbookSlug> = {
   book8: 'saharSecretClock',
   book9: 'guyClassNewspaper',
   book10: 'almaRootFamilies',
+};
+const STORY_DEPTH_SLUG_BY_BOOK: Partial<Record<LadderBookId, StoryDepthHandbookSlug>> = {
+  book1: 'mikaSoundGarden',
+  book7: 'tamarWordTower',
 };
 const HANDBOOK_SLUG_TO_BOOK: Record<HandbookSlug, LadderBookId> = {
   mikaSoundGarden: 'book1',
@@ -269,6 +274,11 @@ function resolveActiveLadderBookId(levelConfig: Record<string, unknown>, profile
 }
 
 function resolveHandbookSlug(levelConfig: Record<string, unknown>, activeBookId: LadderBookId): HandbookSlug {
+  const storyDepthSlug = STORY_DEPTH_SLUG_BY_BOOK[activeBookId];
+  if (storyDepthSlug) {
+    return storyDepthSlug;
+  }
+
   const readingLadderConfig = isRecord(levelConfig.readingLadder) ? levelConfig.readingLadder : null;
   const booksConfig = readingLadderConfig && isRecord(readingLadderConfig.books) ? readingLadderConfig.books : null;
   const activeBookConfig = booksConfig && isRecord(booksConfig[activeBookId]) ? booksConfig[activeBookId] : null;
@@ -282,6 +292,19 @@ function resolveHandbookSlug(levelConfig: Record<string, unknown>, activeBookId:
   }
 
   return BOOK_TO_HANDBOOK_SLUG[activeBookId];
+}
+
+function resolveStoryDepthSlug(activeBookId: LadderBookId, handbookSlug: HandbookSlug): StoryDepthHandbookSlug | null {
+  const mappedSlug = STORY_DEPTH_SLUG_BY_BOOK[activeBookId];
+  if (mappedSlug) {
+    return mappedSlug;
+  }
+
+  if (handbookSlug === 'mikaSoundGarden' || handbookSlug === 'yoavLetterMap' || handbookSlug === 'tamarWordTower') {
+    return handbookSlug;
+  }
+
+  return null;
 }
 
 function handbookMetaKey(slug: HandbookSlug, field: 'title' | 'estimatedDuration'): string {
@@ -311,6 +334,10 @@ function keyToAudioPath(key: string): string {
 }
 
 function handbookIntroAudioKey(slug: HandbookSlug): string {
+  if (slug === 'mikaSoundGarden' || slug === 'yoavLetterMap' || slug === 'tamarWordTower') {
+    return `handbooks.${slug}.pages.page01.narration`;
+  }
+
   if (slug === 'magicLetterMap') {
     return 'games.interactiveHandbook.handbooks.magicLetterMap.pages.p01.narration';
   }
@@ -318,6 +345,10 @@ function handbookIntroAudioKey(slug: HandbookSlug): string {
 }
 
 function handbookCompletionTitleKey(slug: HandbookSlug): string {
+  if (slug === 'mikaSoundGarden' || slug === 'yoavLetterMap' || slug === 'tamarWordTower') {
+    return `handbooks.${slug}.chapterRecap.title`;
+  }
+
   if (slug === 'magicLetterMap') {
     return 'games.interactiveHandbook.handbooks.magicLetterMap.completion.title';
   }
@@ -325,6 +356,10 @@ function handbookCompletionTitleKey(slug: HandbookSlug): string {
 }
 
 function handbookCompletionNextStepKey(slug: HandbookSlug): string {
+  if (slug === 'mikaSoundGarden' || slug === 'yoavLetterMap' || slug === 'tamarWordTower') {
+    return `handbooks.${slug}.chapterRecap.nextStep`;
+  }
+
   if (slug === 'magicLetterMap') {
     return 'games.interactiveHandbook.handbooks.magicLetterMap.completion.nextStep';
   }
@@ -486,13 +521,17 @@ export default function InteractiveHandbookPage() {
     () => resolveHandbookSlug(baseLevelConfig, selectedLadderBookId),
     [baseLevelConfig, selectedLadderBookId],
   );
+  const activeDisplaySlug = useMemo<HandbookSlug>(
+    () => resolveStoryDepthSlug(selectedLadderBookId, activeHandbookSlug) ?? activeHandbookSlug,
+    [activeHandbookSlug, selectedLadderBookId],
+  );
 
   const runtimeGame = useMemo<Game>(
     () => ({
       ...BASE_INTERACTIVE_HANDBOOK_GAME,
-      audioUrl: keyToAudioPath(handbookIntroAudioKey(activeHandbookSlug)),
+      audioUrl: keyToAudioPath(handbookIntroAudioKey(activeDisplaySlug)),
     }),
-    [activeHandbookSlug],
+    [activeDisplaySlug],
   );
 
   const runtimeLevel = useMemo<GameLevel>(() => {
@@ -758,9 +797,10 @@ export default function InteractiveHandbookPage() {
   const handleSelectBook = useCallback(
     (bookId: LadderBookId) => {
       const selectedSlug = resolveHandbookSlug(baseLevelConfig, bookId);
+      const selectedDisplaySlug = resolveStoryDepthSlug(bookId, selectedSlug) ?? selectedSlug;
       setSelectedLadderBookId(bookId);
       setReplayFromStart(false);
-      void audio.playNow(keyToAudioPath(handbookMetaKey(selectedSlug, 'title')));
+      void audio.playNow(keyToAudioPath(handbookMetaKey(selectedDisplaySlug, 'title')));
     },
     [audio, baseLevelConfig],
   );
@@ -789,13 +829,13 @@ export default function InteractiveHandbookPage() {
   const handleComplete = useCallback(
     (result: GameCompletionResult) => {
       setCompletionResult(result);
-      void audio.playNow(keyToAudioPath(handbookCompletionTitleKey(activeHandbookSlug)));
+      void audio.playNow(keyToAudioPath(handbookCompletionTitleKey(activeDisplaySlug)));
 
       if (!isSupabaseConfigured || !persistableChildId || !handbookId) {
         setSyncState('synced');
       }
     },
-    [activeHandbookSlug, audio, handbookId, persistableChildId],
+    [activeDisplaySlug, audio, handbookId, persistableChildId],
   );
 
   const handleReplayBook = useCallback(() => {
@@ -820,16 +860,57 @@ export default function InteractiveHandbookPage() {
     void audio.playNow(keyToAudioPath('games.interactiveHandbook.controls.retry'));
   }, [audio, flushProgress, handbookId, persistableChildId]);
 
+  const handleBackToGames = useCallback(() => {
+    void audio.playNow(keyToAudioPath('nav.back'));
+    navigate('/games');
+  }, [audio, navigate]);
+
   const handleBackHome = useCallback(() => {
     void audio.playNow(keyToAudioPath('nav.home'));
     navigate('/games');
   }, [audio, navigate]);
 
   const hasBookshelf = bookshelfBooks.length > 1;
+  const selectedBookshelfIndex = useMemo(
+    () => bookshelfBooks.findIndex((book) => book.bookId === selectedLadderBookId),
+    [bookshelfBooks, selectedLadderBookId],
+  );
+  const featuredBookshelfBook = useMemo(
+    () => (selectedBookshelfIndex >= 0 ? bookshelfBooks[selectedBookshelfIndex] : (bookshelfBooks[0] ?? null)),
+    [bookshelfBooks, selectedBookshelfIndex],
+  );
+  const adjacentBookshelfBooks = useMemo(() => {
+    if (!featuredBookshelfBook) {
+      return [];
+    }
+
+    const originIndex = selectedBookshelfIndex >= 0 ? selectedBookshelfIndex : 0;
+    const neighborIndexes: number[] = [];
+    let offset = 1;
+
+    while (neighborIndexes.length < 2 && (originIndex - offset >= 0 || originIndex + offset < bookshelfBooks.length)) {
+      if (originIndex - offset >= 0) {
+        neighborIndexes.push(originIndex - offset);
+      }
+      if (neighborIndexes.length >= 2) {
+        break;
+      }
+      if (originIndex + offset < bookshelfBooks.length) {
+        neighborIndexes.push(originIndex + offset);
+      }
+      offset += 1;
+    }
+
+    return neighborIndexes
+      .slice(0, 2)
+      .map((index) => bookshelfBooks[index])
+      .filter((book): book is (typeof bookshelfBooks)[number] => Boolean(book));
+  }, [bookshelfBooks, featuredBookshelfBook, selectedBookshelfIndex]);
+
   const showCelebrationScreen = Boolean(completionResult);
   const gameInstanceKey = `${activeHandbookSlug}-${sessionVersion}`;
-  const completionTitle = t(handbookCompletionTitleKey(activeHandbookSlug) as any);
-  const completionNextStep = t(handbookCompletionNextStepKey(activeHandbookSlug) as any);
+  const completionTitle = t(handbookCompletionTitleKey(activeDisplaySlug) as any);
+  const completionNextStep = t(handbookCompletionNextStepKey(activeDisplaySlug) as any);
 
   return (
     <main
@@ -861,19 +942,15 @@ export default function InteractiveHandbookPage() {
                 fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
               }}
             >
-              {t(handbookMetaKey(activeHandbookSlug, 'title') as any)}
+              {t(handbookMetaKey(activeDisplaySlug, 'title') as any)}
             </h1>
             <p style={{ margin: 0, color: 'var(--color-text-secondary)' }}>
-              {t(handbookMetaKey(activeHandbookSlug, 'estimatedDuration') as any)}
+              {t(handbookMetaKey(activeDisplaySlug, 'estimatedDuration') as any)}
             </p>
           </div>
-
-          <Button variant="secondary" size="lg" onClick={handleBackHome} aria-label={t('nav.back')}>
-            {t('nav.back')}
-          </Button>
         </header>
 
-        {hasBookshelf && (
+        {hasBookshelf && featuredBookshelfBook && (
           <Card
             padding="md"
             style={{
@@ -891,36 +968,73 @@ export default function InteractiveHandbookPage() {
               <p style={{ margin: 0, color: 'var(--color-text-secondary)' }}>{t('handbooks.library.subtitle')}</p>
             </div>
 
-            <div className="interactive-handbook__bookshelf-grid">
-              {bookshelfBooks.map((book) => {
-                const isSelected = selectedLadderBookId === book.bookId;
-                return (
-                  <button
-                    key={book.bookId}
-                    type="button"
-                    className={[
-                      'interactive-handbook__bookshelf-book',
-                      `interactive-handbook__bookshelf-book--${book.bookId}`,
-                      isSelected ? 'interactive-handbook__bookshelf-book--selected' : null,
-                    ]
-                      .filter(Boolean)
-                      .join(' ')}
-                    onClick={() => handleSelectBook(book.bookId)}
-                    aria-pressed={isSelected}
-                    aria-label={t(`games.interactiveHandbook.ladderBooks.${book.bookId}` as any)}
-                  >
-                    <span className="interactive-handbook__bookshelf-icon" aria-hidden="true">
-                      {BOOK_ICON_BY_ID[book.bookId]}
-                    </span>
-                    <span className="interactive-handbook__bookshelf-title">
-                      {t(`games.interactiveHandbook.ladderBooks.${book.bookId}` as any)}
-                    </span>
-                    <span className="interactive-handbook__bookshelf-duration">
-                      {t(handbookMetaKey(book.handbookSlug, 'estimatedDuration') as any)}
-                    </span>
-                  </button>
-                );
-              })}
+            <div className="interactive-handbook__bookshelf-stage">
+              <button
+                type="button"
+                className={[
+                  'interactive-handbook__bookshelf-choice',
+                  'interactive-handbook__bookshelf-choice--featured',
+                  `interactive-handbook__bookshelf-choice--${featuredBookshelfBook.bookId}`,
+                  selectedLadderBookId === featuredBookshelfBook.bookId
+                    ? 'interactive-handbook__bookshelf-choice--selected'
+                    : null,
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+                onClick={() => handleSelectBook(featuredBookshelfBook.bookId)}
+                aria-pressed={selectedLadderBookId === featuredBookshelfBook.bookId}
+                aria-label={t(`games.interactiveHandbook.ladderBooks.${featuredBookshelfBook.bookId}` as any)}
+              >
+                <span className="interactive-handbook__bookshelf-cover" aria-hidden="true">
+                  {BOOK_ICON_BY_ID[featuredBookshelfBook.bookId]}
+                </span>
+                <span className="interactive-handbook__bookshelf-title">
+                  {t(`games.interactiveHandbook.ladderBooks.${featuredBookshelfBook.bookId}` as any)}
+                </span>
+                <span className="interactive-handbook__bookshelf-duration">
+                  {t(
+                    handbookMetaKey(
+                      resolveStoryDepthSlug(featuredBookshelfBook.bookId, featuredBookshelfBook.handbookSlug) ??
+                        featuredBookshelfBook.handbookSlug,
+                      'estimatedDuration',
+                    ) as any,
+                  )}
+                </span>
+              </button>
+
+              {adjacentBookshelfBooks.length > 0 && (
+                <div className="interactive-handbook__bookshelf-neighbors">
+                  {adjacentBookshelfBooks.map((book) => {
+                    const isSelected = selectedLadderBookId === book.bookId;
+                    return (
+                      <button
+                        key={book.bookId}
+                        type="button"
+                        className={[
+                          'interactive-handbook__bookshelf-choice',
+                          `interactive-handbook__bookshelf-choice--${book.bookId}`,
+                          isSelected ? 'interactive-handbook__bookshelf-choice--selected' : null,
+                        ]
+                          .filter(Boolean)
+                          .join(' ')}
+                        onClick={() => handleSelectBook(book.bookId)}
+                        aria-pressed={isSelected}
+                        aria-label={t(`games.interactiveHandbook.ladderBooks.${book.bookId}` as any)}
+                      >
+                        <span className="interactive-handbook__bookshelf-icon" aria-hidden="true">
+                          {BOOK_ICON_BY_ID[book.bookId]}
+                        </span>
+                        <span className="interactive-handbook__bookshelf-title">
+                          {t(`games.interactiveHandbook.ladderBooks.${book.bookId}` as any)}
+                        </span>
+                        <span className="interactive-handbook__bookshelf-duration">
+                          {t(handbookMetaKey(resolveStoryDepthSlug(book.bookId, book.handbookSlug) ?? book.handbookSlug, 'estimatedDuration') as any)}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </Card>
         )}
@@ -945,7 +1059,7 @@ export default function InteractiveHandbookPage() {
 
               {completionResult?.summaryMetrics && (
                 <p className="interactive-handbook__celebration-line">
-                  {t(parentHandbookKey(activeHandbookSlug, 'progressSummary') as any, {
+                  {t(parentHandbookKey(activeDisplaySlug, 'progressSummary') as any, {
                     successRate: completionResult.summaryMetrics.firstAttemptSuccessRate,
                     pagesVisited: completionResult.roundsCompleted ?? 0,
                   })}
@@ -994,6 +1108,7 @@ export default function InteractiveHandbookPage() {
               onProgressChange={handleProgressChange}
               preloadManifest={preloadManifest}
               runtimeContent={runtimeContent}
+              onRequestBack={handleBackToGames}
             />
 
             {isHydratingProgress ? (
@@ -1005,17 +1120,24 @@ export default function InteractiveHandbookPage() {
         )}
 
         <style>{`
-          .interactive-handbook__bookshelf-grid {
+          .interactive-handbook__bookshelf-stage {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.85fr);
+            align-items: stretch;
             gap: var(--space-sm);
           }
 
-          .interactive-handbook__bookshelf-book {
+          .interactive-handbook__bookshelf-neighbors {
+            display: grid;
+            gap: var(--space-sm);
+            align-content: stretch;
+          }
+
+          .interactive-handbook__bookshelf-choice {
             appearance: none;
             border: 2px solid transparent;
-            border-radius: 14px 18px 18px 14px;
-            min-block-size: 168px;
+            border-radius: 16px 20px 20px 16px;
+            min-block-size: 130px;
             padding-block: var(--space-sm);
             padding-inline: var(--space-sm);
             padding-inline-start: calc(var(--space-sm) + 12px);
@@ -1028,13 +1150,19 @@ export default function InteractiveHandbookPage() {
             position: relative;
             overflow: hidden;
             isolation: isolate;
+            background: var(--color-surface);
             transition:
               transform var(--motion-duration-fast) var(--motion-ease-standard),
               box-shadow var(--motion-duration-fast) var(--motion-ease-standard),
               border-color var(--motion-duration-fast) var(--motion-ease-standard);
           }
 
-          .interactive-handbook__bookshelf-book::before {
+          .interactive-handbook__bookshelf-choice--featured {
+            min-block-size: 208px;
+            gap: var(--space-sm);
+          }
+
+          .interactive-handbook__bookshelf-choice::before {
             content: '';
             position: absolute;
             inset-block: 0;
@@ -1051,7 +1179,7 @@ export default function InteractiveHandbookPage() {
             pointer-events: none;
           }
 
-          .interactive-handbook__bookshelf-book::after {
+          .interactive-handbook__bookshelf-choice::after {
             content: '';
             position: absolute;
             inset-block: 0;
@@ -1062,69 +1190,85 @@ export default function InteractiveHandbookPage() {
             pointer-events: none;
           }
 
-          .interactive-handbook__bookshelf-book > * {
+          .interactive-handbook__bookshelf-choice > * {
             position: relative;
             z-index: 1;
           }
 
-          .interactive-handbook__bookshelf-book:focus-visible {
+          .interactive-handbook__bookshelf-choice:focus-visible {
             outline: 3px solid color-mix(in srgb, var(--color-theme-primary) 45%, white 55%);
             outline-offset: 2px;
           }
 
-          .interactive-handbook__bookshelf-book:hover {
+          .interactive-handbook__bookshelf-choice:hover {
             transform: translateY(-2px) rotateZ(-0.35deg);
             box-shadow: var(--shadow-md);
           }
 
-          .interactive-handbook__bookshelf-book--selected {
+          .interactive-handbook__bookshelf-choice:active {
+            transform: translateY(1px) scale(0.99);
+          }
+
+          .interactive-handbook__bookshelf-choice--selected {
             border-color: color-mix(in srgb, var(--color-theme-primary) 70%, white 30%);
             box-shadow: var(--shadow-md);
             transform: translateY(-2px) rotateZ(-0.2deg);
           }
 
-          .interactive-handbook__bookshelf-book--book1 {
+          .interactive-handbook__bookshelf-choice--book1 {
             background:
               linear-gradient(180deg, color-mix(in srgb, var(--color-accent-success) 24%, var(--color-bg-card) 76%), color-mix(in srgb, var(--color-bg-card) 90%, white 10%));
           }
 
-          .interactive-handbook__bookshelf-book--book4 {
+          .interactive-handbook__bookshelf-choice--book4 {
             background:
               linear-gradient(180deg, color-mix(in srgb, var(--color-theme-primary) 24%, var(--color-bg-card) 76%), color-mix(in srgb, var(--color-bg-card) 90%, white 10%));
           }
 
-          .interactive-handbook__bookshelf-book--book5 {
+          .interactive-handbook__bookshelf-choice--book5 {
             background:
               linear-gradient(180deg, color-mix(in srgb, var(--color-accent-warning) 18%, var(--color-theme-primary) 12%, var(--color-bg-card) 70%), color-mix(in srgb, var(--color-bg-card) 90%, white 10%));
           }
 
-          .interactive-handbook__bookshelf-book--book7 {
+          .interactive-handbook__bookshelf-choice--book7 {
             background:
               linear-gradient(180deg, color-mix(in srgb, var(--color-accent-info) 24%, var(--color-bg-card) 76%), color-mix(in srgb, var(--color-bg-card) 90%, white 10%));
           }
 
-          .interactive-handbook__bookshelf-book--book8 {
+          .interactive-handbook__bookshelf-choice--book8 {
             background:
               linear-gradient(180deg, color-mix(in srgb, var(--color-theme-primary) 18%, var(--color-accent-info) 14%, var(--color-bg-card) 68%), color-mix(in srgb, var(--color-bg-card) 90%, white 10%));
           }
 
-          .interactive-handbook__bookshelf-book--book10 {
+          .interactive-handbook__bookshelf-choice--book10 {
             background:
               linear-gradient(180deg, color-mix(in srgb, var(--color-accent-secondary) 24%, var(--color-bg-card) 76%), color-mix(in srgb, var(--color-bg-card) 90%, white 10%));
           }
 
-          .interactive-handbook__bookshelf-book--book9 {
+          .interactive-handbook__bookshelf-choice--book9 {
             background:
               linear-gradient(180deg, color-mix(in srgb, var(--color-accent-warning) 24%, var(--color-bg-card) 76%), color-mix(in srgb, var(--color-bg-card) 90%, white 10%));
           }
 
+          .interactive-handbook__bookshelf-cover {
+            inline-size: 100%;
+            min-block-size: 112px;
+            border-radius: var(--radius-lg);
+            display: grid;
+            place-items: center;
+            font-size: clamp(2.2rem, 2rem + 1.2vw, 3rem);
+            background:
+              radial-gradient(circle at 24% 28%, color-mix(in srgb, white 55%, transparent), transparent 46%),
+              color-mix(in srgb, var(--color-bg-card) 76%, white 24%);
+          }
+
           .interactive-handbook__bookshelf-icon {
-            inline-size: 44px;
-            block-size: 44px;
+            inline-size: 48px;
+            block-size: 48px;
             border-radius: var(--radius-full);
             display: grid;
             place-items: center;
-            font-size: 1.35rem;
+            font-size: 1.45rem;
             background: color-mix(in srgb, white 70%, transparent);
           }
 
@@ -1134,9 +1278,14 @@ export default function InteractiveHandbookPage() {
             font-weight: var(--font-weight-bold);
           }
 
+          .interactive-handbook__bookshelf-choice--featured .interactive-handbook__bookshelf-title {
+            font-size: var(--font-size-lg);
+          }
+
           .interactive-handbook__bookshelf-duration {
-            color: var(--color-text-secondary);
-            font-size: var(--font-size-xs);
+            color: var(--color-text-primary);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-semibold);
           }
 
           .interactive-handbook__celebration-card {
@@ -1207,9 +1356,15 @@ export default function InteractiveHandbookPage() {
             }
           }
 
+          @media (max-width: 900px) {
+            .interactive-handbook__bookshelf-stage {
+              grid-template-columns: 1fr;
+            }
+          }
+
           @media (max-width: 720px) {
-            .interactive-handbook__bookshelf-grid {
-              grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            .interactive-handbook__bookshelf-neighbors {
+              grid-template-columns: repeat(2, minmax(0, 1fr));
             }
 
             .interactive-handbook__celebration-actions > * {
@@ -1217,8 +1372,14 @@ export default function InteractiveHandbookPage() {
             }
           }
 
+          @media (max-width: 540px) {
+            .interactive-handbook__bookshelf-neighbors {
+              grid-template-columns: 1fr;
+            }
+          }
+
           @media (prefers-reduced-motion: reduce) {
-            .interactive-handbook__bookshelf-book,
+            .interactive-handbook__bookshelf-choice,
             .interactive-handbook__celebration-stars {
               animation: none;
               transition: none;

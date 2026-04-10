@@ -1,0 +1,5 @@
+src/hooks/audioPlaybackQueue.ts(30,3): error TS2322: Type 'HTMLAudioElement' is not assignable to type 'AudioLike'.
+  Types of property 'onended' are incompatible.
+    Type '((this: GlobalEventHandlers, ev: Event) => any) | null' is not assignable to type 'VoidFn | null'.
+      Type '(this: GlobalEventHandlers, ev: Event) => any' is not assignable to type 'VoidFn'.
+        Target signature provides too few arguments. Expected 1 or more, but got 0.

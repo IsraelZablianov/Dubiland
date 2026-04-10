@@ -2,6 +2,7 @@ export { Button } from './Button';
 export { Card } from './Card';
 export { TopicCard } from './TopicCard';
 export { GameCard } from './GameCard';
+export { GameTopBar } from './GameTopBar';
 export { AgeRangeFilterBar } from './AgeRangeFilterBar';
 export { Avatar } from './Avatar';
 export { StarRating } from './StarRating';

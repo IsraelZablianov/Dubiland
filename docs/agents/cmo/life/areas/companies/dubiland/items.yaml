@@ -723,8 +723,8 @@
   category: status
   timestamp: "2026-04-10"
   source: "2026-04-10"
-  status: active
-  superseded_by: null
+  status: superseded
+  superseded_by: dubiland-seo-20260410-068
   related_entities:
     - companies/dubiland
   last_accessed: "2026-04-10"
@@ -733,6 +733,246 @@
 - id: dubiland-seo-20260410-055
   fact: "Ops Watchdog redirected priorities to critical handbook launch DUB-433; CMO parked DUB-10 at todo and escalated to PM for scope decision on whether DUB-419 and DUB-375 should continue during the handbook window."
   category: dependency
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-quality-20260410-056
+  fact: "CMO completed DUB-511 and delivered a parent-quality audit with competitor review evidence for TinyTap, Khan Academy Kids, Lingokids, and HOMER."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-quality-20260410-057
+  fact: "First-session guest journey currently requires multiple transitions (landing -> login -> profiles -> home) before entering a game, increasing time-to-first-delight risk."
+  category: risk
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-quality-20260410-058
+  fact: "Counting game onboarding relies on drag interactions; click attempts did not advance objective state, indicating a clarity risk for early-age motor/interaction expectations."
+  category: observation
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-quality-20260410-059
+  fact: "Interactive handbook route is functional but visually sparse in first-screen composition, creating weaker perceived storytelling depth for age 5-7 positioning."
+  category: risk
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-quality-20260410-060
+  fact: "Competitor sentiment pattern: parents reward trust/safety and fast engagement, while billing friction, weak age adaptation, and reliability issues drive negative reviews."
+  category: insight
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-quality-20260410-061
+  fact: "CMO delivered the first DUB-512 weekly checkpoint with a scored competitive matrix, prioritized top-5 quality gaps, mapped owner lanes, and measurable delta targets."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-quality-20260410-062
+  fact: "CMO opened DUB-537 as a critical SEO child under DUB-512 and assigned it to SEO Expert to formalize handbook/game discoverability standards and next-bet recommendations."
+  category: delegation
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-quality-20260410-063
+  fact: "DUB-512 remains in_progress as an ongoing scoreboard lane, with the next checkpoint gated on measurable updates from DUB-537 and linked quality-fix execution lanes."
+  category: status
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-quality-20260410-064
+  fact: "CMO posted DUB-512 checkpoint delta comment 6596eb59 with measurable execution scoreboard (15 linked lanes: 7 done, 3 in progress, 3 blocked, 2 todo) mapped to DUB-493 child lanes."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-quality-20260410-065
+  fact: "As of April 10, 2026 checkpoint delta, DUB-537 is in progress with SEO Expert while DUB-50 and DUB-42 remain unresolved dependencies for discoverability acceptance closeout."
+  category: dependency
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-quality-20260410-066
+  fact: "CMO executed co-founder coordination on DUB-512 by posting checkpoint routing updates to DUB-559, DUB-560, DUB-551, and DUB-557, plus linkage sync on DUB-513."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-quality-20260410-067
+  fact: "CMO posted the required one-paragraph top-3 immediate product-fix gate roll-up on DUB-510, with active critical path still including DUB-495 and DUB-50 -> DUB-42."
+  category: status
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-066
+  fact: "Wake comment 835f9254 on DUB-42 (April 10, 2026 19:40 UTC) confirms DUB-50 remains blocked on unresolved host reachability (http=000) and Schema API 429 challenge responses, with dependency owner on DUB-375."
+  category: dependency
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-067
+  fact: "CMO checked out DUB-42 in run cf00b8e2 and re-set it to blocked via comment f10904b9, confirming DUB-24 is done but acceptance cannot close until DUB-375 unblocks DUB-50."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-068
+  fact: "As of April 10, 2026 19:51 UTC, DUB-375 is in todo state (not in_progress), while DUB-50 and DUB-42 are blocked and DUB-24 remains done."
+  category: status
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-quality-20260410-069
+  fact: "CMO completed DUB-561 by converting DUB-512 benchmark outputs into three immediate fix priorities mapped to active implementation lanes: DUB-504 (interaction/accessibility), DUB-498 (age-band progression), and DUB-454 with DUB-495 dependency (handbook visual immersion)."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-quality-20260410-070
+  fact: "CMO posted synchronized benchmark-priority checkpoints to DUB-509 (comment d75cdcaa) and DUB-510 (comment 91e0a85f) to keep Co-Founder and PM lanes aligned in the same heartbeat."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-quality-20260410-071
+  fact: "Board unblock instruction for blocked illustration lane DUB-495 is now standardized for PM forwarding: sign in to gemini.google.com in runtime context and confirm with explicit in-thread reply to unblock Media generation."
+  category: dependency
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-brand-20260410-072
+  fact: "CMO completed DUB-564 by publishing docs/seo/brand-marketing-consistency-standard.md, normalizing strategy route naming in docs/seo/strategy.md, and closing the lane with a dated owner and ETA inconsistency matrix."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-brand-20260410-073
+  fact: "CMO created delegation child DUB-586 under DUB-564, assigned it to SEO Expert, and set it to todo with April 11, 2026 ETA for route QA, metadata parity, GEO template, and weekly regression checklist."
+  category: delegation
   timestamp: "2026-04-10"
   source: "2026-04-10"
   status: active

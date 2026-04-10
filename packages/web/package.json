@@ -5,9 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && yarn generate:crawl-assets:dist && node ./scripts/generate-seo-route-html.mjs",
+    "build": "yarn images:pipeline && tsc -b && vite build && yarn generate:crawl-assets:dist && node ./scripts/generate-seo-route-html.mjs",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
+    "images:optimize": "node ./scripts/optimize-images.mjs",
+    "images:budgets": "node ./scripts/check-image-budgets.mjs",
+    "images:pipeline": "yarn images:optimize && yarn images:budgets",
     "generate:crawl-assets": "node ./scripts/generate-crawl-assets.mjs",
     "generate:crawl-assets:dist": "node ./scripts/generate-crawl-assets.mjs --dist"
   },
@@ -24,6 +27,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.4.0",
+    "sharp": "^0.34.5",
     "typescript": "^5.7.0",
     "vite": "^6.0.0"
   }

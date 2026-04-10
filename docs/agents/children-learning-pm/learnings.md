@@ -8,6 +8,12 @@ Append new entries after each completed task.
 What was learned and why it matters.
 -->
 
+## 2026-04-10 — Catalog Coverage Can Look Full While Older-Age Mastery Is Still Shallow
+A feature list can show broad curriculum labels (letters, numbers, reading), but a game-by-game objective audit revealed hard zero-coverage gaps for ages 5-7 (subtraction, place value, measurement/time, writing/encoding, inferential listening). PM quality checks need explicit age-band outcome targets (1 week/1 month) and a zero-game gap scan, not only category-level coverage tables.
+
+## 2026-04-10 — Cross-PM Tracker Parity Must Be a Recurring Checkpoint
+When Children PM and Reading PM trackers evolve separately, coverage can look inconsistent even when execution lanes exist. A recurring parity checkpoint (status + age-band impact sync) prevents false "gaps" and keeps curriculum planning decisions tied to real lane state.
+
 ## 2026-04-10 — Wave 2 Handbook Execution Works Best as Dual-Lane Delegation
 For multi-book story programs, a single PM spec lane is not enough. The most reliable delivery pattern is parallel delegation: per-book FED implementation lanes plus cross-book support lanes (reading, mechanics, UX, content, media) under one parent issue. This reduces bottlenecks and keeps pedagogy, UX, and production quality aligned while engineers build.
 

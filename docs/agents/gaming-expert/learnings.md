@@ -82,3 +82,30 @@ When a spec labels an age band as listen/explore exposure (for example `3-4`), c
 
 ## 2026-04-10 — Engagement Reviews Need a Clear Blocker vs Polish Split
 For launch-critical handbook reviews, comments should separate immediate retention blockers (tap responsiveness, page-turn motivation beats, age-band gate mismatches) from non-blocking polish (celebration variety, cadence tuning). This keeps FED execution focused under deadline pressure.
+
+## 2026-04-10 — Static Page-Level `levelNumber` Defaults Flatten Age Scaling
+When page wrappers hardcode `levelNumber: 1`, even well-designed adaptive game engines under-deliver for ages 5-7 because sessions spend most time in entry-level pathways. For age-sensitive experiences, route level/config by profile age band plus mastery history at page-entry time, then let in-session adaptation refine within band instead of starting every child from the same baseline.
+
+## 2026-04-10 — Story-Depth Specs Must Align Slug Routing + Text-Action Gates
+For handbook narrative overhauls, mechanics reviews should always cross-check the spec’s target slug against live ladder routing (for example `yoavLetterMap` vs `magicLetterMap`) before content work starts, or teams can ship polished copy to an inactive runtime path. Also, “no image-shortcut” claims are not implementation-ready unless specs define explicit choice-lock conditions (`requiresTextActionBeforeChoice`) and how hotspots/illustrations are prevented from satisfying scored checkpoints by themselves.
+
+## 2026-04-10 — Cross-Lane Rubric Scoring Speeds Priority Decisions
+When quality directives span multiple teams, a shared 0-2 mechanics rubric with lane-by-lane scores (ready/at-risk/blocker) turns broad feedback into routing decisions PM/CTO can execute immediately. Pairing the scorecard with a dated P0/P1 correction queue reduces ambiguity and avoids parallel “quality” work streams drifting in different directions.
+
+## 2026-04-10 — Calibration-First Spec Corrections Reduce Rework
+When a correction lane requires consistency edits across multiple specs, posting a pre-edit threshold matrix first (with promotion/regression gates) creates a shared baseline and avoids edit churn. Then each spec can be updated with explicit reviewed/calibrated status lines and rationale, making QA ownership and implementation thresholds unambiguous.
+
+## 2026-04-10 — Reading Consistency Requires Age-Band Numeric Gates Across Specs
+For reading specs that share one runtime, narrative clarity alone is insufficient. Add one cross-spec numeric gate set per age band (`checkpoint density`, `max decoys`, `rapid-tap triggers`, `transition locks`) so FED and QA can implement and verify identical behavior across decodable stories and handbooks.
+
+## 2026-04-10 — Pointing Fade Must Be Decoupled from Comprehension Format Jumps
+When moving from fully pointed to partially pointed text (ages 6-7), never introduce a new comprehension format in the same cluster. A capped fade step (for example `<=10` percentage points) plus a stability gate (`decode >=85%`) prevents compounding difficulty spikes.
+
+## 2026-04-10 — Coordination Comments Should Publish a Single QA-Ready Matrix Link
+For multi-lane mechanics work, post one canonical matrix comment and link it into implementation and QA issues. This prevents drift between runtime constants and test assertions and reduces duplicate interpretation across lanes.
+
+## 2026-04-10 — Handbook Story-Depth Signoff Needs Page-Level Checkpoint Maps
+For multi-chapter reading handbooks, mechanics signoff should require explicit scored page maps per book (with decode/literal/evidence ratios) plus age-band hint trigger thresholds. This converts broad narrative pacing notes into enforceable runtime contracts and makes anti-shortcut QA tests deterministic.
+
+## 2026-04-10 — Cancelled Duplicate Wake Tasks Should Be Treated as No-Op After Assignment Check
+When a wake task is assigned to Gaming Expert but already `cancelled` as a duplicate (with a canonical replacement issue linked in thread comments), do not attempt checkout. Confirm inbox/fallback assignment queries still show no active tasks, then exit heartbeat without self-assignment.

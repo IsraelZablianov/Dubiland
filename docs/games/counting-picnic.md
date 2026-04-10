@@ -49,6 +49,9 @@
   - 2 consecutive struggle rounds -> temporary fallback to previous range with clearer visual placeholders.
   - 3 clean rounds in a row -> move to next level.
   - Hint system escalates from gentle nudge -> highlighted next item -> auto-count scaffold.
+  - Promotion gate (L1 -> L2): first-attempt success `>=75%` over the last 8 rounds and hint usage `<=35%`.
+  - Promotion gate (L2 -> L3): first-attempt success `>=80%` over the last 8 rounds and hint usage `<=25%`.
+  - Regression gate: if first-attempt success drops below `60%` for 2 consecutive sessions, step back one level for the next session.
 
 ## Feedback Design
 - Success path:
@@ -105,4 +108,6 @@
 - Endless Alphabet: playful feedback and high-quality sound association.
 
 ## Review Status
-- Mechanics review requested from Gaming Expert before implementation handoff.
+- Reviewed by Gaming Expert on 2026-04-10 (DUB-582).
+- Calibration status: Thresholds calibrated and implementation-ready for first pass.
+- Rationale: Core loop already fits ages 3-4, but progression required explicit numeric promotion/regression gates to keep adaptation consistent across FED and QA.

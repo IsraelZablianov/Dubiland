@@ -218,6 +218,18 @@ When QA requires an empty-state CTA "instead of" zero metrics, treat the whole d
 ## 2026-04-10 — RTL reader controls should derive direction once and mirror navigation glyphs
 For Hebrew storybook controls, compute `isRtl` from `i18n.dir()` in the component and use it for forward-arrow glyphs (`←` in RTL, `→` in LTR); pair this with stronger text contrast (not near-threshold secondary tones) on small labels/buttons to avoid QA contrast failures around 4.49:1.
 
+## 2026-04-10 — Replay icon QA checks should assert icon routing, not only button wiring
+In shared icon components, a missing explicit branch (for example `kind === 'replay'`) can silently fall through to a default glyph. For pre-literate controls, verify both the replay button hookup and the rendered icon contract (`▶` affordance) before closing QA blockers.
+
+## 2026-04-10 — Bookshelf metadata text on gradient cards should default to primary text contrast
+In `InteractiveHandbook` bookshelf cards, tiny duration labels rendered with `--color-text-secondary` can fail WCAG2AA on accent-tinted gradients; using `--color-text-primary` (plus semibold weight) is a safer baseline for small metadata text in child-facing card surfaces.
+
+## 2026-04-10 — Telemetry writes from local game fixtures need slug resolution plus retry-stable IDs
+When game pages still use local placeholder IDs (`local-*`), resolve the canonical `games.id` by `slug` before invoking `submit-game-attempt`; keep one `clientSessionId` per play session and reuse the same `attemptId` on retry so idempotent upserts do not duplicate attempt rows.
+
+## 2026-04-10 — Status badges in reading games should avoid speaker glyph fallbacks
+For child-facing reading games, keep replay controls explicitly `▶` and use the same non-speaker icon language for neutral status badges; replacing `🔊` fallback in `toneIcon` avoids glyph inconsistency regressions while preserving i18n/audio behavior and 44px replay target compliance.
+
 ## 2026-04-10 — Reader toolbars should use semantic SVG icons and a single title surface
 For handbook-style game shells, replace literal toolbar glyphs (`▶`, `💡`, `→`) with reusable SVG controls that keep `aria-label` text and mirror direction in RTL via transform; keep the editorial title only at page chrome level to prevent duplicate headings inside the game card.
 
@@ -235,3 +247,15 @@ When consolidating duplicate app routes (`/home` -> `/games`), close the loop in
 
 ## 2026-04-10 — Audio-degradation fallback should be stateful and non-blocking in game loops
 In narration-heavy games, wrap `audio.play`/`playNow` with one shared failure handler that flips a persistent `audioDegraded` flag, keeps gameplay interactive, and surfaces a compact fallback hint row. Pair this with `--touch-min: 48px` and replace hardcoded `44px` controls in game-local styles to satisfy child touch-target QA quickly across multiple game shells.
+
+## 2026-04-10 — Child-route shell splits are safest with compatibility wrappers
+When replacing one shared app layout with dedicated route shells, add explicit `MarketingShell`/`ChildPlayShell`/`ParentShell` components, but keep legacy `PublicLayout`/`AppLayout` as thin wrappers for compatibility. This lets App route mounts switch immediately while minimizing blast radius for any lingering imports.
+
+## 2026-04-10 — Checkpoint states need their own audio-first control pair
+When a game inserts a checkpoint between rounds, treat it as a separate narrated state: auto-play the checkpoint instruction on entry, add a visible `▶` replay button for that exact instruction key, and keep continue icon-first with an aria label and 44px-safe target sizing.
+
+## 2026-04-10 — Directional controls in RTL games need side-specific aria labels and mirrored audio keys
+When controls are symmetric in layout (left/right movement, left/right basket/count actions), avoid shared instruction labels because screen readers collapse them as duplicates. Use side-specific i18n keys (`...Left`/`...Right`) for aria names and run `yarn generate-audio` so the new keys immediately get manifest-backed Hebrew audio assets.
+
+## 2026-04-10 — Fast touch-target audits across games are easiest with one literal scan pass
+When a quality lane asks for child tap target enforcement across many game files, scanning `packages/web/src/games/**` for literal `44px` tokens and normalizing to `48px` in one patch is a reliable first sweep; then verify with `rg "44px"` returning empty plus `yarn typecheck` and a Vite boot check.

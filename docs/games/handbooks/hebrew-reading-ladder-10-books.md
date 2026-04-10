@@ -61,6 +61,20 @@
   - 18-26 target words per book with semantic families and early root-pattern clustering.
   - Repeated phrase frames for fluency plus controlled novelty for transfer.
 
+## Age-Band Mechanics Gates (Calibrated)
+
+| Age band | Checkpoint density target | Distractor cap | Anti-guess guard | Notes for FED/QA |
+|---|---|---|---|---|
+| `3-4` (Books 1-3) | `1` scored check every `2-3` pages (`max 2` scored checks/session loop) | `2` options max; no near-decoy text foils | `>=3` rapid non-target taps in `<2s` -> pause `800ms` + replay | Score participation/recognition; no independent decoding pass/fail |
+| `5-6` (Books 4-6) | Decode checkpoint each page cluster (`4-6` decode checks/story) + `2-3` literal checks (`max 8` scored checks/story) | `2-3` options max; only `1` near decoy per check | `>=4` rapid non-target taps in `<2s` -> pause `1000ms`, replay, reduce options by `1` on retry | Fully pointed text remains mandatory in scored decoding checks |
+| `6-7` (Books 7-10) | Decode every page cluster (`5-8`) + sequence/evidence every `2` pages (`max 3` sequence/evidence checks/story) | `3` options max; only `1` same-pattern foil in sequence/evidence checks | Trigger on `>=4` rapid non-target taps `<2s` OR `3` consecutive responses `<600ms` -> forced scaffold trial | Keep decode-first ordering in all scored checks |
+
+### Pointing-Bridge Transition Lock (Book 7 -> Book 8)
+- During the first 2 chapter clusters of Book 8, keep comprehension format fixed (literal/sequence only) while introducing partial-pointing.
+- Cap pointing reduction to `<=10` percentage points per chapter cluster.
+- If decode accuracy drops below `85%` in a cluster, freeze further pointing reduction for the next cluster.
+- Introduce new evidence-format prompts only after one stable cluster meeting decode `>=85%` and hint-stage-3 usage `<=1`.
+
 ## First 3 Prioritized Launch Books (One Per Age Group)
 
 ### Priority A (Age 3-4): Book 1 — מיקה בגן הקולות
@@ -136,6 +150,11 @@
 - FED: implement level metadata hooks and progression gates for Books 1/4/7 in handbook runtime.
 - Content Writer: produce decodable sentence bank, i18n keys, and audio script package for Books 1/4/7 aligned to this ladder.
 - Gaming Expert: validate checkpoint density and distractor load against age-band pacing.
+
+## Review Status
+- Reviewed by Gaming Expert on 2026-04-10 ([DUB-589](/DUB/issues/DUB-589)).
+- Calibration status: Age-band mechanics gates and Book 7 -> 8 transition lock are now explicit and testable.
+- Rationale: The ladder already defined pedagogic order, but runtime/QA needed numeric caps to keep pacing and anti-guessing behavior consistent across books.
 
 ## Inspiration / References
 - Reading Eggs (systematic decodable sequencing).

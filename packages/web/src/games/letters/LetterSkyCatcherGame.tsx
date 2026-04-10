@@ -1306,7 +1306,7 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
               type="button"
               className="letter-sky-catcher__move-button"
               onClick={() => movePlayer('left')}
-              aria-label={t('games.letterSkyCatcher.instructions.moveBear')}
+              aria-label={t('games.letterSkyCatcher.instructions.moveBearLeft')}
             >
               ⬅
             </button>
@@ -1314,7 +1314,7 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
               type="button"
               className="letter-sky-catcher__move-button"
               onClick={() => movePlayer('right')}
-              aria-label={t('games.letterSkyCatcher.instructions.moveBear')}
+              aria-label={t('games.letterSkyCatcher.instructions.moveBearRight')}
             >
               ➡
             </button>
@@ -1393,7 +1393,7 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
         }
 
         .letter-sky-catcher__meta-pill {
-          min-height: 44px;
+          min-height: 48px;
           min-inline-size: 84px;
           display: inline-flex;
           align-items: center;
@@ -1473,7 +1473,7 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
 
         .letter-sky-catcher__icon-controls {
           display: grid;
-          grid-template-columns: repeat(4, minmax(44px, 1fr));
+          grid-template-columns: repeat(4, minmax(48px, 1fr));
           gap: var(--space-xs);
         }
 
@@ -1503,7 +1503,7 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
           align-items: center;
           justify-self: center;
           gap: var(--space-xs);
-          min-height: 44px;
+          min-height: 48px;
           padding-inline: var(--space-md);
           border-radius: var(--radius-full);
           border: 1px solid color-mix(in srgb, var(--color-accent-primary) 36%, transparent);
@@ -1512,8 +1512,8 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
         }
 
         .letter-sky-catcher__inline-replay {
-          min-height: 44px;
-          min-inline-size: 44px;
+          min-height: 48px;
+          min-inline-size: 48px;
           border-radius: var(--radius-full);
           border: 1px solid color-mix(in srgb, var(--color-border) 72%, transparent);
           background: var(--color-surface);

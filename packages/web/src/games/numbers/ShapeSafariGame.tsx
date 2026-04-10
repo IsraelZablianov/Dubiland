@@ -973,7 +973,7 @@ export function ShapeSafariGame({ onComplete, audio }: GameProps) {
         }
 
         .shape-safari__round-pill {
-          min-height: 44px;
+          min-height: 48px;
           min-width: 112px;
           display: inline-flex;
           align-items: center;
@@ -1019,7 +1019,7 @@ export function ShapeSafariGame({ onComplete, audio }: GameProps) {
         }
 
         .shape-safari__score-pill {
-          min-height: 44px;
+          min-height: 48px;
           padding-inline: var(--space-sm);
           border-radius: var(--radius-full);
           border: 1px solid color-mix(in srgb, var(--color-accent-primary) 34%, transparent);
@@ -1076,7 +1076,7 @@ export function ShapeSafariGame({ onComplete, audio }: GameProps) {
 
         .shape-safari__controls {
           display: grid;
-          grid-template-columns: repeat(4, minmax(44px, 1fr));
+          grid-template-columns: repeat(4, minmax(48px, 1fr));
           gap: var(--space-xs);
         }
 
@@ -1151,7 +1151,7 @@ export function ShapeSafariGame({ onComplete, audio }: GameProps) {
 
         .shape-safari__shape-card {
           min-height: 92px;
-          min-width: 44px;
+          min-width: 48px;
           border: 1px solid color-mix(in srgb, var(--color-border) 72%, transparent);
           border-radius: var(--radius-md);
           background: var(--color-surface);

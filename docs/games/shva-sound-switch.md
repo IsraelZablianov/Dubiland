@@ -68,9 +68,46 @@
   - Mix previously trained shva patterns with non-shva controls.
   - No new rule complexity until mastery threshold is met.
 - Adaptive logic:
-  - 2 consecutive errors on same pattern -> return to modeled Level 1 variant.
-  - 3 hints in one round -> slow mode with syllable-by-syllable replay.
-  - 6 first-try correct actions with <=1 hint -> advance item cluster.
+  - Use the calibrated sequencing and thresholds below as the single source of truth.
+  - Struggle handling is cluster-local (fallback only for the active shva cluster).
+  - Mastered clusters move to spaced review, not full removal.
+
+### Shva Cluster Sequencing And Distractor Distance (Calibrated)
+- Cluster order for first ship:
+  1. Audible shva in predictable prefix patterns (`בְ`, `לְ`, `כְ`) with familiar word stems.
+  2. Controlled silent-shva contrasts in short pointed words where letter order stays constant.
+  3. Mixed audible/silent shva contrasts with one non-shva control item per block.
+- Distractor distance policy:
+  - Level 1: 2 audio choices only; distractor must differ in both rhythm and shva realization.
+  - Level 2 early: 2 audio choices + blend rail; distractor differs only in shva handling (near-miss).
+  - Level 2 late: 3 choices max (target, near-miss shva foil, far non-shva foil).
+  - Level 3 transfer: 3 choices max, with at least one same-onset foil every 4 items.
+- Isolation rule: add only one new variable per block (new cluster, more options, or reduced cueing).
+
+### Adaptive Thresholds (Calibrated)
+- Promotion gate (L1 -> L2):
+  - Listen/choose first-try accuracy `>=80%` across last 10 items, and
+  - Hint usage `<=2` in that window.
+- Promotion gate (L2 -> L3):
+  - Combined choose+blend first-try accuracy `>=85%` across last 12 items, and
+  - Blend-rail completion accuracy `>=80%`, and
+  - No more than 1 random-tap intervention in that window.
+- Regression gate (any level):
+  - First-try accuracy `<60%` across 8 items, or
+  - 3 consecutive errors on one shva cluster, or
+  - 3 level-3 hints in one block.
+  - If triggered, step down one level for next 4 items, then re-evaluate.
+- Slow mode behavior:
+  - Trigger: 2 hints in one block or 2 consecutive errors.
+  - Effect: segmented audio at `0.85x`, blend-boundary highlight +400ms, and options reduced by 1 for next 2 items.
+  - Exit: 2 first-try correct responses in slow mode.
+
+### Transfer Anti-Guessing Rules (Calibrated)
+- Level 3 transfer rounds require two actions to pass: correct listen/choose plus correct blend completion.
+- At least 50% of transfer items must be full-word decoding items where end-state cannot be inferred from one letter cue.
+- One minimal contrast set every 4 items should keep graphemes constant and vary only shva realization.
+- Choice order must be shuffled every trial; correct option cannot stay in a fixed position.
+- If 3 consecutive correct transfer responses occur with <600ms latency, inject one scaffold item with forced full-model replay before continuing.
 
 ## Feedback Design
 - Success:
@@ -79,18 +116,23 @@
 - Mistakes:
   - No punitive feedback.
   - Incorrect choice triggers gentle replay contrast with slowed model.
-  - Repeated random taps trigger modeled example before retry.
+  - Repeated random taps are handled by the anti-random tapping guardrail below.
 - Hint progression:
   1. Replay with segmented syllable timing.
   2. Highlight blend boundary on RTL rail.
   3. Provide one solved example and immediate similar retry.
+- Anti-random tapping guardrail:
+  - Detect random tapping as 3 incorrect taps within 2 seconds.
+  - On trigger: freeze options for 1200ms, replay model audio, then run one non-punitive 2-choice recovery item.
+  - Recovery item does not reduce streak/reward state.
+  - Max 2 interventions per round to protect flow.
 
 ## Session Design
-- Session length: 10-12 minutes.
+- Session length: 6-8 minutes.
 - Structure:
-  - Warm-up listening (2 min).
-  - Core choose+blend rounds (6-7 min).
-  - Transfer word/phrase round (2-3 min).
+  - Warm-up listening (1-1.5 min).
+  - Core choose+blend rounds (3.5-4 min).
+  - Transfer word/phrase round (1.5-2 min).
 - Natural stopping points:
   - After each shva item cluster.
   - After transfer recap card.
@@ -137,5 +179,7 @@
 - Ji Alef-Bet: Hebrew-first nikud sensitivity in early decoding.
 - Hebrew reading pedagogy: introduce shva in controlled, audio-supported progression before open-text exposure.
 
-## Review Request
-- Request Gaming Expert review for shva item sequencing, distractor distance, and adaptive thresholds before implementation starts.
+## Review Status
+- Reviewed by Gaming Expert on 2026-04-10 ([DUB-414](/DUB/issues/DUB-414)).
+- Calibration status: Shva cluster sequencing, distractor distance, adaptive thresholds, anti-random tapping, and anti-guess transfer rules are implementation-ready.
+- Rationale: The original draft was educationally aligned but left key progression controls qualitative; numeric thresholds and deterministic intervention triggers make delivery and QA verification consistent.

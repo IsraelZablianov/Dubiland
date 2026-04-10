@@ -1584,8 +1584,8 @@ const colorGardenStyles = `
   }
 
   .color-garden__replay-btn {
-    min-inline-size: 44px;
-    min-block-size: 44px;
+    min-inline-size: 48px;
+    min-block-size: 48px;
     padding-inline: var(--space-md);
   }
 
@@ -1595,10 +1595,10 @@ const colorGardenStyles = `
   }
 
   .color-garden__replay-button {
-    inline-size: 44px;
-    block-size: 44px;
-    min-inline-size: 44px;
-    min-block-size: 44px;
+    inline-size: 48px;
+    block-size: 48px;
+    min-inline-size: 48px;
+    min-block-size: 48px;
     border-radius: var(--radius-sm);
     border: none;
     background: transparent;
@@ -1653,7 +1653,7 @@ const colorGardenStyles = `
   }
 
   .color-garden__score-pill {
-    min-height: 44px;
+    min-height: 48px;
     padding-inline: var(--space-sm);
     border-radius: var(--radius-full);
     border: 1px solid color-mix(in srgb, var(--color-theme-primary) 30%, transparent);
@@ -1763,11 +1763,11 @@ const colorGardenStyles = `
   .color-garden__swatch-grid {
     display: grid;
     gap: var(--space-xs);
-    grid-template-columns: repeat(2, minmax(44px, 1fr));
+    grid-template-columns: repeat(2, minmax(48px, 1fr));
   }
 
   .color-garden__swatch {
-    min-height: 44px;
+    min-height: 48px;
     border-radius: var(--radius-full);
     border: 2px solid color-mix(in srgb, var(--color-theme-primary) 26%, transparent);
     font-weight: var(--font-weight-bold);

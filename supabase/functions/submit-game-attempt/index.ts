@@ -7,14 +7,43 @@ const corsHeaders: Record<string, string> = {
     "authorization, x-client-info, apikey, content-type, x-paperclip-run-id",
 };
 
+const AGE_BANDS = new Set(["3-4", "4-5", "5-6", "6-7"]);
+const MASTERY_OUTCOMES = new Set([
+  "unknown",
+  "introduced",
+  "practicing",
+  "passed",
+  "mastered",
+  "needs_support",
+]);
+/** Keep payloads small so rollups / dashboard queries stay predictable (JSONB bloat). */
+const MAX_ATTEMPT_PAYLOAD_CHARS = 14_000;
+
 type AttemptBody = {
   childId: string;
   gameId: string;
   /** Idempotent session key per child (omit for always-new session). */
   clientSessionId?: string;
   levelId?: string | null;
+  /** Level the child started from for this progression context (must belong to gameId). */
+  startingLevelId?: string | null;
   startedAt?: string;
+  /** Resolved published profile (must match gameId); optional for legacy clients. */
+  difficultyProfileId?: string | null;
+  /** Child age band label for analytics; duplicated in age_band column when valid. */
+  ageBand?: string | null;
+  /** Coarse mastery signal (stored on game_attempts.mastery_outcome). */
+  masteryOutcome?: string | null;
+  /** Attempt was taken in scaffolding / reduced-demand mode. */
+  inSupportMode?: boolean;
+  /** Structured support hints (counts, flags); merged into support_flags JSONB. */
+  supportFlags?: Record<string, unknown>;
   attempt: {
+    /**
+     * Client-generated UUID for this logical attempt: upsert on game_attempts.id
+     * so retries / offline replay do not duplicate rows or inflate rollups.
+     */
+    attemptId?: string;
     attemptIndex?: number;
     score?: number;
     stars?: number;
@@ -34,6 +63,24 @@ function jsonResponse(body: unknown, status = 200): Response {
     status,
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
+}
+
+function summarizePayloadForStorage(payload: Record<string, unknown>): Record<string, unknown> {
+  const raw = JSON.stringify(payload);
+  if (raw.length <= MAX_ATTEMPT_PAYLOAD_CHARS) return payload;
+  const topLevelKeysSample = Object.keys(payload).slice(0, 40);
+  const meta: Record<string, unknown> = {
+    dubilandPayloadTruncated: true,
+    approxOriginalChars: raw.length,
+    topLevelKeysSample,
+  };
+  if (payload.dubilandAgeBand != null) {
+    meta.dubilandAgeBand = payload.dubilandAgeBand;
+  }
+  if (payload.dubilandDifficultyProfileId != null) {
+    meta.dubilandDifficultyProfileId = payload.dubilandDifficultyProfileId;
+  }
+  return meta;
 }
 
 Deno.serve(async (req: Request) => {
@@ -57,7 +104,20 @@ Deno.serve(async (req: Request) => {
     return jsonResponse({ error: "Invalid JSON body" }, 400);
   }
 
-  const { childId, gameId, clientSessionId, levelId, startedAt, attempt } = body;
+  const {
+    childId,
+    gameId,
+    clientSessionId,
+    levelId,
+    startingLevelId,
+    startedAt,
+    difficultyProfileId,
+    ageBand,
+    masteryOutcome,
+    inSupportMode,
+    supportFlags,
+    attempt,
+  } = body;
   if (!childId || !gameId || !attempt || typeof attempt !== "object") {
     return jsonResponse(
       { error: "childId, gameId, and attempt are required" },
@@ -69,6 +129,54 @@ Deno.serve(async (req: Request) => {
   }
   if (levelId != null && levelId !== "" && !isUuid(levelId)) {
     return jsonResponse({ error: "levelId must be a UUID when provided" }, 400);
+  }
+  if (
+    difficultyProfileId != null &&
+    difficultyProfileId !== "" &&
+    !isUuid(difficultyProfileId)
+  ) {
+    return jsonResponse(
+      { error: "difficultyProfileId must be a UUID when provided" },
+      400,
+    );
+  }
+  if (ageBand != null && ageBand !== "" && !AGE_BANDS.has(ageBand)) {
+    return jsonResponse(
+      { error: "ageBand must be one of 3-4, 4-5, 5-6, 6-7 when provided" },
+      400,
+    );
+  }
+  if (
+    startingLevelId != null &&
+    startingLevelId !== "" &&
+    !isUuid(startingLevelId)
+  ) {
+    return jsonResponse(
+      { error: "startingLevelId must be a UUID when provided" },
+      400,
+    );
+  }
+  const trimmedMastery =
+    masteryOutcome && masteryOutcome.trim() !== ""
+      ? masteryOutcome.trim()
+      : null;
+  if (trimmedMastery && !MASTERY_OUTCOMES.has(trimmedMastery)) {
+    return jsonResponse(
+      {
+        error:
+          "masteryOutcome must be one of unknown, introduced, practicing, passed, mastered, needs_support when provided",
+      },
+      400,
+    );
+  }
+  const attemptIdRaw = attempt.attemptId?.trim();
+  const attemptId =
+    attemptIdRaw && attemptIdRaw !== "" ? attemptIdRaw : undefined;
+  if (attemptId != null && !isUuid(attemptId)) {
+    return jsonResponse(
+      { error: "attempt.attemptId must be a UUID when provided" },
+      400,
+    );
   }
 
   const score = Number(attempt.score ?? 0);
@@ -96,6 +204,56 @@ Deno.serve(async (req: Request) => {
   const { data: userData, error: userError } = await supabase.auth.getUser();
   if (userError || !userData.user) {
     return jsonResponse({ error: "Invalid or expired session" }, 401);
+  }
+
+  let resolvedDifficultyProfileId: string | null = null;
+  const trimmedProfileId =
+    difficultyProfileId && difficultyProfileId.trim() !== ""
+      ? difficultyProfileId.trim()
+      : null;
+  if (trimmedProfileId) {
+    const prof = await supabase
+      .from("game_difficulty_profiles")
+      .select("id, game_id")
+      .eq("id", trimmedProfileId)
+      .eq("game_id", gameId)
+      .maybeSingle();
+    if (prof.error) {
+      return jsonResponse({ error: prof.error.message }, 400);
+    }
+    if (!prof.data?.id) {
+      return jsonResponse(
+        {
+          error:
+            "difficultyProfileId not found, unpublished, or does not match gameId",
+        },
+        400,
+      );
+    }
+    resolvedDifficultyProfileId = prof.data.id;
+  }
+
+  let resolvedStartingLevelId: string | null = null;
+  const trimmedStart =
+    startingLevelId && startingLevelId.trim() !== ""
+      ? startingLevelId.trim()
+      : null;
+  if (trimmedStart) {
+    const lvl = await supabase
+      .from("game_levels")
+      .select("id, game_id")
+      .eq("id", trimmedStart)
+      .maybeSingle();
+    if (lvl.error) {
+      return jsonResponse({ error: lvl.error.message }, 400);
+    }
+    if (!lvl.data?.id || lvl.data.game_id !== gameId) {
+      return jsonResponse(
+        { error: "startingLevelId not found or does not match gameId" },
+        400,
+      );
+    }
+    resolvedStartingLevelId = lvl.data.id;
   }
 
   let sessionId: string;
@@ -160,26 +318,57 @@ Deno.serve(async (req: Request) => {
     sessionId = ins.data.id;
   }
 
-  const payload =
+  const basePayload =
     attempt.payload && typeof attempt.payload === "object"
-      ? attempt.payload
+      ? { ...attempt.payload }
+      : {};
+  const trimmedAgeBand =
+    ageBand && ageBand.trim() !== "" ? ageBand.trim() : null;
+  if (trimmedAgeBand) {
+    basePayload.dubilandAgeBand = trimmedAgeBand;
+  }
+  if (resolvedDifficultyProfileId) {
+    basePayload.dubilandDifficultyProfileId = resolvedDifficultyProfileId;
+  }
+  const payload = summarizePayloadForStorage(basePayload);
+
+  const supportFlagsRow =
+    supportFlags && typeof supportFlags === "object" && !Array.isArray(supportFlags)
+      ? supportFlags
       : {};
 
-  const att = await supabase
-    .from("game_attempts")
-    .insert({
-      session_id: sessionId,
-      child_id: childId,
-      game_id: gameId,
-      level_id: levelId && levelId !== "" ? levelId : null,
-      attempt_index: attemptIndex,
-      score,
-      stars,
-      duration_ms: durationMs,
-      payload,
-    })
-    .select("id, created_at")
-    .single();
+  const attemptRow: Record<string, unknown> = {
+    session_id: sessionId,
+    child_id: childId,
+    game_id: gameId,
+    level_id: levelId && levelId !== "" ? levelId : null,
+    starting_level_id: resolvedStartingLevelId,
+    age_band: trimmedAgeBand,
+    mastery_outcome: trimmedMastery,
+    in_support_mode: Boolean(inSupportMode),
+    support_flags: supportFlagsRow,
+    difficulty_profile_id: resolvedDifficultyProfileId,
+    attempt_index: attemptIndex,
+    score,
+    stars,
+    duration_ms: durationMs,
+    payload,
+  };
+  if (attemptId) {
+    attemptRow.id = attemptId;
+  }
+
+  const att = attemptId
+    ? await supabase
+      .from("game_attempts")
+      .upsert(attemptRow, { onConflict: "id" })
+      .select("id, created_at, updated_at")
+      .single()
+    : await supabase
+      .from("game_attempts")
+      .insert(attemptRow)
+      .select("id, created_at, updated_at")
+      .single();
 
   if (att.error || !att.data) {
     return jsonResponse(
@@ -192,5 +381,6 @@ Deno.serve(async (req: Request) => {
     sessionId,
     attemptId: att.data.id,
     createdAt: att.data.created_at,
+    updatedAt: att.data.updated_at,
   });
 });

@@ -13,6 +13,31 @@ Learning-focused changelog maintained by the Children Learning PM. Record game s
 
 ---
 
+### 2026-04-10 — Curriculum consistency checkpoints defined and correction lanes delegated
+- Published `docs/children-learning-pm/curriculum-consistency-checkpoints-2026-04-10.md` under [DUB-568](/DUB/issues/DUB-568) with an 8-checkpoint quality matrix (`C1-C8`) spanning objective measurability, progression continuity, pre-literate UX, audio/i18n parity, parent metric comparability, and review-state hygiene.
+- Flagged priority drifts:
+  - stale review-state language in delegated core specs (`counting-picnic`, `more-or-less-market`, `letter-tracing-trail`);
+  - cross-PM reading visibility mismatch between Children PM and Reading PM trackers;
+  - parent-dashboard metric naming inconsistency across active games.
+- Created direct correction handoff lanes:
+  - Gaming Expert: [DUB-582](/DUB/issues/DUB-582)
+  - Reading PM: [DUB-574](/DUB/issues/DUB-574)
+  - Architect: [DUB-575](/DUB/issues/DUB-575)
+- Updated `docs/children-learning-pm/features.md`:
+  - added a dedicated in-progress row for curriculum consistency correction lanes.
+  - refreshed letters/reading coverage language to reflect active reading-bridge lanes and delegated overhauls.
+- Delegation gate check completed: no finalized Children PM specs left in "not yet handed off" state; remaining undecided items are un-authored planned gaps.
+
+### 2026-04-10 — Critical Educational Quality Audit Completed (Ages 3-7)
+- Completed comprehensive audit in `docs/children-learning-pm/educational-quality-audit-2026-04-10.md` under [DUB-502](/DUB/issues/DUB-502), including:
+  - web-backed Ministry curriculum signal review (kindergarten and grade-1 literacy/numeracy pages).
+  - full game-to-learning-objective mapping across Children Learning PM and Reading PM active catalog.
+  - 1-week and 1-month measurable outcome expectations for ages 3-4, 5-6, and 6-7.
+  - hard-gap analysis for older children (no dedicated lanes for subtraction, place value, measurement/time, writing/encoding, and inferential listening comprehension).
+- Added prioritized, task-ready backlog recommendations (P0/P1) focused on closing 5-7 depth gaps before expanding early-years breadth.
+- Delegation gate check performed on `docs/children-learning-pm/features.md`: no un-handed-off finalized specs found in this heartbeat.
+- Learning areas affected: Numbers (מספרים), Reading (קריאה), cross-curriculum depth and age-band mastery quality.
+
 ### 2026-04-10 — Wave 2 Handbook Specs (Books 4-10) Completed and Directly Delegated
 - Authored seven new handbook specs under `docs/games/handbooks/`:
   - `book-4-yoav-letter-map.md`

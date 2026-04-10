@@ -155,6 +155,12 @@ If a game computes audio URLs directly from keys (for example `resolveAudioPath(
 ## 2026-04-10 — Audio-first QA must verify autoplay on newly revealed instruction states
 Icon-compliant replay controls are insufficient when midpoint/completion text appears silently. For state-transition screens, QA should require automatic first-play narration on entry and block replay-only implementations.
 
+## 2026-04-10 — Stabilize handbook route state before final pa11y verdict
+On `/games/reading/interactive-handbook`, run pa11y after the app shell/route settles and confirm with a second run; transient shell differences can inflate issue counts, but the stable blocker should be taken from the repeatable result set.
+
+## 2026-04-10 — Contrast failures can remain in bookshelf metadata after story-card fixes
+Even when `InteractiveHandbookGame` contrast fixes land (subtitle/mode/progress/page-chip), QA should still validate `InteractiveHandbook.tsx` bookshelf metadata rows (`.interactive-handbook__bookshelf-duration`) because per-book gradients can leave a single WCAG2AA failure.
+
 ## 2026-04-10 — Close autoplay blockers with paired evidence: entry effects + asset parity
 For replay-to-autoplay remediations, signoff should include both code-path proof (screen-entry `useEffect` triggers for midpoint/completion) and script-backed audio parity (`playAudioKey` keys mapped + files present). This reduces reopen churn on “audio exists but does not auto-play” debates.
 
@@ -172,3 +178,27 @@ When QA patches an implementation-titled lane to a manager assignee, Paperclip m
 
 ## 2026-04-10 — Launch-slot closure evidence should combine scoped keysets with direct audio-path checks
 For handbook launch QA closure, verify lane-specific keysets (for example `book1` narration/prompts/interactions/controls) against both locale presence and on-disk audio files resolved by the runtime key-to-path logic. This avoids false negatives from manifest-only checks when the game plays audio via direct key-derived paths.
+
+## 2026-04-10 — Generic `aria-label` on repeated controls can erase critical distinctions
+When multiple interactive controls are rendered in a set (left/right baskets, per-word choices, directional movement), assigning one shared `aria-label` to each element makes screen-reader navigation ambiguous and can override meaningful visible text. QA should explicitly verify that repeated controls expose unique, localized accessible names.
+
+## 2026-04-10 — Handbook closure comments should include namespace-scoped parity counts plus runtime boot proof
+For handbook QA signoff, include two concrete evidence lines together: a namespace-scoped locale→manifest→file parity count (for the active slug and related ladder/choice keys) and an explicit local dev boot check (`yarn workspace @dubiland/web dev --host ...`). This combination accelerates approval decisions and reduces reopen loops.
+
+## 2026-04-10 — Re-run global and workspace typecheck before filing platform regression blockers
+During heavy multi-agent churn, an initial `yarn typecheck` failure can be transient. Before escalating a platform-level blocker, re-run both root and workspace-local typecheck (and, when relevant, `yarn workspace @dubiland/web build`) to confirm persistence and avoid false blocker reports.
+
+## 2026-04-10 — Playwright CLI availability does not imply `@playwright/test` module resolution
+In this workspace, `npx playwright --version` succeeds, but direct scripted/spec execution still fails when `@playwright/test` cannot be resolved from repo context. QA heartbeat automation notes should distinguish CLI presence from runnable test-module wiring.
+
+## 2026-04-10 — Completion replay checks must cover all visible summary lines, not only success headline
+In completion states, a replay control can pass superficially while narrating only a single success key. QA should compare completion replay handlers against every rendered completion line (including next-step guidance and dynamic badges/metrics) and block when visible text has no narration path.
+
+## 2026-04-10 — Treat shared shell components as handbook a11y risk surfaces during route QA
+Handbook pa11y failures can originate in shared chrome (`GameTopBar`) rather than handbook-only classes. During handbook QA, run route-level pa11y and map failing selectors back to shared components before signoff; otherwise contrast regressions in subtitle/progress text can slip through even when handbook-specific styles were previously fixed.
+
+## 2026-04-10 — DB-first acceptance requires structure-level proof, not just DB hydration calls
+Seeing `handbooks`/`handbook_pages` queries in route code is insufficient for DB-first signoff. Validate runtime merge semantics too: if render still returns hardcoded `basePages` when runtime payload is empty and only overlays via `basePages.map(...)`, keep QA blocked until the DB-first implementation lane is complete.
+
+## 2026-04-10 — Completion-state QA must validate control gating plus replay semantics together
+When a game reaches completion, verify not only visible completion copy but also which control handlers remain active. In `RootFamilyStickers`, always-rendered header controls let hint/retry fire stage-inappropriate status/audio in completion, and replay covered only one of multiple completion lines. In `SightWordSprint`, replay controls remain visible while handler early-returns on `sessionComplete`, producing silent replay taps.

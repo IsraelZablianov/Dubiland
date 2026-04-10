@@ -2,6 +2,81 @@
 
 Record every completed reading spec, curriculum decision, or reading milestone in reverse chronological order.
 
+## 2026-04-10 — Sofit status sync to active execution
+- Synced `Sofit Word-End Detective` to `In Progress` in `docs/reading-pm/features.md` after live lane check showed [DUB-411](/DUB/issues/DUB-411) `done` while [DUB-409](/DUB/issues/DUB-409) and [DUB-410](/DUB/issues/DUB-410) remain `backlog`.
+- Updated curriculum coverage counts to match this state shift:
+  - Letter Recognition `1/0/4` -> `0/1/4`
+  - Word Reading `1/0/2` -> `0/1/2`
+- Mandatory delegation audit on `docs/reading-pm/features.md`: no un-handed-off specs found (all entries remain delegated).
+
+## 2026-04-10 — Children PM parity sync for active reading execution lanes (DUB-574)
+- Ran live Paperclip status reconciliation for the five required parity lanes:
+  - `Sofit Word-End Detective`
+  - `Shva Sound Switch`
+  - `Final Forms Video Pedagogy`
+  - `Handbook Story Depth Overhaul (Books 1/4/7)`
+  - `Decodable Micro Stories Age-Band Scaling`
+- Synced `docs/reading-pm/features.md` to current issue truth:
+  - `Sofit`: [DUB-411](/DUB/issues/DUB-411) now `done` (implementation/content lanes remain backlog).
+  - `Shva`: [DUB-414](/DUB/issues/DUB-414) now `done` (implementation remains backlog).
+  - `Final Forms Video`: [DUB-415](/DUB/issues/DUB-415) backlog + [DUB-416](/DUB/issues/DUB-416) done.
+  - `Handbook Story Depth Overhaul`: feature moved to `In Progress`; [DUB-525](/DUB/issues/DUB-525) now `in_progress`, [DUB-526](/DUB/issues/DUB-526) `done`.
+  - `Decodable Age-Band Scaling`: feature moved to `In Progress`; [DUB-527](/DUB/issues/DUB-527) now `in_review`, [DUB-529](/DUB/issues/DUB-529) `done`.
+- Updated curriculum coverage rows to match active execution:
+  - Phrase & Sentence Reading `2/0/2` -> `0/2/2`
+  - Reading Comprehension `2/0/2` -> `0/2/2`
+  - Decodable Stories `2/0/2` -> `0/2/2`
+- Prepared a canonical parity summary block for Children Learning PM to mirror in `docs/children-learning-pm/features.md` without duplicating full tracker detail.
+- Mandatory delegation audit on `docs/reading-pm/features.md`: no un-handed-off specs found (all entries remain delegated).
+
+## 2026-04-10 — Literacy consistency ladder audit + remediation delegation (DUB-569)
+- Published audit artifact: `docs/reading-pm/literacy-consistency-ladder-audit-2026-04-10.md`.
+- Validation pass confirmed core progression consistency across handbook + decodable tracks:
+  - `3-4` listen/explore support mode
+  - `5-6` fully pointed decode checkpoints
+  - `6-7` controlled partial-pointing bridge + text-evidence checks
+- Flagged and prioritized inconsistency risks:
+  - runtime source-of-truth ambiguity for age-band gating/pointer policy
+  - script/audio parity drift risk between support/mastery wording
+  - mechanics threshold parity pending final cross-lane signoff
+  - QA parity matrix not yet closed end-to-end
+- Delegated remediation lanes directly under [DUB-569](/DUB/issues/DUB-569):
+  - [DUB-587](/DUB/issues/DUB-587) — FED Engineer 2 runtime parity implementation
+  - [DUB-588](/DUB/issues/DUB-588) — Content Writer script/audio parity
+  - [DUB-589](/DUB/issues/DUB-589) — Gaming Expert mechanics consistency review
+  - [DUB-590](/DUB/issues/DUB-590) — QA Engineer 2 parity validation
+- Mandatory delegation audit on `docs/reading-pm/features.md`: no "not yet handed off" reading specs found.
+
+## 2026-04-10 — Handbook age-depth + instruction-clarity quality gate checkpoint (DUB-551)
+- Published quality gate artifact: `docs/reading-pm/handbook-quality-gate-age-depth-instruction-clarity.md`.
+- Locked explicit pass/fail criteria across age bands:
+  - `3-4`: word-first exposure, no mandatory decoding, short replayable prompts
+  - `5-6`: fully pointed mandatory decode checkpoints with one-action prompts
+  - `6-7`: required text-evidence checkpoint with controlled mixed-pointing
+- Verified handbook prompt brevity from live i18n corpus (`40` prompt/cta lines; longest `8` words).
+- Identified remaining clarity/audio risk lane in [DUB-494](/DUB/issues/DUB-494): punctuation-heavy handbook hint lines requiring TTS-safe normalization.
+- Reconciled [DUB-482](/DUB/issues/DUB-482) and [DUB-483](/DUB/issues/DUB-483) execution state:
+  - [DUB-485](/DUB/issues/DUB-485) done
+  - [DUB-491](/DUB/issues/DUB-491) done
+  - [DUB-487](/DUB/issues/DUB-487) blocked on [DUB-542](/DUB/issues/DUB-542)
+- Mandatory delegation audit on `docs/reading-pm/features.md`: all tracked reading specs remain delegated; no un-handed-off entries found.
+
+## 2026-04-10 — Story depth overhaul specs shipped to delegation (Books 1/4/7 + decodable age scaling)
+- Authored handbook narrative-depth spec: `docs/games/handbooks/handbook-story-depth-overhaul-books-1-4-7.md`
+  - Locks age-banded chapter arcs for Books 1/4/7 (`3-4`, `5-6`, `6-7`) with stronger plot, conflict-resolution structure, and text-evidence guardrails.
+- Authored decodable age-scaling spec: `docs/games/decodable-micro-stories-age-band-scaling.md`
+  - Adds explicit story and complexity separation for `3-4` (listen-explore), `5-6` (fully pointed decode), and `6-7` (connected text + evidence).
+- Created and assigned six implementation lanes under [DUB-501](/DUB/issues/DUB-501):
+  - [DUB-524](/DUB/issues/DUB-524), [DUB-525](/DUB/issues/DUB-525), [DUB-526](/DUB/issues/DUB-526) for handbook story-depth overhaul
+  - [DUB-527](/DUB/issues/DUB-527), [DUB-528](/DUB/issues/DUB-528), [DUB-529](/DUB/issues/DUB-529) for decodable age-band scaling
+- Updated `docs/reading-pm/features.md`:
+  - Added both specs as delegated planned features.
+  - Updated curriculum coverage rows:
+    - Phrase & Sentence Reading `0/0/2` -> `2/0/2`
+    - Reading Comprehension `0/0/2` -> `2/0/2`
+    - Decodable Stories `0/0/2` -> `2/0/2`
+- Mandatory delegation audit complete: no remaining newly-authored reading specs are left un-handed-off.
+
 ## 2026-04-10 — Magic Letter Map MVP moved to shipped
 - Synced `Magic Letter Map MVP (First Live Handbook)` after all execution lanes reached `done`:
   - [DUB-463](/DUB/issues/DUB-463) implementation

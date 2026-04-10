@@ -3,6 +3,33 @@
 Accumulated knowledge specific to the Reading PM role.
 Append new entries after each completed task.
 
+## 2026-04-10 — Planned-to-in-progress trigger rule (lane-first)
+- A feature should move from Planned to In Progress as soon as any delegated lane produces concrete execution output (`in_progress`, `in_review`, or `done`), even if other lanes are still backlog.
+- Coverage rows must be updated in the same edit as the feature-state shift; otherwise planned/in-progress totals drift and confuse cross-PM parity checks.
+
+## 2026-04-10 — Cross-PM parity handoff format
+- Children PM sync work is fastest when Reading PM publishes one compact canonical block with: feature state, lane-level issue links, curriculum impact, and explicit risk.
+- `features.md` labels can drift within a single heartbeat; parity comments should always be based on live issue statuses first, then tracker docs should be updated immediately.
+- For reading lanes, the main sequence risk pattern is asymmetric completion (content/mechanics done while implementation waits), so parity blocks should highlight "transfer not yet child-visible" explicitly.
+
+## 2026-04-10 — Consistency rollouts need a shared runtime matrix, not only aligned prose
+- Even when handbook and decodable specs look aligned, drift risk remains high unless FED/content/QA execute from one explicit age-band + pointing matrix.
+- The highest-risk mismatch is entrypoint vs mastery semantics: a `3-4` child can see an older-band story for exploration, but runtime and parent copy must still enforce non-mastery expectations.
+- For reading consistency remediation, a four-lane delegation pattern is efficient and complete: FED (runtime rules), Content Writer (audio/script parity), Gaming Expert (mechanics thresholds), QA (behavioral parity validation).
+
+## 2026-04-10 — Quality-gate triage pattern for handbook launch blockers
+- For handbook quality gates, separate three outcomes explicitly: pedagogy definition pass, prompt brevity pass, and live-readiness pass/fail; this prevents technical blockers from obscuring curriculum decisions.
+- A fast instruction-clarity audit can be done from i18n keys by extracting `prompt/cta` strings and tracking max word length; this gives objective evidence before requesting rewrites.
+- When rendering and UX implementation lanes are done but QA is blocked by regression mismatch, treat QA blocker issue as the single release gate and keep parent lane blocked until that gate closes.
+
+## 2026-04-10 — Story depth requires age-specific conflict, not just longer sentences
+- For Hebrew early-reading products, raising narrative quality is not primarily about adding words; it is about matching story structure to age expectations:
+  - `3-4`: repetition and predictable emotional loop (find/repeat/celebrate)
+  - `5-6`: simple external problem with clear decode-linked solution
+  - `6-7`: internal growth arc (mistake -> reflection -> evidence-based success)
+- A reusable chapter pattern (`A/B/C`) across handbook books enables continuity without breaking decodable control.
+- Delegation remains highest-throughput when each narrative overhaul ships as a three-lane package from day one: FED runtime, Content Writer i18n/audio, Gaming Expert pacing review.
+
 ## 2026-04-10 — Operational-slice shipment rule
 - For launch-scope handbook slices, mark the feature Shipped once implementation + content/audio + mechanics lanes are all `done`, even when curriculum coverage counts intentionally stay unchanged.
 - Keep the coverage rationale explicit in the feature entry to prevent accidental table recalculation during shipment sync.

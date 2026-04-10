@@ -1,0 +1,65 @@
+{
+  "totalAssetBytes": 1398925,
+  "top15": [
+    {
+      "name": "index-CLNe6QT2.js",
+      "bytes": 406008
+    },
+    {
+      "name": "supabase-k82gbVKr.js",
+      "bytes": 196612
+    },
+    {
+      "name": "InteractiveHandbook-B74UN-kW.js",
+      "bytes": 111478
+    },
+    {
+      "name": "i18n-CQO0ZaI5.js",
+      "bytes": 49391
+    },
+    {
+      "name": "react-dz6IX6RK.js",
+      "bytes": 49001
+    },
+    {
+      "name": "LetterSoundMatch-BIjvcH0W.js",
+      "bytes": 45184
+    },
+    {
+      "name": "ColorGarden-Cwf2F5bM.js",
+      "bytes": 42588
+    },
+    {
+      "name": "LetterTracingTrail-oMTE5JYo.js",
+      "bytes": 40707
+    },
+    {
+      "name": "CountingPicnic-Ckuop1XQ.js",
+      "bytes": 38414
+    },
+    {
+      "name": "LetterSkyCatcher-Cn_29lUB.js",
+      "bytes": 36950
+    },
+    {
+      "name": "PictureToWordBuilder-Bsw6TShh.js",
+      "bytes": 36912
+    },
+    {
+      "name": "DecodableMicroStories-zFpRLafh.js",
+      "bytes": 33360
+    },
+    {
+      "name": "ConfusableLetterContrast-Bqaas1Pu.js",
+      "bytes": 30528
+    },
+    {
+      "name": "SightWordSprint-Dlu4jWGM.js",
+      "bytes": 30418
+    },
+    {
+      "name": "MoreOrLessMarket-Dqn0Gr5v.js",
+      "bytes": 29580
+    }
+  ]
+}

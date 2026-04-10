@@ -59,6 +59,10 @@
   - 2 failed traces -> re-enable thicker path and stroke ghost animation.
   - 3 successful traces in a row -> advance to lighter scaffold.
   - Confusion pattern on similar letters -> inject contrast rounds with extra audio emphasis.
+  - L1 pass gate: path coverage `>=70%` and stroke-order adherence `>=60%`.
+  - L2 pass gate: path coverage `>=80%` and stroke-order adherence `>=70%`.
+  - L3 pass gate: path coverage `>=85%`, stroke-order adherence `>=80%`, and average independent replay usage `<=1` per letter round.
+  - Regression gate: if 2 consecutive traces fall below the active level gate, re-enable thick-path assist and ghost-hand guidance for the next trace.
 
 ## Feedback Design
 - Success path:
@@ -116,4 +120,6 @@
 - TinyTap: simple trace/tap mechanics suitable for early learners.
 
 ## Review Status
-- Mechanics review requested from Gaming Expert before implementation handoff.
+- Reviewed by Gaming Expert on 2026-04-10 (DUB-582).
+- Calibration status: Stroke-quality thresholds calibrated for implementation and QA.
+- Rationale: Tracing flow and scaffolds were sound, but progression needed explicit coverage/order metrics to prevent subjective pass decisions across age bands.

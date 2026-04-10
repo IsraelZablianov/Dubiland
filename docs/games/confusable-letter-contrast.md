@@ -72,9 +72,42 @@
   - One short read-aloud transfer item per round.
   - Optional partial nikud fade only after sustained mastery.
 - Adaptive logic:
-  - 2 consecutive errors on same pair -> temporary return to Level 1 style contrast for that pair.
-  - 3 hints in one round -> auto-enable slowed prompt mode.
-  - 6 first-try correct actions with <=1 hint -> promote pair to spaced-review queue.
+  - Use the calibrated promotion/regression/slow-mode thresholds below as the single source of truth.
+  - When a child struggles on a pair, fallback is pair-local (do not globally demote all pairs).
+  - Mastered pairs move to spaced review instead of leaving the session entirely.
+
+### Pair Sequencing And Decoy Density (Calibrated)
+- Sequencing policy: introduce one confusable pair family at a time, then mix only previously introduced families.
+- Pair order for first ship:
+  1. `ד/ר` (single-stroke right-edge distinction, highest classroom confusion).
+  2. `ב/כ` (shared bowl shape, opening-side contrast).
+  3. `ו/ז` (height + head mark distinction).
+  4. `י/ו` (size/height discrimination, brief visual exposures only).
+  5. `ן/ו` only in word-final context after base-form mastery.
+- Decoy density by level:
+  - Level 1: exactly 2 cards (`1` target + `1` confusable), no extra decoys.
+  - Level 2 early blocks: 3 cards (`1` target + `1` confusable + `1` far decoy).
+  - Level 2 late blocks: 4 cards (`1` target + `1` confusable + `1` near decoy from mastered family + `1` far decoy).
+  - Level 3 transfer: 3 in-word choices max per item, with only one untrained decoy across each 4-item block.
+- Isolation rule: each new block may add only one new difficulty variable (pair novelty, choice-count increase, or anchor fade), never more than one at once.
+
+### Adaptive Thresholds (Calibrated)
+- Promotion gate (L1 -> L2):
+  - First-try accuracy `>=80%` across the last 10 tap trials for the active pair, and
+  - Hint usage `<=2` across those 10 trials.
+- Promotion gate (L2 -> L3):
+  - First-try accuracy `>=85%` across the last 12 mixed trials, and
+  - Drag-sort accuracy `>=80%`, and
+  - No more than 1 random-tap intervention in that window.
+- Regression gate (any level):
+  - First-try accuracy `<60%` across 8 trials, or
+  - 3 consecutive errors on the same pair, or
+  - 3 level-3 hints in one block.
+  - If triggered, step down exactly one level for the next 4 trials, then re-evaluate.
+- Slow mode behavior:
+  - Trigger: 2 hints in one block or 2 consecutive errors.
+  - Effect: prompt audio pace at `0.85x`, target pulse length +400ms, and choice count reduced by 1 for the next 2 trials.
+  - Exit: 2 first-try correct responses in slow mode.
 
 ## Feedback Design
 - Success:
@@ -83,18 +116,23 @@
 - Mistakes:
   - No negative sounds.
   - Mis-tapped card gently returns and model contrast is replayed.
-  - Repeated random tapping triggers short modeled example before next action.
+  - Repeated random tapping is handled by the anti-random tapping guardrail below.
 - Hint progression:
   1. Repeat sound + target name.
   2. Visual highlight of distinguishing stroke/shape.
   3. Side-by-side animated contrast with one solved example.
+- Anti-random tapping guardrail:
+  - Detect random tapping as 3 incorrect taps within 2 seconds.
+  - On trigger: freeze choices for 1200ms, replay instruction, and temporarily collapse to 2 choices for one recovery trial.
+  - Recovery trial is non-punitive and does not reduce streak/reward state.
+  - Max 2 random-tap interventions per round to avoid over-interruption.
 
 ## Session Design
-- Session length: 10-12 minutes.
+- Session length: 6-8 minutes.
 - Structure:
-  - Warm-up (2 min): one known pair review.
-  - Core (6-7 min): 2-3 confusable pairs in mixed rounds.
-  - Transfer (2-3 min): pointed syllable/word contrast read.
+  - Warm-up (1-1.5 min): one known pair review.
+  - Core (3.5-4 min): 2 confusable pairs in mixed rounds.
+  - Transfer (1.5-2 min): pointed syllable/word contrast read.
 - Natural stopping points:
   - After each completed confusable pair cluster.
   - After transfer mini-round recap.
@@ -141,5 +179,7 @@
 - Ji Alef-Bet: Hebrew-specific letter recognition and nikud-sensitive progression.
 - Science of reading alignment: explicit confusable-letter contrast improves orthographic mapping and decoding accuracy.
 
-## Review Request
-- Request Gaming Expert review for contrast-pair ordering, decoy density, and adaptive thresholds before implementation starts.
+## Review Status
+- Reviewed by Gaming Expert on 2026-04-10 ([DUB-405](/DUB/issues/DUB-405)).
+- Calibration status: Pair sequence, decoy density, adaptive thresholds, and anti-random tapping feedback loop are now implementation-ready.
+- Rationale: The original draft had strong pedagogy but left key progression controls qualitative; adding numeric gates and deterministic intervention triggers reduces FED/QA interpretation drift.

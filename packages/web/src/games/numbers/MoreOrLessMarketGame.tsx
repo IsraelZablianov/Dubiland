@@ -114,6 +114,7 @@ interface SummaryReport {
 const TOTAL_ROUNDS = 9;
 const CHECKPOINT_ROUNDS = [4, 7];
 const NON_CRITICAL_AUDIO_DELAY_MS = 5000;
+const CHECKPOINT_INSTRUCTION_KEY: InstructionKey = 'games.moreOrLessMarket.instructions.listenAndCompare';
 
 const TOKEN_POOL_BY_THEME: Record<ThemeKey, string[]> = {
   basketFruits: ['🍊', '🍎', '🍐', '🍓'],
@@ -869,6 +870,13 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
     setMessageWithAudio('games.moreOrLessMarket.hints.gentleRetry', 'hint');
   }, [checkpointPaused, markNonCriticalAudioReady, sessionComplete, setMessageWithAudio]);
 
+  const handleCheckpointReplay = useCallback(() => {
+    if (!checkpointPaused || sessionComplete) {
+      return;
+    }
+    setMessageWithAudio(CHECKPOINT_INSTRUCTION_KEY, 'neutral');
+  }, [checkpointPaused, sessionComplete, setMessageWithAudio]);
+
   const revealCountOnSide = useCallback(
     (side: Side) => {
       if (round.level < 2) {
@@ -935,6 +943,20 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
       }
     };
   }, [setMessageWithAudio]);
+
+  useEffect(() => {
+    if (!checkpointPaused || sessionComplete) {
+      return;
+    }
+
+    const checkpointPromptTimeout = window.setTimeout(() => {
+      setMessageWithAudio(CHECKPOINT_INSTRUCTION_KEY, 'neutral');
+    }, 180);
+
+    return () => {
+      window.clearTimeout(checkpointPromptTimeout);
+    };
+  }, [checkpointPaused, sessionComplete, setMessageWithAudio]);
 
   useEffect(() => {
     if (!badgeSlotAcceptPulse) {
@@ -1017,10 +1039,27 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
       <div className="more-less-market more-less-market--checkpoint">
         <Card padding="lg" className="more-less-market__shell">
           <h2 className="more-less-market__title">{t('feedback.greatEffort')}</h2>
-          <p className="more-less-market__summary-note">{t('games.moreOrLessMarket.instructions.listenAndCompare')}</p>
-          <Button variant="primary" size="lg" onClick={handleContinueAfterCheckpoint} aria-label={t('nav.next')}>
-            {t('nav.next')}
-          </Button>
+          <p className="more-less-market__summary-note">{t(CHECKPOINT_INSTRUCTION_KEY)}</p>
+          <div className="more-less-market__checkpoint-actions">
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={handleCheckpointReplay}
+              aria-label={t('games.moreOrLessMarket.hints.useReplay')}
+              style={{ minWidth: 'var(--touch-min)' }}
+            >
+              ▶
+            </Button>
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={handleContinueAfterCheckpoint}
+              aria-label={t('nav.next')}
+              style={{ minWidth: 'var(--touch-min)' }}
+            >
+              ⏭
+            </Button>
+          </div>
         </Card>
         <style>{moreLessMarketStyles}</style>
       </div>
@@ -1129,7 +1168,7 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
             }}
             role="button"
             tabIndex={0}
-            aria-label={t('games.moreOrLessMarket.instructions.tapChoice')}
+            aria-label={t('games.moreOrLessMarket.instructions.tapChoiceRight')}
           >
             {round.rightIsNumberCard ? (
               <span className="more-less-market__number">{round.rightValue}</span>
@@ -1161,7 +1200,7 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
                   event.stopPropagation();
                   revealCountOnSide('right');
                 }}
-                aria-label={t('games.moreOrLessMarket.hints.tapToCount')}
+                aria-label={t('games.moreOrLessMarket.hints.tapToCountRight')}
               >
                 🔢
               </button>
@@ -1251,7 +1290,7 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
             }}
             role="button"
             tabIndex={0}
-            aria-label={t('games.moreOrLessMarket.instructions.tapChoice')}
+            aria-label={t('games.moreOrLessMarket.instructions.tapChoiceLeft')}
           >
             {round.leftIsNumberCard ? (
               <span className="more-less-market__number">{round.leftValue}</span>
@@ -1283,7 +1322,7 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
                   event.stopPropagation();
                   revealCountOnSide('left');
                 }}
-                aria-label={t('games.moreOrLessMarket.hints.tapToCount')}
+                aria-label={t('games.moreOrLessMarket.hints.tapToCountLeft')}
               >
                 🔢
               </button>
@@ -1395,7 +1434,7 @@ const moreLessMarketStyles = `
     background: var(--color-bg-primary);
     color: var(--color-text-primary);
     font-weight: var(--font-weight-bold);
-    min-height: 44px;
+    min-height: 48px;
     padding-inline: var(--space-sm);
     transition: transform var(--transition-fast), box-shadow var(--transition-fast);
   }
@@ -1597,6 +1636,13 @@ const moreLessMarketStyles = `
   .more-less-market__summary-tone {
     margin: 0;
     color: var(--color-text-secondary);
+  }
+
+  .more-less-market__checkpoint-actions {
+    display: flex;
+    gap: var(--space-sm);
+    justify-content: center;
+    flex-wrap: wrap;
   }
 
   .more-less-market--summary,

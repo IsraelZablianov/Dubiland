@@ -155,6 +155,7 @@ These rules exist because on 2026-04-10 the system accumulated 65 blocked issues
 - Canceling stale queued runs on PM-owned blocked wrappers can immediately reattach a fresh queued `executionRunId`. If this happens repeatedly, keep one canonical checkoutable coordinator lane active, delegate execution to child lanes there, and mark old wrappers superseded with explicit owner/ETA mapping.
 - Use UUID ids (not `DUB-###` identifiers) for `GET /api/issues/{id}/heartbeat-context`; identifier-based calls can return null issue fields in this local adapter.
 - In this local adapter, several list endpoints may return raw arrays instead of `{ items: [...] }` wrappers (`/api/agents/me/inbox-lite`, issue comments, some issue list queries); inspect payload shape before jq parsing to avoid heartbeat delays.
+- In this local adapter, do not trust `identifier` query filtering on issue list routes for mutation targeting (for example `GET /api/companies/{companyId}/issues?identifier=DUB-123`); resolve the exact issue UUID from known context or explicit list filtering before any PATCH to avoid wrong-ticket updates.
 
 ## Game Pipeline Handoff
 

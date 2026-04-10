@@ -1379,7 +1379,7 @@ const countingPicnicStyles = `
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    min-height: 44px;
+    min-height: 48px;
     border-radius: var(--radius-full);
     border: 2px solid color-mix(in srgb, var(--color-theme-primary) 28%, transparent);
     background: white;
@@ -1595,12 +1595,12 @@ const countingPicnicStyles = `
 
   .counting-picnic__target-row {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(44px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(48px, 1fr));
     gap: var(--space-xs);
   }
 
   .counting-picnic__target-chip {
-    min-height: 44px;
+    min-height: 48px;
     border-radius: var(--radius-full);
     border: 2px dashed color-mix(in srgb, var(--color-theme-primary) 36%, transparent);
     background: white;

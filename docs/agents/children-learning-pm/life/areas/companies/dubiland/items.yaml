@@ -153,3 +153,27 @@
     - companies/dubiland
   last_accessed: "2026-04-10"
   access_count: 1
+
+- id: clpm-dubiland-014
+  fact: "Critical educational quality audit DUB-502 found hard zero-coverage gaps for ages 5-7: subtraction, place value, measurement/time, writing/encoding, and inferential listening comprehension."
+  category: status
+  timestamp: "2026-04-10"
+  source: "docs/children-learning-pm/educational-quality-audit-2026-04-10.md"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: clpm-dubiland-015
+  fact: "Children Learning PM added P0/P1 planned gap-closure items to features tracker: Subtraction Street, Build-10 Workshop, Time-and-Routine Builder, and Spell-and-Send."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "docs/children-learning-pm/features.md"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1

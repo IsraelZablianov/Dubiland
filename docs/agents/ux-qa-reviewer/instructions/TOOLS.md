@@ -1,50 +1,68 @@
 # UX QA Reviewer — Tools
 
-## Browser Tools (via Cursor MCP)
+## Browser Tools (via Playwright MCP)
 
 Your primary tools for visual review. These let you see and interact with the running application.
+The Playwright MCP server runs in **headless** mode — you won't see a browser window, but all tools work.
+
+**How element interaction works:** Always call `browser_snapshot` first. The snapshot returns a structured accessibility tree where each element has a `ref` attribute (like `ref="e42"`). Use that `ref` value to target elements in `browser_click`, `browser_type`, etc.
 
 | Tool | Purpose | When to use |
 |------|---------|-------------|
-| `browser_navigate` | Go to a URL | Start of each page review |
-| `browser_snapshot` | Get page DOM structure | Understand element hierarchy, check for missing elements |
-| `browser_screenshot` | Capture visual state | Document visual issues, compare before/after |
-| `browser_click` | Click elements | Test interactions, navigation flow, audio feedback |
-| `browser_type` / `browser_fill` | Enter text | Test form flows (login, search) |
-| `browser_scroll` | Scroll the page | Check below-fold content, sticky headers |
-| `browser_resize` | Change viewport size | Test responsive layouts at tablet/mobile |
-| `browser_tabs` | List open tabs | Manage browser state |
+| `browser_navigate` | Go to a URL (`url` param) | Start of each page review |
+| `browser_snapshot` | Get page accessibility tree with `ref` attributes | **Always call before interacting** — understand element hierarchy |
+| `browser_take_screenshot` | Capture visual state as image | Document visual issues, compare before/after |
+| `browser_click` | Click an element (`ref` param from snapshot) | Test interactions, navigation flow |
+| `browser_type` | Type text into an element (`ref` + `text` params) | Test form flows (login, search). Use `submit: true` to press Enter |
+| `browser_fill_form` | Fill multiple form fields at once (`fields` param) | Fill entire forms efficiently |
+| `browser_hover` | Hover over an element (`ref` param) | Check hover states, tooltips |
+| `browser_press_key` | Press a keyboard key (`key` param) | Scroll with PageDown, navigate with arrows |
+| `browser_resize` | Change viewport (`width` + `height` params) | Test responsive layouts at tablet/mobile |
+| `browser_tabs` | List/close/select tabs (`action` param) | Manage browser state |
+| `browser_wait_for` | Wait for time or text (`time` or `text` param) | Wait for animations, page loads |
+| `browser_evaluate` | Run JavaScript on the page (`function` param) | Check computed styles, scroll position, custom checks |
+| `browser_close` | Close the browser | Clean up when done |
 
 ### Deep-Dive Workflow Pattern
 
 ```
-1. browser_navigate("http://localhost:3001/{page}")   # Go to focus area
-2. browser_snapshot()                                   # Read DOM structure
-3. browser_screenshot()                                 # See visual state — write gut reaction
+1. browser_navigate({ url: "http://localhost:3000/{page}" })
+2. browser_snapshot()                                         # Read accessibility tree — get ref attributes
+3. browser_take_screenshot()                                  # See visual state — write gut reaction
 4. [Apply UX lens: analyze against this heartbeat's framework]
-5. browser_click({interactive elements})                # Test EVERY interactive element
+5. browser_click({ ref: "e42", element: "Start button" })     # Test interactive elements using ref from snapshot
 6. [Check: did it produce audio + visual feedback?]
-7. browser_resize(768, 1024)                            # Tablet — primary viewport
-8. browser_screenshot()                                 # Analyze responsive quality
-9. browser_resize(375, 812)                             # Mobile
-10. browser_screenshot()                                # Analyze mobile quality
+7. browser_resize({ width: 768, height: 1024 })               # Tablet — primary viewport
+8. browser_take_screenshot()                                   # Analyze responsive quality
+9. browser_resize({ width: 375, height: 812 })                # Mobile
+10. browser_take_screenshot()                                  # Analyze mobile quality
 11. [Compare: what would Khan Academy Kids do here?]
 12. [Create improvement tasks in Paperclip]
+13. browser_close()                                            # Clean up
 ```
+
+### Scrolling
+
+There is no dedicated scroll tool. Use one of these approaches:
+- `browser_press_key({ key: "PageDown" })` — scroll down one viewport
+- `browser_press_key({ key: "End" })` — scroll to bottom
+- `browser_evaluate({ function: "() => window.scrollBy(0, 500)" })` — precise pixel scroll
+- `browser_click` on an element below the fold — Playwright auto-scrolls to it
 
 ### Game Testing Pattern (for focus area 2)
 
 ```
 1. Navigate to game page
-2. Screenshot initial state — evaluate visual hierarchy, דובי placement
+2. browser_snapshot() → browser_take_screenshot() — evaluate visual hierarchy, דובי placement
 3. Play through first round — verify guaranteed first success
 4. Play 5+ rounds — observe difficulty progression
 5. Deliberately fail 3 times — check scaffolding and encouragement
-6. Go idle for 10 seconds — does דובי nudge?
-7. Test at tablet viewport (768px) — primary play device
-8. Test at mobile viewport (375px) — secondary
-9. Count all interactive elements — test each for audio feedback
+6. browser_wait_for({ time: 10 }) — does דובי nudge after idle?
+7. browser_resize({ width: 768, height: 1024 }) — primary play device
+8. browser_resize({ width: 375, height: 812 }) — secondary
+9. Count all interactive elements from snapshot — test each for audio feedback
 10. Score against Gelman's 4 principles (1–5 each)
+11. browser_close()
 ```
 
 ## Shell Tools

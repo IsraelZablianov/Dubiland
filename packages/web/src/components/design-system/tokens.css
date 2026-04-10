@@ -22,11 +22,20 @@
   --color-accent-success: #6BCB77;   /* Friendly green */
   --color-accent-danger: #FF6B6B;    /* Soft red */
   --color-accent-info: #4ECDC4;      /* Teal */
+  --color-accent-warning: #FFC857;
+  --color-warning: #FFB020;
 
   /* Theme-specific (bear default) */
   --color-theme-primary: #C47B3B;    /* Bear brown */
   --color-theme-secondary: #E8A857;  /* Honey gold */
   --color-theme-bg: linear-gradient(180deg, #FFF8E7, #F5E6C8);
+
+  /* Shared surfaces + borders */
+  --color-border: color-mix(in srgb, var(--color-text-primary) 22%, transparent);
+  --color-border-subtle: color-mix(in srgb, var(--color-text-primary) 12%, transparent);
+  --color-bg-surface: color-mix(in srgb, var(--color-bg-card) 92%, white 8%);
+  --color-surface: var(--color-bg-surface);
+  --color-surface-muted: color-mix(in srgb, var(--color-bg-secondary) 62%, var(--color-bg-card) 38%);
 
   /* Stars */
   --color-star-filled: #FFD166;
@@ -58,13 +67,14 @@
   --font-family-primary: 'Rubik', 'Heebo', system-ui, sans-serif;
   --font-family-display: 'Rubik', system-ui, sans-serif;
 
-  --font-size-xs: 0.75rem;   /* 12px */
-  --font-size-sm: 0.875rem;  /* 14px */
-  --font-size-md: 1rem;      /* 16px */
-  --font-size-lg: 1.25rem;   /* 20px */
-  --font-size-xl: 1.5rem;    /* 24px */
-  --font-size-2xl: 2rem;     /* 32px */
-  --font-size-3xl: 2.5rem;   /* 40px */
+  --font-size-xs: 1rem;      /* 16px */
+  --font-size-sm: 1.125rem;  /* 18px */
+  --font-size-md: 1.25rem;   /* 20px */
+  --font-size-lg: 1.5rem;    /* 24px */
+  --font-size-xl: 1.875rem;  /* 30px */
+  --font-size-2xl: 2.25rem;  /* 36px */
+  --font-size-3xl: 2.75rem;  /* 44px */
+  --font-size-base: var(--font-size-md);
 
   --font-weight-regular: 400;
   --font-weight-medium: 500;
@@ -73,10 +83,11 @@
   --font-weight-extrabold: 800;
 
   --line-height-tight: 1.2;
-  --line-height-normal: 1.5;
-  --line-height-relaxed: 1.75;
+  --line-height-normal: 1.6;
+  --line-height-relaxed: 1.7;
 
   /* === Spacing === */
+  --space-2xs: 0.375rem; /* 6px */
   --space-xs: 0.25rem;  /* 4px */
   --space-sm: 0.5rem;   /* 8px */
   --space-md: 1rem;     /* 16px */
@@ -99,10 +110,10 @@
   --shadow-card: 0 2px 8px rgba(93, 58, 26, 0.08);
 
   /* === Touch Targets === */
-  --touch-min: 48px;
-  --touch-primary-action: 60px;
-  --touch-primary-action-prominent: 72px;
-  --touch-filter-chip: 48px;
+  --touch-min: 52px;
+  --touch-primary-action: 72px;
+  --touch-primary-action-prominent: 80px;
+  --touch-filter-chip: 52px;
 
   /* === Handbook Reader Shell === */
   --handbook-frame-radius: 1.75rem; /* 28px */
@@ -156,11 +167,12 @@
   --color-tag-text: var(--color-text-primary);
   --color-tag-border: color-mix(in srgb, var(--color-text-primary) 14%, transparent);
   --radius-tag-pill: var(--radius-full);
-  --tag-chip-height: 30px;
+  --tag-chip-height: 38px;
   --shadow-filter-chip-active: 0 4px 10px var(--color-filter-chip-active-shadow);
 
   /* === Motion Duration Scale === */
   --motion-duration-quick: 150ms;
+  --motion-duration-fast: 220ms;
   --motion-duration-normal: 300ms;
   --motion-duration-slow: 500ms;
   --motion-duration-dramatic: 800ms;

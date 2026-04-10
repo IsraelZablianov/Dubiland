@@ -210,20 +210,27 @@ All routes in the running application:
 
 ## How to use browser tools
 
-Use Cursor browser MCP tools:
+Use the **Playwright MCP** server (configured in `.cursor/mcp.json`, runs headless).
+
+**Key pattern:** Always `browser_snapshot` first → get `ref` attributes → use `ref` to interact.
 
 ```
-browser_navigate → go to a URL
-browser_snapshot → get page DOM structure
-browser_screenshot → capture visual state
-browser_click → test interactions
-browser_type / browser_fill → test forms
-browser_scroll → check below-fold content
-browser_resize → test responsive (768px tablet, 375px mobile)
-browser_tabs → manage browser state
+browser_navigate      → go to a URL (param: url)
+browser_snapshot      → get accessibility tree with ref attributes — ALWAYS call before interacting
+browser_take_screenshot → capture visual state as image
+browser_click         → click element (param: ref from snapshot)
+browser_type          → type text into element (params: ref, text)
+browser_hover         → hover over element (param: ref)
+browser_press_key     → press keyboard key (PageDown to scroll, etc.)
+browser_resize        → change viewport (params: width, height)
+browser_tabs          → list/close/select tabs
+browser_wait_for      → wait for time or text
+browser_evaluate      → run JavaScript on the page
+browser_close         → close browser when done
 ```
 
-Always start by navigating to the dev server URL (usually `http://localhost:3000` or `http://localhost:3001`).
+Always start by navigating to the dev server URL (usually `http://localhost:3000`).
+To scroll: use `browser_press_key({ key: "PageDown" })` or click an element below the fold (auto-scrolls).
 
 ## Coordination
 

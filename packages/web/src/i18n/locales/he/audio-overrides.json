@@ -33,5 +33,20 @@
   "common.parentDashboard.games.confusableLetterContrast.confusions": "בדוח ההורים מוצג זוג האותיות שבו נדרש כרגע עוד תרגול.",
   "common.parentDashboard.videos.finalForms.progressSummary": "איזה יופי. הילד מתקדם בזיהוי אותיות סופיות ומדייק יותר בסוף המילה.",
   "common.parentDashboard.games.shvaSoundSwitch.progressSummary": "איזה יופי. הילד מתקדם בפענוח שווא, מקשיב טוב יותר ומדייק יותר בקריאה.",
-  "common.parentDashboard.games.shvaSoundSwitch.confusions": "בדוח ההורים מסומן כרגע זוג הצלילים שבו נדרש עוד תרגול עדין ומודרך."
+  "common.parentDashboard.games.shvaSoundSwitch.confusions": "בדוח ההורים מסומן כרגע זוג הצלילים שבו נדרש עוד תרגול עדין ומודרך.",
+  "common.handbooks.mikaSoundGarden.chapterRecap.summary": "איזה יופי. השלמתם פרקים חשובים במצעד הצלילים של מיקה.",
+  "common.handbooks.yoavLetterMap.chapterRecap.summary": "איזה יופי. השלמתם את פרקי מסע המפה והחזרתם את האור עם יואב.",
+  "common.handbooks.tamarWordTower.chapterRecap.summary": "איזה יופי. השלמתם את פרקי מגדל המילים בעזרת קריאה מדויקת.",
+  "common.parentDashboard.handbooks.mikaSoundGarden.storyEngagement": "מעורבות סיפורית טובה מאוד בספרון מיקה והמצעד השקט.",
+  "common.parentDashboard.handbooks.mikaSoundGarden.decodeInStoryAccuracy": "ניכרת התקדמות יפה בדיוק הקריאה בתוך העלילה.",
+  "common.parentDashboard.handbooks.mikaSoundGarden.evidenceReading": "ניכרת התקדמות בזיהוי תשובות מתוך הטקסט עצמו.",
+  "common.parentDashboard.handbooks.mikaSoundGarden.independenceTrend": "מגמת העצמאות בקריאה משתפרת בהדרגה.",
+  "common.parentDashboard.handbooks.yoavLetterMap.storyEngagement": "הילד מעורב היטב בעלילת המסע של יואב והמפה.",
+  "common.parentDashboard.handbooks.yoavLetterMap.decodeInStoryAccuracy": "דיוק הקריאה בעלילה מתחזק ומתייצב.",
+  "common.parentDashboard.handbooks.yoavLetterMap.evidenceReading": "ניכר שימוש טוב יותר בהוכחות מתוך הטקסט.",
+  "common.parentDashboard.handbooks.yoavLetterMap.independenceTrend": "הילד נעשה עצמאי יותר בקריאה לאורך המסע.",
+  "common.parentDashboard.handbooks.tamarWordTower.storyEngagement": "הילד מגלה מעורבות גבוהה לאורך עלילת מגדל המילים.",
+  "common.parentDashboard.handbooks.tamarWordTower.decodeInStoryAccuracy": "דיוק הקריאה בתוך העלילה משתפר בצורה עקבית.",
+  "common.parentDashboard.handbooks.tamarWordTower.evidenceReading": "ניכר שיפור בבחירת תשובות לפי ראיה מתוך הטקסט.",
+  "common.parentDashboard.handbooks.tamarWordTower.independenceTrend": "מגמת העצמאות בקריאה ובהבנת טקסט חיובית מאוד."
 }

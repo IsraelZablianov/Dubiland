@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Card } from '@/components/design-system';
+import { Card, GameTopBar } from '@/components/design-system';
 import { MascotIllustration } from '@/components/illustrations';
 import { SuccessCelebration } from '@/components/motion';
 import type { GameCompletionResult, GameProps, HintTrend, ParentSummaryMetrics, StableRange } from '@/games/engine';
@@ -55,6 +55,10 @@ interface SessionSummary {
   hintTrendLabel: string;
   masteryWordLabel: string;
   masteryPercent: number;
+}
+
+interface SightWordSprintGameProps extends GameProps {
+  onRequestBack?: () => void;
 }
 
 const TOTAL_ROUNDS = 8;
@@ -263,7 +267,7 @@ function createRound(levelId: LevelId, optionCount: number, previousWord: WordId
   };
 }
 
-export function SightWordSprintGame({ level, onComplete, audio }: GameProps) {
+export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }: SightWordSprintGameProps) {
   const { t } = useTranslation('common');
 
   const levelId = useMemo(() => resolveLevel(level.levelNumber), [level.levelNumber]);
@@ -818,32 +822,26 @@ export function SightWordSprintGame({ level, onComplete, audio }: GameProps) {
 
   return (
     <Card padding="lg" className="sight-word-sprint">
-      <div className="sight-word-sprint__header">
-        <div className="sight-word-sprint__heading">
-          <h2 className="sight-word-sprint__title">{t('games.sightWordSprint.title')}</h2>
-          <p className="sight-word-sprint__subtitle">{t('games.sightWordSprint.subtitle')}</p>
-        </div>
-        <div className="sight-word-sprint__score" aria-live="polite">
-          <span className={['sight-word-sprint__score-pill', scorePulse ? 'sight-word-sprint__score-pill--pulse' : ''].join(' ')}>
-            🎯 {roundIndex + 1}/{TOTAL_ROUNDS}
-          </span>
-          {ROUND_SECONDS[levelId] > 0 && <span className="sight-word-sprint__score-pill">⏱ {countdownSec}</span>}
-        </div>
-      </div>
-
-      <div className="sight-word-sprint__progress" aria-hidden="true">
-        {Array.from({ length: TOTAL_ROUNDS }, (_, index) => (
-          <span
-            key={`sight-round-${index + 1}`}
-            className={[
-              'sight-word-sprint__progress-dot',
-              index < roundIndex ? 'sight-word-sprint__progress-dot--done' : '',
-              index === roundIndex ? 'sight-word-sprint__progress-dot--active' : '',
-              index === roundIndex ? 'sight-word-sprint__progress-dot--breathing' : '',
-            ].join(' ')}
-          />
-        ))}
-      </div>
+      <GameTopBar
+        title={t('games.sightWordSprint.title')}
+        subtitle={t('games.sightWordSprint.subtitle')}
+        progressLabel={`${Math.min(roundIndex + 1, TOTAL_ROUNDS)}/${TOTAL_ROUNDS}`}
+        progressAriaLabel={t('games.sightWordSprint.prompts.wordSelect.chooseWord')}
+        currentStep={Math.min(roundIndex + 1, TOTAL_ROUNDS)}
+        totalSteps={TOTAL_ROUNDS}
+        onReplayInstruction={handleReplay}
+        replayAriaLabel={t('games.sightWordSprint.instructions.tapReplay')}
+        onBack={onRequestBack}
+        backAriaLabel={t('nav.back')}
+        rightSlot={
+          <div className="sight-word-sprint__score" aria-live="polite">
+            <span className={['sight-word-sprint__score-pill', scorePulse ? 'sight-word-sprint__score-pill--pulse' : ''].join(' ')}>
+              🎯 {roundIndex + 1}/{TOTAL_ROUNDS}
+            </span>
+            {ROUND_SECONDS[levelId] > 0 && <span className="sight-word-sprint__score-pill">⏱ {countdownSec}</span>}
+          </div>
+        }
+      />
 
       <div className={['sight-word-sprint__status', roundMessage.tone === 'hint' ? 'sight-word-sprint__status--hint' : '', roundMessage.tone === 'success' ? 'sight-word-sprint__status--success' : ''].join(' ')}>
         <MascotIllustration variant="hint" size={50} />
@@ -1030,31 +1028,6 @@ export function SightWordSprintGame({ level, onComplete, audio }: GameProps) {
             var(--color-surface);
         }
 
-        .sight-word-sprint__header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          flex-wrap: wrap;
-          gap: var(--space-sm);
-        }
-
-        .sight-word-sprint__heading {
-          display: grid;
-          gap: var(--space-2xs);
-        }
-
-        .sight-word-sprint__title {
-          margin: 0;
-          color: var(--color-text-primary);
-          font-size: var(--font-size-xl);
-        }
-
-        .sight-word-sprint__subtitle {
-          margin: 0;
-          color: var(--color-text-secondary);
-          font-size: var(--font-size-sm);
-        }
-
         .sight-word-sprint__score {
           display: inline-flex;
           gap: var(--space-xs);
@@ -1063,7 +1036,7 @@ export function SightWordSprintGame({ level, onComplete, audio }: GameProps) {
         }
 
         .sight-word-sprint__score-pill {
-          min-height: 44px;
+          min-height: 48px;
           min-inline-size: 76px;
           padding-inline: var(--space-sm);
           display: inline-flex;
@@ -1078,32 +1051,6 @@ export function SightWordSprintGame({ level, onComplete, audio }: GameProps) {
 
         .sight-word-sprint__score-pill--pulse {
           animation: sight-word-score-pill-pulse 520ms ease;
-        }
-
-        .sight-word-sprint__progress {
-          display: grid;
-          grid-auto-flow: column;
-          grid-auto-columns: 1fr;
-          gap: var(--space-xs);
-        }
-
-        .sight-word-sprint__progress-dot {
-          block-size: 10px;
-          border-radius: var(--radius-full);
-          background: color-mix(in srgb, var(--color-border) 68%, transparent);
-        }
-
-        .sight-word-sprint__progress-dot--done {
-          background: var(--color-accent-success);
-        }
-
-        .sight-word-sprint__progress-dot--active {
-          background: var(--color-accent-primary);
-          transform: scaleY(1.3);
-        }
-
-        .sight-word-sprint__progress-dot--breathing {
-          animation: sight-word-progress-breathe 1.2s ease-in-out infinite;
         }
 
         .sight-word-sprint__status {
@@ -1131,8 +1078,8 @@ export function SightWordSprintGame({ level, onComplete, audio }: GameProps) {
         }
 
         .sight-word-sprint__inline-replay {
-          min-height: 44px;
-          min-inline-size: 44px;
+          min-height: 48px;
+          min-inline-size: 48px;
           border-radius: var(--radius-md);
           border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
           background: var(--color-surface);
@@ -1143,7 +1090,7 @@ export function SightWordSprintGame({ level, onComplete, audio }: GameProps) {
 
         .sight-word-sprint__icon-controls {
           display: grid;
-          grid-template-columns: repeat(4, minmax(44px, 1fr));
+          grid-template-columns: repeat(4, minmax(48px, 1fr));
           gap: var(--space-xs);
         }
 
@@ -1198,8 +1145,8 @@ export function SightWordSprintGame({ level, onComplete, audio }: GameProps) {
         }
 
         .sight-word-sprint__small-replay {
-          min-height: 44px;
-          min-inline-size: 44px;
+          min-height: 48px;
+          min-inline-size: 48px;
           border-radius: var(--radius-sm);
           border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
           background: var(--color-surface);
@@ -1298,16 +1245,6 @@ export function SightWordSprintGame({ level, onComplete, audio }: GameProps) {
           color: var(--color-text-secondary);
         }
 
-        @keyframes sight-word-progress-breathe {
-          0%,
-          100% {
-            transform: scaleY(1.3);
-          }
-          50% {
-            transform: scale(1.08, 1.38);
-          }
-        }
-
         @keyframes sight-word-score-pill-pulse {
           0% {
             transform: scale(1);
@@ -1345,15 +1282,7 @@ export function SightWordSprintGame({ level, onComplete, audio }: GameProps) {
           }
         }
 
-        @media (max-width: 768px) {
-          .sight-word-sprint__title {
-            font-size: var(--font-size-lg);
-          }
-        }
-
         @media (prefers-reduced-motion: reduce) {
-          .sight-word-sprint__progress-dot--active,
-          .sight-word-sprint__progress-dot--breathing,
           .sight-word-sprint__score-pill--pulse,
           .sight-word-sprint__board--success,
           .sight-word-sprint__board--miss,

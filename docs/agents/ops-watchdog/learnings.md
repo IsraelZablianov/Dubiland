@@ -359,3 +359,27 @@ This spiraled into 31 `[CTO]` lock-cleanup meta-tasks, 7 `[Ops Alert]` meta-task
 **Fix applied:** Added heuristic #29 (comment-referenced blocker resolution) and heuristic #30/#31 to AGENTS.md. Heuristic #29 reads blocked task comments, extracts DUB-ID references, checks if they're done, and unblocks automatically. This bypasses the broken `blockedByIssueIds` API entirely.
 
 **Prevention:** Heuristic #29 procedure must run BEFORE heuristic #22 on every heartbeat. It catches the most common stall pattern: agent writes "waiting for DUB-X" in a comment, DUB-X completes, nobody notices.
+
+## 2026-04-10 — `AI Model Not Found` can be transient after runtime/session reset
+
+**Incident:** Backend Engineer and UX QA Reviewer both entered `error` with `AI Model Not Found` in the same window, while Gaming Expert failed with a context-window overflow.
+
+**Recovery:** Clearing `agent_runtime_state` (`session_id`, `last_error`, `last_run_status`) + resetting agent status to `idle` + immediate board-context heartbeat invoke restored all three agents without config edits.
+
+**Operational rule:** Treat first occurrence as recoverable; attempt one reset+invoke cycle before escalating model-availability incidents.
+
+## 2026-04-10 — Stale `checkout_run_id` residue can appear continuously as new runs finish
+
+**Incident:** After clearing 7 stale checkout residues, new stale rows (DUB-504, DUB-510, then DUB-508) appeared minutes later from newly succeeded runs.
+
+**Mitigation:** Run at least one follow-up stale-lock pass near heartbeat end; include counts in report. Avoid infinite loops, but do one final cleanup before exit to minimize immediate checkout conflicts.
+
+## 2026-04-10 — `blockedByIssueIds` API accepts writes but issue schema does not persist formal blocker links
+
+**Incident:** Ops Watchdog patched blocked issues ([DUB-50](/DUB/issues/DUB-50), [DUB-441](/DUB/issues/DUB-441), [DUB-488](/DUB/issues/DUB-488), [DUB-505](/DUB/issues/DUB-505)) with `blockedByIssueIds` payloads. API returned success, but follow-up checks showed no blocker links available via issue reads.
+
+**Verification:** PostgreSQL schema inspection on `issues` showed no `blocked_by_issue_ids` column, confirming formal blocker linkage is not currently persisted in this environment.
+
+**Operational impact:** Auto-wake via structured blockers is unavailable; blocked-lane dependency tracking remains comment-driven and requires heuristic #29 comment parsing each heartbeat.
+
+**Mitigation:** Continue comment-based blocker resolution and treat `blockedByIssueIds` as non-authoritative until server-side persistence is implemented.

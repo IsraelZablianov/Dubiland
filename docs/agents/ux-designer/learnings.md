@@ -46,3 +46,15 @@ For reading UX changes, "make the word bigger" is too ambiguous and leads to inc
 
 ## 2026-04-10 — Missing CSS Tokens Create Silent UX Regressions Across Multiple Games
 Before writing visual remediation, run a token contract check (`defined vars` vs `var(--*) usages`) across child-facing routes. Undefined variables (for example warning/surface/border tokens and `--space-2xs`) silently collapse intended styling, which can look like random polish issues but is actually a design-system integrity bug.
+
+## 2026-04-10 — UX Lane Closes Faster with Explicit "Pass vs Gap" Checklists
+For cross-functional ship-blocker work, a compact checklist that separates current passes from concrete gaps (and maps each gap to implementation + QA checks) is more actionable than broad style guidance. CTO/FED can implement directly, and QA can verify the same contract without interpretation drift.
+
+## 2026-04-10 — Consistency Directives Need Explicit Shell-Level Boundaries
+Cross-product consistency does not mean one identical header/footer everywhere. Defining shell families (marketing, child-play, parent) with tokenized parity rules prevents false uniformity while still removing drift inside each family.
+
+## 2026-04-10 — Token Audits Should Report Coverage Numbers, Not Just Style Opinions
+For design-system consistency tickets, a simple coverage snapshot (`declared tokens` vs `referenced tokens`) plus an unreferenced-token list turns vague "cleanup" requests into measurable work. It also makes follow-up prioritization straightforward for FED and Architect lanes.
+
+## 2026-04-10 — Route-Audit Deliverables Land Faster with a "Runtime vs Ticket" Drift Check
+When older UX tickets still reference legacy routes (for example `/home`) while runtime has moved to `/games`, explicitly calling out that mapping in the audit avoids implementation confusion and prevents downstream QA from validating the wrong URL surface.
