@@ -32,7 +32,8 @@ type HomeGameSlug =
   | 'sightWordSprint'
   | 'decodableMicroStories'
   | 'interactiveHandbook'
-  | 'rootFamilyStickers';
+  | 'rootFamilyStickers'
+  | 'confusableLetterContrast';
 
 interface TopicState {
   slug: TopicSlug;
@@ -166,6 +167,13 @@ const GAME_OPTIONS_BY_TOPIC: Record<TopicSlug, TopicGameOption[]> = {
       primaryAgeBand: '6-7',
       supportAgeBands: ['5-6'],
     },
+    {
+      slug: 'confusableLetterContrast',
+      route: '/games/reading/confusable-letter-contrast',
+      difficulty: 4,
+      primaryAgeBand: '5-6',
+      supportAgeBands: ['6-7'],
+    },
   ],
 };
 
@@ -183,6 +191,7 @@ const GAME_OPTIONS_BY_SLUG: Record<HomeGameSlug, TopicGameOption & { topic: Topi
   decodableMicroStories: { ...GAME_OPTIONS_BY_TOPIC.reading[2], topic: 'reading' },
   interactiveHandbook: { ...GAME_OPTIONS_BY_TOPIC.reading[3], topic: 'reading' },
   rootFamilyStickers: { ...GAME_OPTIONS_BY_TOPIC.reading[4], topic: 'reading' },
+  confusableLetterContrast: { ...GAME_OPTIONS_BY_TOPIC.reading[5], topic: 'reading' },
 };
 
 const TOPIC_ICON_BY_SLUG: Record<TopicSlug, string> = {

@@ -2,6 +2,13 @@
 
 Record every completed reading spec, curriculum decision, or reading milestone in reverse chronological order.
 
+## 2026-04-10 — Confusable lane execution advanced
+- Synced live statuses for the `Confusable Letter Contrast` cluster in `docs/reading-pm/features.md`:
+  - [DUB-406](/DUB/issues/DUB-406) `in_progress` (implementation)
+  - [DUB-407](/DUB/issues/DUB-407) `done` (Hebrew i18n/audio)
+  - [DUB-408](/DUB/issues/DUB-408) `done` (mechanics review)
+- Feature remains In Progress until implementation lane [DUB-406](/DUB/issues/DUB-406) closes.
+
 ## 2026-04-10 — Confusable lane live-state sync
 - Synced `docs/reading-pm/features.md` issue-state annotation after [DUB-408](/DUB/issues/DUB-408) moved from `todo` to `in_progress`.
 - Current confusable cluster state:

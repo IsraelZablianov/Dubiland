@@ -32,6 +32,7 @@ const SightWordSprint = lazy(() => import('@/pages/SightWordSprint'));
 const DecodableMicroStories = lazy(() => import('@/pages/DecodableMicroStories'));
 const InteractiveHandbook = lazy(() => import('@/pages/InteractiveHandbook'));
 const RootFamilyStickers = lazy(() => import('@/pages/RootFamilyStickers'));
+const ConfusableLetterContrast = lazy(() => import('@/pages/ConfusableLetterContrast'));
 const LetterSoundMatch = lazy(() => import('@/pages/LetterSoundMatch'));
 const LetterTracingTrail = lazy(() => import('@/pages/LetterTracingTrail'));
 const LetterSkyCatcher = lazy(() => import('@/pages/LetterSkyCatcher'));
@@ -187,6 +188,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <AppLayout>{withAnimatedPage(<RootFamilyStickers />, 'app')}</AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/games/reading/confusable-letter-contrast"
+            element={
+              <ProtectedRoute>
+                <AppLayout>{withAnimatedPage(<ConfusableLetterContrast />, 'app')}</AppLayout>
               </ProtectedRoute>
             }
           />

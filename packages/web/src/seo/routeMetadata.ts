@@ -25,6 +25,7 @@ export type RouteMetadataKey =
   | 'decodableMicroStoriesGame'
   | 'interactiveHandbookGame'
   | 'rootFamilyStickersGame'
+  | 'confusableLetterContrastGame'
   | 'notFound'
   | 'default';
 
@@ -169,6 +170,11 @@ const ROUTE_METADATA_BY_PATH: Record<string, RouteMetadataDefinition> = {
   '/games/reading/root-family-stickers': {
     key: 'rootFamilyStickersGame',
     canonicalPath: '/games/reading/root-family-stickers',
+    indexable: false,
+  },
+  '/games/reading/confusable-letter-contrast': {
+    key: 'confusableLetterContrastGame',
+    canonicalPath: '/games/reading/confusable-letter-contrast',
     indexable: false,
   },
 };

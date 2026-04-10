@@ -145,3 +145,6 @@ For route-level QA closure, script the exact `t(...)` key set from affected file
 
 ## 2026-04-10 — `PAPERCLIP_TASK_ID` can point to a non-owned completed issue; verify assignee before action
 On some `issue_assigned` wakes, the injected task id may reference a different agent's already-`done` issue. Treat it as non-actionable unless the issue is assigned to QA, then fall back to assigned inbox items and blocked-task dedup rules.
+
+## 2026-04-10 — Audio parity pass does not prove card-level tap narration compliance
+Even with `0` missing locale/manifest/audio files, spec contracts like “shape-name tap replay on each shape card” can still fail if interaction handlers only narrate on correct answers. During closure retests, pair parity checks with per-control behavior verification against spec interaction clauses (for example `docs/games/shape-safari.md:121`).

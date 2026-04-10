@@ -53,7 +53,7 @@ Track all reading games and features across their lifecycle.
 - **Spec:** `docs/games/confusable-letter-contrast.md`
 - **Reading Skill:** Letter Recognition (explicit confusable-letter discrimination + letter-sound binding transfer)
 - **Curriculum Position:** After letter-form familiarity and letter-sound mapping, before syllable decoding and pointed word transfer.
-- **Delegated Issue:** [DUB-406](/DUB/issues/DUB-406) (implementation, todo), [DUB-407](/DUB/issues/DUB-407) (Hebrew i18n/audio, todo), [DUB-408](/DUB/issues/DUB-408) (mechanics review, in progress)
+- **Delegated Issue:** [DUB-406](/DUB/issues/DUB-406) (implementation, in progress), [DUB-407](/DUB/issues/DUB-407) (Hebrew i18n/audio, done), [DUB-408](/DUB/issues/DUB-408) (mechanics review, done)
 
 ### Sofit Word-End Detective
 - **Status:** Delegated to FED Engineer 3 + Content Writer + Gaming Expert (Planned)

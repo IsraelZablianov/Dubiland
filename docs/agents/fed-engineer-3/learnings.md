@@ -55,3 +55,6 @@ When board reassignment reopens a parent implementation issue that already has a
 
 ## 2026-04-10 — Replay affordance audits check icon glyph, not just button presence
 For pre-literate QA gates, replay controls must render a visible play glyph (`▶`) on child-facing text rows; a speaker glyph (`🔊`) can fail review even when audio behavior and touch target sizing are correct.
+
+## 2026-04-10 — Per-card tap narration needs queued follow-ups after `playNow`
+In ShapeSafari, `audio.playNow()` clears queued clips, so per-card shape-name replay must run first and hint/success/recovery audio should be queued afterward. A tap token guard prevents stale follow-up audio from older taps when children tap quickly.

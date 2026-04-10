@@ -109,3 +109,9 @@ If `PAPERCLIP_TASK_ID` points to an assigned `in_review` issue that is not retur
 
 ## 2026-04-10 — Launch-slot QA must verify runtime slug map, not just dependency status/handoff notes
 Even when FED dependency issues are `done`, validate the actual runtime slot mapping (`ageBand -> book -> handbookSlug`) and page-count contracts in code. In this heartbeat, `5-6` was still wired to `yoavLetterMap` with 8-page flow while `magicLetterMap` 10-page assets existed but were unreachable, requiring a new FED fix lane.
+
+## 2026-04-10 — Home RTL progress QA should validate anchor + gradient together
+For RTL-native progress bars, reviewing gradient angle alone is insufficient. Verify both track anchoring (`justify-content` start/end by `dir`) and fill gradient direction so visual completion semantics align with Hebrew reading flow.
+
+## 2026-04-10 — Replay-glyph compliance reruns must still enforce auto-play on new instruction surfaces
+Even when a rerun scope is “icon remediation” (`🔊` → `▶`), keep the mandatory game blocker for instruction auto-play on every newly displayed instruction state (e.g., midpoint/completion overlays). Replay availability is not a substitute for auto-play.

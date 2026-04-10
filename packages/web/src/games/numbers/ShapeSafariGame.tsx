@@ -333,6 +333,7 @@ export function ShapeSafariGame({ onComplete, audio }: GameProps) {
   const boardFeedbackTimeoutRef = useRef<number | null>(null);
   const recoveryInFlightRef = useRef(false);
   const nextActionInFlightRef = useRef(false);
+  const pickAudioTokenRef = useRef(0);
   const progressSegments = useMemo(() => Array.from({ length: TOTAL_ROUNDS }, (_, index) => index + 1), []);
 
   const playNow = useCallback(
@@ -653,11 +654,16 @@ export function ShapeSafariGame({ onComplete, audio }: GameProps) {
         totalAttempts: previous.totalAttempts + 1,
       }));
 
+      const shapeNameKey = SHAPE_NAME_KEY_BY_ID[shape];
+      let followUpAudioKey: StatusKey | null = null;
+      let runRecoveryFlow = false;
+
       if (shape === round.target) {
         triggerBoardFeedback('success');
         if (attemptInRound === 0) {
           triggerScorePulse();
         }
+        const successKey = ROUND_SUCCESS_KEYS[(roundNumber - 1) % ROUND_SUCCESS_KEYS.length];
         setStats((previous) => ({
           ...previous,
           correctAnswers: previous.correctAnswers + 1,
@@ -666,47 +672,59 @@ export function ShapeSafariGame({ onComplete, audio }: GameProps) {
         setRoundSolved(true);
         setConsecutiveMisses(0);
         setMessage({
-          key: ROUND_SUCCESS_KEYS[(roundNumber - 1) % ROUND_SUCCESS_KEYS.length],
+          key: successKey,
           tone: 'success',
         });
-        void playNow(ROUND_SUCCESS_KEYS[(roundNumber - 1) % ROUND_SUCCESS_KEYS.length]);
-        void playQueued(SHAPE_NAME_KEY_BY_ID[shape]);
-        return;
-      }
+        followUpAudioKey = successKey;
+      } else {
+        const nextMissCount = consecutiveMisses + 1;
+        triggerBoardFeedback('miss');
+        setAttemptInRound((previous) => previous + 1);
+        setConsecutiveMisses(nextMissCount);
+        incrementHintUsage(roundNumber);
 
-      const nextMissCount = consecutiveMisses + 1;
-      triggerBoardFeedback('miss');
-      setAttemptInRound((previous) => previous + 1);
-      setConsecutiveMisses(nextMissCount);
-      incrementHintUsage(roundNumber);
+        setStats((previous) => ({
+          ...previous,
+          confusionPairs: {
+            ...previous.confusionPairs,
+            [`${round.target}:${shape}`]: (previous.confusionPairs[`${round.target}:${shape}`] ?? 0) + 1,
+          },
+        }));
 
-      setStats((previous) => ({
-        ...previous,
-        confusionPairs: {
-          ...previous.confusionPairs,
-          [`${round.target}:${shape}`]: (previous.confusionPairs[`${round.target}:${shape}`] ?? 0) + 1,
-        },
-      }));
-
-      if (nextMissCount >= 3) {
-        setMessage({ key: 'games.shapeSafari.recovery.demo.watchDubi', tone: 'hint' });
-        void runRecoveryDemo();
-        return;
-      }
-
-      if (nextMissCount === 2) {
-        if (!round.simplifyApplied) {
-          setRound(buildRound(roundNumber, round.target, true));
+        if (nextMissCount >= 3) {
+          setMessage({ key: 'games.shapeSafari.recovery.demo.watchDubi', tone: 'hint' });
+          runRecoveryFlow = true;
+        } else if (nextMissCount === 2) {
+          if (!round.simplifyApplied) {
+            setRound(buildRound(roundNumber, round.target, true));
+          }
+          setMessage({ key: 'games.shapeSafari.hints.lookAtCorners', tone: 'hint' });
+          triggerTargetHighlight(round.target, 1400);
+          followUpAudioKey = 'games.shapeSafari.hints.lookAtCorners';
+        } else {
+          setMessage({ key: round.promptKey, tone: 'neutral' });
+          triggerReplayVisualFeedback(1200);
+          followUpAudioKey = round.promptKey;
         }
-        setMessage({ key: 'games.shapeSafari.hints.lookAtCorners', tone: 'hint' });
-        triggerTargetHighlight(round.target, 1400);
-        void playNow('games.shapeSafari.hints.lookAtCorners');
-        return;
       }
 
-      setMessage({ key: round.promptKey, tone: 'neutral' });
-      triggerReplayVisualFeedback(1200);
-      void playNow(round.promptKey);
+      const pickAudioToken = pickAudioTokenRef.current + 1;
+      pickAudioTokenRef.current = pickAudioToken;
+
+      void (async () => {
+        await playNow(shapeNameKey);
+        // Skip stale follow-up audio when a newer tap already took control of the audio queue.
+        if (pickAudioTokenRef.current !== pickAudioToken) {
+          return;
+        }
+        if (runRecoveryFlow) {
+          await runRecoveryDemo();
+          return;
+        }
+        if (followUpAudioKey) {
+          await playQueued(followUpAudioKey);
+        }
+      })();
     },
     [
       attemptInRound,
