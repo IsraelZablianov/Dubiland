@@ -1,5 +1,6 @@
 import type { HTMLAttributes } from 'react';
 import { MascotIllustration } from '@/components/illustrations';
+import { assetUrl } from '@/lib/assetUrl';
 import { StarRating } from './StarRating';
 
 interface GameCardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
@@ -123,7 +124,7 @@ export function GameCard({
           width: '100%',
           aspectRatio: '16 / 10',
           background: thumbnailUrl
-            ? `url(${thumbnailUrl}) center / cover no-repeat`
+            ? `url(${assetUrl(thumbnailUrl)}) center / cover no-repeat`
             : 'var(--color-bg-secondary)',
           display: 'flex',
           alignItems: 'center',

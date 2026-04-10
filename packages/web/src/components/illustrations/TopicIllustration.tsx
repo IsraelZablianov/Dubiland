@@ -1,12 +1,13 @@
 import type { CSSProperties, ImgHTMLAttributes } from 'react';
+import { assetUrl } from '@/lib/assetUrl';
 
 export type TopicIllustrationSlug = 'math' | 'numbers' | 'letters' | 'reading';
 
 const TOPIC_SRC_BY_SLUG: Record<TopicIllustrationSlug, string> = {
-  math: '/images/topics/topic-numbers.svg',
-  numbers: '/images/topics/topic-numbers.svg',
-  letters: '/images/topics/topic-letters.svg',
-  reading: '/images/topics/topic-reading.svg',
+  math: assetUrl('/images/topics/topic-numbers.svg'),
+  numbers: assetUrl('/images/topics/topic-numbers.svg'),
+  letters: assetUrl('/images/topics/topic-letters.svg'),
+  reading: assetUrl('/images/topics/topic-reading.svg'),
 };
 
 interface TopicIllustrationProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> {

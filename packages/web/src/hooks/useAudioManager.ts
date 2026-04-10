@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import type { AudioController } from '@/games/engine';
+import { assetUrl } from '@/lib/assetUrl';
 
 type VoidFn = () => void;
 
@@ -54,7 +55,7 @@ export function useAudioManager(): AudioController {
           return;
         }
 
-        const audio = new Audio(path);
+        const audio = new Audio(assetUrl(path));
         audio.preload = 'auto';
         audioRef.current = audio;
 

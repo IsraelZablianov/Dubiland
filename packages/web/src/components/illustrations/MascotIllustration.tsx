@@ -1,12 +1,13 @@
 import type { CSSProperties, ImgHTMLAttributes } from 'react';
+import { assetUrl } from '@/lib/assetUrl';
 
 export type MascotVariant = 'hero' | 'hint' | 'success' | 'loading';
 
 const MASCOT_SRC_BY_VARIANT: Record<MascotVariant, string> = {
-  hero: '/images/mascot/dubi-hero-wave-rtl.svg',
-  hint: '/images/mascot/dubi-hint-point-rtl.svg',
-  success: '/images/mascot/dubi-success-cheer.svg',
-  loading: '/images/mascot/dubi-loading-breathe.svg',
+  hero: assetUrl('/images/mascot/dubi-hero-wave-rtl.svg'),
+  hint: assetUrl('/images/mascot/dubi-hint-point-rtl.svg'),
+  success: assetUrl('/images/mascot/dubi-success-cheer.svg'),
+  loading: assetUrl('/images/mascot/dubi-loading-breathe.svg'),
 };
 
 interface MascotIllustrationProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> {
