@@ -1,13 +1,11 @@
 import type { Database } from '@dubiland/shared';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import { isSupabaseConfigured, supabaseConfig } from '@/lib/supabaseConfig';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
+export { isSupabaseConfigured } from '@/lib/supabaseConfig';
 
 export const supabase: SupabaseClient<Database> = isSupabaseConfigured
-  ? createClient<Database>(supabaseUrl!, supabaseAnonKey!, {
+  ? createClient<Database>(supabaseConfig.url!, supabaseConfig.anonKey!, {
       auth: {
         flowType: 'pkce',
         persistSession: true,

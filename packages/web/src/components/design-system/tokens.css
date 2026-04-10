@@ -99,10 +99,46 @@
   --shadow-card: 0 2px 8px rgba(93, 58, 26, 0.08);
 
   /* === Touch Targets === */
-  --touch-min: 44px;
+  --touch-min: 48px;
   --touch-primary-action: 60px;
   --touch-primary-action-prominent: 72px;
-  --touch-filter-chip: 44px;
+  --touch-filter-chip: 48px;
+
+  /* === Handbook Reader Shell === */
+  --handbook-frame-radius: 1.75rem; /* 28px */
+  --handbook-frame-border: 2px solid color-mix(in srgb, var(--color-theme-primary) 22%, transparent);
+  --handbook-frame-shadow: 0 10px 26px rgba(93, 58, 26, 0.14);
+  --handbook-illustration-min-height: 280px;
+  --handbook-text-min-height: 120px;
+  --handbook-control-min-height: 72px;
+  --handbook-progress-dot-size: 14px;
+  --handbook-progress-dot-gap: 8px;
+  --handbook-hotspot-min-size: 72px;
+  --handbook-hotspot-gap: 16px;
+  --handbook-nav-hotspot-size: clamp(72px, 10vw, 108px);
+  --handbook-nav-hotspot-offset: 12px;
+  --handbook-text-size: clamp(1.25rem, 2.1vw, 1.75rem);
+  --handbook-text-line-height: 1.6;
+  --handbook-page-turn-duration: 420ms;
+  --handbook-spread-max-width: 1060px;
+  --handbook-spread-inline-padding: clamp(12px, 2.4vw, 24px);
+  --handbook-spine-width: clamp(18px, 2.2vw, 24px);
+  --handbook-page-inner-gutter: clamp(12px, 1.8vw, 20px);
+  --handbook-illustration-ratio-landscape: 16 / 10;
+  --handbook-illustration-ratio-portrait: 4 / 3;
+  --handbook-story-font-size: clamp(1.375rem, 2.3vw, 1.625rem);
+  --handbook-prompt-font-size: clamp(1.5rem, 2.8vw, 1.875rem);
+  --handbook-status-font-size: clamp(1.125rem, 1.9vw, 1.25rem);
+  --handbook-control-surface-opacity: 0.92;
+  --handbook-word-hero-font-size: clamp(2rem, 4.8vw, 3.25rem);
+  --handbook-word-hero-line-height: 1.2;
+  --handbook-word-hero-letter-spacing: 0.01em;
+  --handbook-word-stack-gap: clamp(8px, 1.4vw, 14px);
+  --handbook-word-repeat-font-size: clamp(1.5rem, 3.1vw, 2.25rem);
+  --handbook-support-font-size: clamp(1.125rem, 2vw, 1.375rem);
+  --handbook-support-line-height: 1.6;
+  --handbook-support-max-lines: 2;
+  --handbook-support-emphasis-opacity: 0.65;
 
   /* === Filter + Tag System === */
   --color-filter-surface: color-mix(in srgb, var(--color-bg-card) 82%, var(--color-theme-secondary) 18%);

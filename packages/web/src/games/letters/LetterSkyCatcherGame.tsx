@@ -408,6 +408,7 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
   const [sessionComplete, setSessionComplete] = useState(false);
   const [promptPulse, setPromptPulse] = useState(false);
   const [fieldFeedback, setFieldFeedback] = useState<'idle' | 'success' | 'miss'>('idle');
+  const [scorePulse, setScorePulse] = useState(false);
   const [speedScale, setSpeedScale] = useState(1);
   const [targetRatio, setTargetRatio] = useState(levelConfig.targetRatio);
   const [maxActiveObjects, setMaxActiveObjects] = useState(levelConfig.maxActiveObjects);
@@ -454,6 +455,7 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
 
   const feedbackTimeoutRef = useRef<number | null>(null);
   const pulseTimeoutRef = useRef<number | null>(null);
+  const scorePulseTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     playerLaneRef.current = playerLane;
@@ -553,6 +555,17 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
       setPromptPulse(false);
       pulseTimeoutRef.current = null;
     }, durationMs);
+  }, []);
+
+  const triggerScorePulse = useCallback(() => {
+    setScorePulse(true);
+    if (scorePulseTimeoutRef.current !== null) {
+      window.clearTimeout(scorePulseTimeoutRef.current);
+    }
+    scorePulseTimeoutRef.current = window.setTimeout(() => {
+      setScorePulse(false);
+      scorePulseTimeoutRef.current = null;
+    }, 300);
   }, []);
 
   const updateRewardTier = useCallback((nextCorrectCatches: number) => {
@@ -810,12 +823,13 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
         updateRewardTier(next);
         return next;
       });
+      triggerScorePulse();
 
       setMessageWithAudio('games.letterSkyCatcher.prompts.objectHit.success', 'success', 'interrupt');
       void playAudio(OBJECT_META_BY_ID[object.objectId].nameKey);
       applyAdaptiveDifficultyAfterTargetHit();
     },
-    [applyAdaptiveDifficultyAfterTargetHit, markFieldFeedback, playAudio, setMessageWithAudio, updateRewardTier],
+    [applyAdaptiveDifficultyAfterTargetHit, markFieldFeedback, playAudio, setMessageWithAudio, triggerScorePulse, updateRewardTier],
   );
 
   const handleWrongCatch = useCallback(
@@ -1075,6 +1089,9 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
       if (pulseTimeoutRef.current !== null) {
         window.clearTimeout(pulseTimeoutRef.current);
       }
+      if (scorePulseTimeoutRef.current !== null) {
+        window.clearTimeout(scorePulseTimeoutRef.current);
+      }
     },
     [],
   );
@@ -1127,7 +1144,9 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
         </div>
 
         <div className="letter-sky-catcher__meta-pills" aria-live="polite">
-          <span className="letter-sky-catcher__meta-pill">⭐ {correctCatches}</span>
+          <span className={['letter-sky-catcher__meta-pill', scorePulse ? 'letter-sky-catcher__meta-pill--score-pulse' : ''].join(' ')}>
+            ⭐ {correctCatches}
+          </span>
           <span className="letter-sky-catcher__meta-pill">🎯 {blockIndex + 1}/{TOTAL_BLOCKS}</span>
         </div>
       </div>
@@ -1143,6 +1162,7 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
                 : index === blockIndex
                   ? 'letter-sky-catcher__progress-dot--active'
                   : '',
+              index === blockIndex && !sessionComplete ? 'letter-sky-catcher__progress-dot--active-live' : '',
             ].join(' ')}
             aria-hidden="true"
           />
@@ -1387,6 +1407,10 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
           font-size: var(--font-size-sm);
         }
 
+        .letter-sky-catcher__meta-pill--score-pulse {
+          animation: letter-sky-catcher-score-pulse 300ms ease-out;
+        }
+
         .letter-sky-catcher__progress {
           display: grid;
           grid-auto-flow: column;
@@ -1408,6 +1432,11 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
         .letter-sky-catcher__progress-dot--active {
           background: var(--color-accent-primary);
           transform: scaleY(1.35);
+        }
+
+        .letter-sky-catcher__progress-dot--active-live {
+          animation: letter-sky-catcher-progress-breathe 1.1s ease-in-out infinite;
+          transform-origin: center;
         }
 
         .letter-sky-catcher__status-row {
@@ -1701,6 +1730,18 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
           100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent-primary) 0%, transparent); }
         }
 
+        @keyframes letter-sky-catcher-score-pulse {
+          0% { transform: scale(1); }
+          55% { transform: scale(1.06); }
+          100% { transform: scale(1); }
+        }
+
+        @keyframes letter-sky-catcher-progress-breathe {
+          0% { transform: scaleY(1.35); }
+          50% { transform: scaleY(1.56); }
+          100% { transform: scaleY(1.35); }
+        }
+
         @media (max-width: 768px) {
           .letter-sky-catcher {
             padding: var(--space-md);
@@ -1717,6 +1758,8 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
 
         @media (prefers-reduced-motion: reduce) {
           .letter-sky-catcher__status-row--pulse,
+          .letter-sky-catcher__meta-pill--score-pulse,
+          .letter-sky-catcher__progress-dot--active-live,
           .letter-sky-catcher__falling-object,
           .letter-sky-catcher__falling-object--hint,
           .letter-sky-catcher__playfield--success,

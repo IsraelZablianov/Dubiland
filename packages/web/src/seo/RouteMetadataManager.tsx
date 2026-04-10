@@ -5,6 +5,7 @@ import { buildJsonLdScripts, isValidJsonLdPayload, runJsonLdSmokeChecks } from '
 import { getRouteMetadata, type RouteMetadataKey } from './routeMetadata';
 
 const MANAGED_JSON_LD_SELECTOR = 'script[type="application/ld+json"][data-dubiland-json-ld="true"]';
+const DEFAULT_OPEN_GRAPH_IMAGE_PATH = '/images/games/thumbnails/contact-sheet-16x10.webp';
 const PARENTS_FAQ_KEYS = [
   { questionKey: 'parents.faq1Q', answerKey: 'parents.faq1A' },
   { questionKey: 'parents.faq2Q', answerKey: 'parents.faq2A' },
@@ -21,6 +22,18 @@ function ensureNamedMetaTag(name: string): HTMLMetaElement {
 
   const tag = document.createElement('meta');
   tag.setAttribute('name', name);
+  document.head.append(tag);
+  return tag;
+}
+
+function ensurePropertyMetaTag(property: string): HTMLMetaElement {
+  const existingTag = document.head.querySelector<HTMLMetaElement>(`meta[property="${property}"]`);
+  if (existingTag) {
+    return existingTag;
+  }
+
+  const tag = document.createElement('meta');
+  tag.setAttribute('property', property);
   document.head.append(tag);
   return tag;
 }
@@ -65,17 +78,50 @@ function clearUnusedJsonLdScripts(activeSchemaIds: Set<string>): void {
   });
 }
 
-function resolveCanonicalOrigin(): string {
+function resolveCanonicalBaseUrl(): URL {
   const configuredSiteUrl = import.meta.env.VITE_SITE_URL;
   if (!configuredSiteUrl) {
-    return window.location.origin;
+    return new URL(import.meta.env.BASE_URL ?? '/', window.location.origin);
   }
 
   try {
-    return new URL(configuredSiteUrl).origin;
+    const siteUrl = new URL(configuredSiteUrl);
+    siteUrl.search = '';
+    siteUrl.hash = '';
+    return siteUrl;
   } catch {
-    return window.location.origin;
+    return new URL(import.meta.env.BASE_URL ?? '/', window.location.origin);
   }
+}
+
+function normalizeBasePath(pathname: string): string {
+  if (!pathname || pathname === '/') {
+    return '';
+  }
+
+  return `/${pathname.replace(/^\/+|\/+$/g, '')}`;
+}
+
+function normalizeRoutePath(pathname: string): string {
+  if (!pathname || pathname === '/') {
+    return '/';
+  }
+
+  return `/${pathname.replace(/^\/+/, '')}`;
+}
+
+function buildAbsoluteRouteUrl(pathname: string, canonicalBaseUrl: URL): string {
+  const basePath = normalizeBasePath(canonicalBaseUrl.pathname);
+  const routePath = normalizeRoutePath(pathname);
+  const url = new URL(canonicalBaseUrl.origin);
+
+  if (routePath === '/') {
+    url.pathname = basePath ? `${basePath}/` : '/';
+    return url.toString();
+  }
+
+  url.pathname = `${basePath}${routePath}`;
+  return url.toString();
 }
 
 function buildBreadcrumbItems(
@@ -133,21 +179,24 @@ export function RouteMetadataManager() {
   const { t: tPublic } = useTranslation('public');
   const { t: tCommon } = useTranslation('common');
   const location = useLocation();
-  const canonicalOrigin = useMemo(() => resolveCanonicalOrigin(), []);
+  const canonicalBaseUrl = useMemo(() => resolveCanonicalBaseUrl(), []);
+  const canonicalOrigin = useMemo(() => canonicalBaseUrl.origin, [canonicalBaseUrl]);
 
   const routeMetadata = useMemo(() => getRouteMetadata(location.pathname), [location.pathname]);
   const metadata = useMemo(() => {
     const canonicalUrl = routeMetadata.canonicalPath
-      ? new URL(routeMetadata.canonicalPath, canonicalOrigin).toString()
+      ? buildAbsoluteRouteUrl(routeMetadata.canonicalPath, canonicalBaseUrl)
       : null;
+    const openGraphImageUrl = buildAbsoluteRouteUrl(DEFAULT_OPEN_GRAPH_IMAGE_PATH, canonicalBaseUrl);
 
     return {
       title: tSeo(`routes.${routeMetadata.key}.title`),
       description: tSeo(`routes.${routeMetadata.key}.description`),
       canonicalUrl,
+      openGraphImageUrl,
       indexable: routeMetadata.indexable,
     };
-  }, [canonicalOrigin, routeMetadata, tSeo]);
+  }, [canonicalBaseUrl, routeMetadata, tSeo]);
 
   const jsonLdScripts = useMemo(() => {
     if (!routeMetadata.indexable || !routeMetadata.canonicalPath) {
@@ -198,6 +247,15 @@ export function RouteMetadataManager() {
     const descriptionTag = ensureNamedMetaTag('description');
     descriptionTag.content = metadata.description;
 
+    const ogTitleTag = ensurePropertyMetaTag('og:title');
+    ogTitleTag.content = metadata.title;
+
+    const ogDescriptionTag = ensurePropertyMetaTag('og:description');
+    ogDescriptionTag.content = metadata.description;
+
+    const ogImageTag = ensurePropertyMetaTag('og:image');
+    ogImageTag.content = metadata.openGraphImageUrl;
+
     if (metadata.canonicalUrl) {
       const canonicalTag = ensureLinkTag('link[rel="canonical"]', { rel: 'canonical' });
       canonicalTag.href = metadata.canonicalUrl;
@@ -207,9 +265,13 @@ export function RouteMetadataManager() {
         hreflang: 'he',
       });
       hreflangTag.href = metadata.canonicalUrl;
+
+      const ogUrlTag = ensurePropertyMetaTag('og:url');
+      ogUrlTag.content = metadata.canonicalUrl;
     } else {
       document.head.querySelector('link[rel="canonical"]')?.remove();
       document.head.querySelector('link[rel="alternate"][hreflang="he"]')?.remove();
+      document.head.querySelector('meta[property="og:url"]')?.remove();
     }
 
     const robotsTag = ensureNamedMetaTag('robots');

@@ -10,6 +10,7 @@ export interface TopicProgress {
 
 export interface ChildProgressData {
   topics: TopicProgress[];
+  gameProgressBySlug: Record<string, number>;
   dailyMinutes: number;
   loading: boolean;
 }
@@ -20,6 +21,7 @@ const EMPTY: ChildProgressData = {
     { slug: 'letters', progress: 0 },
     { slug: 'reading', progress: 0 },
   ],
+  gameProgressBySlug: {},
   dailyMinutes: 0,
   loading: false,
 };
@@ -39,7 +41,7 @@ export function useChildProgress(childId: string | null): ChildProgressData {
       try {
         const [topicsRes, gamesRes, summariesRes, sessionsRes] = await Promise.all([
           supabase.from('topics').select('id, slug'),
-          supabase.from('games').select('id, topic_id, is_published').eq('is_published', true),
+          supabase.from('games').select('id, slug, topic_id, is_published').eq('is_published', true),
           supabase.from('child_game_summaries').select('game_id, best_stars').eq('child_id', childId!),
           supabase
             .from('game_sessions')
@@ -57,6 +59,7 @@ export function useChildProgress(childId: string | null): ChildProgressData {
 
         const topicIdBySlug = new Map(topics.map((t) => [t.id, t.slug as TopicSlug]));
         const starsById = new Map(summaries.map((s) => [s.game_id, s.best_stars]));
+        const gameSlugById = new Map(games.map((game) => [game.id, game.slug]));
 
         const topicGameCount = new Map<TopicSlug, number>();
         const topicStarSum = new Map<TopicSlug, number>();
@@ -82,6 +85,17 @@ export function useChildProgress(childId: string | null): ChildProgressData {
           },
         );
 
+        const gameProgressBySlug: Record<string, number> = {};
+        for (const summary of summaries) {
+          const slug = gameSlugById.get(summary.game_id);
+          if (!slug) continue;
+
+          const safeStars = Number.isFinite(summary.best_stars) ? Number(summary.best_stars) : 0;
+          const progress = Math.max(0, Math.min(100, Math.round((safeStars / 3) * 100)));
+          const previous = gameProgressBySlug[slug] ?? 0;
+          gameProgressBySlug[slug] = Math.max(previous, progress);
+        }
+
         let dailyMs = 0;
         for (const s of sessions) {
           if (s.ended_at && s.started_at) {
@@ -92,6 +106,7 @@ export function useChildProgress(childId: string | null): ChildProgressData {
         if (!cancelled) {
           setData({
             topics: topicProgress,
+            gameProgressBySlug,
             dailyMinutes: Math.round(dailyMs / 60_000),
             loading: false,
           });

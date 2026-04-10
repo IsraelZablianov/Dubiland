@@ -9,10 +9,9 @@ import {
   type FeatureIllustrationKind,
   type TopicIllustrationSlug,
 } from '@/components/illustrations';
-import { FloatingElement } from '@/components/motion';
 import { useAudioManager } from '@/hooks/useAudioManager';
 import type { RouteTopicSlug } from '@/lib/topicSlugMap';
-import { listPublishedVideosByRouteTopic, type PublishedTopicVideo } from '@/lib/videosRepository';
+import type { PublishedTopicVideo } from '@/lib/videosRepository';
 
 type TopicSlug = RouteTopicSlug;
 type VideoLoadStatus = 'idle' | 'loading' | 'ready' | 'error';
@@ -137,6 +136,7 @@ export default function TopicPillar({ topic }: TopicPillarProps) {
   const audio = useAudioManager();
   const [videos, setVideos] = useState<PublishedTopicVideo[]>([]);
   const [videoLoadStatus, setVideoLoadStatus] = useState<VideoLoadStatus>('idle');
+  const [shouldLoadVideos, setShouldLoadVideos] = useState(false);
 
   const config = TOPIC_CONFIG[topic];
   const getCommonText = useCallback((rawKey: string) => tCommon(stripCommonNamespace(rawKey) as any), [tCommon]);
@@ -149,9 +149,46 @@ export default function TopicPillar({ topic }: TopicPillarProps) {
   );
 
   useEffect(() => {
+    if (topic !== 'letters') {
+      setShouldLoadVideos(false);
+      return;
+    }
+
+    if (shouldLoadVideos) {
+      return;
+    }
+
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const maybeEnableVideoLoading = () => {
+      if (window.scrollY > 64) {
+        setShouldLoadVideos(true);
+      }
+    };
+
+    maybeEnableVideoLoading();
+
+    if (window.scrollY > 64) {
+      return;
+    }
+
+    const onScroll = () => {
+      maybeEnableVideoLoading();
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, [shouldLoadVideos, topic]);
+
+  useEffect(() => {
     let active = true;
 
-    if (topic !== 'letters') {
+    if (topic !== 'letters' || !shouldLoadVideos) {
       setVideos([]);
       setVideoLoadStatus('idle');
       return () => {
@@ -161,7 +198,8 @@ export default function TopicPillar({ topic }: TopicPillarProps) {
 
     setVideoLoadStatus('loading');
 
-    listPublishedVideosByRouteTopic({ routeTopicSlug: topic })
+    void import('@/lib/videosRepository')
+      .then(({ listPublishedVideosByRouteTopic }) => listPublishedVideosByRouteTopic({ routeTopicSlug: topic }))
       .then((nextVideos) => {
         if (!active) return;
         setVideos(nextVideos);
@@ -176,7 +214,7 @@ export default function TopicPillar({ topic }: TopicPillarProps) {
     return () => {
       active = false;
     };
-  }, [topic]);
+  }, [shouldLoadVideos, topic]);
 
   const lettersSeriesTitle = getCommonText('common.videos.lettersSeries.title');
   const lettersSeriesSubtitle = getCommonText('common.videos.lettersSeries.subtitle');
@@ -208,9 +246,9 @@ export default function TopicPillar({ topic }: TopicPillarProps) {
             </div>
           </div>
 
-          <FloatingElement className="topic-pillar__hero-mascot" durationMs={3600}>
+          <div className="topic-pillar__hero-mascot" aria-hidden="true">
             <MascotIllustration variant="hero" size={190} />
-          </FloatingElement>
+          </div>
         </div>
       </section>
 
@@ -688,6 +726,7 @@ export default function TopicPillar({ topic }: TopicPillarProps) {
 
           .topic-pillar__hero-mascot {
             justify-self: center;
+            display: none;
           }
 
           .topic-pillar__letters-series-row {

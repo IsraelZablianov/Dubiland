@@ -25,15 +25,42 @@ OUTPUT_BASE = PROJECT_ROOT / "packages" / "web" / "public" / "audio" / "he"
 PUBLIC_ROOT = PROJECT_ROOT / "packages" / "web" / "public"
 LOCALE_DIR = PROJECT_ROOT / "packages" / "web" / "src" / "i18n" / "locales" / "he"
 
+AUDIO_OVERRIDES_PATH = LOCALE_DIR / "audio-overrides.json"
 LOCALE_FILES = [
-    {"namespace": ns, "path": LOCALE_DIR / f"{ns}.json"}
-    for ns in ["common", "onboarding"]
-    if (LOCALE_DIR / f"{ns}.json").exists()
+    {"namespace": path.stem, "path": path}
+    for path in sorted(LOCALE_DIR.glob("*.json"))
+    if path.name != AUDIO_OVERRIDES_PATH.name
 ]
 
-AUDIO_OVERRIDES_PATH = LOCALE_DIR / "audio-overrides.json"
-
 LANG = "iw"  # gTTS uses 'iw' for Hebrew
+
+RANGE_PATTERN = re.compile(r"\b(\d{1,2})\s*[–—-]\s*(\d{1,2})\b")
+STANDALONE_NUMBER_PATTERN = re.compile(r"\b(10|[0-9])\b")
+PUNCTUATION_PATTERN = re.compile(r"[!?,.:;…\"'׳״`“”„()\[\]{}<>\\|]")
+MULTI_DASH_PATTERN = re.compile(r"[–—-]+")
+
+SYMBOL_REPLACEMENTS = {
+    "&": " ו ",
+    "+": " ועוד ",
+    "=": " שווה ",
+    "%": " אחוז ",
+    "/": " או ",
+    "@": " ב ",
+}
+
+HEBREW_NUMBERS = {
+    "0": "אפס",
+    "1": "אחת",
+    "2": "שתיים",
+    "3": "שלוש",
+    "4": "ארבע",
+    "5": "חמש",
+    "6": "שש",
+    "7": "שבע",
+    "8": "שמונה",
+    "9": "תשע",
+    "10": "עשר",
+}
 
 
 def load_audio_overrides() -> dict:
@@ -78,6 +105,28 @@ def strip_template_vars(text: str) -> str:
     return re.sub(r"\{\{.*?\}\}", "", text).strip()
 
 
+def to_hebrew_number(token: str) -> str:
+    return HEBREW_NUMBERS.get(token, token)
+
+
+def normalize_audio_text(text: str) -> str:
+    """Normalize symbols and punctuation that hurt Hebrew TTS clarity."""
+    normalized = text
+    normalized = RANGE_PATTERN.sub(
+        lambda m: f"{to_hebrew_number(m.group(1))} עד {to_hebrew_number(m.group(2))}",
+        normalized,
+    )
+
+    for symbol, replacement in SYMBOL_REPLACEMENTS.items():
+        normalized = normalized.replace(symbol, replacement)
+
+    normalized = STANDALONE_NUMBER_PATTERN.sub(lambda m: to_hebrew_number(m.group(1)), normalized)
+    normalized = PUNCTUATION_PATTERN.sub(" ", normalized)
+    normalized = MULTI_DASH_PATTERN.sub(" ", normalized)
+    normalized = re.sub(r"\s+", " ", normalized).strip()
+    return normalized
+
+
 def load_locale_entries():
     overrides = load_audio_overrides()
     entries = []
@@ -88,9 +137,10 @@ def load_locale_entries():
         for item in flattened:
             key = item["key"]
             if key in overrides:
-                audio_text = overrides[key]
+                source_text = overrides[key]
             else:
-                audio_text = strip_template_vars(item["text"])
+                source_text = strip_template_vars(item["text"])
+            audio_text = normalize_audio_text(source_text)
             if not audio_text:
                 continue
             entries.append({

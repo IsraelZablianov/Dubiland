@@ -327,3 +327,35 @@ This spiraled into 31 `[CTO]` lock-cleanup meta-tasks, 7 `[Ops Alert]` meta-task
 - Checking silent agents should be the FIRST action in every watchdog heartbeat
 - If watchdog detects 3+ silent agents at once, invoke all of them immediately rather than one at a time
 - Use the board-context invoke endpoint (no auth header on localhost) since agent-scoped tokens cannot invoke cross-agent heartbeats
+
+## 2026-04-10 — `blockedByIssueIds` writes are not visible in issue payloads
+
+**Incident:** During blocker normalization, PATCH requests including `blockedByIssueIds` succeeded (HTTP 200), but subsequent `GET /api/issues/{id}` responses still returned `blockedByIssueIds: null` and no dependency fields.
+
+**Impact:** Heuristic checks that rely on reading dependency arrays from issue payloads can misclassify legitimate blockers as phantom blockers.
+
+**Mitigation:** For now, treat blocker linkage as comment-documented unless/until dependency fields are reliably exposed. Keep phantom-blocker cleanup tied to latest blocker comments plus lock-state verification.
+
+## 2026-04-10 — Priority redirect requires `backlog`, not just `todo`
+
+**Incident:** Non-handbook lanes moved from `in_progress` to `todo` were immediately re-picked by active agents in the same heartbeat, reintroducing priority drift.
+
+**Mitigation:** When board priority requires hard redirection (e.g., handbook-first launch), move non-priority lanes to `backlog` with an explicit resume condition tied to the priority issue.
+
+## 2026-04-10 — 2.5-hour system stall: all blocked tasks had resolved dependencies but nobody unblocked them
+
+**Incident:** After a wave of handbook implementation completions (DUB-463, DUB-458, DUB-468, DUB-459, DUB-445–451 all done by 17:53 UTC), 6 downstream tasks (QA, Performance, Backend, CMO) remained `blocked` for 2.5+ hours. All 20 agents were idle, waking every 10 minutes, finding nothing actionable, and exiting. Zero progress for 2.5 hours until the board manually intervened.
+
+**Root cause (triple failure):**
+
+1. **Agents soft-blocked via comments, not formal links.** QA set DUB-452 to `blocked` and wrote "waiting for DUB-458, DUB-463" in a comment — but never set `blockedByIssueIds`. When those tasks completed, Paperclip had no way to auto-unblock.
+
+2. **`blockedByIssueIds` API bug made heuristic #22/#23 blind.** The API returns `null` for this field regardless of what was set. Heuristic #22 (phantom blocker) couldn't distinguish "no dependency" from "dependency not returned by API." The watchdog couldn't confidently unblock anything.
+
+3. **Ops Watchdog itself was silent for 2.5 hours.** Last heartbeat at 16:33 UTC, didn't run again until board intervention. With 20 agents competing for limited codex_local concurrency slots, the watchdog rarely got a turn.
+
+**Impact:** 6 blocked tasks × 2.5 hours = ~15 agent-hours wasted. 14 agents had zero work and sat idle.
+
+**Fix applied:** Added heuristic #29 (comment-referenced blocker resolution) and heuristic #30/#31 to AGENTS.md. Heuristic #29 reads blocked task comments, extracts DUB-ID references, checks if they're done, and unblocks automatically. This bypasses the broken `blockedByIssueIds` API entirely.
+
+**Prevention:** Heuristic #29 procedure must run BEFORE heuristic #22 on every heartbeat. It catches the most common stall pattern: agent writes "waiting for DUB-X" in a comment, DUB-X completes, nobody notices.

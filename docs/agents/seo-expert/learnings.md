@@ -126,3 +126,18 @@
 
 - A fresh host can pass all direct route checks (`200` on `/`, `/letters`, `/parents/faq`, `/robots.txt`) while official validator endpoints remain blocked by anti-abuse/rate-limit responses from the runtime (`HTTP 429` or Google-sorry redirect).
 - In this state, unblock criteria should require raw validator JSON success payloads captured from a known-clean runtime, not just route uptime proofs.
+
+## 2026-04-10 — GitHub Pages Crawlability Gap on Path Routes (DUB-419)
+
+- Even when browser rendering reaches route content through JS fallback, non-JS probes (`curl -I`) can still return `404` on intended indexable paths; this is a launch-critical crawlability signal and must be treated as a blocker.
+- For SEO acceptance on static hosting, require direct `HTTP 200` on indexable paths before marking route rollout complete; JS-only recovery is insufficient.
+
+## 2026-04-10 — Canonical Base-Path Loss Pattern
+
+- Using `new URL(VITE_SITE_URL).origin` in metadata code drops deployment pathname segments (for example `/Dubiland`) and silently generates wrong canonical/hreflang URLs.
+- Canonical builders for subpath deployments must preserve canonical base path, not only origin.
+
+## 2026-04-10 — Crawl Asset Host Drift Detection
+
+- `robots.txt`, `sitemap.xml`, canonical URLs, and `llms.txt` can drift independently if host values are static in multiple files.
+- Keep crawl assets host-driven from a single deployment canonical source and verify all published URLs resolve in the same runtime heartbeat.

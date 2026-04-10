@@ -1,22 +1,18 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { AgeRangeFilterBar, Button, Card, GameCard, TopicCard } from '@/components/design-system';
-import { MascotIllustration, TopicIllustration } from '@/components/illustrations';
+import { AgeRangeFilterBar, Button, Card, GameCard } from '@/components/design-system';
+import { MascotIllustration } from '@/components/illustrations';
 import { FloatingElement, SuccessCelebration } from '@/components/motion';
 import { DAILY_LEARNING_GOAL_MINUTES } from '@/constants/learningGoals';
 import { useAudioManager } from '@/hooks/useAudioManager';
 import { useChildProgress } from '@/hooks/useChildProgress';
 import { getPersistedAgeBandOverride, persistAgeBandOverride } from '@/lib/ageFilterPreferences';
-import {
-  listCatalogForChild,
-  type CatalogAgeBand,
-  type CatalogItem,
-  type CatalogTopicSlug,
-} from '@/lib/catalogRepository';
+import { listCatalogForChild, type CatalogAgeBand, type CatalogItem } from '@/lib/catalogRepository';
 import { getActiveChildProfile } from '@/lib/session';
 
 type TopicSlug = 'math' | 'letters' | 'reading';
+type HomeSectionSlug = 'letters' | 'reading' | 'math' | 'books';
 type AgeBand = CatalogAgeBand;
 type ProfileAgeBand = Exclude<AgeBand, 'all'>;
 type HomeGameSlug =
@@ -35,163 +31,42 @@ type HomeGameSlug =
   | 'rootFamilyStickers'
   | 'confusableLetterContrast';
 
-interface TopicState {
-  slug: TopicSlug;
-  progress: number;
-}
-
 interface TopicGameOption {
   slug: HomeGameSlug;
   route: string;
-  thumbnailUrl?: string;
+  thumbnailUrl: string;
   difficulty: 1 | 2 | 3 | 4 | 5;
   primaryAgeBand: ProfileAgeBand;
   supportAgeBands: ProfileAgeBand[];
+  topic: TopicSlug;
+  section: HomeSectionSlug;
 }
 
 interface HomeGameCardItem {
   id: string;
   slug: HomeGameSlug;
   route: string;
-  thumbnailUrl?: string;
+  thumbnailUrl: string;
   difficulty: 1 | 2 | 3 | 4 | 5;
   primaryAgeBand: ProfileAgeBand;
   supportAgeBands: ProfileAgeBand[];
   topic: TopicSlug;
+  section: HomeSectionSlug;
   ageMatchRank: 1 | 2 | 3;
   sortOrder: number;
 }
 
 const AGE_BANDS: ProfileAgeBand[] = ['3-4', '4-5', '5-6', '6-7'];
 const NAVIGATION_AUDIO_LEAD_MS = 140;
+const DEFAULT_GAME_THUMBNAIL = '/images/games/thumbnails/contact-sheet-16x10.webp';
 
-const GAME_OPTIONS_BY_TOPIC: Record<TopicSlug, TopicGameOption[]> = {
-  math: [
-    {
-      slug: 'countingPicnic',
-      route: '/games/numbers/counting-picnic',
-      thumbnailUrl: '/images/games/thumbnails/countingPicnic/thumb-16x10.webp',
-      difficulty: 2,
-      primaryAgeBand: '3-4',
-      supportAgeBands: ['4-5'],
-    },
-    {
-      slug: 'moreOrLessMarket',
-      route: '/games/numbers/more-or-less-market',
-      difficulty: 2,
-      primaryAgeBand: '4-5',
-      supportAgeBands: ['5-6'],
-    },
-    {
-      slug: 'numberLineJumps',
-      route: '/games/numbers/number-line-jumps',
-      difficulty: 3,
-      primaryAgeBand: '5-6',
-      supportAgeBands: ['6-7'],
-    },
-    {
-      slug: 'colorGarden',
-      route: '/games/colors/color-garden',
-      thumbnailUrl: '/images/games/thumbnails/colorGarden/thumb-16x10.webp',
-      difficulty: 2,
-      primaryAgeBand: '3-4',
-      supportAgeBands: ['4-5'],
-    },
-    {
-      slug: 'shapeSafari',
-      route: '/games/numbers/shape-safari',
-      difficulty: 2,
-      primaryAgeBand: '3-4',
-      supportAgeBands: ['4-5'],
-    },
-  ],
-  letters: [
-    {
-      slug: 'letterSoundMatch',
-      route: '/games/letters/letter-sound-match',
-      thumbnailUrl: '/images/games/thumbnails/letterSoundMatch/thumb-16x10.webp',
-      difficulty: 3,
-      primaryAgeBand: '4-5',
-      supportAgeBands: ['5-6'],
-    },
-    {
-      slug: 'letterTracingTrail',
-      route: '/games/letters/letter-tracing-trail',
-      thumbnailUrl: '/images/games/thumbnails/letterTracingTrail/thumb-16x10.webp',
-      difficulty: 2,
-      primaryAgeBand: '5-6',
-      supportAgeBands: ['6-7'],
-    },
-    {
-      slug: 'letterSkyCatcher',
-      route: '/games/letters/letter-sky-catcher',
-      difficulty: 3,
-      primaryAgeBand: '4-5',
-      supportAgeBands: ['5-6', '6-7'],
-    },
-  ],
-  reading: [
-    {
-      slug: 'pictureToWordBuilder',
-      route: '/games/reading/picture-to-word-builder',
-      thumbnailUrl: '/images/games/thumbnails/pictureToWordBuilder/thumb-16x10.webp',
-      difficulty: 3,
-      primaryAgeBand: '5-6',
-      supportAgeBands: ['6-7'],
-    },
-    {
-      slug: 'sightWordSprint',
-      route: '/games/reading/sight-word-sprint',
-      difficulty: 3,
-      primaryAgeBand: '5-6',
-      supportAgeBands: ['6-7'],
-    },
-    {
-      slug: 'decodableMicroStories',
-      route: '/games/reading/decodable-micro-stories',
-      difficulty: 4,
-      primaryAgeBand: '5-6',
-      supportAgeBands: ['6-7'],
-    },
-    {
-      slug: 'interactiveHandbook',
-      route: '/games/reading/interactive-handbook',
-      difficulty: 3,
-      primaryAgeBand: '4-5',
-      supportAgeBands: ['5-6', '6-7'],
-    },
-    {
-      slug: 'rootFamilyStickers',
-      route: '/games/reading/root-family-stickers',
-      difficulty: 4,
-      primaryAgeBand: '6-7',
-      supportAgeBands: ['5-6'],
-    },
-    {
-      slug: 'confusableLetterContrast',
-      route: '/games/reading/confusable-letter-contrast',
-      difficulty: 4,
-      primaryAgeBand: '5-6',
-      supportAgeBands: ['6-7'],
-    },
-  ],
-};
+const SECTION_ORDER: HomeSectionSlug[] = ['letters', 'reading', 'math', 'books'];
 
-const GAME_OPTIONS_BY_SLUG: Record<HomeGameSlug, TopicGameOption & { topic: TopicSlug }> = {
-  countingPicnic: { ...GAME_OPTIONS_BY_TOPIC.math[0], topic: 'math' },
-  moreOrLessMarket: { ...GAME_OPTIONS_BY_TOPIC.math[1], topic: 'math' },
-  numberLineJumps: { ...GAME_OPTIONS_BY_TOPIC.math[2], topic: 'math' },
-  colorGarden: { ...GAME_OPTIONS_BY_TOPIC.math[3], topic: 'math' },
-  shapeSafari: { ...GAME_OPTIONS_BY_TOPIC.math[4], topic: 'math' },
-  letterSoundMatch: { ...GAME_OPTIONS_BY_TOPIC.letters[0], topic: 'letters' },
-  letterTracingTrail: { ...GAME_OPTIONS_BY_TOPIC.letters[1], topic: 'letters' },
-  letterSkyCatcher: { ...GAME_OPTIONS_BY_TOPIC.letters[2], topic: 'letters' },
-  pictureToWordBuilder: { ...GAME_OPTIONS_BY_TOPIC.reading[0], topic: 'reading' },
-  sightWordSprint: { ...GAME_OPTIONS_BY_TOPIC.reading[1], topic: 'reading' },
-  decodableMicroStories: { ...GAME_OPTIONS_BY_TOPIC.reading[2], topic: 'reading' },
-  interactiveHandbook: { ...GAME_OPTIONS_BY_TOPIC.reading[3], topic: 'reading' },
-  rootFamilyStickers: { ...GAME_OPTIONS_BY_TOPIC.reading[4], topic: 'reading' },
-  confusableLetterContrast: { ...GAME_OPTIONS_BY_TOPIC.reading[5], topic: 'reading' },
+const SECTION_ICON_BY_SLUG: Record<HomeSectionSlug, string> = {
+  letters: '🔤',
+  reading: '🧠',
+  math: '🔢',
+  books: '📚',
 };
 
 const TOPIC_ICON_BY_SLUG: Record<TopicSlug, string> = {
@@ -199,6 +74,157 @@ const TOPIC_ICON_BY_SLUG: Record<TopicSlug, string> = {
   letters: '🔤',
   reading: '📖',
 };
+
+const HOME_GAME_OPTIONS: TopicGameOption[] = [
+  {
+    slug: 'countingPicnic',
+    route: '/games/numbers/counting-picnic',
+    thumbnailUrl: '/images/games/thumbnails/countingPicnic/thumb-16x10.webp',
+    difficulty: 2,
+    primaryAgeBand: '3-4',
+    supportAgeBands: ['4-5'],
+    topic: 'math',
+    section: 'math',
+  },
+  {
+    slug: 'moreOrLessMarket',
+    route: '/games/numbers/more-or-less-market',
+    thumbnailUrl: DEFAULT_GAME_THUMBNAIL,
+    difficulty: 2,
+    primaryAgeBand: '4-5',
+    supportAgeBands: ['5-6'],
+    topic: 'math',
+    section: 'math',
+  },
+  {
+    slug: 'numberLineJumps',
+    route: '/games/numbers/number-line-jumps',
+    thumbnailUrl: DEFAULT_GAME_THUMBNAIL,
+    difficulty: 3,
+    primaryAgeBand: '5-6',
+    supportAgeBands: ['6-7'],
+    topic: 'math',
+    section: 'math',
+  },
+  {
+    slug: 'colorGarden',
+    route: '/games/colors/color-garden',
+    thumbnailUrl: '/images/games/thumbnails/colorGarden/thumb-16x10.webp',
+    difficulty: 2,
+    primaryAgeBand: '3-4',
+    supportAgeBands: ['4-5'],
+    topic: 'math',
+    section: 'math',
+  },
+  {
+    slug: 'shapeSafari',
+    route: '/games/numbers/shape-safari',
+    thumbnailUrl: DEFAULT_GAME_THUMBNAIL,
+    difficulty: 2,
+    primaryAgeBand: '3-4',
+    supportAgeBands: ['4-5'],
+    topic: 'math',
+    section: 'math',
+  },
+  {
+    slug: 'letterSoundMatch',
+    route: '/games/letters/letter-sound-match',
+    thumbnailUrl: '/images/games/thumbnails/letterSoundMatch/thumb-16x10.webp',
+    difficulty: 3,
+    primaryAgeBand: '4-5',
+    supportAgeBands: ['5-6'],
+    topic: 'letters',
+    section: 'letters',
+  },
+  {
+    slug: 'letterTracingTrail',
+    route: '/games/letters/letter-tracing-trail',
+    thumbnailUrl: '/images/games/thumbnails/letterTracingTrail/thumb-16x10.webp',
+    difficulty: 2,
+    primaryAgeBand: '5-6',
+    supportAgeBands: ['6-7'],
+    topic: 'letters',
+    section: 'letters',
+  },
+  {
+    slug: 'letterSkyCatcher',
+    route: '/games/letters/letter-sky-catcher',
+    thumbnailUrl: DEFAULT_GAME_THUMBNAIL,
+    difficulty: 3,
+    primaryAgeBand: '4-5',
+    supportAgeBands: ['5-6', '6-7'],
+    topic: 'letters',
+    section: 'letters',
+  },
+  {
+    slug: 'pictureToWordBuilder',
+    route: '/games/reading/picture-to-word-builder',
+    thumbnailUrl: '/images/games/thumbnails/pictureToWordBuilder/thumb-16x10.webp',
+    difficulty: 3,
+    primaryAgeBand: '5-6',
+    supportAgeBands: ['6-7'],
+    topic: 'reading',
+    section: 'reading',
+  },
+  {
+    slug: 'sightWordSprint',
+    route: '/games/reading/sight-word-sprint',
+    thumbnailUrl: DEFAULT_GAME_THUMBNAIL,
+    difficulty: 3,
+    primaryAgeBand: '5-6',
+    supportAgeBands: ['6-7'],
+    topic: 'reading',
+    section: 'reading',
+  },
+  {
+    slug: 'decodableMicroStories',
+    route: '/games/reading/decodable-micro-stories',
+    thumbnailUrl: DEFAULT_GAME_THUMBNAIL,
+    difficulty: 4,
+    primaryAgeBand: '5-6',
+    supportAgeBands: ['6-7'],
+    topic: 'reading',
+    section: 'reading',
+  },
+  {
+    slug: 'interactiveHandbook',
+    route: '/games/reading/interactive-handbook',
+    thumbnailUrl: '/images/games/thumbnails/interactiveHandbook/thumb-16x10.webp',
+    difficulty: 3,
+    primaryAgeBand: '3-4',
+    supportAgeBands: ['4-5', '5-6', '6-7'],
+    topic: 'reading',
+    section: 'books',
+  },
+  {
+    slug: 'rootFamilyStickers',
+    route: '/games/reading/root-family-stickers',
+    thumbnailUrl: DEFAULT_GAME_THUMBNAIL,
+    difficulty: 4,
+    primaryAgeBand: '6-7',
+    supportAgeBands: ['5-6'],
+    topic: 'reading',
+    section: 'reading',
+  },
+  {
+    slug: 'confusableLetterContrast',
+    route: '/games/reading/confusable-letter-contrast',
+    thumbnailUrl: DEFAULT_GAME_THUMBNAIL,
+    difficulty: 4,
+    primaryAgeBand: '5-6',
+    supportAgeBands: ['6-7'],
+    topic: 'reading',
+    section: 'reading',
+  },
+];
+
+const GAME_OPTIONS_BY_SLUG: Record<HomeGameSlug, TopicGameOption> = HOME_GAME_OPTIONS.reduce(
+  (acc, option) => {
+    acc[option.slug] = option;
+    return acc;
+  },
+  {} as Record<HomeGameSlug, TopicGameOption>,
+);
 
 function toKebabCase(value: string): string {
   return value
@@ -216,15 +242,15 @@ function isProfileAgeBand(value: string | undefined): value is ProfileAgeBand {
   return value === '3-4' || value === '4-5' || value === '5-6' || value === '6-7';
 }
 
-function toCatalogTopicSlug(topic: TopicSlug): CatalogTopicSlug {
-  return topic;
-}
-
 function toBandKey(band: ProfileAgeBand): '3_4' | '4_5' | '5_6' | '6_7' {
   if (band === '3-4') return '3_4';
   if (band === '4-5') return '4_5';
   if (band === '5-6') return '5_6';
   return '6_7';
+}
+
+function toSectionOrderIndex(section: HomeSectionSlug): number {
+  return SECTION_ORDER.indexOf(section);
 }
 
 function toAgeMatchRank(
@@ -249,26 +275,53 @@ function toAgeMatchRank(
   return 3;
 }
 
-function buildFallbackGames(
-  topic: TopicSlug,
-  selectedAgeBand: AgeBand,
-  profileAgeBand?: ProfileAgeBand,
-): HomeGameCardItem[] {
-  return GAME_OPTIONS_BY_TOPIC[topic]
+function buildFallbackGames(selectedAgeBand: AgeBand, profileAgeBand?: ProfileAgeBand): HomeGameCardItem[] {
+  return HOME_GAME_OPTIONS
     .map((option, index) => ({
-      id: `local-${topic}-${option.slug}`,
+      id: `local-${option.slug}`,
       slug: option.slug,
       route: option.route,
       thumbnailUrl: option.thumbnailUrl,
       difficulty: option.difficulty,
       primaryAgeBand: option.primaryAgeBand,
       supportAgeBands: option.supportAgeBands,
-      topic,
+      topic: option.topic,
+      section: option.section,
       ageMatchRank: toAgeMatchRank(option, selectedAgeBand, profileAgeBand),
       sortOrder: index,
     }))
     .filter((option) => selectedAgeBand === 'all' || option.ageMatchRank < 3)
-    .sort((a, b) => a.ageMatchRank - b.ageMatchRank || a.sortOrder - b.sortOrder);
+    .sort(
+      (a, b) =>
+        a.ageMatchRank - b.ageMatchRank ||
+        toSectionOrderIndex(a.section) - toSectionOrderIndex(b.section) ||
+        a.sortOrder - b.sortOrder,
+    );
+}
+
+function mergeCatalogWithFallbackGames(
+  catalogGames: HomeGameCardItem[] | null,
+  fallbackGames: HomeGameCardItem[],
+): HomeGameCardItem[] {
+  if (!catalogGames || catalogGames.length === 0) {
+    return fallbackGames;
+  }
+
+  const mergedGames = [...catalogGames];
+  const includedSlugs = new Set(catalogGames.map((game) => game.slug));
+
+  fallbackGames.forEach((game) => {
+    if (!includedSlugs.has(game.slug)) {
+      mergedGames.push(game);
+    }
+  });
+
+  return mergedGames.sort(
+    (a, b) =>
+      a.ageMatchRank - b.ageMatchRank ||
+      toSectionOrderIndex(a.section) - toSectionOrderIndex(b.section) ||
+      a.sortOrder - b.sortOrder,
+  );
 }
 
 function toHomeGameCard(item: CatalogItem): HomeGameCardItem | null {
@@ -290,6 +343,7 @@ function toHomeGameCard(item: CatalogItem): HomeGameCardItem | null {
     primaryAgeBand: item.primaryAgeBand,
     supportAgeBands: item.supportAgeBands,
     topic: fallback.topic,
+    section: fallback.section,
     ageMatchRank: item.ageMatchRank,
     sortOrder: item.sortOrder,
   };
@@ -315,6 +369,13 @@ function shouldUseManualOverride(profileAgeBand: ProfileAgeBand | undefined, sel
   return selectedAgeBand !== profileAgeBand;
 }
 
+function toStars(progressPercent: number): number {
+  if (progressPercent >= 100) return 3;
+  if (progressPercent >= 67) return 2;
+  if (progressPercent >= 25) return 1;
+  return 0;
+}
+
 export default function Home() {
   const { t } = useTranslation('common');
   const navigate = useNavigate();
@@ -327,16 +388,17 @@ export default function Home() {
 
   const childProgress = useChildProgress(childId);
 
-  const topics = useMemo<TopicState[]>(
+  const topicProgressBySlug = useMemo(
     () =>
-      childProgress.topics.map((tp) => ({
-        slug: tp.slug,
-        progress: tp.progress,
-      })),
+      childProgress.topics.reduce(
+        (acc, topic) => {
+          acc[topic.slug] = topic.progress;
+          return acc;
+        },
+        { math: 0, letters: 0, reading: 0 } as Record<TopicSlug, number>,
+      ),
     [childProgress.topics],
   );
-
-  const [selectedTopic, setSelectedTopic] = useState<TopicSlug>(topics[0]?.slug ?? 'math');
 
   const [selectedAgeBand, setSelectedAgeBand] = useState<AgeBand>(() => {
     const persisted = getPersistedAgeBandOverride(childId);
@@ -379,7 +441,9 @@ export default function Home() {
     }
 
     const requestedAgeBand: AgeBand | null = profileAgeBand
-      ? (isManualOverride ? selectedAgeBand : null)
+      ? isManualOverride
+        ? selectedAgeBand
+        : null
       : selectedAgeBand;
 
     setCatalogGames(null);
@@ -388,9 +452,9 @@ export default function Home() {
     listCatalogForChild({
       childId,
       contentTypes: ['game'],
-      topicSlug: toCatalogTopicSlug(selectedTopic),
+      topicSlug: null,
       ageBand: requestedAgeBand,
-      limit: 50,
+      limit: 80,
       offset: 0,
     })
       .then((items) => {
@@ -405,7 +469,12 @@ export default function Home() {
         const mapped = items
           .map((item) => toHomeGameCard(item))
           .filter((item): item is HomeGameCardItem => item !== null)
-          .sort((a, b) => a.ageMatchRank - b.ageMatchRank || a.sortOrder - b.sortOrder);
+          .sort(
+            (a, b) =>
+              a.ageMatchRank - b.ageMatchRank ||
+              toSectionOrderIndex(a.section) - toSectionOrderIndex(b.section) ||
+              a.sortOrder - b.sortOrder,
+          );
 
         setCatalogGames(mapped);
         setCatalogLoadStatus('ready');
@@ -419,27 +488,73 @@ export default function Home() {
     return () => {
       active = false;
     };
-  }, [childId, isManualOverride, profileAgeBand, selectedAgeBand, selectedTopic]);
+  }, [childId, isManualOverride, profileAgeBand, selectedAgeBand]);
 
-  const selectedTopicProgress = topics.find((topic) => topic.slug === selectedTopic)?.progress ?? 0;
   const dailyGoalMinutes = childProgress.dailyMinutes;
   const dailyGoalTarget = DAILY_LEARNING_GOAL_MINUTES;
   const dailyGoalProgress = Math.min(100, Math.round((dailyGoalMinutes / dailyGoalTarget) * 100));
 
   const fallbackGames = useMemo(
-    () => buildFallbackGames(selectedTopic, selectedAgeBand, profileAgeBand),
-    [profileAgeBand, selectedAgeBand, selectedTopic],
+    () => buildFallbackGames(selectedAgeBand, profileAgeBand),
+    [profileAgeBand, selectedAgeBand],
   );
 
-  const selectedTopicGames = catalogGames ?? fallbackGames;
+  const allVisibleGames = useMemo(
+    () => mergeCatalogWithFallbackGames(catalogGames, fallbackGames),
+    [catalogGames, fallbackGames],
+  );
 
-  const routeByTopic: Record<TopicSlug, string> = {
-    math: GAME_OPTIONS_BY_TOPIC.math[0]?.route ?? '/games/colors/color-garden',
-    letters: GAME_OPTIONS_BY_TOPIC.letters[0]?.route ?? '/letters',
-    reading: GAME_OPTIONS_BY_TOPIC.reading[0]?.route ?? '/reading',
-  };
+  const sectionedGames = useMemo(() => {
+    const result: Record<HomeSectionSlug, HomeGameCardItem[]> = {
+      letters: [],
+      reading: [],
+      math: [],
+      books: [],
+    };
 
-  const startRoute = selectedTopicGames[0]?.route ?? routeByTopic[selectedTopic];
+    allVisibleGames.forEach((game) => {
+      result[game.section].push(game);
+    });
+
+    return result;
+  }, [allVisibleGames]);
+
+  const featuredGames = useMemo(() => {
+    return [...allVisibleGames]
+      .sort((a, b) => {
+        const progressA = childProgress.gameProgressBySlug[a.slug] ?? 0;
+        const progressB = childProgress.gameProgressBySlug[b.slug] ?? 0;
+
+        const inProgressRankA = progressA > 0 && progressA < 100 ? 0 : progressA === 0 ? 1 : 2;
+        const inProgressRankB = progressB > 0 && progressB < 100 ? 0 : progressB === 0 ? 1 : 2;
+
+        return (
+          a.ageMatchRank - b.ageMatchRank ||
+          inProgressRankA - inProgressRankB ||
+          progressB - progressA ||
+          toSectionOrderIndex(a.section) - toSectionOrderIndex(b.section) ||
+          a.sortOrder - b.sortOrder
+        );
+      })
+      .slice(0, 4);
+  }, [allVisibleGames, childProgress.gameProgressBySlug]);
+
+  const sectionProgressBySlug = useMemo(() => {
+    const result: Record<HomeSectionSlug, number> = {
+      letters: topicProgressBySlug.letters,
+      reading: topicProgressBySlug.reading,
+      math: topicProgressBySlug.math,
+      books: 0,
+    };
+
+    const books = sectionedGames.books;
+    if (books.length > 0) {
+      const total = books.reduce((sum, game) => sum + (childProgress.gameProgressBySlug[game.slug] ?? 0), 0);
+      result.books = Math.round(total / books.length);
+    }
+
+    return result;
+  }, [childProgress.gameProgressBySlug, sectionedGames.books, topicProgressBySlug]);
 
   const ageBandLabels: Record<AgeBand, string> = {
     '3-4': t('contentFilters.age.band.3_4'),
@@ -480,10 +595,7 @@ export default function Home() {
         setIsPersistingOverride(false);
       });
 
-      const audioKey =
-        band === 'all'
-          ? 'contentFilters.age.all'
-          : `contentFilters.age.band.${toBandKey(band)}`;
+      const audioKey = band === 'all' ? 'contentFilters.age.all' : `contentFilters.age.band.${toBandKey(band)}`;
       void audio.play(resolveCommonAudioPath(audioKey));
     },
     [audio, childId, profileAgeBand],
@@ -505,18 +617,6 @@ export default function Home() {
     void audio.play(resolveCommonAudioPath('contentFilters.age.resetToProfile'));
   }, [audio, childId, profileAgeBand]);
 
-  const handleSelectTopic = useCallback(
-    (topic: TopicSlug) => {
-      setSelectedTopic(topic);
-      playCommonAudioNow(`topics.${topic}`);
-    },
-    [playCommonAudioNow],
-  );
-
-  const handleStartLearning = useCallback(() => {
-    navigateWithLeadAudio(startRoute, 'home.startLearning');
-  }, [navigateWithLeadAudio, startRoute]);
-
   const handleOpenGame = useCallback(
     (route: string, gameTitleAudioKey: string) => {
       navigateWithLeadAudio(route, gameTitleAudioKey);
@@ -524,58 +624,73 @@ export default function Home() {
     [navigateWithLeadAudio],
   );
 
+  const startFeaturedRoute = featuredGames[0]?.route ?? allVisibleGames[0]?.route ?? '/games';
+  const startFeaturedAudioKey = featuredGames[0] ? `games.${featuredGames[0].slug}.title` : 'home.startLearning';
+
+  const showEmptyState = allVisibleGames.length === 0;
+
   return (
     <main
       style={{
         flex: 1,
         backgroundImage:
-          'linear-gradient(180deg, color-mix(in srgb, var(--color-bg-primary) 82%, white 18%) 0%, color-mix(in srgb, var(--color-bg-secondary) 78%, white 22%) 100%), url(/images/backgrounds/home/home-storybook.webp)',
+          'radial-gradient(120% 120% at 10% 0%, color-mix(in srgb, var(--color-theme-secondary) 18%, transparent) 0%, transparent 55%), radial-gradient(120% 120% at 90% 100%, color-mix(in srgb, var(--color-accent-warning) 16%, transparent) 0%, transparent 58%), linear-gradient(180deg, color-mix(in srgb, var(--color-bg-primary) 78%, white 22%) 0%, color-mix(in srgb, var(--color-bg-secondary) 80%, white 20%) 100%), url(/images/backgrounds/home/home-storybook.webp)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundBlendMode: 'soft-light, normal',
+        backgroundBlendMode: 'screen, screen, soft-light, normal',
         padding: 'var(--space-xl)',
         display: 'flex',
         justifyContent: 'center',
       }}
     >
-      <section style={{ width: 'min(1040px, 100%)', display: 'grid', gap: 'var(--space-lg)' }}>
-        <header className="home__header">
-          <div className="home__header-copy">
-            <h1
-              style={{
-                fontSize: 'var(--font-size-2xl)',
-                fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
-                color: 'var(--color-text-primary)',
-              }}
-            >
-              {t('home.greeting', { name: childName })}
-            </h1>
-            <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-md)' }}>
-              {t('home.dubiWelcome')}
-            </p>
-          </div>
-
-          <FloatingElement className="home__header-mascot">
-            <MascotIllustration variant="hint" size="clamp(96px, 18vw, 120px)" />
-          </FloatingElement>
-        </header>
-
+      <section style={{ width: 'min(1120px, 100%)', display: 'grid', gap: 'var(--space-lg)' }}>
         <Card
           padding="lg"
           style={{
             display: 'grid',
-            gap: 'var(--space-sm)',
-            border: '2px solid var(--color-bg-secondary)',
+            gap: 'var(--space-md)',
+            border: '2px solid color-mix(in srgb, var(--color-theme-primary) 24%, transparent)',
             background:
-              'linear-gradient(140deg, color-mix(in srgb, var(--color-bg-card) 84%, var(--color-accent-secondary) 16%), var(--color-bg-card))',
+              'linear-gradient(138deg, color-mix(in srgb, var(--color-bg-card) 76%, var(--color-theme-secondary) 24%), color-mix(in srgb, var(--color-bg-card) 86%, white 14%))',
           }}
         >
-          <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
-            {t('home.dailyGoal')}
-          </p>
-          <h2 style={{ fontSize: 'var(--font-size-xl)', color: 'var(--color-text-primary)' }}>
-            {t('home.minutes', { count: dailyGoalMinutes })} / {t('home.minutes', { count: dailyGoalTarget })}
-          </h2>
+          <header className="home__hero-header">
+            <div className="home__hero-copy">
+              <h1
+                style={{
+                  fontSize: 'var(--font-size-2xl)',
+                  fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
+                  color: 'var(--color-text-primary)',
+                }}
+              >
+                {t('home.greeting', { name: childName })}
+              </h1>
+              <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-md)' }}>{t('home.dubiWelcome')}</p>
+            </div>
+
+            <FloatingElement className="home__hero-mascot" durationMs={3200}>
+              <MascotIllustration variant="hint" size="clamp(108px, 18vw, 132px)" />
+            </FloatingElement>
+          </header>
+
+          <div className="home__hero-stats">
+            <div style={{ display: 'grid', gap: 'var(--space-2xs)' }}>
+              <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>{t('home.dailyGoal')}</p>
+              <strong style={{ color: 'var(--color-text-primary)', fontSize: 'var(--font-size-lg)' }}>
+                {t('home.minutes', { count: dailyGoalMinutes })} / {t('home.minutes', { count: dailyGoalTarget })}
+              </strong>
+            </div>
+
+            <Button
+              variant="primary"
+              size="lg"
+              aria-label={t('home.startLearning')}
+              onClick={() => navigateWithLeadAudio(startFeaturedRoute, startFeaturedAudioKey)}
+            >
+              {t('home.startLearning')}
+            </Button>
+          </div>
+
           <div
             className="home__daily-goal-track"
             role="progressbar"
@@ -584,103 +699,70 @@ export default function Home() {
             aria-valuemax={100}
             aria-valuenow={dailyGoalProgress}
             aria-valuetext={`${dailyGoalProgress}%`}
-            style={{
-              width: '100%',
-              height: '14px',
-              borderRadius: 'var(--radius-full)',
-              background: 'var(--color-star-empty)',
-              overflow: 'hidden',
-              display: 'flex',
-            }}
           >
-            <div
-              className="home__daily-goal-fill"
-              style={{
-                width: `${dailyGoalProgress}%`,
-                height: '100%',
-                borderRadius: 'var(--radius-full)',
-                transition: 'width var(--motion-duration-normal) var(--motion-ease-standard)',
-              }}
-            />
+            <div className="home__daily-goal-fill" style={{ width: `${dailyGoalProgress}%` }} />
           </div>
         </Card>
-
-        <div style={{ display: 'grid', gap: 'var(--space-sm)' }}>
-          <h2 style={{ fontSize: 'var(--font-size-xl)', color: 'var(--color-text-primary)' }}>
-            {t('home.chooseTopic')}
-          </h2>
-
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-              gap: 'var(--space-md)',
-            }}
-          >
-            {topics.map((topic) => {
-              const isSelected = selectedTopic === topic.slug;
-
-              return (
-                <TopicCard
-                  key={topic.slug}
-                  icon={<TopicIllustration topic={topic.slug} size={82} loading="eager" fetchPriority="high" />}
-                  title={t(`topics.${topic.slug}`)}
-                  subtitle={t(`topicDescriptions.${topic.slug}`)}
-                  progress={topic.progress}
-                  onClick={() => handleSelectTopic(topic.slug)}
-                  style={{
-                    border: isSelected ? '3px solid var(--color-theme-primary)' : '2px solid transparent',
-                    transform: isSelected ? 'translateY(-4px)' : 'translateY(0)',
-                    boxShadow: isSelected ? 'var(--shadow-success-glow)' : 'var(--shadow-md)',
-                    animation: isSelected ? 'var(--motion-success-burst)' : undefined,
-                  }}
-                />
-              );
-            })}
-          </div>
-        </div>
 
         <Card
           padding="md"
           style={{
             display: 'grid',
             gap: 'var(--space-sm)',
-            border: '2px solid color-mix(in srgb, var(--color-theme-primary) 22%, transparent)',
+            border: '2px solid color-mix(in srgb, var(--color-accent-info) 28%, transparent)',
             background:
-              'linear-gradient(160deg, color-mix(in srgb, var(--color-bg-card) 78%, var(--color-theme-secondary) 22%), var(--color-bg-card))',
+              'linear-gradient(160deg, color-mix(in srgb, var(--color-bg-card) 80%, var(--color-accent-info) 20%), var(--color-bg-card))',
           }}
         >
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'auto 1fr',
-              alignItems: 'center',
-              gap: 'var(--space-md)',
-            }}
-          >
-            <FloatingElement durationMs={3600}>
-              <MascotIllustration variant="hint" size={84} />
-            </FloatingElement>
-
-            <div style={{ display: 'grid', gap: 'var(--space-xs)' }}>
-              <h3 style={{ color: 'var(--color-text-primary)', fontSize: 'var(--font-size-lg)' }}>
-                {t(`topics.${selectedTopic}`)}
-              </h3>
-              <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
-                {t(`topicDescriptions.${selectedTopic}`)}
-              </p>
-            </div>
+          <div style={{ display: 'grid', gap: 'var(--space-2xs)' }}>
+            <h2 style={{ color: 'var(--color-text-primary)', fontSize: 'var(--font-size-xl)' }}>{t('home.featured.title')}</h2>
+            <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>{t('home.featured.subtitle')}</p>
           </div>
 
-          <Button
-            variant="primary"
-            size="lg"
-            style={{ justifySelf: 'start' }}
-            aria-label={t('home.startLearning')}
-            onClick={handleStartLearning}
-          >
-            {t('home.startLearning')} · {selectedTopicProgress}%
-          </Button>
+          {featuredGames.length > 0 ? (
+            <div className="home__featured-grid">
+              {featuredGames.map((game, index) => {
+                const progressPercent = childProgress.gameProgressBySlug[game.slug] ?? 0;
+                const gameTitleKey = `games.${game.slug}.title`;
+
+                return (
+                  <GameCard
+                    key={`featured-${game.id}`}
+                    title={t(gameTitleKey as any)}
+                    thumbnailUrl={game.thumbnailUrl}
+                    difficulty={game.difficulty}
+                    agePrimaryLabel={ageBandLabels[game.primaryAgeBand]}
+                    ageSupportLabels={game.supportAgeBands.map((band) => ageBandLabels[band])}
+                    topicLabel={t(`contentTags.topic.${game.topic}` as any)}
+                    topicIcon={TOPIC_ICON_BY_SLUG[game.topic]}
+                    difficultyLabel={t('contentTags.difficulty.label')}
+                    stars={toStars(progressPercent)}
+                    progressPercent={progressPercent}
+                    progressAriaLabel={t('home.progressLabel')}
+                    progressValueLabel={t('home.progressValue', { count: progressPercent })}
+                    onClick={() => handleOpenGame(game.route, gameTitleKey)}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        handleOpenGame(game.route, gameTitleKey);
+                      }
+                    }}
+                    aria-label={t(gameTitleKey as any)}
+                    style={{
+                      minHeight: '264px',
+                      animationDelay: `${index * 70}ms`,
+                    }}
+                  />
+                );
+              })}
+            </div>
+          ) : (
+            <Card padding="lg" style={{ display: 'grid', placeItems: 'center' }}>
+              <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+                {catalogLoadStatus === 'loading' ? t('contentFilters.age.loading') : t('games.empty')}
+              </p>
+            </Card>
+          )}
 
           <SuccessCelebration dense />
         </Card>
@@ -690,17 +772,10 @@ export default function Home() {
           style={{
             display: 'grid',
             gap: 'var(--space-sm)',
-            border: '2px solid color-mix(in srgb, var(--color-theme-primary) 22%, transparent)',
+            border: '2px solid color-mix(in srgb, var(--color-theme-primary) 20%, transparent)',
           }}
         >
-          <h3
-            style={{
-              color: 'var(--color-text-primary)',
-              fontSize: 'var(--font-size-lg)',
-            }}
-          >
-            {t('nav.chooseGame')}
-          </h3>
+          <h3 style={{ color: 'var(--color-text-primary)', fontSize: 'var(--font-size-lg)' }}>{t('contentFilters.age.title')}</h3>
 
           <AgeRangeFilterBar
             title={t('contentFilters.age.title')}
@@ -719,82 +794,153 @@ export default function Home() {
             resetLabel={t('contentFilters.age.resetToProfile')}
           />
 
-          {selectedTopicGames.length > 0 ? (
-            <div
-              style={{
-                display: 'grid',
-                gap: 'var(--space-sm)',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-              }}
-            >
-              {selectedTopicGames.map((game, index) => {
-                const gameTitleKey = `games.${game.slug}.title`;
-                return (
-                  <GameCard
-                    key={game.id}
-                    title={t(gameTitleKey as any)}
-                    thumbnailUrl={game.thumbnailUrl}
-                    difficulty={game.difficulty}
-                    agePrimaryLabel={ageBandLabels[game.primaryAgeBand]}
-                    ageSupportLabels={game.supportAgeBands.map((band) => ageBandLabels[band])}
-                    topicLabel={t(`contentTags.topic.${game.topic}` as any)}
-                    topicIcon={TOPIC_ICON_BY_SLUG[game.topic]}
-                    difficultyLabel={t('contentTags.difficulty.label')}
-                    stars={Math.max(1, Math.round(selectedTopicProgress / 34))}
-                    onClick={() => handleOpenGame(game.route, gameTitleKey)}
-                    onKeyDown={(event) => {
-                      if (event.key === 'Enter' || event.key === ' ') {
-                        event.preventDefault();
-                        handleOpenGame(game.route, gameTitleKey);
-                      }
-                    }}
-                    aria-label={t(gameTitleKey as any)}
-                    style={{
-                      minHeight: '220px',
-                      animationDelay: `${index * 55}ms`,
-                    }}
-                  />
-                );
-              })}
-            </div>
-          ) : (
-            <Card padding="lg" style={{ display: 'grid', placeItems: 'center' }}>
-              <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
-                {catalogLoadStatus === 'loading' ? t('contentFilters.age.loading') : t('games.empty')}
-              </p>
-            </Card>
-          )}
-
           {catalogLoadStatus === 'error' && (
             <p style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-accent-danger)' }}>
               {t('contentFilters.age.fallbackNotice')}
             </p>
           )}
         </Card>
+
+        {showEmptyState ? (
+          <Card padding="lg" style={{ display: 'grid', placeItems: 'center' }}>
+            <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>{t('home.emptyByAge')}</p>
+          </Card>
+        ) : (
+          <div className="home__sections-grid">
+            {SECTION_ORDER.map((sectionSlug) => {
+              const sectionGames = sectionedGames[sectionSlug];
+              if (sectionGames.length === 0) {
+                return null;
+              }
+
+              const sectionProgress = sectionProgressBySlug[sectionSlug] ?? 0;
+
+              return (
+                <Card
+                  key={sectionSlug}
+                  padding="md"
+                  style={{
+                    display: 'grid',
+                    gap: 'var(--space-sm)',
+                    border: '2px solid color-mix(in srgb, var(--color-theme-primary) 16%, transparent)',
+                    background:
+                      sectionSlug === 'books'
+                        ? 'linear-gradient(160deg, color-mix(in srgb, var(--color-bg-card) 78%, var(--color-accent-warning) 22%), var(--color-bg-card))'
+                        : 'var(--color-bg-card)',
+                  }}
+                >
+                  <div style={{ display: 'grid', gap: 'var(--space-2xs)' }}>
+                    <h3 style={{ color: 'var(--color-text-primary)', fontSize: 'var(--font-size-lg)' }}>
+                      {SECTION_ICON_BY_SLUG[sectionSlug]} {t(`home.sections.${sectionSlug}.title` as any)}
+                    </h3>
+                    <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
+                      {t(`home.sections.${sectionSlug}.subtitle` as any)}
+                    </p>
+                    <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-xs)' }}>
+                      {t('home.sectionProgressValue', { count: sectionProgress })}
+                    </p>
+                  </div>
+
+                  <div className="home__section-games-grid">
+                    {sectionGames.map((game, index) => {
+                      const progressPercent = childProgress.gameProgressBySlug[game.slug] ?? 0;
+                      const gameTitleKey = `games.${game.slug}.title`;
+
+                      return (
+                        <GameCard
+                          key={game.id}
+                          title={t(gameTitleKey as any)}
+                          thumbnailUrl={game.thumbnailUrl}
+                          difficulty={game.difficulty}
+                          agePrimaryLabel={ageBandLabels[game.primaryAgeBand]}
+                          ageSupportLabels={game.supportAgeBands.map((band) => ageBandLabels[band])}
+                          topicLabel={t(`contentTags.topic.${game.topic}` as any)}
+                          topicIcon={TOPIC_ICON_BY_SLUG[game.topic]}
+                          difficultyLabel={t('contentTags.difficulty.label')}
+                          stars={toStars(progressPercent)}
+                          progressPercent={progressPercent}
+                          progressAriaLabel={t('home.progressLabel')}
+                          progressValueLabel={t('home.progressValue', { count: progressPercent })}
+                          onClick={() => handleOpenGame(game.route, gameTitleKey)}
+                          onKeyDown={(event) => {
+                            if (event.key === 'Enter' || event.key === ' ') {
+                              event.preventDefault();
+                              handleOpenGame(game.route, gameTitleKey);
+                            }
+                          }}
+                          aria-label={t(gameTitleKey as any)}
+                          style={{
+                            minHeight: '252px',
+                            animationDelay: `${index * 55}ms`,
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
+        )}
       </section>
+
       <style>{`
-        .home__header {
+        .home__hero-header {
           display: grid;
           grid-template-columns: 1fr auto;
           align-items: center;
           gap: var(--space-md);
         }
 
-        .home__header-copy {
+        .home__hero-copy {
           display: grid;
           gap: var(--space-xs);
         }
 
-        .home__header-mascot {
+        .home__hero-mascot {
           justify-self: end;
         }
 
+        .home__hero-stats {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: space-between;
+          gap: var(--space-sm);
+        }
+
         .home__daily-goal-track {
+          inline-size: 100%;
+          block-size: 14px;
+          border-radius: var(--radius-full);
+          background: var(--color-star-empty);
+          overflow: hidden;
+          display: flex;
           justify-content: flex-start;
         }
 
         .home__daily-goal-fill {
+          block-size: 100%;
+          border-radius: var(--radius-full);
+          transition: width var(--motion-duration-normal) var(--motion-ease-standard);
           background: linear-gradient(90deg, var(--color-accent-success), var(--color-accent-info));
+        }
+
+        .home__featured-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+          gap: var(--space-md);
+        }
+
+        .home__sections-grid {
+          display: grid;
+          gap: var(--space-md);
+        }
+
+        .home__section-games-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          gap: var(--space-sm);
         }
 
         html[dir='rtl'] .home__daily-goal-track {
@@ -805,14 +951,32 @@ export default function Home() {
           background: linear-gradient(270deg, var(--color-accent-success), var(--color-accent-info));
         }
 
-        @media (max-width: 640px) {
-          .home__header {
-            grid-template-columns: 1fr;
-            gap: var(--space-sm);
+        @media (max-width: 900px) {
+          .home__featured-grid {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
           }
 
-          .home__header-mascot {
+          .home__section-games-grid {
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+          }
+        }
+
+        @media (max-width: 640px) {
+          .home__hero-header {
+            grid-template-columns: 1fr;
+          }
+
+          .home__hero-mascot {
             justify-self: center;
+          }
+
+          .home__hero-stats {
+            align-items: stretch;
+          }
+
+          .home__hero-stats button {
+            inline-size: 100%;
+            justify-content: center;
           }
         }
       `}</style>

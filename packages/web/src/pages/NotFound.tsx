@@ -3,9 +3,18 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/design-system';
 import { MascotIllustration } from '@/components/illustrations';
 import { FloatingElement } from '@/components/motion';
+import { usePublicAuthState } from '@/hooks/usePublicAuthState';
+import { isGuestModeEnabled } from '@/lib/session';
 
 export default function NotFound() {
   const { t } = useTranslation('public');
+  const guestModeEnabled = isGuestModeEnabled();
+  const { hasAuthenticatedUser } = usePublicAuthState(!guestModeEnabled);
+  const isAuthenticated = guestModeEnabled || hasAuthenticatedUser;
+  const primaryPath = isAuthenticated ? '/games' : '/';
+  const primaryLabel = isAuthenticated ? t('notFound.backApp') : t('notFound.backHome');
+  const secondaryPath = isAuthenticated ? '/' : '/login';
+  const secondaryLabel = isAuthenticated ? t('notFound.backHome') : t('notFound.backApp');
 
   return (
     <div className="not-found">
@@ -16,11 +25,11 @@ export default function NotFound() {
       <h2 className="not-found__title">{t('notFound.title')}</h2>
       <p className="not-found__text">{t('notFound.text')}</p>
       <div className="not-found__actions">
-        <Link to="/">
-          <Button variant="primary" size="lg">{t('notFound.backHome')}</Button>
+        <Link to={primaryPath}>
+          <Button variant="primary" size="lg">{primaryLabel}</Button>
         </Link>
-        <Link to="/login">
-          <Button variant="secondary" size="lg">{t('notFound.backApp')}</Button>
+        <Link to={secondaryPath}>
+          <Button variant="secondary" size="lg">{secondaryLabel}</Button>
         </Link>
       </div>
 

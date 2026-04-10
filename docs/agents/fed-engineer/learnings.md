@@ -196,3 +196,42 @@ For `/parent` polish, place report jump + settings toggle in a shared toolbar ca
 
 ## 2026-04-10 — Global SPA scroll reset is safest as a router-level utility component
 When cross-page navigation keeps prior scroll positions, add one `ScrollToTop` null-render component at app root that watches `useLocation()` and calls `window.scrollTo(0, 0)` in `useLayoutEffect`; this fixes all route branches at once and avoids brittle per-page patches.
+
+## 2026-04-10 — Public shell home affordances must be session-aware
+On mixed public/app surfaces (`PublicHeader`, `NotFound`), route logo and recovery CTAs to `/home` for active guest/auth sessions while keeping anonymous fallback to marketing `/`; this preserves “back to games” continuity without adding new copy/audio keys.
+
+## 2026-04-10 — Launch-slot aliases should be explicit in FED runtime mappings
+For handbook launch-trio lanes, keep a visible alias map in reader/runtime code (`bouncy-balloon` → `mikaSoundGarden`, `magic-letter-map` → `magicLetterMap`, `star-message` → `tamarWordTower`) and drive age-band page counts from the active ladder book (`book1` uses 8 pages). This gives QA deterministic slug traces while preserving canonical DB slugs.
+
+## 2026-04-10 — Decodable reading checkpoints polish best when feedback sits on the panel container
+In comprehension-heavy reading games, adding transient `success/miss` choreography to the shared checkpoint panel (instead of each option button) plus score-pill pulse + active progress breathing gives clearer pacing without extra copy/audio keys, and stays stable if every transient state is reset on page-change/retry and disabled under `prefers-reduced-motion`.
+
+## 2026-04-10 — Fast-action catcher games need score feedback in the always-visible header lane
+For reflex games like `LetterSkyCatcher`, pulsing the existing score pill on successful catches and adding breathing animation only to the active progress dot gives immediate reinforcement without adding layout noise; keep pulse timers cleanup-safe and disable both animations under reduced-motion.
+
+## 2026-04-10 — Smooth-scroll controls must honor reduced-motion at action time
+For parent-facing utility actions that jump within the page (like "view reports"), compute `prefers-reduced-motion` when the control is activated and switch `scrollIntoView` to `behavior: 'auto'`; this closes accessibility review gaps without changing layout or copy/audio contracts.
+
+## 2026-04-10 — Parent dashboard empty-state QA closures should gate summary KPIs with `hasChildren`
+When QA requires an empty-state CTA "instead of" zero metrics, treat the whole dashboard body as two branches (`hasChildren` vs empty state) so summary cards and weekly list never render placeholder zeros; then verify with both `yarn typecheck` and a real Vite startup to prove the lane is review-ready.
+
+## 2026-04-10 — RTL reader controls should derive direction once and mirror navigation glyphs
+For Hebrew storybook controls, compute `isRtl` from `i18n.dir()` in the component and use it for forward-arrow glyphs (`←` in RTL, `→` in LTR); pair this with stronger text contrast (not near-threshold secondary tones) on small labels/buttons to avoid QA contrast failures around 4.49:1.
+
+## 2026-04-10 — Reader toolbars should use semantic SVG icons and a single title surface
+For handbook-style game shells, replace literal toolbar glyphs (`▶`, `💡`, `→`) with reusable SVG controls that keep `aria-label` text and mirror direction in RTL via transform; keep the editorial title only at page chrome level to prevent duplicate headings inside the game card.
+
+## 2026-04-10 — Age-band mastery overrides should run after DB/runtime merge in handbook flows
+When handbook interaction `required` flags can come from seeded defaults and `handbook_pages.interactions_json`, age-band-specific contracts (for example 3-4 exposure-only decoding on `magicLetterMap` `p06/p07`) must be applied after runtime merge so profile policy is enforced consistently regardless DB defaults.
+
+## 2026-04-10 — New handbook lanes ship fastest when treated as "slug package + ladder slot + audio parity"
+For non-launch handbooks (e.g. `oriBreadMarket`), implementation is stable when done as one bundle: add slug/book mapping in reader runtime, define interaction flow + required flags for that slot, add full `common.handbooks.<slug>` and `common.parentDashboard.handbooks.<slug>` families, then run `yarn generate-audio` and verify manifest coverage before moving to `in_review`.
+
+## 2026-04-10 — Handbook DB hydration should degrade gracefully when media-asset query fails
+For DB-driven handbook rendering, treat `handbook_pages` as the critical source and keep runtime content active even if `handbook_media_assets` fetch errors; passing an empty media list preserves block/narration integration and avoids unnecessary fallback to legacy-only page definitions.
+
+## 2026-04-10 — Route de-dupes should migrate nav, auth redirects, and crawl metadata together
+When consolidating duplicate app routes (`/home` -> `/games`), close the loop in one pass: remove the route definition, retarget in-app navigation/back actions and login/profile redirects, and regenerate crawl assets (`robots.txt`, `llms.txt`) so SEO metadata does not retain stale private paths.
+
+## 2026-04-10 — Audio-degradation fallback should be stateful and non-blocking in game loops
+In narration-heavy games, wrap `audio.play`/`playNow` with one shared failure handler that flips a persistent `audioDegraded` flag, keeps gameplay interactive, and surfaces a compact fallback hint row. Pair this with `--touch-min: 48px` and replace hardcoded `44px` controls in game-local styles to satisfy child touch-target QA quickly across multiple game shells.

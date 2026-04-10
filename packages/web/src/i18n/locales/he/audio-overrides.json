@@ -30,5 +30,8 @@
   "common.parentDashboard.games.decodableMicroStories.progressSummary": "איזה יופי. הילד מתקדם בקריאת סיפורים מדורגים, מדייק יותר במילים ומשתמש בפחות רמזים.",
   "common.parentDashboard.games.decodableMicroStories.wordAccuracy": "המילים שכרגע דורשות עוד תרגול מופיעות בדוח, כדי לחזור עליהן בקריאה קצרה בבית.",
   "common.parentDashboard.games.confusableLetterContrast.progressSummary": "איזה יופי. הילד מתקדם בזיהוי אותיות דומות ומדייק יותר בין זוגות מבלבלים.",
-  "common.parentDashboard.games.confusableLetterContrast.confusions": "בדוח ההורים מוצג זוג האותיות שבו נדרש כרגע עוד תרגול."
+  "common.parentDashboard.games.confusableLetterContrast.confusions": "בדוח ההורים מוצג זוג האותיות שבו נדרש כרגע עוד תרגול.",
+  "common.parentDashboard.videos.finalForms.progressSummary": "איזה יופי. הילד מתקדם בזיהוי אותיות סופיות ומדייק יותר בסוף המילה.",
+  "common.parentDashboard.games.shvaSoundSwitch.progressSummary": "איזה יופי. הילד מתקדם בפענוח שווא, מקשיב טוב יותר ומדייק יותר בקריאה.",
+  "common.parentDashboard.games.shvaSoundSwitch.confusions": "בדוח ההורים מסומן כרגע זוג הצלילים שבו נדרש עוד תרגול עדין ומודרך."
 }

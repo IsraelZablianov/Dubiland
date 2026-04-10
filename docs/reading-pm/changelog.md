@@ -2,6 +2,93 @@
 
 Record every completed reading spec, curriculum decision, or reading milestone in reverse chronological order.
 
+## 2026-04-10 — Magic Letter Map MVP moved to shipped
+- Synced `Magic Letter Map MVP (First Live Handbook)` after all execution lanes reached `done`:
+  - [DUB-463](/DUB/issues/DUB-463) implementation
+  - [DUB-464](/DUB/issues/DUB-464) Hebrew i18n/audio
+  - [DUB-465](/DUB/issues/DUB-465) mechanics review
+- Updated `docs/reading-pm/features.md`:
+  - Feature status moved from In Progress to Shipped.
+  - Lane annotations now reflect `done` for all three linked issues.
+- Coverage note remains unchanged by design (operational handbook slice inside existing curriculum lane).
+- Ran mandatory delegation audit: no specs marked "not yet handed off" and no new handoff issues required this heartbeat.
+
+## 2026-04-10 — Magic Letter Map runtime lane entered execution
+- Synced `Magic Letter Map MVP` runtime lane state in `docs/reading-pm/features.md`:
+  - [DUB-463](/DUB/issues/DUB-463) moved from `todo` to `in_progress`.
+  - [DUB-464](/DUB/issues/DUB-464) and [DUB-465](/DUB/issues/DUB-465) remain `done`.
+- Feature status remains `In Progress`; no curriculum coverage table change required.
+- Ran mandatory delegation audit: no specs marked "not yet handed off" and no new handoff issues required this heartbeat.
+
+## 2026-04-10 — Live-state sync for shva and final-forms lanes
+- Synced `Shva Sound Switch` to live lane state:
+  - [DUB-412](/DUB/issues/DUB-412) remains `backlog` (implementation).
+  - [DUB-413](/DUB/issues/DUB-413) is now `done` (Hebrew i18n/audio).
+  - [DUB-414](/DUB/issues/DUB-414) remains `backlog` (mechanics review).
+- Synced `Final Forms Video Pedagogy` content lane:
+  - [DUB-415](/DUB/issues/DUB-415) remains `backlog`.
+  - [DUB-416](/DUB/issues/DUB-416) moved from `in_progress` to `done`.
+- Updated `docs/reading-pm/features.md`:
+  - Promoted `Shva Sound Switch` from Planned to In Progress.
+  - Updated coverage rows:
+    - Nikud `1/0/2` -> `0/1/2`
+    - Syllable Decoding `1/0/2` -> `0/1/2`
+- Ran mandatory delegation audit: no specs marked "not yet handed off" and no new handoff issues required this heartbeat.
+
+## 2026-04-10 — Live-state sync for video and handbook MVP lanes
+- Synced `Final Forms Video Pedagogy` to live execution state:
+  - [DUB-415](/DUB/issues/DUB-415) remains `backlog` (video composition).
+  - [DUB-416](/DUB/issues/DUB-416) is now `in_progress` (Hebrew script/audio).
+- Synced `Magic Letter Map MVP` support lanes to live state:
+  - [DUB-463](/DUB/issues/DUB-463) remains `todo` (implementation).
+  - [DUB-464](/DUB/issues/DUB-464) is `done` (Hebrew i18n/audio).
+  - [DUB-465](/DUB/issues/DUB-465) is `done` (mechanics review).
+- Updated `docs/reading-pm/features.md`:
+  - Promoted both features from Planned to In Progress.
+  - Updated Educational Videos curriculum coverage from `1/0/1` to `0/1/1` (planned/in progress/shipped).
+- Ran mandatory delegation audit: no specs marked "not yet handed off" and no new handoff issues required this heartbeat.
+
+## 2026-04-10 — Wave 2 reading progression validation locked for Books 4-10
+- Completed Reading PM validation pass for:
+  - `docs/games/handbooks/book-4-yoav-letter-map.md`
+  - `docs/games/handbooks/book-5-naama-syllable-box.md`
+  - `docs/games/handbooks/book-6-ori-bread-market.md`
+  - `docs/games/handbooks/book-7-tamar-word-tower.md`
+  - `docs/games/handbooks/book-8-sahar-secret-clock.md`
+  - `docs/games/handbooks/book-9-guy-class-newspaper.md`
+  - `docs/games/handbooks/book-10-alma-root-families.md`
+- Added explicit `Reading PM Validation Updates (2026-04-10)` sections in each spec with:
+  - Pointing policy locks per level cluster.
+  - Sentence complexity caps for mandatory path.
+  - Anti image-shortcut controls for decoding/comprehension checkpoints.
+  - Book-to-book transition gates (Book 4 -> Book 10) with measurable thresholds.
+- Synced review status text in all seven specs to mark Reading PM validation complete and unblock FED/content execution.
+- Ran mandatory delegation audit in `docs/reading-pm/features.md`: no specs marked "not yet handed off" and no new handoff issues required this heartbeat.
+
+## 2026-04-10 — Added and delegated Magic Letter Map MVP handbook scope
+- Authored focused ship-cycle spec: `docs/games/handbooks/magic-letter-map-mvp.md` for first live handbook execution (`magicLetterMap`).
+- Locked MVP boundaries to 10 pages with required checkpoints (`p02,p03,p05,p06,p07,p10`) and one optional checkpoint (`p08`).
+- Made explicit age-band decision for launch:
+  - `5-6` primary mastery band
+  - `6-7` stretch support
+  - `3-4` visible as listen/explore support mode (no decoding mastery expectation)
+- Created direct delegation lanes:
+  - [DUB-463](/DUB/issues/DUB-463) assigned to FED Engineer (implementation)
+  - [DUB-464](/DUB/issues/DUB-464) assigned to Content Writer (Hebrew i18n/audio parity)
+  - [DUB-465](/DUB/issues/DUB-465) assigned to Gaming Expert (mechanics calibration)
+- Promoted all three lanes to `todo` for immediate cycle execution.
+- Posted coordination comments on all three issues with cross-lane dependencies and closure criteria.
+- Updated `docs/reading-pm/features.md` with delegated status for the new MVP scope item.
+
+## 2026-04-10 — Confusable Letter Contrast moved to shipped
+- Synced `Confusable Letter Contrast` after all execution lanes reached `done`:
+  - [DUB-406](/DUB/issues/DUB-406) implementation
+  - [DUB-407](/DUB/issues/DUB-407) Hebrew i18n/audio
+  - [DUB-408](/DUB/issues/DUB-408) mechanics review
+- Updated `docs/reading-pm/features.md`:
+  - Feature status moved from In Progress to Shipped.
+  - Letter Recognition coverage updated `1/1/3` -> `1/0/4` (planned/in progress/shipped).
+
 ## 2026-04-10 — Confusable lane execution advanced
 - Synced live statuses for the `Confusable Letter Contrast` cluster in `docs/reading-pm/features.md`:
   - [DUB-406](/DUB/issues/DUB-406) `in_progress` (implementation)

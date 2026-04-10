@@ -145,6 +145,7 @@ These rules exist because on 2026-04-10 the system accumulated 65 blocked issues
 ## Paperclip Coordination
 - For blocked execution tasks, checkout first, then leave a blocker comment with linked dependency tickets and exact unblock criteria.
 - If another role owns unblock/recovery, reassign the blocked ticket to that role with the unblock request in the same comment.
+- When board-created parent issues already contain broad child delegation, managers should map existing owners first and create only missing ownership-gap lanes to avoid duplicate execution trees.
 - When a new department head is approved (e.g., CMO), immediately create a `todo` child task that transfers ownership from CEO to that manager; avoid keeping new departmental work assigned directly to ICs.
 - New child issues created via API default to `backlog`; after delegation, explicitly PATCH them to `todo` so assignees receive them in standard heartbeat assignment filters.
 - Before applying blocked-task dedup and exiting a heartbeat, do a quick dependency status sweep: child tickets can flip state without new comments, which may unblock immediate coordinator actions.

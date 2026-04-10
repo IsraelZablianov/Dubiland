@@ -12,8 +12,14 @@ import {
   isGuestModeEnabled,
 } from '@/lib/session';
 
-const NAV_LINKS = [
+const PUBLIC_NAV_LINKS = [
   { key: 'home', path: '/' },
+  { key: 'about', path: '/about' },
+  { key: 'parents', path: '/parents' },
+] as const;
+
+const APP_NAV_LINKS = [
+  { key: 'topics', path: '/games' },
   { key: 'about', path: '/about' },
   { key: 'parents', path: '/parents' },
 ] as const;
@@ -24,8 +30,12 @@ const MARKETING_HEADER_CTA_STYLE = {
 };
 
 function isMainNavActive(currentPath: string, navPath: string): boolean {
+  if (navPath === '/games') {
+    return currentPath === '/games' || currentPath.startsWith('/games/');
+  }
+
   if (navPath === '/') {
-    return currentPath === '/' || currentPath === '/home';
+    return currentPath === '/';
   }
 
   if (navPath === '/parents') {
@@ -48,6 +58,9 @@ export function PublicHeader() {
   const isAuthenticated = guestModeEnabled || hasAuthenticatedUser;
   const showPublicActions = !isAuthenticated && !loading;
   const showAppActions = isAuthenticated;
+  const homeDestination = showAppActions ? '/games' : '/';
+  const navLinks = showAppActions ? APP_NAV_LINKS : PUBLIC_NAV_LINKS;
+  const isHome = location.pathname === '/games';
   const isProfiles = location.pathname === '/profiles';
   const isParentArea = location.pathname === '/parent';
 
@@ -73,7 +86,7 @@ export function PublicHeader() {
   return (
     <header className="public-header">
       <div className="public-header__inner">
-        <Link to="/" className="public-header__logo" aria-label={t('header.logoAlt')}>
+        <Link to={homeDestination} className="public-header__logo" aria-label={t('header.logoAlt')}>
           <MascotIllustration variant="hero" size={42} className="public-header__logo-icon" />
           <span className="public-header__logo-text">{t('common:branding.appName')}</span>
         </Link>
@@ -88,7 +101,7 @@ export function PublicHeader() {
         </button>
 
         <nav className={`public-header__nav ${menuOpen ? 'public-header__nav--open' : ''}`}>
-          {NAV_LINKS.map(({ key, path }) => (
+          {navLinks.map(({ key, path }) => (
             <Link
               key={key}
               to={path}
@@ -124,6 +137,11 @@ export function PublicHeader() {
               )}
 
               <div className="public-header__app-nav">
+                {!isHome && (
+                  <Button variant="ghost" size="sm" onClick={() => goToAppRoute('/games')}>
+                    {t('common:nav.home')}
+                  </Button>
+                )}
                 {!isProfiles && (
                   <Button variant="ghost" size="sm" onClick={() => goToAppRoute('/profiles')}>
                     {t('common:profile.title')}

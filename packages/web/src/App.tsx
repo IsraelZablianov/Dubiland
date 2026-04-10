@@ -1,8 +1,7 @@
 import { lazy, Suspense, type ReactNode } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { AppLayout, PublicLayout } from '@/components/layout';
-import { MascotIllustration } from '@/components/illustrations';
-import { AnimatedPage, FloatingElement, SuccessCelebration } from '@/components/motion';
+import { AnimatedPage } from '@/components/motion';
 import { ScrollToTop } from '@/components/routing/ScrollToTop';
 import { RouteMetadataManager } from '@/seo/RouteMetadataManager';
 
@@ -42,10 +41,6 @@ function RouteFallback() {
     <div className="route-fallback" aria-busy="true" aria-live="polite">
       <span className="route-fallback__halo" aria-hidden="true" />
       <div className="route-fallback__panel">
-        <FloatingElement className="route-fallback__mascot-wrap" durationMs={2800}>
-          <MascotIllustration variant="loading" size={132} />
-        </FloatingElement>
-        <SuccessCelebration dense className="route-fallback__celebration" />
         <div className="route-fallback__skeleton" aria-hidden="true">
           <span className="route-fallback__skeleton-pill route-fallback__skeleton-pill--title" />
           <span className="route-fallback__skeleton-pill route-fallback__skeleton-pill--line" />
@@ -59,6 +54,10 @@ function RouteFallback() {
 type RouteShell = 'public' | 'app';
 
 function withAnimatedPage(element: ReactNode, shell: RouteShell) {
+  if (shell === 'public') {
+    return <>{element}</>;
+  }
+
   return <AnimatedPage className={`animated-page--shell-${shell}`}>{element}</AnimatedPage>;
 }
 
@@ -94,7 +93,7 @@ export default function App() {
             }
           />
           <Route
-            path="/home"
+            path="/games"
             element={
               <ProtectedRoute>
                 <AppLayout>{withAnimatedPage(<Home />, 'app')}</AppLayout>
@@ -121,9 +120,7 @@ export default function App() {
             path="/games/numbers/more-or-less-market"
             element={
               <ProtectedRoute>
-                <AppLayout>
-                  <MoreOrLessMarket />
-                </AppLayout>
+                <AppLayout>{withAnimatedPage(<MoreOrLessMarket />, 'app')}</AppLayout>
               </ProtectedRoute>
             }
           />
@@ -179,7 +176,7 @@ export default function App() {
             path="/games/reading/interactive-handbook"
             element={
               <ProtectedRoute>
-                <AppLayout>{withAnimatedPage(<InteractiveHandbook />, 'app')}</AppLayout>
+                <AppLayout><InteractiveHandbook /></AppLayout>
               </ProtectedRoute>
             }
           />

@@ -148,3 +148,27 @@ On some `issue_assigned` wakes, the injected task id may reference a different a
 
 ## 2026-04-10 — Audio parity pass does not prove card-level tap narration compliance
 Even with `0` missing locale/manifest/audio files, spec contracts like “shape-name tap replay on each shape card” can still fail if interaction handlers only narrate on correct answers. During closure retests, pair parity checks with per-control behavior verification against spec interaction clauses (for example `docs/games/shape-safari.md:121`).
+
+## 2026-04-10 — Validate direct audio-path resolution when games bypass manifest lookups
+If a game computes audio URLs directly from keys (for example `resolveAudioPath(key)`), QA parity checks should include filesystem existence for the computed paths, not only `manifest.json` coverage. This prevents false confidence when manifest entries exist but runtime playback uses a different path strategy.
+
+## 2026-04-10 — Audio-first QA must verify autoplay on newly revealed instruction states
+Icon-compliant replay controls are insufficient when midpoint/completion text appears silently. For state-transition screens, QA should require automatic first-play narration on entry and block replay-only implementations.
+
+## 2026-04-10 — Close autoplay blockers with paired evidence: entry effects + asset parity
+For replay-to-autoplay remediations, signoff should include both code-path proof (screen-entry `useEffect` triggers for midpoint/completion) and script-backed audio parity (`playAudioKey` keys mapped + files present). This reduces reopen churn on “audio exists but does not auto-play” debates.
+
+## 2026-04-10 — `inbox-lite` may omit assigned `in_review` issues; always resolve `PAPERCLIP_TASK_ID` first
+On `issue_assigned` wakes, QA can receive a concrete task id while `GET /api/agents/me/inbox-lite` only shows other blocked items. Resolve `PAPERCLIP_TASK_ID` via issue + heartbeat-context before task selection so active review work is not skipped.
+
+## 2026-04-10 — Empty-state UX acceptance must verify upstream summary surfaces too
+When a UX ticket says to replace “zero KPI + blank list” with an empty state, verify all related sections (summary cards + list) are conditionally handled, not only the list container. A partial empty-state implementation can still leave misleading zero-valued KPI cards visible and should be blocked in QA.
+
+## 2026-04-10 — Mid-heartbeat reassignment needs a checkpoint handoff comment
+If an issue is checked out and then reassigned away in the same run, stop execution on that lane immediately, post a concise checkpoint comment with timestamps/dependency snapshot, and continue only on currently assigned inbox work. This preserves auditability without doing unowned work.
+
+## 2026-04-10 — Assignee guardrail can reroute manager handoffs on implementation lanes
+When QA patches an implementation-titled lane to a manager assignee, Paperclip may auto-reroute ownership via `issue.manager_assignee_guardrail`. Always inspect `/issues/{id}/activity` after blocker updates to confirm final assignee before reporting handoff routing.
+
+## 2026-04-10 — Launch-slot closure evidence should combine scoped keysets with direct audio-path checks
+For handbook launch QA closure, verify lane-specific keysets (for example `book1` narration/prompts/interactions/controls) against both locale presence and on-disk audio files resolved by the runtime key-to-path logic. This avoids false negatives from manifest-only checks when the game plays audio via direct key-derived paths.

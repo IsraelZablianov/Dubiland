@@ -134,3 +134,48 @@ Why it matters:
 - makes illustration and animation handoff to FED/UX easier,
 - keeps first-wave books visually distinct,
 - reduces late-stage revisions when PM asks for "more variety" in protagonists.
+
+## 2026-04-10 — Magic-letter-map handbook asset pack should ship as full pages + card thumbnails in one pass
+
+For handbook illustration tickets, the fastest production-ready delivery pattern is:
+- generate a complete page set under `public/images/handbooks/<slug>/page-01..page-10.png`,
+- generate one shared cover at the same location (`cover.png`),
+- derive lightweight 16:10 card thumbnails (`512x320`, `1024x640`) under `public/images/games/thumbnails/<gameSlug>/` for Home usage.
+
+Why it matters:
+- keeps page art and catalog card assets consistent from one source image,
+- avoids rework when FED wires or updates Home fallback thumbnails,
+- gives PM/QA a deterministic file checklist for acceptance.
+
+## 2026-04-10 — Wave-2 handbook support lane works best as one consolidated media contract doc
+
+For multi-book implementation waves (books 4-10), media support should ship a single cross-book production brief that includes:
+- unique protagonist package per book (pose set, expression set, signature prop),
+- text-first composition + motion caps mapped to high-risk pages,
+- segment-by-segment shot guidance keyed to each spec's planned video IDs.
+
+Why it matters:
+- gives FED/UX/Content one canonical reference instead of seven fragmented pull requests,
+- reduces interpretation drift between book specs,
+- speeds implementation handoff when multiple FED lanes execute in parallel.
+
+## 2026-04-10 — If checkout reports run-bound snapshot conflict, switch to the snapshot issue
+
+When checkout fails with `Checkout run context is bound to a different issue` and includes `snapshotIssueId`, treat that snapshot issue as the canonical lane for the current run context.
+
+Why it matters:
+- avoids wasting heartbeats retrying on lock-contaminated sibling tasks,
+- restores mutation ability (comments/status) on the issue actually bound to the run,
+- keeps Paperclip traceability aligned with the active execution run.
+
+## 2026-04-10 — DUB-495 critical art replacement can be prepped fully before Gemini auth is restored
+
+For large image-overhaul tasks, useful heartbeat output before generation is possible:
+- complete filesystem audit (`path`, `dimensions`, `bytes`, quality score),
+- prompt shotlist mapped directly to existing target paths,
+- repo-stored blocker evidence screenshot when Gemini shows signed-out state.
+
+Why it matters:
+- PM can unblock quickly without re-discovery work,
+- generation can resume immediately once auth is restored,
+- avoids idle heartbeat cycles on the same blocked instruction.

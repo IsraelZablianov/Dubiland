@@ -104,7 +104,7 @@ export default function LetterSkyCatcherPage() {
             <p style={{ color: 'var(--color-text-secondary)' }}>{t('games.letterSkyCatcher.subtitle')}</p>
           </div>
 
-          <Button variant="ghost" size="md" onClick={() => navigate('/home')} aria-label={t('nav.back')}>
+          <Button variant="ghost" size="md" onClick={() => navigate('/games')} aria-label={t('nav.back')}>
             {t('nav.back')}
           </Button>
         </header>

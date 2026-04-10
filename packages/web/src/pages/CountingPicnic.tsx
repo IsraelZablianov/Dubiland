@@ -92,7 +92,7 @@ export default function CountingPicnicPage() {
           <Button
             variant="secondary"
             size="lg"
-            onClick={() => navigate('/home')}
+            onClick={() => navigate('/games')}
             aria-label={t('nav.back')}
           >
             {t('nav.back')}

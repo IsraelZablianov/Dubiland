@@ -120,7 +120,7 @@ export default function DecodableMicroStoriesPage() {
             </p>
           </div>
 
-          <Button variant="secondary" size="lg" onClick={() => navigate('/home')} aria-label={t('nav.back')}>
+          <Button variant="secondary" size="lg" onClick={() => navigate('/games')} aria-label={t('nav.back')}>
             {t('nav.back')}
           </Button>
         </header>

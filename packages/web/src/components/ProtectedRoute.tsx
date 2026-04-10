@@ -1,12 +1,16 @@
 import type { ReactNode } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { MascotIllustration } from '@/components/illustrations';
 import { useAuth } from '@/hooks/useAuth';
-import { isSupabaseConfigured } from '@/lib/supabase';
+import { isSupabaseConfigured } from '@/lib/supabaseConfig';
 import { isGuestModeEnabled } from '@/lib/session';
 
+const HANDBOOK_RENDER_FIRST_ROUTE = '/games/reading/interactive-handbook';
+
 export function ProtectedRoute({ children }: { children: ReactNode }) {
+  const location = useLocation();
   const { user, loading } = useAuth();
+  const isHandbookRenderFirst = location.pathname === HANDBOOK_RENDER_FIRST_ROUTE;
 
   if (!isSupabaseConfigured) {
     return <>{children}</>;
@@ -17,6 +21,10 @@ export function ProtectedRoute({ children }: { children: ReactNode }) {
   }
 
   if (loading) {
+    if (isHandbookRenderFirst) {
+      return <>{children}</>;
+    }
+
     return (
       <div
         style={{

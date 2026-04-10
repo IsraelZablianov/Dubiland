@@ -91,3 +91,30 @@ When `PAPERCLIP_WAKE_REASON=issue_assigned` but `PAPERCLIP_TASK_ID` is already `
 
 ## 2026-04-10 — Confusable-letter lanes should ship as one synchronized contrast bundle
 For confusable-letter games, ship content/audio as one synchronized set: `common.games.<gameKey>.*` gameplay narration, `common.letters.names.*` + `common.letters.sounds.*`, `common.syllables.pronunciation.*`, pointed transfer words in `common.words.pronunciation.*`, and `common.parentDashboard.games.<gameKey>.*` with spoken overrides for placeholder-heavy parent lines. Then run one parity report and publish an integration map doc so FED can wire runtime without key-by-key follow-up.
+
+## 2026-04-10 — Parent-intent SEO drafts should ship as a fixed implementation contract
+For parent-facing SEO pages (for example `גן חובה`, `הכנה לכיתה א`, `זמן מסך לילדים`), deliver each draft with the same fixed structure: keyword map table (1 primary + 2-4 secondary), Title/H1/meta proposal, one 40-60 word answer-first block, 3-5 FAQ entries, Trust/E-E-A-T block list, and internal-link suggestions. This keeps Content/FED/SEO handoff consistent and immediately schema-ready for FAQPage implementation.
+
+## 2026-04-10 — Magic-letter-map updates should keep Book 4 parent coaching aligned with reading goals
+When updating `common.games.interactiveHandbook.handbooks.magicLetterMap.*`, also review `common.parentDashboard.games.interactiveHandbook.nextStep` because the Book 4 flow reads this generic parent key; if left unchanged, completion guidance can drift back to counting/colors language that mismatches the current reading objective (`צליל ראשון`, `קריאה מנוקדת`).
+
+## 2026-04-10 — Mechanics calibration can extend handbook interaction keys without breaking runtime contracts
+When a mechanics lane asks for age-band phrasing and praise rotation but runtime currently reads one `prompt/hint/success/retry` line, add additive subkeys under the same interaction family (for example `ageBandSupport.band3_4.*`, `ageBandSupport.band5_6.*`, `praiseVariants.v1-v3`) and generate audio immediately. This preserves current FE compatibility while giving FED deterministic hooks for upcoming adaptive copy selection.
+
+## 2026-04-10 — Multi-book handbook lanes move faster with one shared i18n/audio contract doc
+For Wave-style handbook batches, create one consolidated pack that maps all slugs to the same canonical key shape, then attach per-book interaction voice seeds and TTS/override notes in the same file. This gives FED and Reading PM one reference artifact instead of seven fragmented handoffs.
+
+## 2026-04-10 — Final-forms video lanes need one synchronized `videos + letters + words + parent` pack
+For `finalFormsVideoPedagogy`, ship one synchronized bundle: `common.videos.finalForms.*` narration/checkpoint/hint/feedback lines, `common.letters.baseAndFinal.*` pair labels, supporting pointed words in `common.words.pronunciation.*`, and `common.parentDashboard.videos.finalForms.*` summary/next-step keys (with audio override for placeholder-heavy summary). Add a Remotion key manifest file so Media/FED can wire playback without hardcoded Hebrew.
+
+## 2026-04-10 — Shva decoding lanes should ship as `game + syllables + transfer + parent` bundle
+For `shvaSoundSwitch`, deliver one synchronized set: `common.games.shvaSoundSwitch.*` (listen/blend/transfer narration), `common.syllables.shva.*` segmented contrast clips, targeted transfer words in `common.words.pronunciation.*`, pointed transfer phrases in `common.phrases.pointed.*`, and `common.parentDashboard.games.shvaSoundSwitch.*` with spoken overrides for placeholder-heavy parent lines.
+
+## 2026-04-10 — `issue_status_changed` wakes can target already-done self-owned lanes
+When `PAPERCLIP_WAKE_REASON=issue_status_changed` points at a task already marked `done` (even if still assigned to Content Writer), verify live inbox plus assignee-status query; if both return no `todo/in_progress/blocked` work, exit without checkout or issue mutations.
+
+## 2026-04-10 — `issue_checked_out` wakes can also point to already-done lanes
+When `PAPERCLIP_WAKE_REASON=issue_checked_out` arrives with `PAPERCLIP_TASK_ID` already `done`, confirm via `inbox-lite` plus assignee/status query that no `todo`/`in_progress`/`blocked` tasks remain, then exit without any issue mutations.
+
+## 2026-04-10 — Word-first handbook audits should be code-derived from `choices` keys
+For handbook reinforcement checks (like [DUB-490](/DUB/issues/DUB-490)), derive the exact target-word set from `InteractiveHandbookGame.tsx` `labelKey` definitions (`games.interactiveHandbook.choices.*`), then run three parity checks together: (1) no hardcoded Hebrew in handbook runtime/page files, (2) locale presence in `common.json`, and (3) on-disk audio file existence from key-to-path mapping. Report counts (`total/missing`) for both full handbook key usage and the reinforced-word subset so PM/FED can confirm word-first readiness without manual spot checks.

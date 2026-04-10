@@ -1,36 +1,45 @@
 # Dubiland crawl policy
 
 User-agent: *
-Allow: /
-Allow: /letters
-Allow: /numbers
-Allow: /reading
-Allow: /parents
-Allow: /parents/faq
-Disallow: /home
-Disallow: /profiles
-Disallow: /parent
-Disallow: /login
+Allow: /Dubiland/
+Allow: /Dubiland/about
+Allow: /Dubiland/letters
+Allow: /Dubiland/numbers
+Allow: /Dubiland/reading
+Allow: /Dubiland/parents
+Allow: /Dubiland/parents/faq
+Allow: /Dubiland/terms
+Allow: /Dubiland/privacy
+Disallow: /Dubiland/profiles
+Disallow: /Dubiland/parent
+Disallow: /Dubiland/login
+Disallow: /Dubiland/games
 
 User-agent: Googlebot
-Allow: /
+Allow: /Dubiland/
 
 User-agent: Bingbot
-Allow: /
+Allow: /Dubiland/
 
 User-agent: DuckDuckBot
-Allow: /
+Allow: /Dubiland/
 
 User-agent: GPTBot
-Allow: /
+Allow: /Dubiland/
+
+User-agent: ChatGPT-User
+Allow: /Dubiland/
 
 User-agent: PerplexityBot
-Allow: /
+Allow: /Dubiland/
 
 User-agent: ClaudeBot
-Allow: /
+Allow: /Dubiland/
+
+User-agent: anthropic-ai
+Allow: /Dubiland/
 
 User-agent: Google-Extended
-Allow: /
+Allow: /Dubiland/
 
-Sitemap: https://dubiland.co.il/sitemap.xml
+Sitemap: https://israelzablianov.github.io/Dubiland/sitemap.xml

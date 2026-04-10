@@ -115,3 +115,30 @@ For RTL-native progress bars, reviewing gradient angle alone is insufficient. Ve
 
 ## 2026-04-10 — Replay-glyph compliance reruns must still enforce auto-play on new instruction surfaces
 Even when a rerun scope is “icon remediation” (`🔊` → `▶`), keep the mandatory game blocker for instruction auto-play on every newly displayed instruction state (e.g., midpoint/completion overlays). Replay availability is not a substitute for auto-play.
+
+## 2026-04-10 — Assignment-triggered wake can carry a non-owned `PAPERCLIP_TASK_ID`
+On `issue_assigned` wakes, verify `PAPERCLIP_TASK_ID` assignee before prioritizing it. If it is not assigned to QA and inbox only contains a blocked lane with no new comments since your last blocker update, apply blocked-dedup and exit without checkout/comment noise.
+
+## 2026-04-10 — Handbook reruns close faster with a key+audio parity script for the exact slot pack
+For interactive-handbook slot reruns (e.g., `5-6` -> `magicLetterMap`), pair code mapping checks with a scripted parity sweep of required i18n/audio keys (cover/pages/interactions/completion + parent summary keys) using the same kebab-case path transform as runtime `keyToAudioPath`. Reporting `checked`/`missing` counts gives auditable sign-off evidence and catches silent asset drift quickly.
+
+## 2026-04-10 — Parent dashboard QA must gate smooth-scroll on reduced-motion
+For non-game UX polish lanes, treat programmatic smooth scrolling as an accessibility gate: any `scrollIntoView({ behavior: 'smooth' })` path must detect `prefers-reduced-motion` and fall back to `behavior: 'auto'` before QA sign-off.
+
+## 2026-04-10 — Checkout conflict issue can become run-context anchor for later checkouts
+When a target issue returns checkout conflict with stale lock metadata, subsequent checkouts in the same run may fail with `Checkout run context is bound to a different issue` and `snapshotIssueId` pointing to the conflicted issue. Treat remaining assigned reviews as deferred to next heartbeat (no same-run retries), and leave an explicit defer note on affected lanes.
+
+## 2026-04-10 — Login onboarding-skip QA should validate the full access-context matrix
+For login bypass fixes, close QA only after verifying redirect guards across all three allowed contexts with a non-guest active child: local mode (no Supabase), guest mode, and authenticated session. Also confirm regressions stay clean (`user` without child still routes `/profiles`, no-child still sees onboarding), then record `typecheck` + web build evidence.
+
+## 2026-04-10 — Handbook QA blocker bundle should include screenshots + runtime matrix + pa11y JSON
+For tablet-first handbook lanes, capture an auditable artifact pack (`768x1024` + `1024x768` screenshots, runtime timing/control matrix JSON, and `pa11y` JSON). Treat missing in-page illustrations (`img/picture/svg` count 0 in story surface), RTL direction glyph mismatch, and unresolved contrast errors as immediate blockers and route fixes to the active FED implementation lane.
+
+## 2026-04-10 — Nav active-state QA for `/games` migration should use a 3-point code contract
+When migrating app-home semantics from `/home` to `/games`, close QA only after all three are true together: (1) app nav links point to `/games` (not `/`), (2) active matcher keeps `/games` active for `/games`, `/games/*`, and legacy `/home`, and (3) landing-home matcher is restricted to exact `/` to prevent false public-home highlights inside app/game routes.
+
+## 2026-04-10 — Paperclip identifier filter may still return full issue list; always jq-select locally
+For `/api/companies/{companyId}/issues?identifier=...`, do not assume server-side exact filtering. Pipe the response through `jq` and select by exact `identifier` locally to avoid noisy context and token-heavy logs during heartbeat triage.
+
+## 2026-04-10 — Same-run task switch needs `release`, and release can mutate issue ownership/state
+When a heartbeat run is context-bound to one issue, switching to another assigned issue may require `POST /api/issues/{issueId}/release` on the bound issue first. That release call can reset checkout fields and may alter assignment/status routing, so always re-fetch the released issue immediately after switching to confirm it still reflects the intended blocker/owner state.

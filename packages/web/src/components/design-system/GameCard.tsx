@@ -14,6 +14,9 @@ interface GameCardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'>
   difficultyLabel?: string;
   stars?: number;
   maxStars?: number;
+  progressPercent?: number;
+  progressAriaLabel?: string;
+  progressValueLabel?: string;
 }
 
 interface TagChipProps {
@@ -31,6 +34,11 @@ function clampDifficulty(value: number): number {
 function meterDots(value: number): string {
   const level = clampDifficulty(value);
   return `${'●'.repeat(level)}${'○'.repeat(Math.max(0, 5 - level))}`;
+}
+
+function clampProgress(value: number): number {
+  if (!Number.isFinite(value)) return 0;
+  return Math.max(0, Math.min(100, Math.round(value)));
 }
 
 function tagChipBackground(tone: TagChipProps['tone']): string {
@@ -93,6 +101,9 @@ export function GameCard({
   difficultyLabel,
   stars = 0,
   maxStars = 3,
+  progressPercent,
+  progressAriaLabel,
+  progressValueLabel,
   style,
   ...props
 }: GameCardProps) {
@@ -100,6 +111,7 @@ export function GameCard({
   const supportLabels = (ageSupportLabels ?? []).filter((label) => label.trim().length > 0);
   const supportBadgeLabel =
     supportLabels.length === 0 ? null : supportLabels.length === 1 ? `+${supportLabels[0]}` : `+${supportLabels.length}`;
+  const normalizedProgress = clampProgress(progressPercent ?? 0);
 
   return (
     <div
@@ -181,6 +193,65 @@ export function GameCard({
             />
           </div>
         )}
+
+        <div
+          style={{
+            display: 'grid',
+            gap: 'var(--space-2xs)',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <span
+              style={{
+                fontSize: 'var(--font-size-xs)',
+                color: 'var(--color-text-secondary)',
+              }}
+            >
+              {progressAriaLabel}
+            </span>
+            <span
+              style={{
+                fontSize: 'var(--font-size-xs)',
+                color: 'var(--color-text-primary)',
+                fontWeight: 'var(--font-weight-semibold)' as unknown as number,
+              }}
+            >
+              {progressValueLabel ?? `${normalizedProgress}%`}
+            </span>
+          </div>
+
+          <div
+            role="progressbar"
+            aria-label={progressAriaLabel}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={normalizedProgress}
+            aria-valuetext={progressValueLabel ?? `${normalizedProgress}%`}
+            style={{
+              inlineSize: '100%',
+              blockSize: '10px',
+              borderRadius: 'var(--radius-full)',
+              background: 'var(--color-star-empty)',
+              overflow: 'hidden',
+            }}
+          >
+            <div
+              style={{
+                inlineSize: `${normalizedProgress}%`,
+                blockSize: '100%',
+                borderRadius: 'var(--radius-full)',
+                background:
+                  'linear-gradient(90deg, var(--color-accent-success), color-mix(in srgb, var(--color-accent-info) 70%, var(--color-accent-success) 30%))',
+              }}
+            />
+          </div>
+        </div>
 
         <div
           style={{

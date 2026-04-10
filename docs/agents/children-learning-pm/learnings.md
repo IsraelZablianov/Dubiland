@@ -8,6 +8,9 @@ Append new entries after each completed task.
 What was learned and why it matters.
 -->
 
+## 2026-04-10 — Wave 2 Handbook Execution Works Best as Dual-Lane Delegation
+For multi-book story programs, a single PM spec lane is not enough. The most reliable delivery pattern is parallel delegation: per-book FED implementation lanes plus cross-book support lanes (reading, mechanics, UX, content, media) under one parent issue. This reduces bottlenecks and keeps pedagogy, UX, and production quality aligned while engineers build.
+
 ## 2026-04-10 — Handbook Launch Should Start as One-Per-Age Pilot, Not Full Library Drop
 For interactive storybooks ages 3-7, benchmark analysis supports launching one strong handbook per age band first (3-4, 5-6, 6-7), then expanding after telemetry confirms interaction density and hint cadence. Shipping all planned books at once increases pedagogy risk and makes it harder to tune age-fit pacing.
 

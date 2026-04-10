@@ -6,6 +6,7 @@ import type { GameProps, ParentSummaryMetrics, StableRange } from '@/games/engin
 
 type HintTrend = ParentSummaryMetrics['hintTrend'];
 type MessageTone = 'neutral' | 'hint' | 'success' | 'error';
+type CheckpointFeedbackTone = 'idle' | 'success' | 'error';
 type PageId = 'p01' | 'p02' | 'p03' | 'p04' | 'p05' | 'p06';
 type WordId =
   | 'dubi'
@@ -268,6 +269,8 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
   const [supportModeActivations, setSupportModeActivations] = useState(0);
   const [completed, setCompleted] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [scorePulse, setScorePulse] = useState(false);
+  const [checkpointFeedback, setCheckpointFeedback] = useState<CheckpointFeedbackTone>('idle');
 
   const completionSentRef = useRef(false);
   const timeoutIdsRef = useRef<number[]>([]);
@@ -326,6 +329,8 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
     setSelectedOptionId(null);
     setLocked(false);
     setHintStep(0);
+    setScorePulse(false);
+    setCheckpointFeedback('idle');
     setMessageTone(supportMode ? 'hint' : 'neutral');
     setMessageKey(
       supportMode
@@ -419,6 +424,7 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
     if (completed) return;
     setSelectedOptionId(null);
     setHintStep(0);
+    setCheckpointFeedback('idle');
     setMessageTone('neutral');
     setMessageKey('games.decodableMicroStories.instructions.chooseAnswer');
     playKey('games.decodableMicroStories.controls.retry', true);
@@ -464,9 +470,17 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
         setLocked(true);
         setConsecutiveMisses(0);
         setShowCelebration(true);
+        setCheckpointFeedback('success');
+        scheduleTimeout(() => {
+          setCheckpointFeedback('idle');
+        }, 540);
 
         if (firstTrySuccess) {
           setFirstAttemptSuccessCount((count) => count + 1);
+          setScorePulse(true);
+          scheduleTimeout(() => {
+            setScorePulse(false);
+          }, 420);
           setIndependentStreak((streak) => {
             const nextStreak = streak + 1;
             if (nextStreak >= 3) {
@@ -503,6 +517,11 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
         [currentPage.id]: nextWrongAttempts,
       }));
       setIndependentStreak(0);
+      setScorePulse(false);
+      setCheckpointFeedback('error');
+      scheduleTimeout(() => {
+        setCheckpointFeedback('idle');
+      }, 420);
       setConsecutiveMisses((previousMisses) => {
         const nextMisses = previousMisses + 1;
         if (nextMisses >= 2) {
@@ -544,6 +563,7 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
 
   const hintCount = hintUsageByPage[currentPage.id] ?? 0;
   const wrongAttempts = wrongAttemptsByPage[currentPage.id] ?? 0;
+  const displayedPage = completed ? STORY_PAGES.length : currentPageIndex + 1;
 
   return (
     <Card padding="lg" className="decodable-story__shell">
@@ -560,7 +580,7 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
       <div className="decodable-story__progress-row">
         <p className="decodable-story__progress-label" aria-live="polite">
           {t('games.decodableMicroStories.status.pageLabel', {
-            current: completed ? STORY_PAGES.length : currentPageIndex + 1,
+            current: displayedPage,
             total: STORY_PAGES.length,
           })}
         </p>
@@ -575,6 +595,15 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
             );
           })}
         </div>
+      </div>
+      <div className="decodable-story__score-strip" aria-live="polite">
+        <span className={`decodable-story__score-pill ${scorePulse ? 'decodable-story__score-pill--pulse' : ''}`}>
+          ⭐ {firstAttemptSuccessCount}
+        </span>
+        <span className="decodable-story__score-pill">
+          🎯 {displayedPage}/{STORY_PAGES.length}
+        </span>
+        {!completed && supportMode && <span className="decodable-story__score-pill">💡 {hintCount}</span>}
       </div>
 
       {!completed && (
@@ -677,7 +706,15 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
               </button>
             </div>
 
-            <div className="decodable-story__checkpoint-card">
+            <div
+              className={`decodable-story__checkpoint-card ${
+                checkpointFeedback === 'success'
+                  ? 'decodable-story__checkpoint-card--success'
+                  : checkpointFeedback === 'error'
+                    ? 'decodable-story__checkpoint-card--error'
+                    : ''
+              }`}
+            >
               <div className="decodable-story__story-row">
                 <p className="decodable-story__checkpoint-prompt">{t(currentPage.comprehensionPromptKey as any)}</p>
                 <button
@@ -830,6 +867,28 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
         .decodable-story__progress-dot--active {
           background: var(--color-accent-primary);
           transform: scaleY(1.15);
+          animation: decodable-story-progress-breathe 1.3s ease-in-out infinite;
+        }
+
+        .decodable-story__score-strip {
+          display: flex;
+          flex-wrap: wrap;
+          gap: var(--space-xs);
+        }
+
+        .decodable-story__score-pill {
+          margin: 0;
+          padding-inline: var(--space-sm);
+          padding-block: var(--space-2xs);
+          border-radius: var(--radius-full);
+          background: color-mix(in srgb, var(--color-theme-secondary) 14%, transparent);
+          color: var(--color-text-primary);
+          font-size: var(--font-size-sm);
+          font-weight: var(--font-weight-semibold);
+        }
+
+        .decodable-story__score-pill--pulse {
+          animation: decodable-story-score-pulse 320ms ease;
         }
 
         .decodable-story__story-card {
@@ -995,6 +1054,16 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
           background: color-mix(in srgb, var(--color-bg-card) 86%, white 14%);
         }
 
+        .decodable-story__checkpoint-card--success {
+          border-color: color-mix(in srgb, var(--color-accent-success) 58%, transparent);
+          animation: decodable-story-card-pop 280ms ease;
+        }
+
+        .decodable-story__checkpoint-card--error {
+          border-color: color-mix(in srgb, var(--color-accent-danger) 55%, transparent);
+          animation: decodable-story-card-shake 300ms ease;
+        }
+
         .decodable-story__options-grid {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -1071,6 +1140,58 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
           font-size: var(--font-size-sm);
         }
 
+        @keyframes decodable-story-progress-breathe {
+          0%,
+          100% {
+            transform: scaleY(1.15);
+          }
+          50% {
+            transform: scaleY(1.3);
+          }
+        }
+
+        @keyframes decodable-story-score-pulse {
+          0% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.08);
+          }
+          100% {
+            transform: scale(1);
+          }
+        }
+
+        @keyframes decodable-story-card-pop {
+          0% {
+            transform: scale(0.99);
+          }
+          60% {
+            transform: scale(1.01);
+          }
+          100% {
+            transform: scale(1);
+          }
+        }
+
+        @keyframes decodable-story-card-shake {
+          0% {
+            transform: translateX(0);
+          }
+          25% {
+            transform: translateX(-3px);
+          }
+          50% {
+            transform: translateX(3px);
+          }
+          75% {
+            transform: translateX(-2px);
+          }
+          100% {
+            transform: translateX(0);
+          }
+        }
+
         @media (max-width: 860px) {
           .decodable-story__title {
             font-size: clamp(1.2rem, 1rem + 0.9vw, 1.5rem);
@@ -1092,6 +1213,13 @@ export function DecodableStoryReaderGame({ onComplete, audio }: GameProps) {
           .decodable-story__option,
           .decodable-story__progress-dot {
             transition: none;
+          }
+
+          .decodable-story__progress-dot--active,
+          .decodable-story__score-pill--pulse,
+          .decodable-story__checkpoint-card--success,
+          .decodable-story__checkpoint-card--error {
+            animation: none;
           }
         }
       `}</style>

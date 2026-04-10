@@ -105,7 +105,7 @@ export default function SightWordSprintPage() {
             <p style={{ margin: 0, color: 'var(--color-text-secondary)' }}>{t('games.sightWordSprint.subtitle')}</p>
           </div>
 
-          <Button variant="ghost" size="md" onClick={() => navigate('/home')} aria-label={t('nav.back')}>
+          <Button variant="ghost" size="md" onClick={() => navigate('/games')} aria-label={t('nav.back')}>
             {t('nav.back')}
           </Button>
         </header>

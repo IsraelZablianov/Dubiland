@@ -30,6 +30,7 @@ type LetterId =
 type LetterAudioKey = `letters.pronunciation.${LetterId}`;
 type GameLevelId = 1 | 2 | 3;
 type HintTone = 'neutral' | 'hint' | 'success';
+type AudioManifestState = 'loading' | 'ready' | 'failed';
 
 type StatusKey =
   | LetterAudioKey
@@ -509,6 +510,8 @@ export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
   const { t } = useTranslation('common');
 
   const [audioManifest, setAudioManifest] = useState<AudioManifest | null>(null);
+  const [audioManifestState, setAudioManifestState] = useState<AudioManifestState>('loading');
+  const [audioDegraded, setAudioDegraded] = useState(false);
 
   const [roundNumber, setRoundNumber] = useState(1);
   const [level, setLevel] = useState<GameLevelId>(1);
@@ -602,6 +605,16 @@ export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
     return Array.from(pronunciation)[0] ?? pronunciation;
   }, [currentLetterAudioKey, t]);
 
+  const handleAudioPlaybackFailure = useCallback(() => {
+    setAudioDegraded((current) => {
+      if (current) {
+        return current;
+      }
+      setRoundMessage({ key: 'feedback.keepGoing', tone: 'hint' });
+      return true;
+    });
+  }, []);
+
   const targetPath = useMemo(
     () => round.pathPoints.map((point) => `${point.x},${point.y}`).join(' '),
     [round.pathPoints],
@@ -623,12 +636,24 @@ export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
     void fetch('/audio/he/manifest.json')
       .then((response) => response.json())
       .then((manifest: unknown) => {
-        if (!mounted || !isAudioManifest(manifest)) {
+        if (!mounted) {
+          return;
+        }
+        if (!isAudioManifest(manifest)) {
+          setAudioManifestState('failed');
+          setAudioDegraded(true);
           return;
         }
         setAudioManifest(manifest);
+        setAudioManifestState('ready');
       })
-      .catch(() => undefined);
+      .catch(() => {
+        if (!mounted) {
+          return;
+        }
+        setAudioManifestState('failed');
+        setAudioDegraded(true);
+      });
 
     return () => {
       mounted = false;
@@ -647,13 +672,21 @@ export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
 
   const playAudioKey = useCallback(
     (key: AudioKey) => {
-      const path = resolveAudioPath(key);
-      if (!path) {
+      if (audioDegraded) {
         return;
       }
-      audio.play(path);
+      const path = resolveAudioPath(key);
+      if (!path) {
+        if (audioManifestState === 'failed') {
+          handleAudioPlaybackFailure();
+        }
+        return;
+      }
+      void audio.play(path).catch(() => {
+        handleAudioPlaybackFailure();
+      });
     },
-    [audio, resolveAudioPath],
+    [audio, audioDegraded, audioManifestState, handleAudioPlaybackFailure, resolveAudioPath],
   );
 
   const setMessageWithAudio = useCallback(
@@ -1514,6 +1547,13 @@ export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
           </button>
         </div>
 
+        {audioDegraded ? (
+          <p className="letter-tracing-trail__audio-fallback" aria-live="polite">
+            <span aria-hidden="true">🔇</span>
+            <span>{t('feedback.keepGoing')}</span>
+          </p>
+        ) : null}
+
         <section className="letter-tracing-trail__board">
           <Card padding="md" className="letter-tracing-trail__trace-card">
             <div className="letter-tracing-trail__trace-head">
@@ -1826,10 +1866,10 @@ const letterTracingTrailStyles = `
   }
 
   .letter-tracing-trail__replay-button {
-    inline-size: 44px;
-    block-size: 44px;
-    min-inline-size: 44px;
-    min-block-size: 44px;
+    inline-size: var(--touch-min);
+    block-size: var(--touch-min);
+    min-inline-size: var(--touch-min);
+    min-block-size: var(--touch-min);
     border-radius: var(--radius-sm);
     border: none;
     background: transparent;
@@ -1850,6 +1890,19 @@ const letterTracingTrailStyles = `
   .letter-tracing-trail__replay-button:focus-visible {
     outline: 3px solid color-mix(in srgb, var(--color-theme-primary) 45%, transparent);
     outline-offset: 2px;
+  }
+
+  .letter-tracing-trail__audio-fallback {
+    margin: 0;
+    min-height: var(--touch-min);
+    border-radius: var(--radius-md);
+    border: 1px dashed color-mix(in srgb, var(--color-accent-warning) 52%, transparent);
+    background: color-mix(in srgb, var(--color-bg-card) 90%, var(--color-accent-warning) 10%);
+    color: var(--color-text-secondary);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    padding-inline: var(--space-sm);
   }
 
   .letter-tracing-trail__trace-card,
@@ -1887,7 +1940,7 @@ const letterTracingTrailStyles = `
   }
 
   .letter-tracing-trail__metric-pill {
-    min-height: 44px;
+    min-height: var(--touch-min);
     padding: 0 var(--space-sm);
     border-radius: var(--radius-full);
     border: 2px solid color-mix(in srgb, var(--color-theme-primary) 24%, transparent);
@@ -2016,14 +2069,14 @@ const letterTracingTrailStyles = `
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 44px;
+    min-height: var(--touch-min);
   }
 
   .letter-tracing-trail__option-replay {
-    inline-size: 44px;
-    block-size: 44px;
-    min-inline-size: 44px;
-    min-block-size: 44px;
+    inline-size: var(--touch-min);
+    block-size: var(--touch-min);
+    min-inline-size: var(--touch-min);
+    min-block-size: var(--touch-min);
   }
 
   .letter-tracing-trail__target-name-wrap {
@@ -2039,7 +2092,7 @@ const letterTracingTrailStyles = `
   }
 
   .letter-tracing-trail__target-chip {
-    min-height: 44px;
+    min-height: var(--touch-min);
     padding: 0 var(--space-sm);
     border-radius: var(--radius-full);
     border: 2px solid color-mix(in srgb, var(--color-theme-primary) 28%, transparent);
@@ -2057,10 +2110,10 @@ const letterTracingTrailStyles = `
   }
 
   .letter-tracing-trail__target-chip-replay {
-    inline-size: 44px;
-    block-size: 44px;
-    min-inline-size: 44px;
-    min-block-size: 44px;
+    inline-size: var(--touch-min);
+    block-size: var(--touch-min);
+    min-inline-size: var(--touch-min);
+    min-block-size: var(--touch-min);
   }
 
   .letter-tracing-trail--midpoint,

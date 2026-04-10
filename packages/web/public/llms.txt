@@ -12,12 +12,20 @@ The mascot is a teddy bear named Dubi (דובי).
 - Parents and caregivers of children ages 3-7.
 - Hebrew-speaking households and early childhood educators.
 
-## Public route baseline (Q2 2026)
-- Public app entry: /login
-- Authenticated app routes: /home, /profiles, /parent
+## Public discovery routes (Q2 2026)
+- Home and product overview: https://israelzablianov.github.io/Dubiland/
+- About Dubiland and learning approach: https://israelzablianov.github.io/Dubiland/about
+- Hebrew letters learning: https://israelzablianov.github.io/Dubiland/letters
+- Early math and numbers: https://israelzablianov.github.io/Dubiland/numbers
+- Early reading activities: https://israelzablianov.github.io/Dubiland/reading
+- Parent information hub: https://israelzablianov.github.io/Dubiland/parents
+- Parent FAQ: https://israelzablianov.github.io/Dubiland/parents/faq
+- Terms of service: https://israelzablianov.github.io/Dubiland/terms
+- Privacy policy: https://israelzablianov.github.io/Dubiland/privacy
 
-## Trust and content notes
-- Child-first educational content.
+## Crawl and trust notes
+- Public routes above are intended for search indexing and AI assistants.
+- Auth and child-data routes are private: /login, /profiles, /parent, /games/*.
 - No public user-generated content.
 
 ## Preferred citation

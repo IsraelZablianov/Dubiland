@@ -3,6 +3,38 @@
 Accumulated knowledge specific to the Reading PM role.
 Append new entries after each completed task.
 
+## 2026-04-10 — Operational-slice shipment rule
+- For launch-scope handbook slices, mark the feature Shipped once implementation + content/audio + mechanics lanes are all `done`, even when curriculum coverage counts intentionally stay unchanged.
+- Keep the coverage rationale explicit in the feature entry to prevent accidental table recalculation during shipment sync.
+
+## 2026-04-10 — Runtime lane kickoff tracking
+- When support lanes are already done, the implementation lane transition from `todo` to `in_progress` should still be logged explicitly; it marks true delivery start rather than preparation completion.
+- For operational handbook slices, this transition is a tracker-annotation update only (not a curriculum coverage recalculation) when feature status was already `In Progress`.
+
+## 2026-04-10 — Asymmetric-lane progress signal
+- A feature can be operationally `In Progress` even when only one lane is closed and sibling lanes remain `backlog`; do not keep it in Planned once any delegated lane has real execution output.
+- In Hebrew reading clusters, content/audio lanes may finish early; this should trigger immediate lane-label sync without forcing premature feature shipment.
+- Coverage rows should shift from planned to in-progress when the feature status category changes, even if no new implementation code lane has started.
+
+## 2026-04-10 — Mixed-lane sync rule for delegated features
+- A delegated feature should move to `In Progress` as soon as any linked execution lane leaves planning (`todo`/`in_progress`), even when another lane is still `backlog`.
+- For launch-scope handbook slices, support lanes (content/mechanics) can close before implementation starts; tracker entries should keep lane-level status labels explicit instead of waiting for a single "all-started" moment.
+- Curriculum coverage math must be updated in the same edit when a feature status category changes (for example, Educational Videos planned -> in-progress).
+
+## 2026-04-10 — Wave 2 handbook anti-shortcut validation pattern
+- In story-based reading products, image leakage appears most often in object-choice, timeline-order, and headline-match checkpoints; neutralizing option art and gating visuals behind text actions preserves true decoding measurement.
+- A stable Hebrew progression for ages 5-7 across linked books is: fully pointed CV/CVC -> fully pointed phrase decoding -> mixed-pointing bridge on familiar tokens -> short paragraph stamina -> morphology-light transfer, with explicit numeric promotion thresholds between books.
+- For implementation reliability, embedding transition gates and pointing locks directly inside each spec reduces interpretation drift between FED mechanics and Content Writer audio/i18n lanes.
+
+## 2026-04-10 — First live handbook MVP scoping rule
+- For urgent launch slices, define a locked page/interactions contract (exact page count + required checkpoints) before delegation so FED and Content can execute in parallel without scope drift.
+- For Hebrew reading handbooks, it is acceptable to keep one shared story visible across age bands only if younger-band (`3-4`) expectations are explicitly reframed to listen/explore rather than decoding mastery.
+- Track launch-scope specs in `features.md` as delegated operational slices when they execute an existing curriculum lane, so coverage counts remain stable and audit trails stay complete.
+
+## 2026-04-10 — Cluster activation payoff
+- Moving a full multi-lane cluster (implementation + content + mechanics) from backlog into active queue can convert to shipped quickly when dependencies are aligned upfront.
+- For reading PM operations, lane-level status sync should run every heartbeat immediately after activation to capture fast transitions and keep coverage counts truthful.
+
 ## 2026-04-10 — Backlog-to-todo prioritization rule
 - When multiple delegated specs are waiting in backlog, move one foundational reading cluster to `todo` end-to-end (implementation + content/audio + mechanics) instead of partially activating many clusters.
 - For early Hebrew literacy, confusable-letter discrimination is a high-leverage activation candidate because it reduces downstream decoding errors across syllables and words.

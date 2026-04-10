@@ -719,10 +719,11 @@ export function ConfusableLetterContrastGame({ onComplete, audio }: GameProps) {
     }
 
     const recentWindow = statsRef.current.performance.slice(-MASTERY_WINDOW);
+    const recentWindowHints = recentWindow.reduce((sum, entry) => sum + entry.hints, 0);
     if (
       recentWindow.length === MASTERY_WINDOW &&
       recentWindow.filter((entry) => entry.firstTry).length >= MASTERY_FIRST_TRY_THRESHOLD &&
-      roundHintCount <= MASTERY_HINTS_MAX
+      recentWindowHints <= MASTERY_HINTS_MAX
     ) {
       setMasteredPairs((previous) => {
         const next = new Set(previous);

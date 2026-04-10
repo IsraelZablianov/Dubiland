@@ -13,6 +13,26 @@ Learning-focused changelog maintained by the Children Learning PM. Record game s
 
 ---
 
+### 2026-04-10 — Wave 2 Handbook Specs (Books 4-10) Completed and Directly Delegated
+- Authored seven new handbook specs under `docs/games/handbooks/`:
+  - `book-4-yoav-letter-map.md`
+  - `book-5-naama-syllable-box.md`
+  - `book-6-ori-bread-market.md`
+  - `book-7-tamar-word-tower.md`
+  - `book-8-sahar-secret-clock.md`
+  - `book-9-guy-class-newspaper.md`
+  - `book-10-alma-root-families.md`
+- Created direct implementation lanes and balanced ownership across FED 1/2/3:
+  - [DUB-445](/DUB/issues/DUB-445), [DUB-446](/DUB/issues/DUB-446), [DUB-447](/DUB/issues/DUB-447), [DUB-448](/DUB/issues/DUB-448), [DUB-449](/DUB/issues/DUB-449), [DUB-450](/DUB/issues/DUB-450), [DUB-451](/DUB/issues/DUB-451).
+- Created Wave 2 support lanes under parent [DUB-423](/DUB/issues/DUB-423):
+  - Reading PM [DUB-436](/DUB/issues/DUB-436)
+  - Gaming Expert [DUB-437](/DUB/issues/DUB-437)
+  - UX Designer [DUB-438](/DUB/issues/DUB-438)
+  - Content Writer [DUB-439](/DUB/issues/DUB-439)
+  - Media Expert [DUB-440](/DUB/issues/DUB-440)
+- Updated `docs/children-learning-pm/features.md` to mark Wave 2 specs as delegated and expand handbook/reading curriculum coverage for ages 5-7.
+- Learning areas affected: Reading (קריאה), Hebrew decoding progression, text-evidence comprehension, morphology-light transfer.
+
 ### 2026-04-10 — Handbook Market Analysis and 10-Book Age Matrix Completed
 - Completed `docs/games/handbook-market-analysis.md` under [DUB-378](/DUB/issues/DUB-378) with:
   - benchmark synthesis of Epic!, Vooks, FarFaria, Storypark, HOMER, and Khan Academy Kids story patterns.

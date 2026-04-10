@@ -70,3 +70,15 @@ For multi-book handbook initiatives, translating each priority book into page-le
 
 ## 2026-04-10 — Confusable Letter Contrast Needs Final-Form Deferral + Rapid-Tap Guard
 For ages 5.5-6.5 confusable-letter games, keep early progression on non-final-form pairs and move final-form contrasts into dedicated later levels. Pair this with an explicit rapid-tap recovery gate (short input pause + modeled replay) so random tapping cannot accidentally simulate mastery.
+
+## 2026-04-10 — Wave Specs Need Explicit Support-Mode Ladders per Book
+For multi-book reading handbooks, a generic "gentle retry" note is not enough for implementation quality. Each spec should include a deterministic support trigger (attempt/inactivity threshold), fixed simplification order, and clear exit condition so FED can encode state transitions consistently and QA can verify anti-frustration behavior across books.
+
+## 2026-04-10 — Handbook Engagement Improves with Tap-Level Feedback + Page-Turn Anticipation
+For interactive storybook flows, kids stay motivated when every tap gets immediate micro-feedback (short motion + SFX) and solved interactions trigger a brief pre-turn reward beat near the next-page control. Keeping the core mechanic stable while rotating praise variants adds novelty without adding cognitive load.
+
+## 2026-04-10 — Exposure-Only Age Bands Must Not Share Mastery Completion Gates
+When a spec labels an age band as listen/explore exposure (for example `3-4`), completion logic cannot still require decoding mastery checkpoints for that same band. The contract must separate exposure completion from mastery completion, or telemetry and progression gating become misleading.
+
+## 2026-04-10 — Engagement Reviews Need a Clear Blocker vs Polish Split
+For launch-critical handbook reviews, comments should separate immediate retention blockers (tap responsiveness, page-turn motivation beats, age-band gate mismatches) from non-blocking polish (celebration variety, cadence tuning). This keeps FED execution focused under deadline pressure.

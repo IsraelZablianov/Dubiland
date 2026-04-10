@@ -1,0 +1,7 @@
+# Long-lived immutable cache for hashed build assets.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Keep HTML fresh so new deployments are discoverable quickly.
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate

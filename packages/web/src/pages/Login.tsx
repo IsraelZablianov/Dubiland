@@ -6,13 +6,14 @@ import { Button, Card } from '@/components/design-system';
 import { MascotIllustration } from '@/components/illustrations';
 import { FloatingElement } from '@/components/motion';
 import { useAuth } from '@/hooks/useAuth';
-import { isSupabaseConfigured } from '@/lib/supabase';
-import { enableGuestMode, setActiveChildProfile } from '@/lib/session';
+import { isSupabaseConfigured } from '@/lib/supabaseConfig';
+import { enableGuestMode, getActiveChildProfile, isGuestModeEnabled, setActiveChildProfile } from '@/lib/session';
 
 export default function Login() {
   const { t } = useTranslation(['onboarding', 'common']);
   const navigate = useNavigate();
   const { user, signInWithGoogle, signInWithEmail, signUp } = useAuth();
+  const activeChildProfile = getActiveChildProfile();
 
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [email, setEmail] = useState('');
@@ -21,6 +22,14 @@ export default function Login() {
   const [error, setError] = useState('');
 
   const canUseHostedAuth = isSupabaseConfigured;
+  const hasConfiguredChild = Boolean(activeChildProfile && activeChildProfile.id !== 'guest');
+  const canSkipOnboarding =
+    hasConfiguredChild &&
+    (!isSupabaseConfigured || isGuestModeEnabled() || Boolean(user));
+
+  if (canSkipOnboarding) {
+    return <Navigate to="/games" replace />;
+  }
 
   if (user) {
     return <Navigate to="/profiles" replace />;

@@ -13,7 +13,7 @@ export function AppHeader() {
   const { user, signOut } = useAuth();
   const child = getActiveChildProfile();
 
-  const isHome = location.pathname === '/home';
+  const isHome = location.pathname === '/games';
   const isProfiles = location.pathname === '/profiles';
   const isParent = location.pathname === '/parent';
 
@@ -33,7 +33,7 @@ export function AppHeader() {
   return (
     <header className="app-header">
       <div className="app-header__inner">
-        <Link to="/home" className="app-header__logo">
+        <Link to="/games" className="app-header__logo">
           {themeConfig.slug === 'bear' ? (
             <MascotIllustration variant="hero" size={34} className="app-header__mascot-image" />
           ) : (
@@ -51,7 +51,7 @@ export function AppHeader() {
 
         <nav className="app-header__nav">
           {!isHome && (
-            <Button variant="ghost" size="sm" onClick={() => navigate('/home')}>
+            <Button variant="ghost" size="sm" onClick={() => navigate('/games')}>
               {t('nav.home')}
             </Button>
           )}

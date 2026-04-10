@@ -12,6 +12,61 @@ Product changelog maintained by the PM (CEO). Record significant product decisio
 
 ---
 
+### 2026-04-10 — CEO coordination lane [DUB-510](/DUB/issues/DUB-510) activated for quality-overhaul execution control
+- Checked out [DUB-510](/DUB/issues/DUB-510) as the PM-owned parent under [DUB-493](/DUB/issues/DUB-493), with a live snapshot of 20 child lanes (14 `in_progress`, 6 `todo`).
+- Delegated CTO execution-triage lane [DUB-514](/DUB/issues/DUB-514) to force finding-to-fix conversion across QA/UX/education/performance outputs into concrete FED/backend tasks.
+- Delegated Ops reliability lane [DUB-515](/DUB/issues/DUB-515) to recover error-state agents and protect continuity on [DUB-497](/DUB/issues/DUB-497), [DUB-507](/DUB/issues/DUB-507), and [DUB-508](/DUB/issues/DUB-508).
+- Delegated Co-Founder activation lane [DUB-516](/DUB/issues/DUB-516) to start dormant critical leadership tracks [DUB-509](/DUB/issues/DUB-509) and [DUB-513](/DUB/issues/DUB-513), and synchronize with [DUB-512](/DUB/issues/DUB-512).
+- Decision: quality-exit gate v1 requires tablet QA+UX validation, clean Hebrew audio coverage, polished age-targeted home discovery, and at least one production-ready illustrated handbook.
+
+### 2026-04-10 — System-wide quality overhaul activated with full delegation map
+- Checked out board-assigned critical parent [DUB-493](/DUB/issues/DUB-493) and kept it as an executive coordination lane (no IC execution by PM).
+- Confirmed active cross-functional execution children under [DUB-493](/DUB/issues/DUB-493): [DUB-503](/DUB/issues/DUB-503), [DUB-498](/DUB/issues/DUB-498), [DUB-499](/DUB/issues/DUB-499), [DUB-500](/DUB/issues/DUB-500), [DUB-504](/DUB/issues/DUB-504), [DUB-505](/DUB/issues/DUB-505), [DUB-494](/DUB/issues/DUB-494), [DUB-495](/DUB/issues/DUB-495), [DUB-496](/DUB/issues/DUB-496), [DUB-497](/DUB/issues/DUB-497), [DUB-501](/DUB/issues/DUB-501), [DUB-502](/DUB/issues/DUB-502).
+- Added missing leadership lanes in this heartbeat: [DUB-512](/DUB/issues/DUB-512) (CMO competitive benchmark + quality messaging/SEO coordination) and [DUB-513](/DUB/issues/DUB-513) (Co-Founder handbook/story quality acceleration).
+- Decision: every child lane must post explicit owner/ETA/blocker evidence; PM escalates any unresolved blocker in the next heartbeat.
+
+### 2026-04-10 — Handbook launch moved to verification-first execution with CTO QA/perf orchestration lane
+- Board directive on [DUB-433](/DUB/issues/DUB-433) confirmed implementation scope is complete and priority is now testing + final polish.
+- PM checked out [DUB-433](/DUB/issues/DUB-433) and delegated technical verification orchestration to [Architect](/DUB/agents/architect) via new critical child [DUB-492](/DUB/issues/DUB-492).
+- Decision: keep [DUB-433](/DUB/issues/DUB-433) `in_progress` until CTO posts owner+ETA matrix plus go/no-go summary covering [DUB-460](/DUB/issues/DUB-460), [DUB-452](/DUB/issues/DUB-452), and [DUB-461](/DUB/issues/DUB-461).
+
+### 2026-04-10 — Word-first handbook UX requirement delegated across CTO, UX, and Content
+- Checked out board-assigned UX improvement [DUB-483](/DUB/issues/DUB-483) and triaged it as a cross-functional execution lane linked to active handbook bug-fix work.
+- Delegated implementation to [Architect](/DUB/agents/architect) via [DUB-488](/DUB/issues/DUB-488), acceptance criteria to [UX Designer](/DUB/agents/ux-designer) via [DUB-489](/DUB/issues/DUB-489), and i18n/audio alignment to [Content Writer](/DUB/agents/content-writer) via [DUB-490](/DUB/issues/DUB-490).
+- Decision: keep [DUB-483](/DUB/issues/DUB-483) `in_progress` as PM coordination gate and require overlap reconciliation with [DUB-482](/DUB/issues/DUB-482), [DUB-484](/DUB/issues/DUB-484), and [DUB-485](/DUB/issues/DUB-485).
+
+### 2026-04-10 — Critical handbook word-rendering bug routed to CTO execution lane
+- Board-assigned bug [DUB-482](/DUB/issues/DUB-482) reported missing target words in interactive handbooks (books 1-3), causing comprehension questions to reference unseen content.
+- PM checked out [DUB-482](/DUB/issues/DUB-482), triaged it as technical execution scope, and delegated via child [DUB-484](/DUB/issues/DUB-484) to [Architect](/DUB/agents/architect).
+- Decision: keep [DUB-482](/DUB/issues/DUB-482) as PM coordination parent until CTO posts root-cause, fix evidence, and regression coverage.
+
+### 2026-04-10 — Ops enforced handbook-first priority; non-handbook lanes paused
+- Ops Watchdog completed [DUB-476](/DUB/issues/DUB-476) and moved non-handbook active parents to `backlog` to protect handbook ship focus, including [DUB-1](/DUB/issues/DUB-1) and [DUB-10](/DUB/issues/DUB-10).
+- PM accepted the enforcement as aligned with board directive and kept handbook coordination anchored on [DUB-433](/DUB/issues/DUB-433) and [DUB-455](/DUB/issues/DUB-455).
+- Decision: maintain handbook-only execution priority until the first live illustrated handbook clears final QA gates.
+
+### 2026-04-10 — PM added and closed CTO technical activation lane for handbook TODO closure
+- Created [DUB-477](/DUB/issues/DUB-477) under [DUB-433](/DUB/issues/DUB-433), assigned to [Architect](/DUB/agents/architect), then closed as `done` after CTO delivered the owner/ETA matrix and activation checkpoints for remaining technical TODOs ([DUB-441](/DUB/issues/DUB-441), [DUB-459](/DUB/issues/DUB-459), [DUB-471](/DUB/issues/DUB-471)).
+- Kept split implementation path explicitly in scope: [DUB-466](/DUB/issues/DUB-466), [DUB-467](/DUB/issues/DUB-467), [DUB-468](/DUB/issues/DUB-468), [DUB-469](/DUB/issues/DUB-469).
+- Co-Founder added complementary CTO pressure lane [DUB-478](/DUB/issues/DUB-478) under [DUB-454](/DUB/issues/DUB-454), now `done`, to reinforce kickoff on launch FED lanes without changing PM ownership.
+- Timing update: [DUB-478](/DUB/issues/DUB-478) tightened FED checkpoint ETA to **April 10, 2026 20:15 IDT** for [DUB-441](/DUB/issues/DUB-441), [DUB-458](/DUB/issues/DUB-458), and [DUB-459](/DUB/issues/DUB-459); PM mirrored this correction on [DUB-433](/DUB/issues/DUB-433).
+- Decision: CTO must post one owner/ETA dependency matrix on [DUB-433](/DUB/issues/DUB-433) to unblock final QA gates [DUB-460](/DUB/issues/DUB-460) and [DUB-452](/DUB/issues/DUB-452).
+
+### 2026-04-10 — CEO split uncovered handbook lanes into targeted delegates
+- Checked out [DUB-455](/DUB/issues/DUB-455) on comment-triggered wake and confirmed Co-Founder coverage on complementary lane [DUB-454](/DUB/issues/DUB-454).
+- Delegated uncovered execution owners under [DUB-455](/DUB/issues/DUB-455): [DUB-474](/DUB/issues/DUB-474) (Architect technical convergence), [DUB-475](/DUB/issues/DUB-475) (Gaming engagement checkpoint), [DUB-476](/DUB/issues/DUB-476) (Ops non-handbook reprioritization audit).
+- Decision: keep [DUB-455](/DUB/issues/DUB-455) `in_progress` until child lanes post owner/ETA/blocker checkpoints for same-day launch execution.
+
+### 2026-04-10 — First live handbook launch lane activated (magicLetterMap)
+- Checked out board-assigned parent [DUB-433](/DUB/issues/DUB-433) and triaged it as a critical cross-functional launch lane to ship one fully live illustrated handbook for all age bands.
+- Confirmed active child execution tree and normalized technical ownership routing through [Architect](/DUB/agents/architect) on [DUB-434](/DUB/issues/DUB-434), [DUB-444](/DUB/issues/DUB-444), and [DUB-452](/DUB/issues/DUB-452), while keeping frontend build lane [DUB-441](/DUB/issues/DUB-441) active in engineering execution.
+- Decision: keep [DUB-433](/DUB/issues/DUB-433) in `in_progress` until Architect posts a single technical integration order + owner/ETA matrix and non-technical lanes report first content/design readiness checkpoints.
+
+### 2026-04-10 — Handbook program advanced to Wave 2 + launch-trio unblock lanes
+- Wake assignment pointed to completed backend issue [DUB-371](/DUB/issues/DUB-371); first checkout returned conflict (`done`, backend-owned), so no retry and no ownership takeover.
+- Verified handbook dependency gates are complete: [DUB-379](/DUB/issues/DUB-379) and [DUB-384](/DUB/issues/DUB-384) now `done`; launch-trio execution remains active with open closures on [DUB-394](/DUB/issues/DUB-394), [DUB-399](/DUB/issues/DUB-399), [DUB-400](/DUB/issues/DUB-400).
+- Opened new PM delegation lanes under [DUB-377](/DUB/issues/DUB-377): [DUB-423](/DUB/issues/DUB-423) (Children Learning PM, books 4-10 specs) and [DUB-424](/DUB/issues/DUB-424) (Architect, launch-trio unblock/closeout).
+
 ### 2026-04-10 — Handbook program moved into consolidation phase
 - On comment-triggered follow-up for [DUB-377](/DUB/issues/DUB-377), validated completed inputs from [DUB-378](/DUB/issues/DUB-378), [DUB-380](/DUB/issues/DUB-380), [DUB-381](/DUB/issues/DUB-381), [DUB-382](/DUB/issues/DUB-382), and [DUB-383](/DUB/issues/DUB-383).
 - Posted PM dependency/technical checkpoints on the remaining open lanes: [DUB-379](/DUB/issues/DUB-379) and [DUB-384](/DUB/issues/DUB-384).

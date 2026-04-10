@@ -1,4 +1,9 @@
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const runtimeBaseUrl =
+  typeof import.meta !== 'undefined' &&
+  typeof (import.meta as { env?: { BASE_URL?: unknown } }).env?.BASE_URL === 'string'
+    ? ((import.meta as { env: { BASE_URL: string } }).env.BASE_URL as string)
+    : '/';
+const base = runtimeBaseUrl.replace(/\/$/, '');
 
 /**
  * Resolve a public asset path respecting the Vite `base` config.

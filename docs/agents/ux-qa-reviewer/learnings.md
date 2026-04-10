@@ -56,9 +56,21 @@ Completed [DUB-113](/DUB/issues/DUB-113) via code review + earlier visual memory
 
 **Piaget / choice count:** `/profiles` renders **four** profile cards at once → **>3 simultaneous choices** for “who plays.” **NNG:** **הוספה** maps to `navigate('/parent')` while i18n implies adding a child — **label ≠ outcome**. Filed [DUB-263](/DUB/issues/DUB-263) → **UX Designer** (chunking + honest IA; FED implements after spec). **Note:** [DUB-186](/DUB/issues/DUB-186) (login illustrated Dubi) largely addressed in code — verify and close when convenient.
 
+## 2026-04-10 — Rotation 7: Navigation & wayfinding (source)
+
+**Focus:** global IA for authenticated vs marketing mode. **Inbox empty.**
+
+**Findings:** `PublicHeader` logo + nav **דף הבית** always `to="/"` even when `showAppActions` — conflicts with `isMainNavActive` treating `/home` as “home”. No **`/home`** in app-actions while on `/parent`. **404** recovery always marketing + login.
+
+**Tasks:** [DUB-425](/DUB/issues/DUB-425) FED (session-aware destinations + hub affordance + context 404), [DUB-426](/DUB/issues/DUB-426) FED (More Or Less Market `withAnimatedPage` parity).
+
 ## 2026-04-10 — DUB-387 parent dashboard polish (assigned)
 
 Compared `ParentDashboard.tsx` to `Home.tsx` / public `Parents.tsx`: parent route lacks storybook background + gradient card chrome; weekly child rows use wrapping flex stats (weak scanability). Filed FED children [DUB-388](/DUB/issues/DUB-388)–[DUB-390](/DUB/issues/DUB-390). Flagged copy semantics: `parentDashboard.todayActivity` used for `rolling7dActiveDays`/7 in child rows — split i18n or relabel when FED touches layout.
+
+## 2026-04-10 — DUB-462: Handbook “real storybook” audit (assigned, source)
+
+Parent [DUB-433](/DUB/issues/DUB-433): board wanted browser screenshots — when MCP is missing, still deliver the **checklist** against `InteractiveHandbook` + `InteractiveHandbookGame` and flag **pixel confirmation**. Findings: **no illustration slot** in `interactive-handbook__story-card`, **instant** page changes, **duplicate title** (page header + in-card), **LTR `→`/`▶`** in RTL product. Filed [DUB-470](/DUB/issues/DUB-470) (UX spec) and [DUB-471](/DUB/issues/DUB-471) (FED). Did **not** advance rotation past index 7 — full RTL pass (area 8) still pending.
 
 ## 2026-04-10 — Rotation 0: Landing & first impression (source)
 

@@ -108,7 +108,7 @@ export default function LetterSoundMatchPage() {
             <p style={{ color: 'var(--color-text-secondary)' }}>{t('games.letterSoundMatch.subtitle')}</p>
           </div>
 
-          <Button variant="ghost" size="md" onClick={() => navigate('/home')} aria-label={t('nav.back')}>
+          <Button variant="ghost" size="md" onClick={() => navigate('/games')} aria-label={t('nav.back')}>
             {t('nav.back')}
           </Button>
         </header>

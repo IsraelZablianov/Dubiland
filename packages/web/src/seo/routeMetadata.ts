@@ -97,9 +97,9 @@ const ROUTE_METADATA_BY_PATH: Record<string, RouteMetadataDefinition> = {
     canonicalPath: '/profiles',
     indexable: false,
   },
-  '/home': {
+  '/games': {
     key: 'home',
-    canonicalPath: '/home',
+    canonicalPath: '/games',
     indexable: false,
   },
   '/parent': {

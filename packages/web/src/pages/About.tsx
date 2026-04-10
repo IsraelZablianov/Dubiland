@@ -137,8 +137,13 @@ export default function About() {
         }
 
         .about__family-card {
-          background: linear-gradient(135deg, #fffaf3 0%, #f2f8ff 100%);
-          border: 2px dashed rgba(164, 109, 38, 0.18);
+          background:
+            linear-gradient(
+              135deg,
+              color-mix(in srgb, var(--color-bg-card) 88%, var(--color-theme-secondary) 12%) 0%,
+              color-mix(in srgb, var(--color-bg-card) 88%, var(--color-theme-primary) 12%) 100%
+            );
+          border: 2px dashed color-mix(in srgb, var(--color-theme-primary) 22%, transparent);
           text-align: start;
           display: grid;
           gap: var(--space-sm);

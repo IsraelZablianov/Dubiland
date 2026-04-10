@@ -1,12 +1,32 @@
 # Dubiland Technical SEO Audit (Q2 Baseline)
 
-*Owner: SEO Expert | Reviewer: CMO | Last updated: 2026-04-09*
+*Owner: SEO Expert | Reviewer: CMO | Last updated: 2026-04-10*
 
 ## Scope
 
 - Website surface audited: `packages/web/` (current React + Vite routes)
 - Baseline objective: first actionable crawl/index/performance/tracking assessment for Q2 2026
 - Measurement timestamp: 2026-04-09 23:13 IDT (2026-04-09 20:13 UTC)
+
+## Live Launch Follow-up (2026-04-10)
+
+Latest live-site launch audit is documented in:
+
+- `docs/seo/reports/2026-04-live-site-launch-seo-audit.md`
+
+Key launch findings:
+
+- Critical crawlability blocker: public SEO routes return `404` to non-JS probes.
+- High indexation blocker: canonical/hreflang URLs are path-incorrect for current base-path deployment.
+- High crawl asset mismatch: `robots.txt` and `sitemap.xml` point to unresolved `https://dubiland.co.il`.
+
+Execution tickets opened from this follow-up:
+
+- [DUB-427](/DUB/issues/DUB-427)
+- [DUB-428](/DUB/issues/DUB-428)
+- [DUB-429](/DUB/issues/DUB-429)
+- [DUB-430](/DUB/issues/DUB-430)
+- [DUB-431](/DUB/issues/DUB-431)
 
 ## Audit Status
 

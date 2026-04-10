@@ -681,3 +681,63 @@
     - companies/dubiland
   last_accessed: "2026-04-10"
   access_count: 1
+
+- id: dubiland-seo-20260410-051
+  fact: "Board opened launch-priority issue DUB-419 for live-site SEO kickoff on the public Dubiland URL; CMO delegated execution to SEO Expert and reset the issue to todo under SEO ownership."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: superseded
+  superseded_by: dubiland-seo-20260410-053
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-052
+  fact: "CMO posted DUB-10 roll-up comment 7f9c6592 to integrate DUB-419 into the Q2 SEO program while preserving active closeout chains DUB-375 -> DUB-50 -> DUB-42 -> DUB-24 and DUB-20 -> DUB-18 -> DUB-21."
+  category: status
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-053
+  fact: "Launch lane DUB-419 is now in_progress under SEO Expert after CMO delegation, with deliverable report still pending."
+  category: status
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-054
+  fact: "Schema unblock lane DUB-375 is now in_progress under FED Engineer 2; CMO reaffirmed canonical blocker path DUB-375 -> DUB-50 -> DUB-42 -> DUB-24 and noted DUB-24 is already done."
+  category: status
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-055
+  fact: "Ops Watchdog redirected priorities to critical handbook launch DUB-433; CMO parked DUB-10 at todo and escalated to PM for scope decision on whether DUB-419 and DUB-375 should continue during the handbook window."
+  category: dependency
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1

@@ -19,7 +19,6 @@ interface ChildProgressRow {
   lifetimeLearningMinutes: number;
   todayLearningMinutes: number;
   rolling7dLearningMinutes: number;
-  rolling7dActiveDays: number;
   streak: number;
   stars: number;
 }
@@ -29,7 +28,6 @@ export default function ParentDashboard() {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
   const [error, setError] = useState('');
-  const [showAudioSettings, setShowAudioSettings] = useState(false);
 
   const useHostedData = isSupabaseConfigured && Boolean(user) && !isGuestModeEnabled();
   const [children, setChildren] = useState<ChildProgressRow[]>([]);
@@ -80,7 +78,6 @@ export default function ParentDashboard() {
             lifetimeLearningMinutes: childMetrics?.lifetime_learning_minutes ?? 0,
             todayLearningMinutes: childMetrics?.today_learning_minutes ?? 0,
             rolling7dLearningMinutes: childMetrics?.rolling_7d_learning_minutes ?? 0,
-            rolling7dActiveDays: childMetrics?.rolling_7d_active_days ?? 0,
             streak: childMetrics?.consecutive_play_streak_days ?? 0,
             stars: childMetrics?.best_stars_across_games ?? 0,
           };
@@ -113,6 +110,7 @@ export default function ParentDashboard() {
   const todayActivityProgress = totals.todayLearningMinutes > 0
     ? Math.min(100, Math.round((totals.todayLearningMinutes / DAILY_LEARNING_GOAL_MINUTES) * 100))
     : 0;
+  const hasChildren = children.length > 0;
 
   const handleLogout = async () => {
     setError('');
@@ -133,13 +131,14 @@ export default function ParentDashboard() {
   };
 
   const handleViewReports = () => {
+    const scrollBehavior: ScrollBehavior =
+      typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ? 'auto'
+        : 'smooth';
+
     document
       .getElementById('parent-dashboard-weekly-progress')
-      ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
-
-  const handleAudioSettings = () => {
-    setShowAudioSettings((current) => !current);
+      ?.scrollIntoView({ behavior: scrollBehavior, block: 'start' });
   };
 
   const handleManageChildren = () => {
@@ -188,174 +187,148 @@ export default function ParentDashboard() {
           </FloatingElement>
         </header>
 
-        <div className="parent-dashboard__summary-grid">
-          <Card padding="lg" className="parent-dashboard__stat-card">
-            <FeatureIllustration kind="games" size={56} />
-            <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
-              {t('parentDashboard.gamesPlayed')}
-            </span>
-            <strong style={{ fontSize: 'var(--font-size-2xl)', color: 'var(--color-text-primary)' }}>
-              {totals.lifetimeGamesPlayed}
-            </strong>
-            <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-xs)' }}>
-              {t('parentDashboard.weeklyProgress')}: {totals.rolling7dGamesPlayed}
-            </span>
-          </Card>
-
-          <Card padding="lg" className="parent-dashboard__stat-card">
-            <FeatureIllustration kind="minutes" size={56} />
-            <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
-              {t('parentDashboard.learningMinutes')}
-            </span>
-            <strong style={{ fontSize: 'var(--font-size-2xl)', color: 'var(--color-text-primary)' }}>
-              {totals.lifetimeLearningMinutes}
-            </strong>
-          </Card>
-
-          <Card padding="lg" className="parent-dashboard__stat-card">
-            <FeatureIllustration kind="streak" size={56} />
-            <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
-              {t('parentDashboard.streak')}
-            </span>
-            <strong style={{ fontSize: 'var(--font-size-2xl)', color: 'var(--color-text-primary)' }}>
-              {totals.streak}
-            </strong>
-          </Card>
-
-          <Card padding="lg" className="parent-dashboard__stat-card">
-            <FeatureIllustration kind="activity" size={56} />
-            <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
-              {t('parentDashboard.todayActivity')}
-            </span>
-            <strong style={{ fontSize: 'var(--font-size-2xl)', color: 'var(--color-text-primary)' }}>
-              {todayActivityProgress}%
-            </strong>
-            <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-xs)' }}>
-              {t('home.minutes', { count: totals.todayLearningMinutes })} / {t('home.minutes', { count: DAILY_LEARNING_GOAL_MINUTES })}
-            </span>
-          </Card>
-        </div>
-
-        <section id="parent-dashboard-weekly-progress" style={{ display: 'grid', gap: 'var(--space-sm)' }}>
-          <h2 style={{ fontSize: 'var(--font-size-lg)', color: 'var(--color-text-primary)' }}>
-            {t('parentDashboard.weeklyProgress')}
-          </h2>
-
-          <div className="parent-dashboard__weekly-list">
-            {children.length > 0 ? (
-              children.map((child) => (
-                <Card
-                  key={child.id}
-                  padding="md"
-                  style={{
-                    border: '2px solid color-mix(in srgb, var(--color-theme-primary) 18%, transparent)',
-                    background:
-                      'linear-gradient(150deg, color-mix(in srgb, var(--color-bg-card) 88%, var(--color-theme-secondary) 12%), var(--color-bg-card))',
-                  }}
-                >
-                  <div className="parent-dashboard__child-layout">
-                    <div className="parent-dashboard__child-identity">
-                      <Avatar name={child.name} emoji={child.emoji} size="lg" />
-                      <div className="parent-dashboard__child-identity-copy">
-                        <strong className="parent-dashboard__child-name">{child.name}</strong>
-                        <StarRating value={child.stars} max={3} size="sm" />
-                      </div>
-                    </div>
-
-                    <div className="parent-dashboard__child-metrics-grid">
-                      <div className="parent-dashboard__child-metric">
-                        <span className="parent-dashboard__child-metric-label">{t('parentDashboard.gamesPlayed')}</span>
-                        <strong className="parent-dashboard__child-metric-value">{child.rolling7dGamesPlayed}</strong>
-                      </div>
-
-                      <div className="parent-dashboard__child-metric">
-                        <span className="parent-dashboard__child-metric-label">{t('parentDashboard.learningMinutes')}</span>
-                        <strong className="parent-dashboard__child-metric-value">{child.rolling7dLearningMinutes}</strong>
-                      </div>
-
-                      <div className="parent-dashboard__child-metric">
-                        <span className="parent-dashboard__child-metric-label">{t('parentDashboard.todayActivity')}</span>
-                        <strong className="parent-dashboard__child-metric-value">{child.rolling7dActiveDays}/7</strong>
-                      </div>
-
-                      <div className="parent-dashboard__child-metric">
-                        <span className="parent-dashboard__child-metric-label">{t('parentDashboard.streak')}</span>
-                        <strong className="parent-dashboard__child-metric-value">{child.streak}</strong>
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              ))
-            ) : (
-              <Card
-                padding="lg"
-                className="parent-dashboard__weekly-empty"
-                style={{
-                  border: '2px solid color-mix(in srgb, var(--color-theme-primary) 18%, transparent)',
-                  background:
-                    'linear-gradient(160deg, color-mix(in srgb, var(--color-bg-card) 90%, var(--color-theme-secondary) 10%), var(--color-bg-card))',
-                }}
-              >
-                <MascotIllustration variant="hint" size={96} />
-                <div className="parent-dashboard__weekly-empty-copy">
-                  <strong style={{ color: 'var(--color-text-primary)' }}>{t('profile.noChildrenYet')}</strong>
-                  <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
-                    {t('parentDashboard.weeklyProgress')}
-                  </span>
-                </div>
-                <Button variant="secondary" size="md" onClick={handleManageChildren}>
-                  {t('parentDashboard.manageChildren')}
-                </Button>
-              </Card>
-            )}
-          </div>
-        </section>
-
-        {showAudioSettings ? (
-          <section id="parent-dashboard-audio-settings">
-            <Card
-              padding="md"
-              style={{
-                display: 'grid',
-                gap: 'var(--space-sm)',
-                border: '2px solid color-mix(in srgb, var(--color-theme-primary) 18%, transparent)',
-                background:
-                  'linear-gradient(150deg, color-mix(in srgb, var(--color-bg-card) 90%, var(--color-theme-secondary) 10%), var(--color-bg-card))',
-              }}
-            >
-              <h2 style={{ fontSize: 'var(--font-size-lg)', color: 'var(--color-text-primary)' }}>
-                {t('parentDashboard.audioSettings')}
-              </h2>
-              <p style={{ color: 'var(--color-text-secondary)' }}>{t('parentDashboard.audioSettingsIntro')}</p>
-              <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
-                {t('parentDashboard.audioSettingsDeviceHint')}
-              </p>
-              <Button variant="ghost" size="md" onClick={() => setShowAudioSettings(false)}>
-                {t('nav.back')}
-              </Button>
+        {hasChildren ? (
+          <>
+            <div className="parent-dashboard__summary-grid">
+            <Card padding="lg" className="parent-dashboard__stat-card">
+              <FeatureIllustration kind="games" size={56} />
+              <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
+                {t('parentDashboard.gamesPlayed')}
+              </span>
+              <strong style={{ fontSize: 'var(--font-size-2xl)', color: 'var(--color-text-primary)' }}>
+                {totals.lifetimeGamesPlayed}
+              </strong>
+              <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-xs)' }}>
+                {t('parentDashboard.weeklyProgress')}: {totals.rolling7dGamesPlayed}
+              </span>
             </Card>
-          </section>
-        ) : null}
+
+            <Card padding="lg" className="parent-dashboard__stat-card">
+              <FeatureIllustration kind="minutes" size={56} />
+              <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
+                {t('parentDashboard.learningMinutes')}
+              </span>
+              <strong style={{ fontSize: 'var(--font-size-2xl)', color: 'var(--color-text-primary)' }}>
+                {totals.lifetimeLearningMinutes}
+              </strong>
+            </Card>
+
+            <Card padding="lg" className="parent-dashboard__stat-card">
+              <FeatureIllustration kind="streak" size={56} />
+              <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
+                {t('parentDashboard.streak')}
+              </span>
+              <strong style={{ fontSize: 'var(--font-size-2xl)', color: 'var(--color-text-primary)' }}>
+                {totals.streak}
+              </strong>
+            </Card>
+
+            <Card padding="lg" className="parent-dashboard__stat-card">
+              <FeatureIllustration kind="activity" size={56} />
+              <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
+                {t('parentDashboard.todayActivity')}
+              </span>
+              <strong style={{ fontSize: 'var(--font-size-2xl)', color: 'var(--color-text-primary)' }}>
+                {todayActivityProgress}%
+              </strong>
+              <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-xs)' }}>
+                {t('home.minutes', { count: totals.todayLearningMinutes })} / {t('home.minutes', { count: DAILY_LEARNING_GOAL_MINUTES })}
+              </span>
+            </Card>
+            </div>
+
+            <section id="parent-dashboard-weekly-progress" style={{ display: 'grid', gap: 'var(--space-sm)' }}>
+              <h2 style={{ fontSize: 'var(--font-size-lg)', color: 'var(--color-text-primary)' }}>
+                {t('parentDashboard.weeklyProgress')}
+              </h2>
+
+              <div className="parent-dashboard__weekly-list">
+                {children.map((child) => (
+                  <Card
+                    key={child.id}
+                    padding="md"
+                    style={{
+                      border: '2px solid color-mix(in srgb, var(--color-theme-primary) 18%, transparent)',
+                      background:
+                        'linear-gradient(150deg, color-mix(in srgb, var(--color-bg-card) 88%, var(--color-theme-secondary) 12%), var(--color-bg-card))',
+                    }}
+                  >
+                    <div className="parent-dashboard__child-layout">
+                      <div className="parent-dashboard__child-identity">
+                        <Avatar name={child.name} emoji={child.emoji} size="lg" />
+                        <div className="parent-dashboard__child-identity-copy">
+                          <strong className="parent-dashboard__child-name">{child.name}</strong>
+                          <StarRating value={child.stars} max={3} size="sm" />
+                        </div>
+                      </div>
+
+                      <div className="parent-dashboard__child-metrics-grid">
+                        <div className="parent-dashboard__child-metric">
+                          <span className="parent-dashboard__child-metric-label">{t('parentDashboard.gamesPlayed')}</span>
+                          <strong className="parent-dashboard__child-metric-value">{child.rolling7dGamesPlayed}</strong>
+                        </div>
+
+                        <div className="parent-dashboard__child-metric">
+                          <span className="parent-dashboard__child-metric-label">{t('parentDashboard.learningMinutes')}</span>
+                          <strong className="parent-dashboard__child-metric-value">{child.rolling7dLearningMinutes}</strong>
+                        </div>
+
+                        <div className="parent-dashboard__child-metric">
+                          <span className="parent-dashboard__child-metric-label">{t('parentDashboard.todayActivity')}</span>
+                          <strong className="parent-dashboard__child-metric-value">
+                            {Math.min(100, Math.round((child.todayLearningMinutes / DAILY_LEARNING_GOAL_MINUTES) * 100))}%
+                          </strong>
+                        </div>
+
+                        <div className="parent-dashboard__child-metric">
+                          <span className="parent-dashboard__child-metric-label">{t('parentDashboard.streak')}</span>
+                          <strong className="parent-dashboard__child-metric-value">{child.streak}</strong>
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </section>
+          </>
+        ) : (
+          <Card
+            padding="lg"
+            className="parent-dashboard__empty-state"
+            style={{
+              border: '2px solid color-mix(in srgb, var(--color-theme-primary) 18%, transparent)',
+              background:
+                'linear-gradient(160deg, color-mix(in srgb, var(--color-bg-card) 90%, var(--color-theme-secondary) 10%), var(--color-bg-card))',
+            }}
+          >
+            <MascotIllustration variant="hint" size={96} />
+            <div className="parent-dashboard__empty-state-copy">
+              <strong style={{ color: 'var(--color-text-primary)' }}>{t('profile.noChildrenYet')}</strong>
+              <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
+                {t('parentDashboard.subtitle')}
+              </span>
+            </div>
+            <Button variant="secondary" size="md" onClick={handleManageChildren}>
+              {t('parentDashboard.manageChildren')}
+            </Button>
+          </Card>
+        )}
 
         <footer>
           <Card padding="md" className="parent-dashboard__actions-card">
             <div className="parent-dashboard__actions-main">
-              <Button
-                variant="secondary"
-                size="md"
-                onClick={handleViewReports}
-                className="parent-dashboard__reports-button"
-              >
-                {t('parentDashboard.jumpToWeeklyProgress')}
-              </Button>
-              <Button
-                variant="ghost"
-                size="md"
-                onClick={handleAudioSettings}
-                aria-controls="parent-dashboard-audio-settings"
-                aria-expanded={showAudioSettings}
-              >
-                {showAudioSettings ? t('parentDashboard.closeAudioSettings') : t('parentDashboard.audioSettings')}
+              {hasChildren ? (
+                <Button
+                  variant="secondary"
+                  size="md"
+                  onClick={handleViewReports}
+                  className="parent-dashboard__reports-button"
+                >
+                  {t('parentDashboard.jumpToWeeklyProgress')}
+                </Button>
+              ) : null}
+              <Button variant={hasChildren ? 'ghost' : 'secondary'} size="md" onClick={handleManageChildren}>
+                {t('parentDashboard.manageChildren')}
               </Button>
             </div>
             <Button variant="danger" size="sm" onClick={handleLogout} className="parent-dashboard__logout-button">
@@ -460,14 +433,14 @@ export default function ParentDashboard() {
           line-height: var(--line-height-tight);
         }
 
-        .parent-dashboard__weekly-empty {
+        .parent-dashboard__empty-state {
           display: grid;
           grid-template-columns: auto 1fr auto;
           align-items: center;
           gap: var(--space-md);
         }
 
-        .parent-dashboard__weekly-empty-copy {
+        .parent-dashboard__empty-state-copy {
           display: grid;
           gap: var(--space-xs);
         }
@@ -514,7 +487,7 @@ export default function ParentDashboard() {
             justify-self: center;
           }
 
-          .parent-dashboard__weekly-empty {
+          .parent-dashboard__empty-state {
             grid-template-columns: 1fr;
             text-align: center;
             justify-items: center;

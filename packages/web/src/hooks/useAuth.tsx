@@ -4,11 +4,13 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from 'react';
+import { useLocation } from 'react-router-dom';
 import type { AuthChangeEvent, Session, User } from '@supabase/supabase-js';
-import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { isSupabaseConfigured } from '@/lib/supabaseConfig';
 import { disableGuestMode } from '@/lib/session';
 
 type AuthContextValue = {
@@ -23,26 +25,120 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
+const AUTH_BOOTSTRAP_PREFIXES = ['/games', '/parent'] as const;
+const HANDBOOK_RENDER_FIRST_ROUTE = '/games/reading/interactive-handbook';
+
+function isRenderFirstAuthPath(pathname: string): boolean {
+  return pathname === HANDBOOK_RENDER_FIRST_ROUTE;
+}
+
+function hasPersistedSupabaseSessionHint(): boolean {
+  if (typeof window === 'undefined' || !window.localStorage) {
+    return false;
+  }
+
+  try {
+    const keys = Object.keys(window.localStorage);
+    return keys.some((key) => {
+      if (!key.startsWith('sb-') || !key.endsWith('-auth-token')) {
+        return false;
+      }
+
+      const token = window.localStorage.getItem(key);
+      return typeof token === 'string' && token.length > 0;
+    });
+  } catch {
+    return false;
+  }
+}
+
+function shouldBootstrapAuthForPath(pathname: string): boolean {
+  if (pathname === '/login' || pathname === '/profiles') {
+    return true;
+  }
+
+  return AUTH_BOOTSTRAP_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const location = useLocation();
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(!isSupabaseConfigured ? false : true);
+  const [loading, setLoading] = useState(() =>
+    !isSupabaseConfigured ? false : !isRenderFirstAuthPath(location.pathname),
+  );
+  const bootstrappedRef = useRef(false);
+  const subscriptionRef = useRef<(() => void) | null>(null);
+
+  const loadSupabase = useCallback(async () => {
+    const module = await import('@/lib/supabase');
+    return module.supabase;
+  }, []);
 
   useEffect(() => {
-    if (!isSupabaseConfigured) return;
+    if (!isSupabaseConfigured || bootstrappedRef.current) {
+      return;
+    }
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event: AuthChangeEvent, next: Session | null) => {
-      setSession(next);
-      setUser(next?.user ?? null);
-      if (next?.user) {
-        disableGuestMode();
-      }
+    const shouldBootstrap =
+      shouldBootstrapAuthForPath(location.pathname) || hasPersistedSupabaseSessionHint();
+
+    if (!shouldBootstrap) {
       setLoading(false);
-    });
+      return;
+    }
 
-    return () => subscription.unsubscribe();
+    const renderFirstRoute = isRenderFirstAuthPath(location.pathname);
+    let active = true;
+    setLoading(!renderFirstRoute);
+
+    void loadSupabase()
+      .then(async (supabase) => {
+        if (!active) return;
+
+        const { data } = await supabase.auth.getSession();
+        if (!active) return;
+
+        const nextSession = data.session ?? null;
+        setSession(nextSession);
+        setUser(nextSession?.user ?? null);
+        if (nextSession?.user) {
+          disableGuestMode();
+        }
+        setLoading(false);
+
+        const {
+          data: { subscription },
+        } = supabase.auth.onAuthStateChange((_event: AuthChangeEvent, next: Session | null) => {
+          setSession(next);
+          setUser(next?.user ?? null);
+          if (next?.user) {
+            disableGuestMode();
+          }
+          setLoading(false);
+        });
+
+        subscriptionRef.current?.();
+        subscriptionRef.current = () => subscription.unsubscribe();
+        bootstrappedRef.current = true;
+      })
+      .catch(() => {
+        if (!active) return;
+        setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [loadSupabase, location.pathname]);
+
+  useEffect(() => {
+    return () => {
+      if (subscriptionRef.current) {
+        subscriptionRef.current();
+        subscriptionRef.current = null;
+      }
+    };
   }, []);
 
   const guardSupabase = useCallback(() => {
@@ -55,6 +151,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signInWithGoogle = useCallback(async () => {
     if (!guardSupabase()) return;
+    const supabase = await loadSupabase();
     const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     const redirectTo =
       typeof window !== 'undefined'
@@ -65,25 +162,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       options: { redirectTo },
     });
     if (error) throw error;
-  }, [guardSupabase]);
+  }, [guardSupabase, loadSupabase]);
 
   const signInWithEmail = useCallback(async (email: string, password: string) => {
     if (!guardSupabase()) return;
+    const supabase = await loadSupabase();
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
-  }, [guardSupabase]);
+  }, [guardSupabase, loadSupabase]);
 
   const signUp = useCallback(async (email: string, password: string) => {
     if (!guardSupabase()) return;
+    const supabase = await loadSupabase();
     const { error } = await supabase.auth.signUp({ email, password });
     if (error) throw error;
-  }, [guardSupabase]);
+  }, [guardSupabase, loadSupabase]);
 
   const signOut = useCallback(async () => {
     if (!guardSupabase()) return;
+    const supabase = await loadSupabase();
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
-  }, [guardSupabase]);
+  }, [guardSupabase, loadSupabase]);
 
   const value = useMemo<AuthContextValue>(
     () => ({

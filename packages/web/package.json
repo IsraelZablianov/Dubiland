@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && yarn generate:crawl-assets:dist && node ./scripts/generate-seo-route-html.mjs",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "generate:crawl-assets": "node ./scripts/generate-crawl-assets.mjs",
+    "generate:crawl-assets:dist": "node ./scripts/generate-crawl-assets.mjs --dist"
   },
   "dependencies": {
     "@dubiland/shared": "workspace:*",

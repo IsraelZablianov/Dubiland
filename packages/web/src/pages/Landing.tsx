@@ -388,6 +388,10 @@ export default function Landing() {
             justify-content: center;
           }
 
+          .landing__hero-visual {
+            display: none;
+          }
+
           .landing__hero-mascot-shell {
             inline-size: 188px;
             block-size: 188px;

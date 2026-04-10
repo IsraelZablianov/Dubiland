@@ -100,7 +100,7 @@ PAPERCLIP_WAKE_REASON (optional), PAPERCLIP_WAKE_COMMENT_ID (optional)
 | SEO Expert | 10min | Technical SEO, GEO, structured data, keyword research, organic growth. Reports to CMO. |
 | CMO | 10min | Marketing strategy, growth, coordinates SEO Expert and content marketing. |
 | UX QA Reviewer | 30min | Visual inspection of running application. Reviews every page for proportions, consistency, layout bugs, responsive quality, and professional polish. Uses browser tools. |
-| Ops Watchdog | 35min | Monitors agent health, detects stuck/crashed agents, alerts on operational issues. |
+| Ops Watchdog | 10min | Monitors agent + task health, solves blockers, rebalances workloads, cancels meta-task spirals, wakes silent agents. |
 
 ## 7. Agent Instructions (External Mode)
 

@@ -535,6 +535,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
   const [showStampBurst, setShowStampBurst] = useState(false);
   const [scorePulse, setScorePulse] = useState(false);
   const [choiceGridFeedback, setChoiceGridFeedback] = useState<ChoiceGridFeedback>('idle');
+  const [audioDegraded, setAudioDegraded] = useState(false);
 
   const completionReportedRef = useRef(false);
 
@@ -551,21 +552,39 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
     return Array.from(pronunciation)[0] ?? pronunciation;
   }, [currentLetterAudioKey, t]);
 
+  const handleAudioPlaybackFailure = useCallback(() => {
+    setAudioDegraded((current) => {
+      if (current) {
+        return current;
+      }
+      setRoundMessage({ key: 'feedback.keepGoing', tone: 'hint' });
+      return true;
+    });
+  }, []);
+
   const playAudioKey = useCallback(
     (key: AudioKey, mode: AudioPlaybackMode = 'queue') => {
+      if (audioDegraded) {
+        return;
+      }
+
       const path = resolveAudioPath(key);
       if (!path) {
         return;
       }
 
       if (mode === 'interrupt') {
-        audio.playNow(path);
+        void audio.playNow(path).catch(() => {
+          handleAudioPlaybackFailure();
+        });
         return;
       }
 
-      audio.play(path);
+      void audio.play(path).catch(() => {
+        handleAudioPlaybackFailure();
+      });
     },
-    [audio],
+    [audio, audioDegraded, handleAudioPlaybackFailure],
   );
 
   const setMessageWithAudio = useCallback(
@@ -1447,6 +1466,13 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
           </button>
         </div>
 
+        {audioDegraded ? (
+          <p className="letter-sound-match__audio-fallback" aria-live="polite">
+            <span aria-hidden="true">🔇</span>
+            <span>{t('feedback.keepGoing')}</span>
+          </p>
+        ) : null}
+
         <section className="letter-sound-match__board">
           <div className="letter-sound-match__scene-props" aria-hidden="true">
             <span>🔠</span>
@@ -1793,6 +1819,19 @@ const letterSoundMatchStyles = `
 
   .letter-sound-match__message--success {
     background: color-mix(in srgb, var(--color-accent-success) 24%, transparent);
+  }
+
+  .letter-sound-match__audio-fallback {
+    margin: 0;
+    min-height: var(--touch-min);
+    border-radius: var(--radius-md);
+    border: 1px dashed color-mix(in srgb, var(--color-accent-warning) 52%, transparent);
+    background: color-mix(in srgb, var(--color-bg-card) 90%, var(--color-accent-warning) 10%);
+    color: var(--color-text-secondary);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    padding-inline: var(--space-sm);
   }
 
   .letter-sound-match__board {

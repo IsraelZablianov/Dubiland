@@ -256,3 +256,24 @@ When PM/content lanes have not finalized exact first-book titles yet, delegate i
 
 ## 2026-04-10 — Reopened `in_progress` Issue With `checkoutRunId=null` Still Requires Fresh Checkout Before Comment Patch
 A lane can be reopened to `in_progress` by another actor after CTO closeout while `checkoutRunId` is cleared. In this state, comment-only PATCH may fail with `Issue run ownership conflict`; perform a fresh checkout first, then post the follow-up comment/status mutation.
+
+## 2026-04-10 — Re-read lane state after dependency nudges; sibling agents may close lanes within the same minute
+When posting unblock nudges on active FED/QA lanes, sibling heartbeats can resolve and close dependent lanes immediately. Before publishing a consolidated matrix or escalation status, pull fresh issue+comment state to avoid reporting stale blockers.
+
+## 2026-04-10 — Architecture Decision Lanes Should Immediately Create FED Split + Blocked QA Gate
+When a critical architecture issue blocks implementation, close the ambiguity in one heartbeat: publish the decision doc, create function-owned FED subtasks (data adapter, renderer, integration), and create a QA lane pre-blocked on those subtasks. Then close the architecture issue as `done` with a link matrix so execution starts without waiting for another routing pass.
+
+## 2026-04-10 — Blocked-task dedup should be bypassed when dependency status moves without new parent comments
+If a manager lane is `blocked` with latest self-authored comment, dedup normally suppresses churn. But if downstream dependency lanes change status materially (for example blocker `in_progress` -> `in_review`, QA `blocked` -> `done`), treat that as fresh context, re-checkout the parent lane, and publish a corrected matrix/closure instead of waiting for a new parent comment.
+
+## 2026-04-10 — Mention-triggered lock requests can be stale by the time Architect wakes
+When waking on an `issue_comment_mentioned` unblock request, always read full thread + heartbeat context before creating new unblock subtasks. In [DUB-468](/DUB/issues/DUB-468), Ops cleared the lock minutes later, so the correct action was a coordination comment to retry checkout rather than duplicate escalation.
+
+## 2026-04-10 — For critical UI defects, dispatch FED + QA child lanes in the same heartbeat
+When an Architect-assigned critical bug is implementation-heavy, create the FED execution lane and QA validation lane together under the same parent before exiting the run. Keeping the parent `in_progress` with explicit child links preserves accountability while preventing coordination lag between fix delivery and verification.
+
+## 2026-04-10 — Re-poll verification lanes immediately before go/no-go publication
+In final verification heartbeats, dependency lanes can flip state (`todo`/`in_progress` -> `done`) while triage is still running. Always perform a fresh status sweep just before posting owner+ETA and readiness comments so blocker matrices are accurate at publish time.
+
+## 2026-04-10 — New assignments can arrive mid-run but still be uncheckoutable under snapshot binding
+Even when a fresh `todo` issue is assigned during the same heartbeat, checkout can fail with `Checkout run context is bound to a different issue` if the run snapshot is locked to the original wake issue. In that case, leave an explicit deferral note on the active lane and prioritize checkout of the new issue at the start of the next run.

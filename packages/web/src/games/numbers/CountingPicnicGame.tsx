@@ -813,6 +813,39 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
   }, [midpointPaused, playAudioKey, playNumberAudio, round.id, round.targetCount, sessionComplete]);
 
   useEffect(() => {
+    if (!midpointPaused || sessionComplete) {
+      return;
+    }
+
+    playAudioKey('feedback.greatEffort');
+    const timer = window.setTimeout(() => {
+      playAudioKey('games.countingPicnic.roundComplete.nextNumber');
+    }, 320);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [midpointPaused, playAudioKey, sessionComplete]);
+
+  useEffect(() => {
+    if (!sessionComplete || !summaryMetrics) {
+      return;
+    }
+
+    const introTimer = window.setTimeout(() => {
+      playAudioKey('feedback.youDidIt');
+    }, 320);
+    const followupTimer = window.setTimeout(() => {
+      playAudioKey('games.countingPicnic.roundComplete.basketReady');
+    }, 880);
+
+    return () => {
+      window.clearTimeout(introTimer);
+      window.clearTimeout(followupTimer);
+    };
+  }, [playAudioKey, sessionComplete, summaryMetrics]);
+
+  useEffect(() => {
     const previousStarTokens = previousStarTokensRef.current;
     previousStarTokensRef.current = starTokens;
 

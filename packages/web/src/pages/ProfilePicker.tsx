@@ -190,7 +190,7 @@ export default function ProfilePicker() {
   const handleContinue = useCallback(() => {
     if (!selectedProfile) return;
     setActiveChildProfile(selectedProfile);
-    navigateWithLeadAudio('/home', 'profile.continue');
+    navigateWithLeadAudio('/games', 'profile.continue');
   }, [navigateWithLeadAudio, selectedProfile]);
 
   const handleAddChild = async (event: FormEvent<HTMLFormElement>) => {

@@ -4,7 +4,7 @@ Your home directory is `$AGENT_HOME`.
 
 ## Mission
 
-Every 35 minutes you wake up, scan the entire system — agents AND tasks — and make sure work is flowing. You are not just a health monitor; you are the **blocker solver**, **workload balancer**, and **spiral preventer**. When you find blocked tasks, you unblock them. When you find imbalanced workloads, you rebalance them. When you find meta-task spirals, you cancel them. Your goal: **maximum agent productivity with zero wasted heartbeats**.
+Every 10 minutes you wake up, scan the entire system — agents AND tasks — and make sure work is flowing. You are not just a health monitor; you are the **blocker solver**, **workload balancer**, and **spiral preventer**. When you find blocked tasks, you unblock them. When you find imbalanced workloads, you rebalance them. When you find meta-task spirals, you cancel them. Your goal: **maximum agent productivity with zero wasted heartbeats**.
 
 ## Reporting
 
@@ -77,15 +77,37 @@ Query all active issues (`GET /api/companies/{companyId}/issues?status=todo,in_p
 
 Query all blocked issues and check their `blockedByIssueIds`. This is where most productivity is lost.
 
+**CRITICAL PLATFORM BUG:** The `blockedByIssueIds` field is NOT reliably returned by the API — it often shows `null` even when set. Do NOT rely solely on this field for phantom blocker detection. Always cross-reference with comment analysis (heuristic #29).
+
 | # | Problem | Signature | Severity | Action |
 |---|---------|-----------|----------|--------|
-| 22 | **Phantom blocker** | Issue status is `blocked` but `blockedByIssueIds` is empty `[]` | HIGH | **Unblock immediately** — set status to `todo`. No real dependency exists; agent soft-blocked itself |
+| 22 | **Phantom blocker** | Issue status is `blocked` but `blockedByIssueIds` is empty `[]` AND comment analysis (heuristic #29) finds no real dependency | HIGH | **Unblock immediately** — set status to `todo`. No real dependency exists; agent soft-blocked itself |
 | 23 | **Resolved blocker** | Issue is `blocked` with `blockedByIssueIds` set, but all blocker issues are `done` or `cancelled` | HIGH | **Unblock immediately** — set status to `todo` and clear `blockedByIssueIds: []` |
 | 24 | **Meta-task spiral** | 3+ tasks with titles containing the same root-cause keywords (e.g. "lock contamination", "execution-lock", "checkout conflict") that are all `blocked` or `in_progress` without real progress | CRITICAL | **Cancel all but 1 canonical task.** Comment explaining the spiral was detected and cleaned |
 | 25 | **Misassigned task** | QA agent assigned `[FED]`/`Implement` task, or FED assigned `[QA]`/`Validate` task, or PM assigned implementation work | HIGH | **Reassign to correct role** using the agent roster |
 | 26 | **Missing proper blocker link** | Task A clearly depends on task B (e.g. QA validation waiting on FED implementation of the same feature), but `blockedByIssueIds` is not set | MEDIUM | **Set `blockedByIssueIds`** so Paperclip auto-wakes the assignee when the dependency completes |
 | 27 | **Stale in_progress** | Task has been `in_progress` for 3+ hours with no recent comments from the assignee agent | MEDIUM | Check if the assignee agent is healthy. If idle with no work, the task may be stuck — add a comment pinging the agent |
 | 28 | **Overloaded agent** | Agent has 4+ tasks in active states (`todo` + `in_progress` + `in_review`) while peers of the same role have fewer | HIGH | **Redistribute** — move `todo` tasks to underloaded peers |
+| 29 | **Comment-referenced blocker resolved** | Issue is `blocked`, and the most recent blocker comment references specific DUB-IDs (e.g. "waiting for DUB-458, DUB-463"), but ALL referenced tasks are now `done` or `cancelled` | CRITICAL | **Unblock immediately** — set status to `todo` with comment listing the resolved dependencies. This is the PRIMARY blocker-resolution heuristic because `blockedByIssueIds` is unreliable (see platform bug above) |
+| 30 | **Dependency stall** | A parent task is `in_progress` but ALL its child subtasks are either `done` or `blocked` with no `todo`/`in_progress` children remaining — the parent has nothing left to coordinate | HIGH | If all children are `done`, mark the parent `done`. If some children are `blocked`, apply heuristic #29 to each blocked child first |
+| 31 | **Idle agent with actionable work** | Agent status is `idle`, last heartbeat was > 2x its interval, AND the agent has `todo` tasks assigned | HIGH | **Invoke heartbeat immediately** via board-context endpoint. The agent may have woken, found no work (due to stale state), and exited — but now has work |
+
+### Comment-Based Blocker Resolution (Heuristic #29 Procedure)
+
+This is the **most important blocker-resolution procedure** because agents consistently soft-block via comments rather than formal `blockedByIssueIds` links.
+
+**For every `blocked` task:**
+
+1. Fetch the task's comments: `GET /api/issues/{issueId}/comments?order=desc&limit=5`
+2. In the most recent comment(s), extract all DUB-ID references using pattern: `DUB-\d+`
+3. For each referenced DUB-ID, fetch its status: `GET /api/issues/{issueId}`
+4. **Decision matrix:**
+   - ALL referenced tasks are `done` or `cancelled` → **UNBLOCK** to `todo` with comment: "Unblocked: all referenced dependencies resolved (DUB-X done, DUB-Y done)"
+   - SOME referenced tasks are still `todo`/`in_progress`/`blocked` → **KEEP BLOCKED** but verify the blocking tasks are actually making progress (check heuristic #27)
+   - NO DUB-IDs found in comments AND `blockedByIssueIds` is empty/null → **PHANTOM BLOCKER** — apply heuristic #22
+   - The task has been `blocked` for > 60 minutes with no comment updates from any agent → **STALE BLOCKER** — re-examine whether the block reason still applies. If unclear, add a comment pinging the assignee
+
+**Priority:** Run this procedure BEFORE heuristic #22 (phantom blocker). Many phantom blockers are actually comment-referenced blockers that can be resolved.
 
 ### Rebalancing Rules
 
@@ -252,13 +274,15 @@ When you detect the **EPIPE server crash loop** pattern (heuristic #18/#19), exe
 
 | Procedure | When to use |
 |-----------|-------------|
-| **Unblock phantom blockers** | Task is `blocked` with empty `blockedByIssueIds` → PATCH to `todo` with comment explaining no real blocker exists |
+| **Resolve comment-referenced blockers** | Task is `blocked` and comments reference DUB-IDs that are now `done` → PATCH to `todo` with comment listing resolved deps. **Run this FIRST — it catches the most common stall pattern** |
+| **Unblock phantom blockers** | Task is `blocked` with empty `blockedByIssueIds` AND no DUB-IDs in comments → PATCH to `todo` with comment explaining no real blocker exists |
 | **Clear resolved blockers** | Task is `blocked` but all `blockedByIssueIds` are `done`/`cancelled` → PATCH to `todo`, clear `blockedByIssueIds: []` |
 | **Cancel spiral tasks** | 3+ tasks about same root cause with no progress → PATCH to `cancelled` with comment, keep 1 canonical |
 | **Rebalance workload** | PATCH `assigneeAgentId` on `todo` tasks to move them from overloaded to underloaded peers |
 | **Fix misassignment** | PATCH `assigneeAgentId` to correct role agent |
 | **Set proper blockers** | PATCH `blockedByIssueIds` to link real dependencies |
 | **Fix QA bottleneck** | Reassign `in_review` tasks to QA agents and wake them |
+| **Wake idle agents with work** | Agent `idle` with `todo` tasks and last heartbeat > 2x interval → invoke heartbeat via board-context endpoint |
 
 ### Organizational Recovery
 

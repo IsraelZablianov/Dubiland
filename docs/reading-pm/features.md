@@ -6,9 +6,9 @@ Track all reading games and features across their lifecycle.
 
 | Reading Skill Area | Games Planned | Games In Progress | Games Shipped |
 |---|---|---|---|
-| Letter Recognition | 1 | 1 | 3 |
-| Nikud (Vowel Diacritics) | 1 | 0 | 2 |
-| Syllable Decoding | 1 | 0 | 2 |
+| Letter Recognition | 1 | 0 | 4 |
+| Nikud (Vowel Diacritics) | 0 | 1 | 2 |
+| Syllable Decoding | 0 | 1 | 2 |
 | Word Reading | 1 | 0 | 2 |
 | Word Building | 0 | 0 | 1 |
 | Sight Words / High Frequency | 0 | 0 | 1 |
@@ -16,7 +16,7 @@ Track all reading games and features across their lifecycle.
 | Reading Comprehension | 0 | 0 | 2 |
 | Morphology (Light) | 0 | 0 | 1 |
 | Decodable Stories | 0 | 0 | 2 |
-| Educational Videos | 1 | 0 | 1 |
+| Educational Videos | 0 | 1 | 1 |
 
 ## Features
 
@@ -49,11 +49,11 @@ Track all reading games and features across their lifecycle.
 - **Delegated Issue:** [DUB-312](/DUB/issues/DUB-312) (implementation, done), [DUB-321](/DUB/issues/DUB-321) (content/audio, done), [DUB-322](/DUB/issues/DUB-322) (mechanics review, done)
 
 ### Confusable Letter Contrast
-- **Status:** Delegated to FED Engineer 2 + Content Writer + Gaming Expert (In Progress)
+- **Status:** Delegated to FED Engineer 2 + Content Writer + Gaming Expert (Shipped)
 - **Spec:** `docs/games/confusable-letter-contrast.md`
 - **Reading Skill:** Letter Recognition (explicit confusable-letter discrimination + letter-sound binding transfer)
 - **Curriculum Position:** After letter-form familiarity and letter-sound mapping, before syllable decoding and pointed word transfer.
-- **Delegated Issue:** [DUB-406](/DUB/issues/DUB-406) (implementation, in progress), [DUB-407](/DUB/issues/DUB-407) (Hebrew i18n/audio, done), [DUB-408](/DUB/issues/DUB-408) (mechanics review, done)
+- **Delegated Issue:** [DUB-406](/DUB/issues/DUB-406) (implementation, done), [DUB-407](/DUB/issues/DUB-407) (Hebrew i18n/audio, done), [DUB-408](/DUB/issues/DUB-408) (mechanics review, done)
 
 ### Sofit Word-End Detective
 - **Status:** Delegated to FED Engineer 3 + Content Writer + Gaming Expert (Planned)
@@ -63,11 +63,11 @@ Track all reading games and features across their lifecycle.
 - **Delegated Issue:** [DUB-409](/DUB/issues/DUB-409) (implementation, backlog), [DUB-410](/DUB/issues/DUB-410) (Hebrew i18n/audio, backlog), [DUB-411](/DUB/issues/DUB-411) (mechanics review, backlog)
 
 ### Shva Sound Switch
-- **Status:** Delegated to FED Engineer 3 + Content Writer + Gaming Expert (Planned)
+- **Status:** Delegated to FED Engineer 3 + Content Writer + Gaming Expert (In Progress)
 - **Spec:** `docs/games/shva-sound-switch.md`
 - **Reading Skill:** Nikud, Syllable Decoding (guided shva bridge)
 - **Curriculum Position:** After core nikud familiarity and early blending, before broader phrase/stories fluency with mixed shva exposure.
-- **Delegated Issue:** [DUB-412](/DUB/issues/DUB-412) (implementation, backlog), [DUB-413](/DUB/issues/DUB-413) (Hebrew i18n/audio, backlog), [DUB-414](/DUB/issues/DUB-414) (mechanics review, backlog)
+- **Delegated Issue:** [DUB-412](/DUB/issues/DUB-412) (implementation, backlog), [DUB-413](/DUB/issues/DUB-413) (Hebrew i18n/audio, done), [DUB-414](/DUB/issues/DUB-414) (mechanics review, backlog)
 
 ### Hebrew Letters Video Pedagogy
 - **Status:** Delegated to Content Writer + Media Expert (Shipped)
@@ -77,11 +77,11 @@ Track all reading games and features across their lifecycle.
 - **Delegated Issue:** [DUB-115](/DUB/issues/DUB-115), [DUB-119](/DUB/issues/DUB-119), [DUB-120](/DUB/issues/DUB-120)
 
 ### Final Forms Video Pedagogy
-- **Status:** Delegated to Media Expert + Content Writer (Planned)
+- **Status:** Delegated to Media Expert + Content Writer (In Progress)
 - **Spec:** `docs/games/final-forms-video-pedagogy.md`
 - **Reading Skill:** Educational Videos (final-forms bridge from letter recognition to word reading)
 - **Curriculum Position:** After base letter familiarity and before large-scale phrase/story exposure to final forms.
-- **Delegated Issue:** [DUB-415](/DUB/issues/DUB-415) (video composition, backlog), [DUB-416](/DUB/issues/DUB-416) (Hebrew script/audio, backlog)
+- **Delegated Issue:** [DUB-415](/DUB/issues/DUB-415) (video composition, backlog), [DUB-416](/DUB/issues/DUB-416) (Hebrew script/audio, done)
 
 ### Handbook Literacy Interaction Framework
 - **Status:** Delegated to Content Writer + Gaming Expert (Shipped)
@@ -96,6 +96,15 @@ Track all reading games and features across their lifecycle.
 - **Reading Skill:** Nikud, Syllable Decoding, Word Reading, Phrase & Sentence Reading, Reading Comprehension, Decodable Stories
 - **Curriculum Position:** Expands handbook reading from print awareness through partially pointed sentence reading across ages 3-7, after letter foundations and before full leveled handbook library rollout.
 - **Delegated Issue:** [DUB-392](/DUB/issues/DUB-392) (runtime progression gates, done), [DUB-393](/DUB/issues/DUB-393) (Hebrew decodable content + audio package, done)
+
+### Magic Letter Map MVP (First Live Handbook)
+- **Status:** Delegated to FED Engineer + Content Writer + Gaming Expert (Shipped)
+- **Spec:** `docs/games/handbooks/magic-letter-map-mvp.md`
+- **Reading Skill:** Letter Recognition, Nikud, Word Reading, Reading Comprehension (live handbook execution slice)
+- **Curriculum Position:** First live handbook launch slice for Book 4 (`5-6`) after letter foundations and before broader decodable-story scale.
+- **Age-Band Visibility Decision:** Catalog-visible for `3-4` as listen/explore support mode, with decoding mastery expectations anchored to `5-6` core and `6-7` stretch.
+- **Delegated Issue:** [DUB-463](/DUB/issues/DUB-463) (implementation, done), [DUB-464](/DUB/issues/DUB-464) (Hebrew i18n/audio, done), [DUB-465](/DUB/issues/DUB-465) (mechanics review, done)
+- **Coverage Note:** Operational launch-scope item inside existing handbook track; curriculum coverage table counts remain unchanged.
 
 ### Root Family Stickers
 - **Status:** Delegated to FED Engineer 3 + Content Writer + Gaming Expert (Shipped)

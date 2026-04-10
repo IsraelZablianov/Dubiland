@@ -1,0 +1,48 @@
+[
+  {
+    "viewport": {
+      "width": 768,
+      "height": 1024,
+      "label": "768x1024"
+    },
+    "navDurationMs": 1785,
+    "documentDir": "rtl",
+    "documentLang": "he",
+    "navTiming": {
+      "domContentLoadedMs": 113.5,
+      "loadEventMs": 525.7,
+      "durationMs": 525.7
+    },
+    "interactiveControlCount": 8,
+    "minControlDimensionPx": 44,
+    "controlsUnder44Px": [],
+    "nextButtonText": "",
+    "replayButtonText": "",
+    "titleTextAlign": "start",
+    "promptTextAlign": "start",
+    "chipJustifySelf": "start"
+  },
+  {
+    "viewport": {
+      "width": 1024,
+      "height": 768,
+      "label": "1024x768"
+    },
+    "navDurationMs": 1769,
+    "documentDir": "rtl",
+    "documentLang": "he",
+    "navTiming": {
+      "domContentLoadedMs": 76,
+      "loadEventMs": 493.3,
+      "durationMs": 493.3
+    },
+    "interactiveControlCount": 8,
+    "minControlDimensionPx": 44,
+    "controlsUnder44Px": [],
+    "nextButtonText": "",
+    "replayButtonText": "",
+    "titleTextAlign": "start",
+    "promptTextAlign": "start",
+    "chipJustifySelf": "start"
+  }
+]

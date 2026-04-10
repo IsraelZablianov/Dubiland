@@ -1,0 +1,54 @@
+{
+  "generatedAt": "2026-04-10T19:25:07.138Z",
+  "baseUrl": "http://127.0.0.1:4173/games/reading/interactive-handbook",
+  "results": [
+    {
+      "viewport": {
+        "name": "768x1024",
+        "width": 768,
+        "height": 1024
+      },
+      "firstRenderMs": 512,
+      "pathname": "/games/reading/interactive-handbook",
+      "htmlDir": "rtl",
+      "storyDir": "rtl",
+      "hasHandbook": true,
+      "hasStage": true,
+      "storyVisualCount": 1,
+      "storyImgCount": 1,
+      "storyPictureCount": 0,
+      "storySvgCount": 0,
+      "nextInlineTransform": "scaleX(-1)",
+      "nextComputedTransform": "matrix(-1, 0, 0, 1, 0, 0)",
+      "controlCount": 7,
+      "minControlWidth": 130.39,
+      "minControlHeight": 52,
+      "tooSmallCount": 0,
+      "tooSmall": []
+    },
+    {
+      "viewport": {
+        "name": "1024x768",
+        "width": 1024,
+        "height": 768
+      },
+      "firstRenderMs": 904,
+      "pathname": "/games/reading/interactive-handbook",
+      "htmlDir": "rtl",
+      "storyDir": "rtl",
+      "hasHandbook": true,
+      "hasStage": true,
+      "storyVisualCount": 1,
+      "storyImgCount": 1,
+      "storyPictureCount": 0,
+      "storySvgCount": 0,
+      "nextInlineTransform": "scaleX(-1)",
+      "nextComputedTransform": "matrix(-1, 0, 0, 1, 0, 0)",
+      "controlCount": 7,
+      "minControlWidth": 181.59,
+      "minControlHeight": 52,
+      "tooSmallCount": 0,
+      "tooSmall": []
+    }
+  ]
+}

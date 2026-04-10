@@ -1,0 +1,117 @@
+{
+  "routes": [
+    {
+      "route": "about",
+      "performance": 96,
+      "fcp_ms": 1976.3598749999999,
+      "lcp_ms": 2448.03185,
+      "tbt_ms": 0,
+      "cls": 0.000791,
+      "speed_index_ms": 1976.3598749999999
+    },
+    {
+      "route": "home",
+      "performance": 96,
+      "fcp_ms": 1981.5082499999999,
+      "lcp_ms": 2379.6099000000004,
+      "tbt_ms": 0,
+      "cls": 0.045332,
+      "speed_index_ms": 1981.5082499999999
+    },
+    {
+      "route": "letters",
+      "performance": 96,
+      "fcp_ms": 1976.692375,
+      "lcp_ms": 2448.83085,
+      "tbt_ms": 108,
+      "cls": 0.023443,
+      "speed_index_ms": 1976.692375
+    },
+    {
+      "route": "login",
+      "performance": 96,
+      "fcp_ms": 1973.8015,
+      "lcp_ms": 2369.5617999999995,
+      "tbt_ms": 0,
+      "cls": 0.002759,
+      "speed_index_ms": 1973.8015
+    },
+    {
+      "route": "numbers",
+      "performance": 97,
+      "fcp_ms": 1987.0715000000002,
+      "lcp_ms": 2237.4858000000004,
+      "tbt_ms": 0,
+      "cls": 0.000374,
+      "speed_index_ms": 1987.0715000000002
+    },
+    {
+      "route": "parents-faq",
+      "performance": 98,
+      "fcp_ms": 1827.28975,
+      "lcp_ms": 1999.1477,
+      "tbt_ms": 0,
+      "cls": 0.002195,
+      "speed_index_ms": 1827.28975
+    },
+    {
+      "route": "parents",
+      "performance": 97,
+      "fcp_ms": 1982.845375,
+      "lcp_ms": 2157.01445,
+      "tbt_ms": 0,
+      "cls": 0.000372,
+      "speed_index_ms": 1982.845375
+    },
+    {
+      "route": "privacy",
+      "performance": 97,
+      "fcp_ms": 1974.2975000000001,
+      "lcp_ms": 2145.157,
+      "tbt_ms": 0,
+      "cls": 0.000789,
+      "speed_index_ms": 1974.2975000000001
+    },
+    {
+      "route": "reading",
+      "performance": 97,
+      "fcp_ms": 1978.2566250000004,
+      "lcp_ms": 2226.1077750000004,
+      "tbt_ms": 0,
+      "cls": 0.000463,
+      "speed_index_ms": 1978.2566250000004
+    },
+    {
+      "route": "terms",
+      "performance": 96,
+      "fcp_ms": 1975.2556249999998,
+      "lcp_ms": 2371.7067500000003,
+      "tbt_ms": 0,
+      "cls": 0.002121,
+      "speed_index_ms": 1975.2556249999998
+    }
+  ],
+  "aggregate": {
+    "count": 10,
+    "perf_median": 96.5,
+    "lcp_median_ms": 2303.5238,
+    "worst_lcp_route": {
+      "route": "letters",
+      "performance": 96,
+      "fcp_ms": 1976.692375,
+      "lcp_ms": 2448.83085,
+      "tbt_ms": 108,
+      "cls": 0.023443,
+      "speed_index_ms": 1976.692375
+    },
+    "worst_perf_route": {
+      "route": "terms",
+      "performance": 96,
+      "fcp_ms": 1975.2556249999998,
+      "lcp_ms": 2371.7067500000003,
+      "tbt_ms": 0,
+      "cls": 0.002121,
+      "speed_index_ms": 1975.2556249999998
+    }
+  }
+}

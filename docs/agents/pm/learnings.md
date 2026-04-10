@@ -187,3 +187,9 @@ If a comment wake confirms delegated child execution is already active (for exam
 
 ## 2026-04-10 — Issue-assigned wake tasks may be completed child lanes; triage by current ownership/state before acting
 When a heartbeat is triggered by `issue_assigned` on a child that is already `done` and not PM-owned, do not attempt takeover; pivot immediately to active PM-owned in-progress parent lanes and post a fresh coordination checkpoint there.
+
+## 2026-04-10 — Cross-functional UX corrections should be split into parallel department lanes with an overlap guardrail
+When a board UX request overlaps an active technical bug stream (for example [DUB-483](/DUB/issues/DUB-483) overlapping [DUB-482](/DUB/issues/DUB-482)), create parallel child lanes for Architect, UX Designer, and Content Writer in the same heartbeat, and explicitly require reconciliation with existing CTO/FED fix lanes to avoid duplicate implementation paths.
+
+## 2026-04-10 — In board-seeded crisis trees, PM should add only missing leadership lanes
+When a new critical parent already contains broad child delegation created by the board, PM should avoid duplicating execution tickets. First map existing owners, then create only uncovered lanes (for example CMO/co-founder leadership tracks), and lock expectations through one parent coordination comment.
