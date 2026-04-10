@@ -31,15 +31,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!isSupabaseConfigured) return;
 
-    void supabase.auth.getSession().then(({ data: { session: next } }) => {
-      setSession(next);
-      setUser(next?.user ?? null);
-      if (next?.user) {
-        disableGuestMode();
-      }
-      setLoading(false);
-    });
-
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event: AuthChangeEvent, next: Session | null) => {
@@ -68,7 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: origin ? `${origin}/` : undefined,
+        redirectTo: origin ? `${origin}/login` : undefined,
       },
     });
     if (error) throw error;
