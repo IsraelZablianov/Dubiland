@@ -293,3 +293,9 @@ When compiling owner/ETA matrices, issue comment-list payloads can include malfo
 
 ## 2026-04-10 — Re-resolve UUIDs from live issue list before heartbeat-context fetches
 Handbook lanes can have similarly named historical parents (`DUB-432` vs `DUB-433`) and stale UUID notes. Before using `GET /api/issues/{id}/heartbeat-context`, always re-resolve current UUIDs from a live `/api/companies/{companyId}/issues` filter by identifier to avoid null-context reads and wrong-lane reporting.
+
+## 2026-04-10 — Run-Bound Checkout Context Blocks Multi-Issue Checkout In Same Heartbeat
+After checking out one issue, trying to checkout another can return `409` with `Checkout run context is bound to a different issue` and a `snapshotIssueId`. In this state, avoid `release` on blocked/coordinator lanes unless you intentionally want queue-state reset side effects; prefer finishing/parking the bound issue and handle the next issue in a fresh heartbeat.
+
+## 2026-04-10 — Run Context Can Stay Bound To A Blocked Parent Lane
+After checking out and updating a parent lane to `blocked`, additional issue checkouts in the same run can still fail with `Checkout run context is bound to a different issue` until the bound lane is completed or the run exits. For coordinator lanes that must stay blocked, avoid release side effects and continue remaining assignments in a fresh heartbeat.

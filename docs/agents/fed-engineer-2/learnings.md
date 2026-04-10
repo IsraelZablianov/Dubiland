@@ -214,3 +214,6 @@ For age bands up to 5-6, cap Home featured cards at 3 and gate section grids beh
 
 ## 2026-04-10 — Story-depth handbook migrations need canonical per-book slug routing plus legacy-runtime key guards
 When migrating handbook narrative quality without immediately rewriting seeded DB rows, route Books `1/4/7` through canonical story slugs (`mikaSoundGarden` / `yoavLetterMap` / `tamarWordTower`) at runtime and ignore legacy runtime narration/prompt overrides unless they already match the new `handbooks.<slug>.pages.pageXX.{narration,cta}` contract. This keeps story-depth copy live immediately while preserving runtime compatibility. Also regenerate/validate audio manifest in the same heartbeat so newly introduced `storyArc`, `pages`, `chapterRecap`, and parent-summary keys remain audio-complete.
+
+## 2026-04-10 — Reading age-band parity is safer when handbook and decodable flows consume one shared runtime matrix
+For cross-game reading gates (decode-first lock, choice cap, hint timeout, anti-guess thresholds), define a single typed matrix module and import it from both `InteractiveHandbookGame` and `DecodableStoryReaderGame`. This removes drift between implementations, keeps age-band fallback (`4-5` -> `5-6`) consistent, and lets PM/QA threshold tuning happen in one file.

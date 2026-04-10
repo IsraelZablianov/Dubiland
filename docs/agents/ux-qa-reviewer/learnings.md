@@ -97,3 +97,11 @@ Parent [DUB-433](/DUB/issues/DUB-433): board wanted browser screenshots — when
 ## 2026-04-10 — DUB-508 + rotation 11: דובי effectiveness
 
 **Area 11** via static grep: **9** `*Game.tsx` files import `MascotIllustration`; **5** do not — **MoreOrLessMarket**, **NumberLineJumps**, **LetterTracingTrail**, **DecodableStoryReader**, **InteractiveHandbook**. That is a clean **systemic** gap (Khan Kodi / Duo always on-screen during activities). Filed [DUB-597](/DUB/issues/DUB-597) under DUB-493; **dedup** with [DUB-185](/DUB/issues/DUB-185) called out in ticket body. **Paperclip FED UUID** from `GET /api/companies/:id/agents` matches `conventions.md` — “assignee not found” on create is likely **role ACL**, not stale docs.
+
+## 2026-04-10 — DUB-508 full browser matrix closed (84 screenshots)
+
+Completed [DUB-508](/DUB/issues/DUB-508) with Playwright across **28 routes x 3 viewports** and wrote a full report at `artifacts/uxqa/dub-508-2026-04-10/report.md`. Biggest cross-route gap is now shell ergonomics, not core game structure: public/legal footer links still render at **30px** and `/parent` header logo at **34px**. Filed [DUB-600](/DUB/issues/DUB-600) (touch target system) and [DUB-601](/DUB/issues/DUB-601) (transient horizontal bounce on animated page entry). Keep an eye on Paperclip assignee routing: this run auto-routed assignee unexpectedly, so leaving tasks unassigned with explicit routing notes was the reliable path.
+
+## 2026-04-11 — DUB-555 blocked heartbeat hygiene (assigned)
+
+Inbox contained only [DUB-555](/DUB/issues/DUB-555), already **blocked**. Followed Paperclip blocked dedup policy: re-engaged only because a newer external comment existed, then refreshed blocker state from [DUB-548](/DUB/issues/DUB-548) (CTO owner/ETA matrix in comment [906f0ddf](/DUB/issues/DUB-548#comment-906f0ddf-68be-460d-bb85-920ad3c325dd)). Checked out [DUB-555](/DUB/issues/DUB-555), re-set status to `blocked`, and posted a concise unblock gate list ([DUB-608](/DUB/issues/DUB-608), [DUB-549](/DUB/issues/DUB-549), [DUB-550](/DUB/issues/DUB-550), [DUB-609](/DUB/issues/DUB-609)). No rotation advancement this run because assigned work was purely dependency tracking.

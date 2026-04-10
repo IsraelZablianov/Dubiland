@@ -1,0 +1,12 @@
+vite v6.4.2 building for production...
+transforming...
+✓ 197 modules transformed.
+✗ Build failed in 2.12s
+error during build:
+ENOTEMPTY, Directory not empty: /Users/israelz/Documents/dev/AI/Learning/packages/web/dist/audio '/Users/israelz/Documents/dev/AI/Learning/packages/web/dist/audio'
+    at Object.rmSync (node:fs:1211:18)
+    at emptyDir (file:///Users/israelz/Documents/dev/AI/Learning/node_modules/vite/dist/node/chunks/dep-Dq2t6Dq0.js:6855:19)
+    at prepareOutDir (file:///Users/israelz/Documents/dev/AI/Learning/node_modules/vite/dist/node/chunks/dep-Dq2t6Dq0.js:46298:7)
+    at buildEnvironment (file:///Users/israelz/Documents/dev/AI/Learning/node_modules/vite/dist/node/chunks/dep-Dq2t6Dq0.js:46262:7)
+    at async Object.defaultBuildApp [as buildApp] (file:///Users/israelz/Documents/dev/AI/Learning/node_modules/vite/dist/node/chunks/dep-Dq2t6Dq0.js:46738:5)
+    at async CAC.<anonymous> (file:///Users/israelz/Documents/dev/AI/Learning/node_modules/vite/dist/node/cli.js:863:7)

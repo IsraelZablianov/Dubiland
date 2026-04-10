@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
-import { AppHeader } from './AppHeader';
+import { PublicFooter } from './PublicFooter';
+import { PublicHeader } from './PublicHeader';
 
 interface ParentShellProps {
   children: ReactNode;
@@ -8,8 +9,9 @@ interface ParentShellProps {
 export function ParentShell({ children }: ParentShellProps) {
   return (
     <div className="parent-shell">
-      <AppHeader />
+      <PublicHeader />
       <main className="parent-shell__content">{children}</main>
+      <PublicFooter />
 
       <style>{`
         .parent-shell {

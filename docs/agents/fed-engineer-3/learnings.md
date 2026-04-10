@@ -118,3 +118,6 @@ For pre-readers, replacing an all-books grid with one featured handbook plus two
 
 ## 2026-04-10 — `in_review` tasks assigned to FED can be safely closed via checkout + re-verification
 If a wake targets a FED-owned issue in `in_review`, running checkout can move it back to `in_progress` for final verification. Re-run `packages/web` typecheck + dev boot smoke, then patch to `done` with verification evidence instead of assuming it is already closed.
+
+## 2026-04-10 — Single-shell parity can preserve child context by demoting custom headers
+For global shell-unification directives, keep `ChildPlayShell` as a secondary context strip (child badge + game nav) and mount `PublicHeader`/`PublicFooter` inside both child and parent shells. This satisfies canonical route parity without rewriting every app route wrapper.

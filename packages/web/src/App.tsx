@@ -93,7 +93,7 @@ export default function App() {
           {/* Login — public header/footer */}
           <Route path="/login" element={<MarketingShell>{withAnimatedPage(<Login />, 'public')}</MarketingShell>} />
 
-          {/* App pages — app header with child info + navigation */}
+          {/* App pages — shared public shell with contextual child/parent controls */}
           <Route
             path="/profiles"
             element={

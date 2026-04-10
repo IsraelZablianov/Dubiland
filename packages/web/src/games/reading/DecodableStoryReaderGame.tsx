@@ -3,10 +3,17 @@ import { useTranslation } from 'react-i18next';
 import { Card } from '@/components/design-system';
 import { SuccessCelebration } from '@/components/motion';
 import type { GameProps, ParentSummaryMetrics, StableRange } from '@/games/engine';
+import {
+  READING_RUNTIME_MATRIX,
+  toReadingAgeBand,
+  type ReadingAgeBand,
+  type ReadingAntiGuessGuard,
+  type ReadingProfileAgeBand,
+} from '@/games/reading/readingRuntimeMatrix';
 
 type HintTrend = ParentSummaryMetrics['hintTrend'];
-type DecodableAgeBand = '3-4' | '5-6' | '6-7';
-type DecodableProfileAgeBand = DecodableAgeBand | '4-5';
+type DecodableAgeBand = ReadingAgeBand;
+type DecodableProfileAgeBand = ReadingProfileAgeBand;
 type MessageTone = 'neutral' | 'hint' | 'success' | 'error';
 type CheckpointFeedbackTone = 'idle' | 'success' | 'error';
 type PageId = 'p01' | 'p02' | 'p03' | 'p04' | 'p05' | 'p06';
@@ -63,6 +70,8 @@ interface StoryPack {
   decodeWithinTwoAttemptsTarget: number;
   sequenceEvidenceTarget: number;
   participationTarget: number;
+  maxChoiceCount: number;
+  antiGuessGuard: ReadingAntiGuessGuard;
 }
 
 const BASE_STORY_PAGES: StoryPage[] = [
@@ -192,22 +201,26 @@ const STORY_PACKS: Record<DecodableAgeBand, StoryPack> = {
   '3-4': {
     ageBand: '3-4',
     storyId: 'lostSound',
-    pages: BASE_STORY_PAGES.slice(0, 4),
-    supportMissThreshold: 1,
-    maxHintStep: 2,
-    decodeWithinTwoAttemptsTarget: 70,
-    sequenceEvidenceTarget: 0,
-    participationTarget: 70,
+    pages: BASE_STORY_PAGES.slice(0, READING_RUNTIME_MATRIX['3-4'].decodable.storyPages),
+    supportMissThreshold: READING_RUNTIME_MATRIX['3-4'].decodable.supportMissThreshold,
+    maxHintStep: READING_RUNTIME_MATRIX['3-4'].decodable.maxHintStep,
+    decodeWithinTwoAttemptsTarget: READING_RUNTIME_MATRIX['3-4'].decodable.decodeWithinTwoAttemptsTarget,
+    sequenceEvidenceTarget: READING_RUNTIME_MATRIX['3-4'].decodable.sequenceEvidenceTarget,
+    participationTarget: READING_RUNTIME_MATRIX['3-4'].decodable.participationTarget,
+    maxChoiceCount: READING_RUNTIME_MATRIX['3-4'].decodable.maxChoiceCount,
+    antiGuessGuard: READING_RUNTIME_MATRIX['3-4'].decodable.antiGuessGuard,
   },
   '5-6': {
     ageBand: '5-6',
     storyId: 'yoavHintMap',
     pages: BASE_STORY_PAGES,
-    supportMissThreshold: 2,
-    maxHintStep: 3,
-    decodeWithinTwoAttemptsTarget: 85,
-    sequenceEvidenceTarget: 0,
-    participationTarget: 75,
+    supportMissThreshold: READING_RUNTIME_MATRIX['5-6'].decodable.supportMissThreshold,
+    maxHintStep: READING_RUNTIME_MATRIX['5-6'].decodable.maxHintStep,
+    decodeWithinTwoAttemptsTarget: READING_RUNTIME_MATRIX['5-6'].decodable.decodeWithinTwoAttemptsTarget,
+    sequenceEvidenceTarget: READING_RUNTIME_MATRIX['5-6'].decodable.sequenceEvidenceTarget,
+    participationTarget: READING_RUNTIME_MATRIX['5-6'].decodable.participationTarget,
+    maxChoiceCount: READING_RUNTIME_MATRIX['5-6'].decodable.maxChoiceCount,
+    antiGuessGuard: READING_RUNTIME_MATRIX['5-6'].decodable.antiGuessGuard,
   },
   '6-7': {
     ageBand: '6-7',
@@ -216,11 +229,13 @@ const STORY_PACKS: Record<DecodableAgeBand, StoryPack> = {
       ...page,
       checkpointType: pageIndex === 3 ? 'evidence' : pageIndex % 2 === 1 ? 'sequence' : 'literal',
     })),
-    supportMissThreshold: 2,
-    maxHintStep: 3,
-    decodeWithinTwoAttemptsTarget: 88,
-    sequenceEvidenceTarget: 80,
-    participationTarget: 80,
+    supportMissThreshold: READING_RUNTIME_MATRIX['6-7'].decodable.supportMissThreshold,
+    maxHintStep: READING_RUNTIME_MATRIX['6-7'].decodable.maxHintStep,
+    decodeWithinTwoAttemptsTarget: READING_RUNTIME_MATRIX['6-7'].decodable.decodeWithinTwoAttemptsTarget,
+    sequenceEvidenceTarget: READING_RUNTIME_MATRIX['6-7'].decodable.sequenceEvidenceTarget,
+    participationTarget: READING_RUNTIME_MATRIX['6-7'].decodable.participationTarget,
+    maxChoiceCount: READING_RUNTIME_MATRIX['6-7'].decodable.maxChoiceCount,
+    antiGuessGuard: READING_RUNTIME_MATRIX['6-7'].decodable.antiGuessGuard,
   },
 };
 
@@ -250,10 +265,20 @@ function createPageFlagRecord(storyPages: StoryPage[], initialValue: boolean): R
   );
 }
 
-function toDecodableAgeBand(value: unknown): DecodableAgeBand {
-  if (value === '3-4') return '3-4';
-  if (value === '6-7') return '6-7';
-  return '5-6';
+function applyChoiceCap(options: ComprehensionOption[], cap: number): ComprehensionOption[] {
+  if (!Number.isFinite(cap) || cap < 1 || options.length <= cap) {
+    return options;
+  }
+
+  const boundedCap = Math.max(1, Math.floor(cap));
+  const correctOption = options.find((option) => option.isCorrect);
+  const distractors = options.filter((option) => !option.isCorrect);
+
+  if (!correctOption) {
+    return options.slice(0, boundedCap);
+  }
+
+  return [correctOption, ...distractors.slice(0, Math.max(0, boundedCap - 1))].slice(0, boundedCap);
 }
 
 function toAgeBandSuffixFromFallbackKey(key: string): string {
@@ -320,7 +345,7 @@ export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps
     const config = level.configJson;
     if (config && typeof config === 'object' && !Array.isArray(config)) {
       const rawAgeBand = (config as Record<string, unknown>).ageBand as DecodableProfileAgeBand | undefined;
-      return toDecodableAgeBand(rawAgeBand);
+      return toReadingAgeBand(rawAgeBand);
     }
     return '5-6';
   }, [level.configJson]);
@@ -378,6 +403,9 @@ export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps
 
   const completionSentRef = useRef(false);
   const timeoutIdsRef = useRef<number[]>([]);
+  const nonTargetTapTimesRef = useRef<number[]>([]);
+  const quickResponseStreakRef = useRef(0);
+  const lastResponseAtRef = useRef<number | null>(null);
   const currentPage = activeStoryPages[Math.min(currentPageIndex, activeStoryPages.length - 1)] ?? activeStoryPages[0];
   const independentMode = activeAgeBand !== '3-4' && !supportMode && independentStreak >= 3;
 
@@ -420,6 +448,13 @@ export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps
   const replayPhraseHintKey = useMemo(
     () => resolveAgeBandGameKey('hints.replayPhrase', 'games.decodableMicroStories.hints.replayPhrase'),
     [resolveAgeBandGameKey],
+  );
+  const antiGuessHintKey = useMemo(
+    () =>
+      activeAgeBand === '3-4'
+        ? replayPhraseHintKey
+        : resolveAgeBandGameKey('hints.decodeBeforeAnswer', 'games.decodableMicroStories.hints.decodeBeforeAnswer'),
+    [activeAgeBand, replayPhraseHintKey, resolveAgeBandGameKey],
   );
 
   const pageNarrationKey = useMemo(() => {
@@ -555,6 +590,9 @@ export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps
     completionSentRef.current = false;
     timeoutIdsRef.current.forEach((timeoutId) => window.clearTimeout(timeoutId));
     timeoutIdsRef.current = [];
+    nonTargetTapTimesRef.current = [];
+    quickResponseStreakRef.current = 0;
+    lastResponseAtRef.current = null;
     setCurrentPageIndex(0);
     setSelectedOptionId(null);
     setLocked(false);
@@ -586,6 +624,9 @@ export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps
     setHintStep(0);
     setScorePulse(false);
     setCheckpointFeedback('idle');
+    nonTargetTapTimesRef.current = [];
+    quickResponseStreakRef.current = 0;
+    lastResponseAtRef.current = null;
     setDecodeReadyByPage((previous) => ({ ...previous, [currentPage.id]: false }));
     setMessageTone(supportMode ? 'hint' : 'neutral');
     setMessageKey(supportMode ? supportInstructionKey : chooseAnswerKey);
@@ -640,14 +681,15 @@ export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps
   const reduceChoicesThreshold = activeAgeBand === '3-4' ? 1 : activeStoryPack.maxHintStep;
   const shouldReduceChoices = supportMode || hintStep >= reduceChoicesThreshold;
   const visibleComprehensionOptions = useMemo(() => {
-    if (!shouldReduceChoices) return currentPage.comprehensionOptions;
-    const correctOption = currentPage.comprehensionOptions.find((option) => option.isCorrect);
-    const firstDistractor = currentPage.comprehensionOptions.find((option) => !option.isCorrect);
+    const cappedOptions = applyChoiceCap(currentPage.comprehensionOptions, activeStoryPack.maxChoiceCount);
+    if (!shouldReduceChoices) return cappedOptions;
+    const correctOption = cappedOptions.find((option) => option.isCorrect);
+    const firstDistractor = cappedOptions.find((option) => !option.isCorrect);
     if (correctOption && firstDistractor) {
       return [correctOption, firstDistractor];
     }
-    return currentPage.comprehensionOptions;
-  }, [currentPage.comprehensionOptions, shouldReduceChoices]);
+    return cappedOptions;
+  }, [activeStoryPack.maxChoiceCount, currentPage.comprehensionOptions, shouldReduceChoices]);
 
   const completeSession = useCallback(() => {
     if (completionSentRef.current) return;
@@ -744,6 +786,9 @@ export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps
 
   const handleRetryCheckpoint = useCallback(() => {
     if (completed) return;
+    nonTargetTapTimesRef.current = [];
+    quickResponseStreakRef.current = 0;
+    lastResponseAtRef.current = null;
     setSelectedOptionId(null);
     setHintStep(0);
     setCheckpointFeedback('idle');
@@ -806,6 +851,27 @@ export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps
     playKey,
   ]);
 
+  const triggerAntiGuessGuard = useCallback(() => {
+    setLocked(true);
+    setMessageTone('hint');
+    setMessageKey(antiGuessHintKey);
+    playKey(antiGuessHintKey, true);
+    scheduleTimeout(() => {
+      setLocked(false);
+      setSelectedOptionId(null);
+      setMessageTone('neutral');
+      setMessageKey(decodeFirstInstructionKey);
+      playKey(pageDecodePromptKey, true);
+    }, activeStoryPack.antiGuessGuard.pauseMs);
+  }, [
+    activeStoryPack.antiGuessGuard.pauseMs,
+    antiGuessHintKey,
+    decodeFirstInstructionKey,
+    pageDecodePromptKey,
+    playKey,
+    scheduleTimeout,
+  ]);
+
   const handleSelectOption = useCallback(
     (option: ComprehensionOption) => {
       if (locked || completed) return;
@@ -821,6 +887,9 @@ export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps
       const wrongAttempts = wrongAttemptsByPage[currentPage.id] ?? 0;
 
       if (option.isCorrect) {
+        nonTargetTapTimesRef.current = [];
+        quickResponseStreakRef.current = 0;
+        lastResponseAtRef.current = null;
         const firstTrySuccess = wrongAttempts === 0 && hintStep === 0;
         const solvedWithinTwoAttempts = wrongAttempts <= 1;
         setLocked(true);
@@ -879,6 +948,20 @@ export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps
       }
 
       const nextWrongAttempts = wrongAttempts + 1;
+      const guardConfig = activeStoryPack.antiGuessGuard;
+      const now = performance.now();
+      nonTargetTapTimesRef.current = nonTargetTapTimesRef.current
+        .filter((timestamp) => now - timestamp <= guardConfig.rapidTapWindowMs)
+        .concat(now);
+      if (guardConfig.shortResponseWindowMs) {
+        const responseGapMs = lastResponseAtRef.current === null ? Infinity : now - lastResponseAtRef.current;
+        quickResponseStreakRef.current = responseGapMs < guardConfig.shortResponseWindowMs
+          ? quickResponseStreakRef.current + 1
+          : 1;
+      } else {
+        quickResponseStreakRef.current = 0;
+      }
+      lastResponseAtRef.current = now;
       setWrongAttemptsByPage((previous) => ({
         ...previous,
         [currentPage.id]: nextWrongAttempts,
@@ -920,9 +1003,21 @@ export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps
         setHintStep(activeStoryPack.maxHintStep);
         playKey(phrasePronunciationKey);
       }
+
+      const rapidTapGuardTriggered = nonTargetTapTimesRef.current.length >= guardConfig.rapidTapCount;
+      const quickResponseGuardTriggered = Boolean(
+        guardConfig.shortResponseStreakThreshold &&
+        quickResponseStreakRef.current >= guardConfig.shortResponseStreakThreshold,
+      );
+      if (rapidTapGuardTriggered || quickResponseGuardTriggered) {
+        nonTargetTapTimesRef.current = [];
+        quickResponseStreakRef.current = 0;
+        triggerAntiGuessGuard();
+      }
     },
     [
       activeAgeBand,
+      activeStoryPack.antiGuessGuard,
       activeStoryPack.maxHintStep,
       activeStoryPack.supportMissThreshold,
       activeStoryPages.length,
@@ -940,6 +1035,7 @@ export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps
       playKey,
       resolveAgeBandGameKey,
       scheduleTimeout,
+      triggerAntiGuessGuard,
       wrongAttemptsByPage,
     ],
   );

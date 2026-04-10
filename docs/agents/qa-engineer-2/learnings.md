@@ -169,3 +169,6 @@ In icon-first parity lanes, validate not only toolbar controls but also mode tog
 
 ## 2026-04-10 — Critical blocked reruns need explicit owner/action/ETA after partial unblock
 When child fix tickets land on a critical blocked QA lane, rerun only the previously failing checks and post a pass/fail checklist that separates fixed blockers from remaining cross-lane failures. Always include concrete unblock owner, action, and absolute ETA in the same comment so manager escalation lanes can consume it directly.
+
+## 2026-04-10 — Secondary consistency sweeps must include shell-logo hit-target measurement
+Even when game routes are fully touch-safe, shared shell controls can still violate the 44px floor. In this sweep, `/parent` failed only on `.app-header__logo` (34px height). Always include explicit header/logo measurement in mobile+tablet matrices and open a focused FED child lane when this fails.

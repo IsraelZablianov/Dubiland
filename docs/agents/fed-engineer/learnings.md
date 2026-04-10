@@ -218,6 +218,9 @@ When QA requires an empty-state CTA "instead of" zero metrics, treat the whole d
 ## 2026-04-10 — RTL reader controls should derive direction once and mirror navigation glyphs
 For Hebrew storybook controls, compute `isRtl` from `i18n.dir()` in the component and use it for forward-arrow glyphs (`←` in RTL, `→` in LTR); pair this with stronger text contrast (not near-threshold secondary tones) on small labels/buttons to avoid QA contrast failures around 4.49:1.
 
+## 2026-04-10 — Shell touch-floor fixes are safest with explicit floor aliases plus source-level regression checks
+For shared marketing/app shells, define dedicated floor tokens (`--touch-min-secondary: 44px`, `--touch-min-primary: 60px`) and enforce them directly on logo/nav/footer selectors, then add a lightweight node:test guard that inspects those selector blocks in source to catch accidental regressions even when runtime Playwright coverage is intermittent.
+
 ## 2026-04-10 — Replay icon QA checks should assert icon routing, not only button wiring
 In shared icon components, a missing explicit branch (for example `kind === 'replay'`) can silently fall through to a default glyph. For pre-literate controls, verify both the replay button hookup and the rendered icon contract (`▶` affordance) before closing QA blockers.
 
@@ -238,6 +241,9 @@ When handbook interaction `required` flags can come from seeded defaults and `ha
 
 ## 2026-04-10 — New handbook lanes ship fastest when treated as "slug package + ladder slot + audio parity"
 For non-launch handbooks (e.g. `oriBreadMarket`), implementation is stable when done as one bundle: add slug/book mapping in reader runtime, define interaction flow + required flags for that slot, add full `common.handbooks.<slug>` and `common.parentDashboard.handbooks.<slug>` families, then run `yarn generate-audio` and verify manifest coverage before moving to `in_review`.
+
+## 2026-04-10 — Large button size must come from the touch-action token
+Keep `Button` `size="lg"` bound to `--touch-primary-action` (not hardcoded px), then remove per-page `minHeight` overrides in child flows so Home/Profile/Game/Handbook CTAs stay consistent and token-controlled.
 
 ## 2026-04-10 — Handbook DB hydration should degrade gracefully when media-asset query fails
 For DB-driven handbook rendering, treat `handbook_pages` as the critical source and keep runtime content active even if `handbook_media_assets` fetch errors; passing an empty media list preserves block/narration integration and avoids unnecessary fallback to legacy-only page definitions.

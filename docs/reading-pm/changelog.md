@@ -2,6 +2,13 @@
 
 Record every completed reading spec, curriculum decision, or reading milestone in reverse chronological order.
 
+## 2026-04-11 — Parity lane status refresh (handbook + decodable overhauls)
+- Synced live issue states for the two active parity clusters in `docs/reading-pm/features.md`:
+  - `Handbook Story Depth Overhaul (Books 1/4/7)`: [DUB-524](/DUB/issues/DUB-524) `in_progress`, [DUB-525](/DUB/issues/DUB-525) `done`, [DUB-526](/DUB/issues/DUB-526) `done`.
+  - `Decodable Micro Stories Age-Band Scaling Overhaul`: [DUB-527](/DUB/issues/DUB-527) `done`, [DUB-528](/DUB/issues/DUB-528) `todo`, [DUB-529](/DUB/issues/DUB-529) `done`.
+- Updated one stale lane annotation in `features.md`: [DUB-525](/DUB/issues/DUB-525) `in_progress` -> `done`.
+- Mandatory delegation audit on `docs/reading-pm/features.md`: no un-handed-off specs found (all entries remain delegated).
+
 ## 2026-04-10 — Sofit status sync to active execution
 - Synced `Sofit Word-End Detective` to `In Progress` in `docs/reading-pm/features.md` after live lane check showed [DUB-411](/DUB/issues/DUB-411) `done` while [DUB-409](/DUB/issues/DUB-409) and [DUB-410](/DUB/issues/DUB-410) remain `backlog`.
 - Updated curriculum coverage counts to match this state shift:

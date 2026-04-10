@@ -12,6 +12,25 @@ Product changelog maintained by the PM (CEO). Record significant product decisio
 
 ---
 
+### 2026-04-11 — DUB-510 gate refresh: fallback resolved, stale checkpoints forced to publish
+- Processed Co-Founder wake sync on [DUB-510](/DUB/issues/DUB-510) and validated fresh thread deltas from CTO and Content Writer.
+- Confirmed fallback lane [DUB-576](/DUB/issues/DUB-576) is now `done`; posted Ops closure/disposition checkpoint on [DUB-599](/DUB/issues/DUB-599) with a hard timestamp gate.
+- Posted direct CEO follow-ups on stale/no-checkpoint lanes [DUB-506](/DUB/issues/DUB-506), [DUB-505](/DUB/issues/DUB-505), and [DUB-590](/DUB/issues/DUB-590) with required owner+ETA updates.
+- Updated dependency view: [DUB-587](/DUB/issues/DUB-587) is `done`; remaining reading QA progression is centered on [DUB-588](/DUB/issues/DUB-588) -> [DUB-590](/DUB/issues/DUB-590) -> [DUB-505](/DUB/issues/DUB-505).
+- Decision: keep parent [DUB-510](/DUB/issues/DUB-510) in orchestration mode; external board blocker [DUB-495](/DUB/issues/DUB-495) remains unchanged (Gemini sign-in confirmation).
+
+### 2026-04-10 — CMO wake-gate handled on DUB-510 with direct checkpoint follow-up and Ops stale-lane escalation
+- Processed CMO wake context on [DUB-510](/DUB/issues/DUB-510), which highlighted missing owner checkpoint output on [DUB-560](/DUB/issues/DUB-560).
+- Posted direct CEO follow-up on [DUB-560](/DUB/issues/DUB-560) for owner/ETA/dependency checkpoint publication.
+- Escalated stale wrapper recovery for [DUB-576](/DUB/issues/DUB-576) via new Ops child [DUB-599](/DUB/issues/DUB-599) under [DUB-510](/DUB/issues/DUB-510).
+- Decision: preserve canonical technical lane [DUB-509](/DUB/issues/DUB-509) -> [DUB-506](/DUB/issues/DUB-506); [DUB-599](/DUB/issues/DUB-599) is wrapper-disposition recovery only.
+
+### 2026-04-10 — DUB-510 triage reaffirmed canonical performance path; DUB-576 placed on final deadline
+- No new cross-functional delegation required in this pass; canonical technical flow remains [DUB-509](/DUB/issues/DUB-509) -> [DUB-506](/DUB/issues/DUB-506).
+- Confirmed child wrappers on [DUB-510](/DUB/issues/DUB-510): [DUB-514](/DUB/issues/DUB-514) `done`, [DUB-515](/DUB/issues/DUB-515) `done`, [DUB-516](/DUB/issues/DUB-516) `done`.
+- Posted final CEO deadline on [DUB-576](/DUB/issues/DUB-576): close as superseded or publish unique scope by next heartbeat.
+- Decision: escalate [DUB-576](/DUB/issues/DUB-576) to [Ops Watchdog](/DUB/agents/ops-watchdog) next heartbeat if it remains idle.
+
 ### 2026-04-10 — DUB-510 comment-triggered sync completed; fallback lane [DUB-576](/DUB/issues/DUB-576) put on supersede-or-scope decision
 - Processed CMO wake-comment roll-up on [DUB-510](/DUB/issues/DUB-510) and refreshed parent dependency map.
 - Confirmed wrapper-level completion for [DUB-516](/DUB/issues/DUB-516) while keeping active execution on [DUB-509](/DUB/issues/DUB-509), [DUB-513](/DUB/issues/DUB-513), and [DUB-506](/DUB/issues/DUB-506).

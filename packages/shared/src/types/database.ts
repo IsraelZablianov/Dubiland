@@ -1083,7 +1083,70 @@ export type Database = {
           starting_level_id: string | null
           support_flags: Json | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "game_attempts_child_id_fkey"
+            columns: ["child_id"]
+            isOneToOne: false
+            referencedRelation: "children"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "game_attempts_difficulty_profile_id_fkey"
+            columns: ["difficulty_profile_id"]
+            isOneToOne: false
+            referencedRelation: "game_difficulty_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "game_attempts_game_id_fkey"
+            columns: ["game_id"]
+            isOneToOne: false
+            referencedRelation: "games"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "game_attempts_level_id_fkey"
+            columns: ["served_level_id"]
+            isOneToOne: false
+            referencedRelation: "game_levels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "game_attempts_starting_level_id_fkey"
+            columns: ["starting_level_id"]
+            isOneToOne: false
+            referencedRelation: "game_levels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dubiland_parent_metrics_latest_v1: {
+        Row: {
+          accuracy_pct: number | null
+          age_band: string | null
+          attempt_id: string | null
+          child_id: string | null
+          decode_accuracy_pct: number | null
+          domain: string | null
+          gate_passed: boolean | null
+          hint_trend: string | null
+          independence_trend: string | null
+          listen_participation_pct: number | null
+          metric_as_of: string | null
+          progression_band: string | null
+          sequence_evidence_score: number | null
+          skill_key: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "game_attempts_child_id_fkey"
+            columns: ["child_id"]
+            isOneToOne: false
+            referencedRelation: "children"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       game_tags_expanded: {
         Row: {
@@ -1152,6 +1215,19 @@ export type Database = {
       dubiland_consecutive_play_streak_days: {
         Args: { p_child_id: string; p_tz: string }
         Returns: number
+      }
+      dubiland_parent_dashboard_curriculum_metrics: {
+        Args: { p_timezone?: string }
+        Returns: {
+          avg_accuracy_pct_14d: number | null
+          child_id: string
+          domain: string
+          hint_trend_latest: string | null
+          independence_trend_latest: string | null
+          last_skill_key: string | null
+          progression_band_latest: string | null
+          updated_at: string
+        }[]
       }
       dubiland_parent_dashboard_metrics: {
         Args: { p_timezone?: string }

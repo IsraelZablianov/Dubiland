@@ -58,7 +58,7 @@ interface HomeGameCardItem {
 
 const AGE_BANDS: ProfileAgeBand[] = ['3-4', '4-5', '5-6', '6-7'];
 const NAVIGATION_AUDIO_LEAD_MS = 140;
-const DEFAULT_GAME_THUMBNAIL = '/images/games/thumbnails/contact-sheet-16x10.webp';
+const DEFAULT_GAME_THUMBNAIL = '/images/games/thumbnails/interactiveHandbook/thumb-16x10.webp';
 
 const SECTION_ORDER: HomeSectionSlug[] = ['letters', 'reading', 'math', 'books'];
 

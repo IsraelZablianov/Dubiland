@@ -110,6 +110,8 @@
   --shadow-card: 0 2px 8px rgba(93, 58, 26, 0.08);
 
   /* === Touch Targets === */
+  --touch-min-secondary: 44px;
+  --touch-min-primary: 60px;
   --touch-min: 52px;
   --touch-primary-action: 72px;
   --touch-primary-action-prominent: 80px;

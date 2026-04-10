@@ -169,8 +169,8 @@ export function GameCard({
       >
         <span
           style={{
-            fontSize: 'var(--font-size-md)',
-            fontWeight: 'var(--font-weight-semibold)' as unknown as number,
+            fontSize: 'var(--font-size-lg)',
+            fontWeight: 'var(--font-weight-bold)' as unknown as number,
             color: 'var(--color-text-primary)',
             lineHeight: 'var(--line-height-normal)',
           }}
@@ -267,7 +267,7 @@ export function GameCard({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            minBlockSize: 'var(--touch-min)',
+            minBlockSize: 'var(--touch-primary-action)',
             borderTop: '1px solid var(--color-border-subtle)',
             paddingBlockStart: 'var(--space-2xs)',
             marginBlockStart: 'auto',
@@ -279,8 +279,8 @@ export function GameCard({
               display: 'inline-flex',
               alignItems: 'center',
               gap: 'var(--space-xs)',
-              minBlockSize: '52px',
-              fontSize: 'var(--font-size-sm)',
+              minBlockSize: 'var(--touch-primary-action)',
+              fontSize: 'var(--font-size-md)',
               fontWeight: 'var(--font-weight-bold)' as unknown as number,
               color: 'var(--color-theme-primary)',
             }}

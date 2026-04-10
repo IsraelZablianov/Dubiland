@@ -11,7 +11,7 @@ import {
 import { useLocation } from 'react-router-dom';
 import type { AuthChangeEvent, Session, User } from '@supabase/supabase-js';
 import { isSupabaseConfigured } from '@/lib/supabaseConfig';
-import { disableGuestMode } from '@/lib/session';
+import { disableGuestMode, isGuestModeEnabled } from '@/lib/session';
 
 type AuthContextValue = {
   user: User | null;
@@ -80,8 +80,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    const shouldBootstrap =
-      shouldBootstrapAuthForPath(location.pathname) || hasPersistedSupabaseSessionHint();
+    const hasSessionHint = hasPersistedSupabaseSessionHint();
+    const shouldSkipGuestBootstrap =
+      isGuestModeEnabled() && location.pathname !== '/login' && !hasSessionHint;
+
+    if (shouldSkipGuestBootstrap) {
+      setLoading(false);
+      return;
+    }
+
+    const shouldBootstrap = shouldBootstrapAuthForPath(location.pathname) || hasSessionHint;
 
     if (!shouldBootstrap) {
       setLoading(false);

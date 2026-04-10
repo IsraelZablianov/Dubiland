@@ -46,7 +46,7 @@ const sizeStyles: Record<ButtonSize, React.CSSProperties> = {
     borderRadius: 'var(--radius-md)',
   },
   lg: {
-    minHeight: '56px',
+    minHeight: 'var(--touch-primary-action)',
     padding: 'var(--space-md) var(--space-xl)',
     fontSize: 'var(--font-size-lg)',
     borderRadius: 'var(--radius-lg)',

@@ -132,7 +132,7 @@ Track all reading games and features across their lifecycle.
 - **Spec:** `docs/games/handbooks/handbook-story-depth-overhaul-books-1-4-7.md`
 - **Reading Skill:** Phrase & Sentence Reading, Reading Comprehension, Decodable Stories
 - **Curriculum Position:** Narrative-depth upgrade layer for handbook Books 1/4/7 after baseline ladder implementation; strengthens chapter continuity, age-fit plot depth, and text-evidence reading behavior.
-- **Delegated Issue:** [DUB-524](/DUB/issues/DUB-524) (implementation, in_progress), [DUB-525](/DUB/issues/DUB-525) (Hebrew i18n/audio, in_progress), [DUB-526](/DUB/issues/DUB-526) (mechanics review, done)
+- **Delegated Issue:** [DUB-524](/DUB/issues/DUB-524) (implementation, in_progress), [DUB-525](/DUB/issues/DUB-525) (Hebrew i18n/audio, done), [DUB-526](/DUB/issues/DUB-526) (mechanics review, done)
 
 ### Decodable Micro Stories Age-Band Scaling Overhaul
 - **Status:** Delegated to FED Engineer 3 + Content Writer + Gaming Expert (In Progress)

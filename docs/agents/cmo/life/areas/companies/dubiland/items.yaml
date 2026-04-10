@@ -981,3 +981,51 @@
     - companies/dubiland
   last_accessed: "2026-04-10"
   access_count: 1
+
+- id: dubiland-quality-20260410-074
+  fact: "DUB-512 latest measurable delta confirms DUB-559 and DUB-537 are done, DUB-513 is blocked by DUB-495, and DUB-560 remains the open coordination checkpoint gate."
+  category: status
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: superseded
+  superseded_by: dubiland-quality-20260410-076
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-quality-20260410-075
+  fact: "Current execution ETA gates under DUB-512 are DUB-498 milestone by April 11, 2026 00:10 IDT and DUB-504 milestone by April 11, 2026 00:40 IDT (full sweep target April 11, 2026 03:00 IDT)."
+  category: dependency
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-quality-20260410-598
+  fact: "CMO completed DUB-598 by force-prioritizing content checkpoint lane DUB-560, posting owner+ETA+blocker updates on DUB-509 and DUB-510, and confirming DUB-495 is not a dependency for the DUB-560/DUB-494 audio checkpoint."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-quality-20260410-076
+  fact: "Post-DUB-598 update on DUB-512 confirms DUB-560 is now done, DUB-494 is done, DUB-498 and DUB-504 remain in progress, and DUB-513 stays blocked by DUB-495."
+  category: status
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1

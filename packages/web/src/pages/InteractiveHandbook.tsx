@@ -17,6 +17,11 @@ import {
   type HandbookRuntimeMediaAssetRow,
   type HandbookRuntimePageRow,
 } from '@/games/reading/handbookRuntimeAdapter';
+import {
+  READING_LADDER_BOOK_BY_AGE_BAND,
+  toReadingAgeBand,
+  type ReadingAgeBand,
+} from '@/games/reading/readingRuntimeMatrix';
 import { useAudioManager } from '@/hooks/useAudioManager';
 import { getActiveChildProfile } from '@/lib/session';
 import { isSupabaseConfigured } from '@/lib/supabaseConfig';
@@ -43,7 +48,7 @@ type HandbookSlug =
   | 'magicLetterMap';
 type StoryDepthHandbookSlug = 'mikaSoundGarden' | 'yoavLetterMap' | 'tamarWordTower';
 type ProfileAgeBand = '3-4' | '4-5' | '5-6' | '6-7';
-type LadderAgeBand = '3-4' | '5-6' | '6-7';
+type LadderAgeBand = ReadingAgeBand;
 
 interface HydratedProgressRow {
   furthest_page_number: number;
@@ -59,10 +64,10 @@ interface HydratedHandbookRow {
 const MAX_SYNC_BACKOFF_MS = 4000;
 const DEFAULT_LADDER_BOOK_ID: LadderBookId = 'book4';
 const AGE_BAND_TO_BOOK: Record<ProfileAgeBand, LadderBookId> = {
-  '3-4': 'book1',
-  '4-5': 'book4',
-  '5-6': 'book4',
-  '6-7': 'book7',
+  '3-4': READING_LADDER_BOOK_BY_AGE_BAND['3-4'],
+  '4-5': READING_LADDER_BOOK_BY_AGE_BAND['5-6'],
+  '5-6': READING_LADDER_BOOK_BY_AGE_BAND['5-6'],
+  '6-7': READING_LADDER_BOOK_BY_AGE_BAND['6-7'],
 };
 const LAUNCH_ALIAS_TO_HANDBOOK_SLUG: Record<LaunchSlotAlias, HandbookSlug> = {
   'bouncy-balloon': 'mikaSoundGarden',
@@ -246,9 +251,9 @@ function isProfileAgeBand(value: unknown): value is ProfileAgeBand {
 }
 
 function toLadderAgeBand(value: unknown): LadderAgeBand | null {
-  if (value === '3-4') return '3-4';
-  if (value === '6-7') return '6-7';
-  if (value === '4-5' || value === '5-6') return '5-6';
+  if (value === '3-4' || value === '4-5' || value === '5-6' || value === '6-7') {
+    return toReadingAgeBand(value);
+  }
   return null;
 }
 

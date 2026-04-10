@@ -1,0 +1,47 @@
+vite v6.4.2 building for production...
+transforming...
+✓ 198 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                     3.67 kB │ gzip:   1.33 kB
+dist/assets/index-CQNWIPZh.css                     15.31 kB │ gzip:   3.76 kB
+dist/assets/supabase-BorA5uBW.js                    0.37 kB │ gzip:   0.28 kB
+dist/assets/Card-BS6RnHiT.js                        0.51 kB │ gzip:   0.33 kB
+dist/assets/learningGoals-ISzoXo9M.js               0.55 kB │ gzip:   0.37 kB
+dist/assets/ProtectedRoute-DVmZ9XDd.js              0.68 kB │ gzip:   0.42 kB
+dist/assets/childAvatarEmoji-f86aPTve.js            1.00 kB │ gzip:   0.61 kB
+dist/assets/videosRepository-B-5W-UM1.js            1.41 kB │ gzip:   0.71 kB
+dist/assets/NotFound-syNRkaD7.js                    2.15 kB │ gzip:   0.77 kB
+dist/assets/Privacy-8k1jjUmP.js                     2.71 kB │ gzip:   0.82 kB
+dist/assets/Terms-BgDiM5L9.js                       2.71 kB │ gzip:   0.83 kB
+dist/assets/GameTopBar-C2ZO1E86.js                  3.19 kB │ gzip:   1.12 kB
+dist/assets/ParentsFaq-Rfms6dJT.js                  3.43 kB │ gzip:   0.99 kB
+dist/assets/Login-CR9yDql3.js                       5.26 kB │ gzip:   1.81 kB
+dist/assets/FeatureIllustration-C3LPaOPJ.js         5.67 kB │ gzip:   1.43 kB
+dist/assets/Parents-BDoNWdfu.js                     5.92 kB │ gzip:   1.27 kB
+dist/assets/About-qGtHLn_R.js                       7.29 kB │ gzip:   1.54 kB
+dist/assets/RouteMetadataManager-6-Bd9TY7.js        8.84 kB │ gzip:   2.79 kB
+dist/assets/ProfilePicker-DexRN5MG.js              10.54 kB │ gzip:   3.07 kB
+dist/assets/Landing-115vCsWa.js                    11.93 kB │ gzip:   2.23 kB
+dist/assets/ParentDashboard-BsGnPWj0.js            14.28 kB │ gzip:   3.19 kB
+dist/assets/TopicPillar-Kk9FeoRM.js                19.11 kB │ gzip:   4.01 kB
+dist/assets/RootFamilyStickers-CMXNKDFg.js         25.51 kB │ gzip:   6.70 kB
+dist/assets/ShapeSafari-n1o5-bsz.js                26.99 kB │ gzip:   6.58 kB
+dist/assets/SightWordSprint-BT8TN6T3.js            28.20 kB │ gzip:   6.71 kB
+dist/assets/Home-C9IndkqQ.js                       29.54 kB │ gzip:   8.13 kB
+dist/assets/MoreOrLessMarket-DlPKydg0.js           30.15 kB │ gzip:   7.43 kB
+dist/assets/ConfusableLetterContrast-4pMCHoK2.js   30.44 kB │ gzip:   7.27 kB
+dist/assets/NumberLineJumps-BRpgAfiP.js            32.15 kB │ gzip:   8.32 kB
+dist/assets/PictureToWordBuilder-vKgl204Y.js       34.52 kB │ gzip:   8.58 kB
+dist/assets/LetterSkyCatcher-DAixt6Dr.js           36.87 kB │ gzip:   8.85 kB
+dist/assets/DecodableMicroStories-8cVGOEKH.js      37.70 kB │ gzip:   8.15 kB
+dist/assets/CountingPicnic-s050lt0z.js             38.33 kB │ gzip:   8.23 kB
+dist/assets/LetterTracingTrail-B-OknEoN.js         40.66 kB │ gzip:   9.11 kB
+dist/assets/ColorGarden-CIox7ekl.js                42.50 kB │ gzip:   9.12 kB
+dist/assets/LetterSoundMatch-BQpmqYtE.js           45.10 kB │ gzip:   9.56 kB
+dist/assets/react-dz6IX6RK.js                      49.00 kB │ gzip:  17.09 kB
+dist/assets/i18n-CQO0ZaI5.js                       49.39 kB │ gzip:  15.37 kB
+dist/assets/InteractiveHandbook-DWB1Dq6F.js       122.02 kB │ gzip:  27.17 kB
+dist/assets/supabase-k82gbVKr.js                  196.61 kB │ gzip:  51.65 kB
+dist/assets/index-DhHqe1B4.js                     429.24 kB │ gzip: 117.16 kB
+✓ built in 3.08s

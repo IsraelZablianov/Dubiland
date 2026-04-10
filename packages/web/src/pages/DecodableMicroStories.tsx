@@ -5,12 +5,13 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Card } from '@/components/design-system';
 import type { GameCompletionResult, ParentSummaryMetrics } from '@/games/engine';
 import { DecodableStoryReaderGame } from '@/games/reading/DecodableStoryReaderGame';
+import { READING_RUNTIME_MATRIX, toReadingAgeBand, type ReadingAgeBand } from '@/games/reading/readingRuntimeMatrix';
 import { useAudioManager } from '@/hooks/useAudioManager';
 import { getActiveChildProfile } from '@/lib/session';
 
 type SyncState = 'idle' | 'syncing' | 'synced';
 type HintTrend = ParentSummaryMetrics['hintTrend'];
-type DecodableAgeBand = '3-4' | '5-6' | '6-7';
+type DecodableAgeBand = ReadingAgeBand;
 
 const DECODABLE_MICRO_STORIES_GAME: Game = {
   id: 'local-decodable-micro-stories',
@@ -47,12 +48,6 @@ function toHintTrendSummaryKey(hintTrend: HintTrend): string {
   return 'games.decodableMicroStories.summary.hintTrend.needsSupport';
 }
 
-function toDecodableAgeBand(value: unknown): DecodableAgeBand {
-  if (value === '3-4') return '3-4';
-  if (value === '6-7') return '6-7';
-  return '5-6';
-}
-
 function toAgeBandLabelKey(ageBand: DecodableAgeBand): 'contentFilters.age.band.3_4' | 'contentFilters.age.band.5_6' | 'contentFilters.age.band.6_7' {
   if (ageBand === '3-4') return 'contentFilters.age.band.3_4';
   if (ageBand === '6-7') return 'contentFilters.age.band.6_7';
@@ -64,7 +59,7 @@ export default function DecodableMicroStoriesPage() {
   const navigate = useNavigate();
   const audio = useAudioManager();
   const activeProfile = getActiveChildProfile();
-  const runtimeAgeBand = useMemo(() => toDecodableAgeBand(activeProfile?.ageBand), [activeProfile?.ageBand]);
+  const runtimeAgeBand = useMemo(() => toReadingAgeBand(activeProfile?.ageBand), [activeProfile?.ageBand]);
 
   const child = useMemo<Child>(
     () => ({
@@ -85,10 +80,10 @@ export default function DecodableMicroStoriesPage() {
       configJson: {
         ...(DECODABLE_MICRO_STORIES_LEVEL.configJson as Record<string, unknown>),
         ageBand: runtimeAgeBand,
-        pages: runtimeAgeBand === '3-4' ? 4 : 6,
+        pages: READING_RUNTIME_MATRIX[runtimeAgeBand].decodable.storyPages,
       },
     }),
-    [runtimeAgeBand],
+  [runtimeAgeBand],
   );
 
   const [completionResult, setCompletionResult] = useState<GameCompletionResult | null>(null);

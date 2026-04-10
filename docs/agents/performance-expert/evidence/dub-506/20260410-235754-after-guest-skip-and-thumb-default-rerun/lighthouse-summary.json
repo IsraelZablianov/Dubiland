@@ -1,0 +1,54 @@
+{
+  "routes": [
+    {
+      "route": "root",
+      "performance": 68,
+      "fcp_ms": 5543.236,
+      "lcp_ms": 5626.604,
+      "tbt_ms": 0,
+      "cls": 0.033993,
+      "speed_index_ms": 4136
+    },
+    {
+      "route": "profiles",
+      "performance": 79,
+      "fcp_ms": 2724.3,
+      "lcp_ms": 3999.27,
+      "tbt_ms": 234.9749999999999,
+      "cls": 0.000786,
+      "speed_index_ms": 3065
+    },
+    {
+      "route": "games",
+      "performance": 79,
+      "fcp_ms": 2731.769,
+      "lcp_ms": 3998.405,
+      "tbt_ms": 236.88500000000022,
+      "cls": 0.000786,
+      "speed_index_ms": 3055
+    }
+  ],
+  "aggregate": {
+    "count": 3,
+    "perf_median": 79,
+    "lcp_median_ms": 3999.27,
+    "worst_lcp_route": {
+      "route": "root",
+      "performance": 68,
+      "fcp_ms": 5543.236,
+      "lcp_ms": 5626.604,
+      "tbt_ms": 0,
+      "cls": 0.033993,
+      "speed_index_ms": 4136
+    },
+    "worst_perf_route": {
+      "route": "root",
+      "performance": 68,
+      "fcp_ms": 5543.236,
+      "lcp_ms": 5626.604,
+      "tbt_ms": 0,
+      "cls": 0.033993,
+      "speed_index_ms": 4136
+    }
+  }
+}

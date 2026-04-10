@@ -163,3 +163,8 @@
 - For brand/SEO consistency requests, one consolidated execution package works best when it separates four artifacts clearly: route QA matrix, metadata parity matrix, GEO answer template, and weekly regression checklist.
 - Route QA should combine messaging checks (parent intent, trust, CTA) with technical checks (non-JS crawlability, canonical/OG parity) so CMO and FED can use the same table without translation overhead.
 - Keep metadata parity tables source-anchored (route metadata + i18n keys) and mark live-state gaps against the latest dated audit snapshot to avoid mixing target state with unverified runtime assumptions.
+
+## 2026-04-10 — Dependency-Link Wake Handling (DUB-50)
+
+- A blocker-link maintenance comment from Ops is valid new context for dedup logic, but it may still contain zero executable unblock evidence.
+- In that case, re-check the linked dependency issue state first; if no new host/proof artifact exists, re-block once with explicit "no fresh validator input" wording to prevent duplicate rerun churn.

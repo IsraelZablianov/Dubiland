@@ -9,13 +9,21 @@ import type {
   HandbookRuntimeContent,
   HandbookRuntimeInteraction,
 } from '@/games/reading/handbookRuntimeAdapter';
+import {
+  READING_DEFAULT_AGE_BAND_BY_BOOK,
+  READING_LADDER_BOOK_BY_AGE_BAND,
+  READING_RUNTIME_MATRIX,
+  isReadingAgeBand,
+  type ReadingAgeBand,
+  type ReadingLadderBookId,
+} from '@/games/reading/readingRuntimeMatrix';
 import { assetUrl } from '@/lib/assetUrl';
 
 type HandbookMode = 'readToMe' | 'readAndPlay' | 'calmReplay';
 type StatusTone = 'neutral' | 'hint' | 'success' | 'error';
 type HintTrend = ParentSummaryMetrics['hintTrend'];
-type AgeBand = '3-4' | '5-6' | '6-7';
-type LadderBookId = 'book1' | 'book4' | 'book5' | 'book6' | 'book7' | 'book8' | 'book9' | 'book10';
+type AgeBand = ReadingAgeBand;
+type LadderBookId = ReadingLadderBookId;
 type LaunchSlotAlias =
   | 'bouncy-balloon'
   | 'magic-letter-map'
@@ -357,11 +365,7 @@ const PAGE_ID_SET = new Set<PageId>(ALL_PAGE_IDS);
 const SWIPE_GESTURE_MIN_DISTANCE_PX = 56;
 const SWIPE_GESTURE_MAX_VERTICAL_DRIFT_PX = 64;
 const LADDER_BOOK_SEQUENCE: LadderBookId[] = ['book1', 'book4', 'book5', 'book6', 'book7', 'book8', 'book9', 'book10'];
-const AGE_BAND_TO_BOOK: Record<AgeBand, LadderBookId> = {
-  '3-4': 'book1',
-  '5-6': 'book4',
-  '6-7': 'book7',
-};
+const AGE_BAND_TO_BOOK: Record<AgeBand, LadderBookId> = READING_LADDER_BOOK_BY_AGE_BAND;
 const LAUNCH_ALIAS_TO_HANDBOOK_SLUG: Record<LaunchSlotAlias, HandbookSlug> = {
   'bouncy-balloon': 'mikaSoundGarden',
   'magic-letter-map': 'magicLetterMap',
@@ -402,16 +406,7 @@ const HANDBOOK_SLUG_TO_BOOK: Record<HandbookSlug, LadderBookId> = {
   almaRootFamilies: 'book10',
   magicLetterMap: 'book4',
 };
-const BOOK_TO_DEFAULT_AGE_BAND: Record<LadderBookId, AgeBand> = {
-  book1: '3-4',
-  book4: '5-6',
-  book5: '5-6',
-  book6: '5-6',
-  book7: '6-7',
-  book8: '6-7',
-  book9: '6-7',
-  book10: '6-7',
-};
+const BOOK_TO_DEFAULT_AGE_BAND: Record<LadderBookId, AgeBand> = READING_DEFAULT_AGE_BAND_BY_BOOK;
 const STORY_DEPTH_SLUG_BY_BOOK: Partial<Record<LadderBookId, StoryDepthHandbookSlug>> = {
   book1: 'mikaSoundGarden',
   book7: 'tamarWordTower',
@@ -499,7 +494,14 @@ const PROMPT_KEY_ORDER_BY_BOOK: Record<LadderBookId, string[]> = {
   ],
 };
 const HANDBOOKS_WITH_ILLUSTRATIONS = new Set<HandbookSlug>(['magicLetterMap']);
-const MAGIC_LETTER_MAP_EXPOSURE_INTERACTION_IDS = new Set<string>(['decodePointedWord', 'literalComprehension']);
+const MAGIC_LETTER_MAP_EXPOSURE_INTERACTION_IDS = new Set<string>([
+  'decodePointedWord',
+  'chooseWordByNikud',
+  'confusableContrast',
+  'literalAfterDecoding',
+  // Legacy id kept to protect old runtime payloads.
+  'literalComprehension',
+]);
 const ILLUSTRATION_WIDTH = 1600;
 const ILLUSTRATION_HEIGHT = 1000;
 const STARTUP_NARRATION_DELAY_MS = 320;
@@ -1398,7 +1400,7 @@ function isLadderBookId(value: unknown): value is LadderBookId {
 }
 
 function isAgeBand(value: unknown): value is AgeBand {
-  return typeof value === 'string' && value in AGE_BAND_TO_BOOK;
+  return isReadingAgeBand(value);
 }
 
 function clampPercent(value: unknown, fallback: number): number {
@@ -1467,25 +1469,59 @@ function applyAgeBandInteractionOverrides(
   pages: HandbookPageDefinition[],
   handbookSlug: HandbookSlug,
   activeAgeBand: AgeBand,
+  activeBookId: LadderBookId,
 ): HandbookPageDefinition[] {
-  if (handbookSlug !== 'magicLetterMap' || activeAgeBand !== '3-4') {
-    return pages;
-  }
+  const handbookRules = READING_RUNTIME_MATRIX[activeAgeBand].handbook;
+  const defaultHintPolicy: AgeBandNumericPolicy = {
+    '3-4': READING_RUNTIME_MATRIX['3-4'].handbook.hintTriggerMs,
+    '5-6': READING_RUNTIME_MATRIX['5-6'].handbook.hintTriggerMs,
+    '6-7': READING_RUNTIME_MATRIX['6-7'].handbook.hintTriggerMs,
+  };
+  const defaultChoicePolicy: AgeBandNumericPolicy = {
+    '3-4': READING_RUNTIME_MATRIX['3-4'].handbook.maxChoiceCount,
+    '5-6': READING_RUNTIME_MATRIX['5-6'].handbook.maxChoiceCount,
+    '6-7': READING_RUNTIME_MATRIX['6-7'].handbook.maxChoiceCount,
+  };
+  const shouldUseBook4SupportVisibilityMode =
+    activeAgeBand === '3-4' &&
+    activeBookId === 'book4' &&
+    (handbookSlug === 'magicLetterMap' || handbookSlug === 'yoavLetterMap');
 
   return pages.map((page) => {
-    if (!page.interaction || !MAGIC_LETTER_MAP_EXPOSURE_INTERACTION_IDS.has(page.interaction.id)) {
+    if (!page.interaction) {
       return page;
     }
 
-    if (!page.interaction.required) {
-      return page;
-    }
+    const shouldDisableMasteryRequirement = shouldUseBook4SupportVisibilityMode
+      ? MAGIC_LETTER_MAP_EXPOSURE_INTERACTION_IDS.has(page.interaction.id) || page.interaction.required
+      : false;
+    const required = shouldDisableMasteryRequirement ? false : page.interaction.required;
+    const isScored = required ? handbookRules.allowsIndependentDecodeScoring : page.interaction.isScored;
+    const shouldApplyDecodeFirstLock = isScored && handbookRules.enforceDecodeFirstScoredLock;
+    const hintTriggerByBand = hasPolicyEntries(page.interaction.hintTriggerByBand)
+      ? page.interaction.hintTriggerByBand
+      : defaultHintPolicy;
+    const maxChoicesByBand = hasPolicyEntries(page.interaction.maxChoicesByBand)
+      ? page.interaction.maxChoicesByBand
+      : defaultChoicePolicy;
 
     return {
       ...page,
       interaction: {
         ...page.interaction,
-        required: false,
+        required,
+        isScored,
+        requiresTextActionBeforeChoice: shouldApplyDecodeFirstLock
+          ? true
+          : page.interaction.requiresTextActionBeforeChoice,
+        allowImageBeforeAnswer: shouldApplyDecodeFirstLock
+          ? false
+          : page.interaction.allowImageBeforeAnswer,
+        choiceLockUntilTextAction: shouldApplyDecodeFirstLock
+          ? true
+          : page.interaction.choiceLockUntilTextAction,
+        hintTriggerByBand,
+        maxChoicesByBand,
       },
     };
   });
@@ -1905,8 +1941,8 @@ export function InteractiveHandbookGame({
     [activeHandbookSlug, basePageDefinitions, runtimeContent],
   );
   const pageDefinitions = useMemo(
-    () => applyAgeBandInteractionOverrides(runtimeMergedPages, activeHandbookSlug, activeAgeBand),
-    [activeAgeBand, activeHandbookSlug, runtimeMergedPages],
+    () => applyAgeBandInteractionOverrides(runtimeMergedPages, activeHandbookSlug, activeAgeBand, activeLadderBookId),
+    [activeAgeBand, activeHandbookSlug, activeLadderBookId, runtimeMergedPages],
   );
   const pageDefinitionIdSet = useMemo(() => new Set(pageDefinitions.map((page) => page.id)), [pageDefinitions]);
   const totalPages = pageDefinitions.length;
@@ -2479,6 +2515,14 @@ export function InteractiveHandbookGame({
         return;
       }
 
+      if (isChoiceLocked) {
+        setStatusKey(activeInteraction.hintKey);
+        setStatusTone('hint');
+        setReadingHighlightState({ pageId: currentPage.id, mode: 'prompt' });
+        playAudioKey(activeInteraction.hintKey, true);
+        return;
+      }
+
       const pageId = currentPage.id;
       const nextAttempts = (pageAttempts[pageId] ?? 0) + 1;
 
@@ -2541,6 +2585,7 @@ export function InteractiveHandbookGame({
       activeInteractionReplayAudioKey,
       applyHint,
       currentPage.id,
+      isChoiceLocked,
       isMagicLetterMapListenExploreMode,
       pageAttempts,
       playAudioKey,
@@ -2664,16 +2709,20 @@ export function InteractiveHandbookGame({
       return [];
     }
 
+    const policyChoiceCap =
+      resolvePolicyValueByAgeBand(activeInteraction.maxChoicesByBand, activeAgeBand) ??
+      READING_RUNTIME_MATRIX[activeAgeBand].handbook.maxChoiceCount;
+    let choices = applyChoiceCap(activeInteraction.choices, policyChoiceCap);
     const attempts = pageAttempts[currentPage.id] ?? 0;
     const shouldReduceChoices = isMagicLetterMapListenExploreMode || attempts >= 2;
-    if (shouldReduceChoices && activeInteraction.choices.length > 2) {
-      const correct = activeInteraction.choices.find((choice) => choice.isCorrect);
-      const fallback = activeInteraction.choices.find((choice) => !choice.isCorrect);
-      return [correct, fallback].filter((choice): choice is ChoiceDefinition => Boolean(choice));
+    if (shouldReduceChoices && choices.length > 2) {
+      const correct = choices.find((choice) => choice.isCorrect);
+      const fallback = choices.find((choice) => !choice.isCorrect);
+      choices = [correct, fallback].filter((choice): choice is ChoiceDefinition => Boolean(choice));
     }
 
-    return activeInteraction.choices;
-  }, [activeInteraction, currentPage.id, isMagicLetterMapListenExploreMode, pageAttempts]);
+    return choices;
+  }, [activeAgeBand, activeInteraction, currentPage.id, isMagicLetterMapListenExploreMode, pageAttempts]);
 
   useEffect(() => {
     markPageVisited(currentPage.id);
@@ -2756,12 +2805,17 @@ export function InteractiveHandbookGame({
       return;
     }
 
-    let timeoutMs = mode === 'readToMe' ? 4200 : mode === 'readAndPlay' ? 6200 : 7200;
-    if (isMagicLetterMapListenExploreMode) {
-      timeoutMs = Math.max(2400, timeoutMs - 1700);
-    } else if (isMagicLetterMapStretchMode) {
-      timeoutMs += 2000;
+    const policyTimeoutMs = resolveHintTriggerTimeoutMs(activeInteraction, activeAgeBand);
+    let timeoutMs = policyTimeoutMs ?? (mode === 'readToMe' ? 4200 : mode === 'readAndPlay' ? 6200 : 7200);
+
+    if (policyTimeoutMs === null) {
+      if (isMagicLetterMapListenExploreMode) {
+        timeoutMs = Math.max(2400, timeoutMs - 1700);
+      } else if (isMagicLetterMapStretchMode) {
+        timeoutMs += 2000;
+      }
     }
+
     const timer = window.setTimeout(() => {
       applyHint(true);
     }, timeoutMs);
@@ -2771,6 +2825,7 @@ export function InteractiveHandbookGame({
     };
   }, [
     activeInteraction,
+    activeAgeBand,
     applyHint,
     currentPage.id,
     isMagicLetterMapListenExploreMode,
@@ -2980,6 +3035,7 @@ export function InteractiveHandbookGame({
                     ].join(' ')}
                     onClick={() => chooseInteractionOption(choice)}
                     aria-label={t(choice.labelKey as any)}
+                    disabled={isChoiceLocked}
                   >
                     <span>{t(choice.labelKey as any)}</span>
                   </button>
@@ -3074,15 +3130,17 @@ export function InteractiveHandbookGame({
         }
 
         .interactive-handbook__mode-button {
-          min-height: var(--touch-min);
-          min-width: 92px;
+          min-height: var(--handbook-control-min-height);
+          min-width: max(var(--handbook-control-min-height), 104px);
           border-radius: var(--radius-md);
           border: 1px solid color-mix(in srgb, var(--color-border) 72%, transparent);
           background: var(--color-surface);
           color: var(--color-text-primary);
-          font-size: var(--font-size-xs);
+          font-size: var(--font-size-sm);
+          font-weight: var(--font-weight-semibold);
+          line-height: var(--line-height-tight);
           cursor: pointer;
-          padding: 0 var(--space-xs);
+          padding: 0 var(--space-sm);
         }
 
         .interactive-handbook__mode-button.is-active {
@@ -3153,7 +3211,7 @@ export function InteractiveHandbookGame({
           border-radius: var(--radius-full);
           background: color-mix(in srgb, var(--color-theme-secondary) 26%, var(--color-bg-card));
           color: var(--color-text-primary);
-          font-size: var(--font-size-xs);
+          font-size: var(--font-size-sm);
           font-weight: var(--font-weight-semibold);
         }
 
@@ -3420,13 +3478,13 @@ export function InteractiveHandbookGame({
 
         .interactive-handbook__controls {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(max(60px, var(--touch-primary-action)), 1fr));
+          grid-template-columns: repeat(auto-fit, minmax(var(--handbook-control-min-height), 1fr));
           gap: var(--space-xs);
         }
 
         .interactive-handbook__icon-button {
-          min-height: max(60px, var(--touch-primary-action));
-          min-width: max(60px, var(--touch-primary-action));
+          min-height: var(--handbook-control-min-height);
+          min-width: var(--handbook-control-min-height);
           border: 1px solid color-mix(in srgb, var(--color-border) 72%, transparent);
           border-radius: var(--radius-md);
           background: var(--color-surface);
@@ -3461,7 +3519,7 @@ export function InteractiveHandbookGame({
           border-radius: var(--radius-lg);
           border: 1px solid color-mix(in srgb, var(--color-theme-primary) 44%, transparent);
           background: color-mix(in srgb, var(--color-surface) 84%, var(--color-theme-bg));
-          padding: var(--space-md);
+          padding: var(--space-lg);
           display: grid;
           gap: var(--space-sm);
         }
@@ -3474,14 +3532,14 @@ export function InteractiveHandbookGame({
         .interactive-handbook__interaction-title {
           margin: 0;
           color: var(--color-text-primary);
-          font-size: 1.25rem;
-          line-height: 1.5;
+          font-size: var(--handbook-prompt-font-size);
+          line-height: var(--line-height-normal);
           font-weight: var(--font-weight-semibold);
         }
 
         .interactive-handbook__choices-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+          grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
           gap: var(--space-xs);
         }
 

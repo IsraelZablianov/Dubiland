@@ -8,6 +8,9 @@ const corsHeaders: Record<string, string> = {
 };
 
 const AGE_BANDS = new Set(["3-4", "4-5", "5-6", "6-7"]);
+const METRIC_DOMAINS = new Set(["math", "letters", "reading"]);
+const TREND_LABELS = new Set(["improving", "steady", "needs_support"]);
+const PROGRESSION_BANDS = new Set(["1-3", "1-5", "1-10"]);
 const MASTERY_OUTCOMES = new Set([
   "unknown",
   "introduced",
@@ -80,7 +83,218 @@ function summarizePayloadForStorage(payload: Record<string, unknown>): Record<st
   if (payload.dubilandDifficultyProfileId != null) {
     meta.dubilandDifficultyProfileId = payload.dubilandDifficultyProfileId;
   }
+  if (payload.parentMetricsV1 != null) {
+    meta.parentMetricsV1 = payload.parentMetricsV1;
+  }
   return meta;
+}
+
+function clampPct(n: number): number {
+  return Math.max(0, Math.min(100, n));
+}
+
+function roundMetric(n: number, places: number): number {
+  const p = 10 ** places;
+  return Math.round(n * p) / p;
+}
+
+type MetricDomain = "math" | "letters" | "reading";
+
+function isRecord(v: unknown): v is Record<string, unknown> {
+  return typeof v === "object" && v !== null && !Array.isArray(v);
+}
+
+function validateAndNormalizeParentMetricsV1(
+  raw: Record<string, unknown>,
+): { ok: true; value: Record<string, unknown> } | { ok: false; message: string } {
+  if (raw.contractVersion !== "parent-metrics.v1") {
+    return {
+      ok: false,
+      message: "parentMetricsV1.contractVersion must be parent-metrics.v1",
+    };
+  }
+  const domain = raw.domain;
+  if (typeof domain !== "string" || !METRIC_DOMAINS.has(domain)) {
+    return { ok: false, message: "parentMetricsV1.domain must be math, letters, or reading" };
+  }
+  const skillKey =
+    typeof raw.skillKey === "string" ? raw.skillKey.trim() : "";
+  if (skillKey.length < 1 || skillKey.length > 96) {
+    return {
+      ok: false,
+      message: "parentMetricsV1.skillKey must be a non-empty string (max 96 chars)",
+    };
+  }
+
+  const accRaw = raw.accuracyPct;
+  const acc = typeof accRaw === "number" ? accRaw : Number(accRaw);
+  if (!Number.isFinite(acc)) {
+    return { ok: false, message: "parentMetricsV1.accuracyPct must be a number" };
+  }
+  if (acc < 0 || acc > 100) {
+    return { ok: false, message: "parentMetricsV1.accuracyPct must be between 0 and 100" };
+  }
+
+  const hintTrend = raw.hintTrend;
+  if (typeof hintTrend !== "string" || !TREND_LABELS.has(hintTrend)) {
+    return {
+      ok: false,
+      message: "parentMetricsV1.hintTrend must be improving, steady, or needs_support",
+    };
+  }
+  const independenceTrend = raw.independenceTrend;
+  if (typeof independenceTrend !== "string" || !TREND_LABELS.has(independenceTrend)) {
+    return {
+      ok: false,
+      message:
+        "parentMetricsV1.independenceTrend must be improving, steady, or needs_support",
+    };
+  }
+  const progressionBand = raw.progressionBand;
+  if (typeof progressionBand !== "string" || !PROGRESSION_BANDS.has(progressionBand)) {
+    return {
+      ok: false,
+      message: "parentMetricsV1.progressionBand must be 1-3, 1-5, or 1-10",
+    };
+  }
+
+  const out: Record<string, unknown> = {
+    contractVersion: "parent-metrics.v1",
+    domain,
+    skillKey,
+    accuracyPct: roundMetric(clampPct(acc), 2),
+    hintTrend,
+    independenceTrend,
+    progressionBand,
+  };
+
+  if (raw.ageBand !== undefined && raw.ageBand !== null) {
+    if (typeof raw.ageBand !== "string" || !AGE_BANDS.has(raw.ageBand)) {
+      return { ok: false, message: "parentMetricsV1.ageBand invalid when provided" };
+    }
+    out.ageBand = raw.ageBand;
+  }
+  if (raw.gatePassed !== undefined && raw.gatePassed !== null) {
+    if (typeof raw.gatePassed !== "boolean") {
+      return { ok: false, message: "parentMetricsV1.gatePassed must be a boolean when provided" };
+    }
+    out.gatePassed = raw.gatePassed;
+  }
+
+  const optPct = (
+    key: string,
+    outKey: string,
+  ): { ok: false; message: string } | undefined => {
+    const v = raw[key];
+    if (v === undefined || v === null) return undefined;
+    const n = typeof v === "number" ? v : Number(v);
+    if (!Number.isFinite(n) || n < 0 || n > 100) {
+      return {
+        ok: false,
+        message: `parentMetricsV1.${key} must be a number between 0 and 100 when provided`,
+      };
+    }
+    out[outKey] = roundMetric(clampPct(n), 2);
+    return undefined;
+  };
+
+  const e1 = optPct("decodeAccuracyPct", "decodeAccuracyPct");
+  if (e1) return e1;
+  const e2 = optPct("sequenceEvidenceScore", "sequenceEvidenceScore");
+  if (e2) return e2;
+  const e3 = optPct("listenParticipationPct", "listenParticipationPct");
+  if (e3) return e3;
+
+  return { ok: true, value: out };
+}
+
+function deriveParentMetricsV1FromSummary(args: {
+  summary: Record<string, unknown>;
+  domain: MetricDomain;
+  skillKey: string;
+}): Record<string, unknown> | null {
+  const { summary, domain, skillKey } = args;
+  const rateRaw = summary.firstAttemptSuccessRate;
+  const rate = typeof rateRaw === "number" ? rateRaw : Number(rateRaw);
+  if (!Number.isFinite(rate)) return null;
+
+  const htRaw = summary.hintTrend;
+  const hintTrend =
+    typeof htRaw === "string" && TREND_LABELS.has(htRaw) ? htRaw : "steady";
+
+  const bandRaw = summary.highestStableRange;
+  const progressionBand =
+    typeof bandRaw === "string" && PROGRESSION_BANDS.has(bandRaw) ? bandRaw : "1-5";
+
+  const independenceTrend = hintTrend;
+
+  const out: Record<string, unknown> = {
+    contractVersion: "parent-metrics.v1",
+    domain,
+    skillKey,
+    accuracyPct: roundMetric(clampPct(rate), 2),
+    hintTrend,
+    independenceTrend,
+    progressionBand,
+  };
+
+  const age = summary.ageBand;
+  if (typeof age === "string" && AGE_BANDS.has(age)) {
+    out.ageBand = age;
+  }
+  if (typeof summary.gatePassed === "boolean") {
+    out.gatePassed = summary.gatePassed;
+  }
+
+  const decRaw = summary.decodeAccuracy;
+  const dec = typeof decRaw === "number" ? decRaw : Number(decRaw);
+  if (Number.isFinite(dec)) {
+    out.decodeAccuracyPct = roundMetric(clampPct(dec), 2);
+  }
+  const seqRaw = summary.sequenceEvidenceScore;
+  const seq = typeof seqRaw === "number" ? seqRaw : Number(seqRaw);
+  if (Number.isFinite(seq)) {
+    out.sequenceEvidenceScore = roundMetric(clampPct(seq), 2);
+  }
+  const listenRaw = summary.listenParticipation;
+  const listen = typeof listenRaw === "number" ? listenRaw : Number(listenRaw);
+  if (Number.isFinite(listen)) {
+    out.listenParticipationPct = roundMetric(clampPct(listen), 2);
+  }
+
+  return out;
+}
+
+async function resolveCurriculumDomainAndSkill(
+  supabase: ReturnType<typeof createClient>,
+  gameId: string,
+): Promise<
+  { ok: true; domain: MetricDomain; skillKey: string } | { ok: false; message: string }
+> {
+  const gr = await supabase
+    .from("games")
+    .select("slug, topic_id")
+    .eq("id", gameId)
+    .maybeSingle();
+  if (gr.error) return { ok: false, message: gr.error.message };
+  if (!gr.data?.slug || !gr.data.topic_id) {
+    return { ok: false, message: "game not found or not visible for curriculum mapping" };
+  }
+  const tr = await supabase
+    .from("topics")
+    .select("slug")
+    .eq("id", gr.data.topic_id)
+    .maybeSingle();
+  if (tr.error) return { ok: false, message: tr.error.message };
+  const topicSlug = tr.data?.slug;
+  if (topicSlug !== "math" && topicSlug !== "letters" && topicSlug !== "reading") {
+    return { ok: false, message: "game topic is not a curriculum domain" };
+  }
+  return {
+    ok: true,
+    domain: topicSlug,
+    skillKey: gr.data.slug,
+  };
 }
 
 Deno.serve(async (req: Request) => {
@@ -330,6 +544,34 @@ Deno.serve(async (req: Request) => {
   if (resolvedDifficultyProfileId) {
     basePayload.dubilandDifficultyProfileId = resolvedDifficultyProfileId;
   }
+
+  const pmRaw = basePayload.parentMetricsV1;
+  if (pmRaw !== undefined && pmRaw !== null) {
+    if (!isRecord(pmRaw)) {
+      return jsonResponse(
+        { error: "parentMetricsV1 must be an object when provided" },
+        400,
+      );
+    }
+    const validated = validateAndNormalizeParentMetricsV1(pmRaw);
+    if (!validated.ok) {
+      return jsonResponse({ error: validated.message }, 400);
+    }
+    basePayload.parentMetricsV1 = validated.value;
+  } else if (isRecord(basePayload.summaryMetrics)) {
+    const mapRes = await resolveCurriculumDomainAndSkill(supabase, gameId);
+    if (mapRes.ok) {
+      const derived = deriveParentMetricsV1FromSummary({
+        summary: basePayload.summaryMetrics,
+        domain: mapRes.domain,
+        skillKey: mapRes.skillKey,
+      });
+      if (derived) {
+        basePayload.parentMetricsV1 = derived;
+      }
+    }
+  }
+
   const payload = summarizePayloadForStorage(basePayload);
 
   const supportFlagsRow =

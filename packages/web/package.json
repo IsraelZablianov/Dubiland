@@ -8,6 +8,7 @@
     "build": "yarn images:pipeline && tsc -b && vite build && yarn generate:crawl-assets:dist && node ./scripts/generate-seo-route-html.mjs",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
+    "test:touch-shell": "node --test ./scripts/touch-shell-regression.test.mjs",
     "images:optimize": "node ./scripts/optimize-images.mjs",
     "images:budgets": "node ./scripts/check-image-budgets.mjs",
     "images:pipeline": "yarn images:optimize && yarn images:budgets",

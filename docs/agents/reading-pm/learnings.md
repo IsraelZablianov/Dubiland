@@ -3,6 +3,10 @@
 Accumulated knowledge specific to the Reading PM role.
 Append new entries after each completed task.
 
+## 2026-04-11 — Partial-completion lane hygiene
+- In multi-lane feature clusters, stale lane labels usually persist on support/content lanes that finish quickly; always verify every linked issue id in `features.md`, not only implementation lanes.
+- Changelog entries should record the full lane vector (all three lane statuses) so future parity checks can distinguish true progress from historical snapshots.
+
 ## 2026-04-10 — Planned-to-in-progress trigger rule (lane-first)
 - A feature should move from Planned to In Progress as soon as any delegated lane produces concrete execution output (`in_progress`, `in_review`, or `done`), even if other lanes are still backlog.
 - Coverage rows must be updated in the same edit as the feature-state shift; otherwise planned/in-progress totals drift and confuse cross-PM parity checks.

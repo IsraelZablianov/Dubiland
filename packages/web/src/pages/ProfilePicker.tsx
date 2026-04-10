@@ -372,7 +372,6 @@ export default function ProfilePicker() {
           size="lg"
           type="submit"
           disabled={!newChildName.trim() || addBusy}
-          style={{ minHeight: 'var(--touch-min)' }}
         >
           {t('profile.addChild')}
         </Button>
@@ -468,7 +467,6 @@ export default function ProfilePicker() {
                 aria-controls="profile-picker-demo-sheet"
                 style={{
                   justifySelf: 'end',
-                  minHeight: 'var(--touch-min)',
                   minWidth: 'max-content',
                 }}
               >
@@ -622,7 +620,6 @@ export default function ProfilePicker() {
             variant="secondary"
             size="md"
             onClick={() => navigate('/parent')}
-            style={{ minHeight: 'var(--touch-min)' }}
           >
             {t('profile.parentZone')}
           </Button>
@@ -633,7 +630,6 @@ export default function ProfilePicker() {
             onClick={handleContinue}
             disabled={!selectedProfile}
             aria-label={t('profile.continue')}
-            style={{ minHeight: 'var(--touch-primary-action)' }}
           >
             {t('profile.continue')}
           </Button>

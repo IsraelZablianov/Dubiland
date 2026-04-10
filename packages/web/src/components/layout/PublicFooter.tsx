@@ -78,6 +78,10 @@ export function PublicFooter() {
           align-items: center;
           gap: var(--space-sm);
           text-decoration: none;
+          min-inline-size: var(--touch-min-secondary);
+          min-block-size: var(--touch-min-secondary);
+          padding-inline: var(--space-xs);
+          border-radius: var(--radius-md);
         }
 
         .public-footer__logo-icon {
@@ -119,11 +123,16 @@ export function PublicFooter() {
         }
 
         .public-footer__links a {
+          display: inline-flex;
+          align-items: center;
           text-decoration: none;
           color: var(--color-text-secondary);
           font-size: var(--font-size-sm);
           transition: var(--transition-fast);
-          padding: var(--space-xs) 0;
+          min-block-size: var(--touch-min-secondary);
+          padding-block: var(--space-xs);
+          padding-inline: var(--space-xs);
+          border-radius: var(--radius-sm);
         }
 
         .public-footer__links a:hover {

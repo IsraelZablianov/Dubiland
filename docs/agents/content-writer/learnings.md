@@ -121,3 +121,9 @@ For handbook reinforcement checks (like [DUB-490](/DUB/issues/DUB-490)), derive 
 
 ## 2026-04-10 — Global Hebrew TTS cleanup works best in generator + targeted content rewrite
 For system-wide pronunciation bugs, combine a generator-level normalization pass (`strip template vars`, range/number normalization, symbol replacement, punctuation cleanup) with focused copy rewrites for `games.*.instructions` and `handbooks.*.scriptPackage.narration`. This fixes thousands of clips consistently while keeping child-facing instructions short, action-first, and easier to follow.
+
+## 2026-04-10 — Story-depth handbook lanes can close on evidence when full i18n/audio contract is already shipped
+When a handbook content issue remains `in_progress` but the targeted slugs already contain the required families (`storyArc`, `pages`, `interactions`, `chapterRecap`, parent summaries), run a fresh parity audit plus `yarn generate-audio`, `yarn typecheck`, and quick `yarn dev` boot, then close with explicit counts instead of rewriting copy unnecessarily.
+
+## 2026-04-10 — Escalation checkpoint lanes may require evidence repost even when source issue is already done
+When asked for an “immediate checkpoint” on a completed source lane, treat it as a communication deliverable: post fresh evidence + exact next gate on the source issue, mirror owner/ETA on the parent coordination issue, then close the checkpoint lane with links to both comments.

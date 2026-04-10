@@ -1,0 +1,52 @@
+- generic [ref=e61]:
+  - banner [ref=e62]:
+    - generic [ref=e63]:
+      - button "דף הבית" [ref=e64] [cursor=pointer]:
+        - img
+        - generic [ref=e65]: דובילנד
+      - generic [ref=e66]:
+        - generic [ref=e67]: 🧒
+        - generic [ref=e68]: אורח קטן
+      - navigation "בחר משחק" [ref=e69]:
+        - button "דף הבית" [ref=e70] [cursor=pointer]:
+          - img [ref=e72]
+          - generic [ref=e74]: דף הבית
+        - button "בחירת ילד" [ref=e75] [cursor=pointer]:
+          - img [ref=e77]
+          - generic [ref=e80]: בחירת ילד
+        - button "אזור הורים" [ref=e81] [cursor=pointer]:
+          - img [ref=e83]
+          - generic [ref=e86]: אזור הורים
+  - main [ref=e87]:
+    - main [ref=e89]:
+      - generic [ref=e90]:
+        - generic [ref=e91]:
+          - generic [ref=e92]:
+            - heading "מי משחק היום?" [level=1] [ref=e93]
+            - paragraph [ref=e94]: בחרו פרופיל כדי להתחיל לשחק
+          - generic [ref=e95]:
+            - img
+        - generic [ref=e96]:
+          - button "אורח קטן" [pressed] [ref=e97] [cursor=pointer]:
+            - generic "אורח קטן" [ref=e98]:
+              - generic [ref=e99]: 🧒
+            - strong [ref=e100]: אורח קטן
+          - button "עוד פרופילים לדוגמה" [ref=e101] [cursor=pointer]
+          - generic:
+            - strong: פרופילים לדוגמה
+            - generic:
+              - generic:
+                - generic:
+                  - generic: 🦊
+                - strong: מאיה
+              - generic:
+                - generic:
+                  - generic: 🐯
+                - strong: נועם
+              - generic:
+                - generic:
+                  - generic: 🐼
+                - strong: ליאל
+        - generic [ref=e102]:
+          - button "אזור הורים" [ref=e103] [cursor=pointer]
+          - button "יאללה, מתחילים!" [ref=e104] [cursor=pointer]

@@ -202,3 +202,12 @@ Seeing `handbooks`/`handbook_pages` queries in route code is insufficient for DB
 
 ## 2026-04-10 — Completion-state QA must validate control gating plus replay semantics together
 When a game reaches completion, verify not only visible completion copy but also which control handlers remain active. In `RootFamilyStickers`, always-rendered header controls let hint/retry fire stage-inappropriate status/audio in completion, and replay covered only one of multiple completion lines. In `SightWordSprint`, replay controls remain visible while handler early-returns on `sessionComplete`, producing silent replay taps.
+
+## 2026-04-10 — Repeated replay icons need context-specific `aria-label`s in completion/status layouts
+Games with many `▶` controls on one screen (for example DecodableStoryReader and PictureToWordBuilder) can appear accessible while remaining ambiguous to screen readers if all replay buttons share one generic label. QA should require per-control replay labels tied to the exact line/prompt being replayed.
+
+## 2026-04-10 — InteractiveHandbook completion can satisfy i18n/audio-asset parity yet still fail runtime narration coverage
+Even with complete locale keys and audio assets, completion UX can remain non-compliant if only the title key is spoken and replay remains bound to pre-completion prompt logic. QA completion checks should explicitly trace entry narration + replay paths against every rendered completion guidance line.
+
+## 2026-04-10 — A run can be checkout-locked to one issue; finish/patch that lane before attempting another checkout
+Paperclip may bind `checkoutRunId` context to the wake task (`snapshotIssueId`); subsequent checkout on a different issue in the same heartbeat returns `Checkout run context is bound to a different issue`. QA heartbeat flow should prioritize the triggered issue, post blocker/progress updates there, and defer other assigned lanes to a later run.

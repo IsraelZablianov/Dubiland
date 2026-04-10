@@ -58,9 +58,8 @@ export function PublicHeader() {
   const isAuthenticated = guestModeEnabled || hasAuthenticatedUser;
   const showPublicActions = !isAuthenticated && !loading;
   const showAppActions = isAuthenticated;
-  const homeDestination = showAppActions ? '/games' : '/';
+  const homeDestination = '/';
   const navLinks = showAppActions ? APP_NAV_LINKS : PUBLIC_NAV_LINKS;
-  const isHome = location.pathname === '/games';
   const isProfiles = location.pathname === '/profiles';
   const isParentArea = location.pathname === '/parent';
 
@@ -129,7 +128,7 @@ export function PublicHeader() {
 
           {showAppActions && (
             <div className="public-header__app-actions">
-              {child && !isProfiles && (
+              {child && (
                 <div className="public-header__child">
                   <span className="public-header__child-emoji">{child.emoji}</span>
                   <span className="public-header__child-name">{child.name}</span>
@@ -137,21 +136,12 @@ export function PublicHeader() {
               )}
 
               <div className="public-header__app-nav">
-                {!isHome && (
-                  <Button variant="ghost" size="sm" onClick={() => goToAppRoute('/games')}>
-                    {t('common:nav.home')}
-                  </Button>
-                )}
-                {!isProfiles && (
-                  <Button variant="ghost" size="sm" onClick={() => goToAppRoute('/profiles')}>
-                    {t('common:profile.title')}
-                  </Button>
-                )}
-                {!isParentArea && (
-                  <Button variant="secondary" size="sm" onClick={() => goToAppRoute('/parent')}>
-                    {t('common:nav.parentArea')}
-                  </Button>
-                )}
+                <Button variant="ghost" size="sm" disabled={isProfiles} onClick={() => goToAppRoute('/profiles')}>
+                  {t('common:profile.title')}
+                </Button>
+                <Button variant="secondary" size="sm" disabled={isParentArea} onClick={() => goToAppRoute('/parent')}>
+                  {t('common:nav.parentArea')}
+                </Button>
                 <Button variant="ghost" size="sm" onClick={() => void handleSignOut()}>
                   {t('common:nav.signOut')}
                 </Button>
@@ -188,6 +178,11 @@ export function PublicHeader() {
           gap: var(--space-sm);
           text-decoration: none;
           flex-shrink: 0;
+          min-inline-size: var(--touch-min-primary);
+          min-block-size: var(--touch-min-primary);
+          padding-inline: var(--space-xs);
+          padding-block: var(--space-2xs);
+          border-radius: var(--radius-md);
         }
 
         .public-header__logo-icon {
@@ -213,10 +208,11 @@ export function PublicHeader() {
           color: var(--color-text-secondary);
           font-size: var(--font-size-md);
           font-weight: var(--font-weight-medium);
-          padding: var(--space-xs) var(--space-sm);
+          padding-inline: var(--space-sm);
+          padding-block: var(--space-xs);
           border-radius: var(--radius-sm);
           transition: var(--transition-fast);
-          min-height: var(--touch-min);
+          min-block-size: max(var(--touch-min-secondary), var(--touch-min));
           display: flex;
           align-items: center;
         }
@@ -245,7 +241,7 @@ export function PublicHeader() {
         .public-header__public-actions {
           display: flex;
           align-items: center;
-          gap: var(--space-sm);
+          gap: max(12px, var(--space-sm));
         }
 
         .public-header__app-actions {

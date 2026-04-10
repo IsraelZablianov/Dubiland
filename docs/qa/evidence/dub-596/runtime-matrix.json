@@ -1,0 +1,192 @@
+{
+  "issue": "DUB-596",
+  "capturedAt": "2026-04-10T20:58:30Z",
+  "baseUrl": "http://127.0.0.1:4176",
+  "authHarness": {
+    "guestMode": true,
+    "activeChildProfile": {
+      "id": "qa-child",
+      "name": "נועה",
+      "emoji": "🧸",
+      "ageBand": "5-6"
+    }
+  },
+  "viewports": [
+    { "name": "mobile-375x812", "width": 375, "height": 812 },
+    { "name": "tablet-834x1112", "width": 834, "height": 1112 }
+  ],
+  "routeSweep": [
+    {
+      "viewport": "mobile-375x812",
+      "route": "/games",
+      "dirAttr": "rtl",
+      "bodyDir": "rtl",
+      "interactiveCount": 14,
+      "tooSmallCount": 0,
+      "hasReplayTriangleText": true,
+      "hasSpeakerGlyphText": false,
+      "hasCheckSubmitTextButton": false
+    },
+    {
+      "viewport": "mobile-375x812",
+      "route": "/games/numbers/more-or-less-market",
+      "dirAttr": "rtl",
+      "bodyDir": "rtl",
+      "interactiveCount": 12,
+      "tooSmallCount": 0,
+      "hasReplayTriangleText": true,
+      "hasSpeakerGlyphText": false,
+      "hasCheckSubmitTextButton": false
+    },
+    {
+      "viewport": "mobile-375x812",
+      "route": "/games/letters/letter-sky-catcher",
+      "dirAttr": "rtl",
+      "bodyDir": "rtl",
+      "interactiveCount": 13,
+      "tooSmallCount": 0,
+      "hasReplayTriangleText": true,
+      "hasSpeakerGlyphText": false,
+      "hasCheckSubmitTextButton": false
+    },
+    {
+      "viewport": "mobile-375x812",
+      "route": "/games/reading/interactive-handbook",
+      "dirAttr": "rtl",
+      "bodyDir": "rtl",
+      "interactiveCount": 20,
+      "tooSmallCount": 0,
+      "hasReplayTriangleText": false,
+      "hasSpeakerGlyphText": false,
+      "hasCheckSubmitTextButton": false,
+      "note": "Replay control is SVG-based in this game; no literal glyph text expected."
+    },
+    {
+      "viewport": "mobile-375x812",
+      "route": "/profiles",
+      "dirAttr": "rtl",
+      "bodyDir": "rtl",
+      "interactiveCount": 8,
+      "tooSmallCount": 0
+    },
+    {
+      "viewport": "mobile-375x812",
+      "route": "/parent",
+      "dirAttr": "rtl",
+      "bodyDir": "rtl",
+      "interactiveCount": 6,
+      "tooSmallCount": 1,
+      "tooSmallSample": [
+        {
+          "selectorHint": ".app-header__logo",
+          "tag": "a",
+          "width": 34,
+          "height": 34,
+          "minSize": 34,
+          "text": "דובילנד"
+        }
+      ]
+    },
+    {
+      "viewport": "tablet-834x1112",
+      "route": "/games",
+      "dirAttr": "rtl",
+      "bodyDir": "rtl",
+      "interactiveCount": 14,
+      "tooSmallCount": 0,
+      "hasReplayTriangleText": true,
+      "hasSpeakerGlyphText": false,
+      "hasCheckSubmitTextButton": false
+    },
+    {
+      "viewport": "tablet-834x1112",
+      "route": "/games/numbers/more-or-less-market",
+      "dirAttr": "rtl",
+      "bodyDir": "rtl",
+      "interactiveCount": 12,
+      "tooSmallCount": 0,
+      "hasReplayTriangleText": true,
+      "hasSpeakerGlyphText": false,
+      "hasCheckSubmitTextButton": false
+    },
+    {
+      "viewport": "tablet-834x1112",
+      "route": "/games/letters/letter-sky-catcher",
+      "dirAttr": "rtl",
+      "bodyDir": "rtl",
+      "interactiveCount": 13,
+      "tooSmallCount": 0,
+      "hasReplayTriangleText": true,
+      "hasSpeakerGlyphText": false,
+      "hasCheckSubmitTextButton": false
+    },
+    {
+      "viewport": "tablet-834x1112",
+      "route": "/games/reading/interactive-handbook",
+      "dirAttr": "rtl",
+      "bodyDir": "rtl",
+      "interactiveCount": 20,
+      "tooSmallCount": 0,
+      "hasReplayTriangleText": false,
+      "hasSpeakerGlyphText": false,
+      "hasCheckSubmitTextButton": false,
+      "note": "Replay control is SVG-based in this game; no literal glyph text expected."
+    },
+    {
+      "viewport": "tablet-834x1112",
+      "route": "/profiles",
+      "dirAttr": "rtl",
+      "bodyDir": "rtl",
+      "interactiveCount": 8,
+      "tooSmallCount": 0
+    },
+    {
+      "viewport": "tablet-834x1112",
+      "route": "/parent",
+      "dirAttr": "rtl",
+      "bodyDir": "rtl",
+      "interactiveCount": 6,
+      "tooSmallCount": 1,
+      "tooSmallSample": [
+        {
+          "selectorHint": ".app-header__logo",
+          "tag": "a",
+          "width": 117.2,
+          "height": 34,
+          "minSize": 34,
+          "text": "דובילנד"
+        }
+      ]
+    }
+  ],
+  "targetedMeasurements": {
+    "parentLogoLink": [
+      {
+        "viewport": "mobile-375x812",
+        "width": 34,
+        "height": 34,
+        "minSize": 34
+      },
+      {
+        "viewport": "tablet-834x1112",
+        "width": 117.2,
+        "height": 34,
+        "minSize": 34
+      }
+    ]
+  },
+  "staticCodeAnchors": {
+    "appHeaderLogoLink": "packages/web/src/components/layout/AppHeader.tsx:36",
+    "appHeaderMascotSize": "packages/web/src/components/layout/AppHeader.tsx:38",
+    "appHeaderLogoCssMissingTouchMin": "packages/web/src/components/layout/AppHeader.tsx:96",
+    "touchTokenGlobal": "packages/web/src/components/design-system/tokens.css:125",
+    "replayTriangleMoreOrLessMarket": "packages/web/src/games/numbers/MoreOrLessMarketGame.tsx:1051",
+    "replayTriangleLetterSkyCatcher": "packages/web/src/games/letters/LetterSkyCatcherGame.tsx:1185",
+    "interactiveHandbookReplayIconSvg": "packages/web/src/games/reading/InteractiveHandbookGame.tsx:105"
+  },
+  "commands": [
+    { "cmd": "yarn typecheck", "status": "pass" },
+    { "cmd": "yarn audio:validate-manifest", "status": "pass", "details": "entries=2673, missing=0, invalid=0" },
+    { "cmd": "yarn workspace @dubiland/web build", "status": "pass" }
+  ]
+}
