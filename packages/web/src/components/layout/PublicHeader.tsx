@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/design-system';
+import { MascotIllustration } from '@/components/illustrations';
+import { usePublicAuthState } from '@/hooks/usePublicAuthState';
+import { getActiveChildProfile, isGuestModeEnabled } from '@/lib/session';
 
 const NAV_LINKS = [
   { key: 'home', path: '/' },
@@ -9,24 +12,56 @@ const NAV_LINKS = [
   { key: 'parents', path: '/parents' },
 ] as const;
 
+const MARKETING_HEADER_CTA_STYLE = {
+  minHeight: 'var(--touch-primary-action)',
+  padding: 'var(--space-sm) var(--space-lg)',
+};
+
+function isMainNavActive(currentPath: string, navPath: string): boolean {
+  if (navPath === '/') {
+    return currentPath === '/' || currentPath === '/home';
+  }
+
+  if (navPath === '/parents') {
+    return currentPath === '/parents' || currentPath.startsWith('/parents/');
+  }
+
+  return currentPath === navPath;
+}
+
 export function PublicHeader() {
-  const { t } = useTranslation('public');
+  const { t } = useTranslation(['public', 'common']);
   const location = useLocation();
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const child = getActiveChildProfile();
+
+  const guestModeEnabled = isGuestModeEnabled();
+  const { hasAuthenticatedUser, loading } = usePublicAuthState(!guestModeEnabled);
+  const isAuthenticated = guestModeEnabled || hasAuthenticatedUser;
+  const showPublicActions = !isAuthenticated && !loading;
+  const showAppActions = isAuthenticated;
+  const isProfiles = location.pathname === '/profiles';
+  const isParentArea = location.pathname === '/parent';
+
+  const goToAppRoute = (path: string) => {
+    navigate(path);
+    setMenuOpen(false);
+  };
 
   return (
     <header className="public-header">
       <div className="public-header__inner">
         <Link to="/" className="public-header__logo" aria-label={t('header.logoAlt')}>
-          <span className="public-header__logo-icon">🧸</span>
-          <span className="public-header__logo-text">דובילנד</span>
+          <MascotIllustration variant="hero" size={42} className="public-header__logo-icon" />
+          <span className="public-header__logo-text">{t('common:branding.appName')}</span>
         </Link>
 
         <button
           className="public-header__menu-toggle"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-expanded={menuOpen}
-          aria-label={menuOpen ? 'סגור תפריט' : 'פתח תפריט'}
+          aria-label={menuOpen ? t('header.closeMenu') : t('header.openMenu')}
         >
           <span className={`public-header__hamburger ${menuOpen ? 'public-header__hamburger--open' : ''}`} />
         </button>
@@ -36,7 +71,7 @@ export function PublicHeader() {
             <Link
               key={key}
               to={path}
-              className={`public-header__nav-link ${location.pathname === path ? 'public-header__nav-link--active' : ''}`}
+              className={`public-header__nav-link ${isMainNavActive(location.pathname, path) ? 'public-header__nav-link--active' : ''}`}
               onClick={() => setMenuOpen(false)}
             >
               {t(`header.${key}`)}
@@ -45,12 +80,42 @@ export function PublicHeader() {
         </nav>
 
         <div className={`public-header__actions ${menuOpen ? 'public-header__actions--open' : ''}`}>
-          <Link to="/login" onClick={() => setMenuOpen(false)}>
-            <Button variant="ghost" size="sm">{t('header.login')}</Button>
-          </Link>
-          <Link to="/login" onClick={() => setMenuOpen(false)}>
-            <Button variant="primary" size="sm">{t('header.tryFree')}</Button>
-          </Link>
+          {showPublicActions && (
+            <div className="public-header__public-actions">
+              <Link to="/login" onClick={() => setMenuOpen(false)}>
+                <Button variant="ghost" size="sm">{t('header.login')}</Button>
+              </Link>
+              <Link to="/login" onClick={() => setMenuOpen(false)}>
+                <Button variant="primary" size="sm" style={MARKETING_HEADER_CTA_STYLE}>
+                  {t('header.tryFree')}
+                </Button>
+              </Link>
+            </div>
+          )}
+
+          {showAppActions && (
+            <div className="public-header__app-actions">
+              {child && !isProfiles && (
+                <div className="public-header__child">
+                  <span className="public-header__child-emoji">{child.emoji}</span>
+                  <span className="public-header__child-name">{child.name}</span>
+                </div>
+              )}
+
+              <div className="public-header__app-nav">
+                {!isProfiles && (
+                  <Button variant="ghost" size="sm" onClick={() => goToAppRoute('/profiles')}>
+                    {t('common:profile.title')}
+                  </Button>
+                )}
+                {!isParentArea && (
+                  <Button variant="secondary" size="sm" onClick={() => goToAppRoute('/parent')}>
+                    {t('common:nav.parentArea')}
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -84,7 +149,7 @@ export function PublicHeader() {
         }
 
         .public-header__logo-icon {
-          font-size: 2rem;
+          flex-shrink: 0;
         }
 
         .public-header__logo-text {
@@ -133,6 +198,44 @@ export function PublicHeader() {
 
         .public-header__actions a {
           text-decoration: none;
+        }
+
+        .public-header__public-actions {
+          display: flex;
+          align-items: center;
+          gap: var(--space-sm);
+        }
+
+        .public-header__app-actions {
+          display: flex;
+          align-items: center;
+          gap: var(--space-sm);
+        }
+
+        .public-header__app-nav {
+          display: flex;
+          align-items: center;
+          gap: var(--space-xs);
+        }
+
+        .public-header__child {
+          display: flex;
+          align-items: center;
+          gap: var(--space-xs);
+          padding: var(--space-xs) var(--space-sm);
+          background: var(--color-bg-secondary);
+          border-radius: var(--radius-full);
+          font-size: var(--font-size-sm);
+          min-height: var(--touch-min);
+        }
+
+        .public-header__child-emoji {
+          font-size: 1.2rem;
+        }
+
+        .public-header__child-name {
+          color: var(--color-text-primary);
+          font-weight: var(--font-weight-medium);
         }
 
         .public-header__menu-toggle {
@@ -214,7 +317,27 @@ export function PublicHeader() {
           .public-header__actions--open {
             padding-top: 0;
             padding-bottom: var(--space-lg);
-            flex-direction: row;
+            flex-direction: column;
+            align-items: stretch;
+          }
+
+          .public-header__public-actions,
+          .public-header__app-actions {
+            width: 100%;
+            justify-content: center;
+          }
+
+          .public-header__app-actions {
+            flex-direction: column;
+          }
+
+          .public-header__app-nav {
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+          }
+
+          .public-header__child {
             justify-content: center;
           }
         }

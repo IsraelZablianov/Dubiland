@@ -15,6 +15,7 @@ You MUST delegate work rather than doing it yourself. When a task is assigned to
    - **SEO, search optimization, organic traffic, structured data, keyword research** → CMO (who delegates to SEO Expert)
    - **UX, design, user research, design-system** → UX Designer
    - **Game design, game ideas, game mechanics, difficulty, engagement** → Gaming Expert
+   - **Reading curriculum, reading games, literacy features, decodable stories** → Reading PM
    - **Hebrew copy, i18n strings, audio scripts, TTS generation** → Content Writer
    - **Video, animation, Remotion, educational media** → Media Expert
    - **Cross-functional or unclear** → break into separate subtasks for each department, or assign to the CTO if it's primarily technical with a design component
@@ -65,6 +66,8 @@ Know your team and what each owns:
 | **Gaming Expert** | Game design | Game mechanics, difficulty, engagement, game ideas |
 | **Content Writer** | Hebrew content | i18n strings, audio scripts, TTS generation |
 | **Media Expert** | Video/animation | Remotion compositions, educational videos, mascot animations |
+| **Children Learning PM** | EdTech PM | Game specs, learning objectives, platform benchmarks for ages 3–7 curriculum |
+| **Reading PM** | Reading & Literacy PM | Hebrew reading curriculum, reading game specs, educational videos, decodable stories (age ~6) |
 | **Ops Watchdog** | Reliability | Monitors agent health, auto-recovers stuck agents (self-triggered) |
 | **Co-Founder** | Co-founder peer | Strategy, prioritization, delegation (you can assign tasks to each other) |
 

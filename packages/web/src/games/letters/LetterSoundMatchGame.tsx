@@ -1,11 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Card } from '@/components/design-system';
+import { MascotIllustration } from '@/components/illustrations';
+import { SuccessCelebration } from '@/components/motion';
 import type { GameProps, ParentSummaryMetrics, StableRange } from '@/games/engine';
 
 type GameLevelId = 1 | 2 | 3;
 type RoundMode = 'listen' | 'wordBridge' | 'remediationListen' | 'remediationWord' | 'remediationTransfer';
 type HintTone = 'neutral' | 'hint' | 'success';
+type ChoiceGridFeedback = 'idle' | 'success' | 'miss';
+type AudioPlaybackMode = 'queue' | 'interrupt';
 
 type LetterId =
   | 'alef'
@@ -46,6 +50,8 @@ type StatusKey =
   | PromptKey
   | LetterAudioKey
   | SampleWordAudioKey
+  | 'games.letterSoundMatch.title'
+  | 'games.letterSoundMatch.subtitle'
   | 'games.letterSoundMatch.instructions.intro'
   | 'games.letterSoundMatch.instructions.listenToSound'
   | 'games.letterSoundMatch.instructions.tapMatchingLetter'
@@ -69,7 +75,9 @@ type StatusKey =
   | 'feedback.greatEffort'
   | 'feedback.excellent'
   | 'feedback.keepGoing'
-  | 'feedback.youDidIt';
+  | 'feedback.youDidIt'
+  | 'parentDashboard.games.letterSoundMatch.progressSummary'
+  | 'parentDashboard.games.letterSoundMatch.nextStep';
 
 type AudioKey =
   | Exclude<StatusKey, LetterAudioKey | SampleWordAudioKey>
@@ -113,6 +121,7 @@ const TOTAL_ROUNDS = 6;
 const MIDPOINT_ROUND = 3;
 const INACTIVITY_MS = 7000;
 const RAPID_TAP_WINDOW_MS = 2400;
+const MIDPOINT_CONTINUE_CUE_DELAY_MS = 520;
 
 const EASY_SET: LetterId[] = ['mem', 'nun', 'lamed', 'samekh', 'shin', 'pe'];
 const MEDIUM_ADDITIONS: LetterId[] = ['bet', 'dalet', 'resh', 'kaf', 'gimel', 'he'];
@@ -156,6 +165,8 @@ const ROUND_SUCCESS_ROTATION: Array<
 ];
 
 const STATIC_AUDIO_PATH_BY_KEY = {
+  'games.letterSoundMatch.title': '/audio/he/games/letter-sound-match/title.mp3',
+  'games.letterSoundMatch.subtitle': '/audio/he/games/letter-sound-match/subtitle.mp3',
   'games.letterSoundMatch.instructions.intro': '/audio/he/games/letter-sound-match/instructions/intro.mp3',
   'games.letterSoundMatch.instructions.listenToSound':
     '/audio/he/games/letter-sound-match/instructions/listen-to-sound.mp3',
@@ -208,6 +219,9 @@ const STATIC_AUDIO_PATH_BY_KEY = {
   'feedback.excellent': '/audio/he/feedback/excellent.mp3',
   'feedback.keepGoing': '/audio/he/feedback/keep-going.mp3',
   'feedback.youDidIt': '/audio/he/feedback/you-did-it.mp3',
+  'parentDashboard.games.letterSoundMatch.progressSummary':
+    '/audio/he/parent-dashboard/games/letter-sound-match/progress-summary.mp3',
+  'parentDashboard.games.letterSoundMatch.nextStep': '/audio/he/parent-dashboard/games/letter-sound-match/next-step.mp3',
 } as const;
 
 function randomInt(min: number, max: number): number {
@@ -459,6 +473,9 @@ function toSampleWordAudioKey(letter: LetterId): SampleWordAudioKey {
 
 export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
   const { t } = useTranslation('common');
+  const choiceGridFeedbackTimeoutRef = useRef<number | null>(null);
+  const scorePulseTimeoutRef = useRef<number | null>(null);
+  const midpointContinueTimeoutRef = useRef<number | null>(null);
 
   const [roundNumber, setRoundNumber] = useState(1);
   const [level, setLevel] = useState<GameLevelId>(1);
@@ -516,6 +533,8 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
   const [rapidIncorrectTaps, setRapidIncorrectTaps] = useState<number[]>([]);
   const [stampCount, setStampCount] = useState(0);
   const [showStampBurst, setShowStampBurst] = useState(false);
+  const [scorePulse, setScorePulse] = useState(false);
+  const [choiceGridFeedback, setChoiceGridFeedback] = useState<ChoiceGridFeedback>('idle');
 
   const completionReportedRef = useRef(false);
 
@@ -533,23 +552,51 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
   }, [currentLetterAudioKey, t]);
 
   const playAudioKey = useCallback(
-    (key: AudioKey) => {
+    (key: AudioKey, mode: AudioPlaybackMode = 'queue') => {
       const path = resolveAudioPath(key);
       if (!path) {
         return;
       }
+
+      if (mode === 'interrupt') {
+        audio.playNow(path);
+        return;
+      }
+
       audio.play(path);
     },
     [audio],
   );
 
   const setMessageWithAudio = useCallback(
-    (key: StatusKey, tone: HintTone) => {
+    (key: StatusKey, tone: HintTone, mode: AudioPlaybackMode = 'queue') => {
       setRoundMessage({ key, tone });
-      playAudioKey(key as AudioKey);
+      playAudioKey(key as AudioKey, mode);
     },
     [playAudioKey],
   );
+
+  const triggerChoiceGridFeedback = useCallback((feedback: Exclude<ChoiceGridFeedback, 'idle'>) => {
+    setChoiceGridFeedback(feedback);
+    if (choiceGridFeedbackTimeoutRef.current) {
+      window.clearTimeout(choiceGridFeedbackTimeoutRef.current);
+    }
+    choiceGridFeedbackTimeoutRef.current = window.setTimeout(() => {
+      setChoiceGridFeedback('idle');
+      choiceGridFeedbackTimeoutRef.current = null;
+    }, 340);
+  }, []);
+
+  const triggerScorePulse = useCallback(() => {
+    setScorePulse(true);
+    if (scorePulseTimeoutRef.current) {
+      window.clearTimeout(scorePulseTimeoutRef.current);
+    }
+    scorePulseTimeoutRef.current = window.setTimeout(() => {
+      setScorePulse(false);
+      scorePulseTimeoutRef.current = null;
+    }, 440);
+  }, []);
 
   const resetRoundInteraction = useCallback((nextRound: RoundState) => {
     setAttemptsThisRound(0);
@@ -569,10 +616,10 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
 
       if (shouldUseSlowReplay) {
         setRoundMessage({ key: 'games.letterSoundMatch.hints.replaySlowly', tone: 'hint' });
-        playAudioKey('games.letterSoundMatch.hints.replaySlowly');
+        playAudioKey('games.letterSoundMatch.hints.replaySlowly', 'interrupt');
       } else {
         setRoundMessage({ key: round.promptKey, tone: 'neutral' });
-        playAudioKey(round.promptKey);
+        playAudioKey(round.promptKey, 'interrupt');
       }
 
       window.setTimeout(() => {
@@ -704,6 +751,9 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
       }
 
       const hadStruggle = !succeededOnFirstAttempt || usedHintThisRound;
+      if (succeededOnFirstAttempt) {
+        triggerScorePulse();
+      }
 
       const pairEventsInLastWindow = sessionStats.pairMistakeEvents.filter(
         (entry) => entry.round >= round.roundNumber - 4,
@@ -823,6 +873,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
       setMessageWithAudio,
       slowReplayRoundsRemaining,
       stampCount,
+      triggerScorePulse,
       usedHintThisRound,
     ],
   );
@@ -835,7 +886,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
 
       setInteractionNonce((value) => value + 1);
       setInactivePulseLetter(null);
-      setMessageWithAudio('games.letterSoundMatch.instructions.useReplay', 'neutral');
+      setMessageWithAudio('games.letterSoundMatch.instructions.useReplay', 'neutral', 'interrupt');
 
       if (options?.gateReleased) {
         setAwaitingReplayGate(false);
@@ -847,6 +898,59 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
     },
     [midpointPaused, playRoundPrompt, sessionComplete, setMessageWithAudio],
   );
+
+  const handleHintControl = useCallback(() => {
+    if (sessionComplete || midpointPaused) {
+      return;
+    }
+
+    setUsedHintThisRound(true);
+    setHintStep((current) => Math.max(current, 1));
+    setCorrectRevealLetter(null);
+    setInteractionNonce((value) => value + 1);
+    setMessageWithAudio('games.letterSoundMatch.hints.lookAndListen', 'hint');
+    setInactivePulseLetter(round.targetLetter);
+
+    window.setTimeout(() => {
+      if (awaitingReplayGate) {
+        handleReplay({ slower: true, gateReleased: true });
+        window.setTimeout(() => {
+          setInactivePulseLetter(round.targetLetter);
+        }, 200);
+        return;
+      }
+
+      playRoundPrompt({ slower: true });
+    }, 200);
+  }, [
+    awaitingReplayGate,
+    handleReplay,
+    midpointPaused,
+    playRoundPrompt,
+    round.targetLetter,
+    sessionComplete,
+    setMessageWithAudio,
+  ]);
+
+  const handleRetryControl = useCallback(() => {
+    if (sessionComplete || midpointPaused) {
+      return;
+    }
+
+    setUsedHintThisRound(true);
+    setHintStep((current) => Math.max(current, 1));
+    setAttemptsThisRound(0);
+    setMistakesThisRound(0);
+    setCorrectRevealLetter(null);
+    setInactivePulseLetter(null);
+    setAwaitingReplayGate(false);
+    setRapidIncorrectTaps([]);
+    setMessageWithAudio('games.letterSoundMatch.hints.gentleRetry', 'hint');
+
+    window.setTimeout(() => {
+      handleReplay({ slower: true, gateReleased: true });
+    }, 180);
+  }, [handleReplay, midpointPaused, sessionComplete, setMessageWithAudio]);
 
   const applyHintEscalation = useCallback(
     (mistakes: number) => {
@@ -911,6 +1015,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
 
   const handleIncorrectSelection = useCallback(
     (selectedLetter: LetterId) => {
+      triggerChoiceGridFeedback('miss');
       const nextAttempt = attemptsThisRound + 1;
       const nextMistakes = mistakesThisRound + 1;
 
@@ -952,6 +1057,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
       sessionStats.pairMistakeEvents,
       sessionStats.pairMistakes,
       setMessageWithAudio,
+      triggerChoiceGridFeedback,
     ],
   );
 
@@ -965,12 +1071,13 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
       setInactivePulseLetter(null);
 
       if (awaitingReplayGate) {
-        setMessageWithAudio('games.letterSoundMatch.instructions.useReplay', 'hint');
+        setMessageWithAudio('games.letterSoundMatch.instructions.useReplay', 'hint', 'interrupt');
         playAudioKey('games.letterSoundMatch.hints.replaySlowly');
         return;
       }
 
       if (letter === round.targetLetter) {
+        triggerChoiceGridFeedback('success');
         playAudioKey(toLetterAudioKey(letter));
         completeRound(attemptsThisRound === 0 && !usedHintThisRound);
         return;
@@ -988,20 +1095,26 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
       round.targetLetter,
       sessionComplete,
       setMessageWithAudio,
+      triggerChoiceGridFeedback,
       usedHintThisRound,
     ],
   );
 
   const handleContinueAfterMidpoint = useCallback(() => {
-    if (!pendingRoundState) {
+    if (!pendingRoundState || midpointContinueTimeoutRef.current) {
       return;
     }
 
-    setMidpointPaused(false);
-    setRound(pendingRoundState);
-    resetRoundInteraction(pendingRoundState);
+    const nextRoundState = pendingRoundState;
+    playAudioKey('games.letterSoundMatch.feedback.success.wellDone', 'interrupt');
     setPendingRoundState(null);
-  }, [pendingRoundState, resetRoundInteraction]);
+    midpointContinueTimeoutRef.current = window.setTimeout(() => {
+      midpointContinueTimeoutRef.current = null;
+      setMidpointPaused(false);
+      setRound(nextRoundState);
+      resetRoundInteraction(nextRoundState);
+    }, MIDPOINT_CONTINUE_CUE_DELAY_MS);
+  }, [pendingRoundState, playAudioKey, resetRoundInteraction]);
 
   useEffect(() => {
     if (sessionComplete || midpointPaused) {
@@ -1009,7 +1122,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
     }
 
     setRoundMessage({ key: round.instructionKey, tone: 'neutral' });
-    playAudioKey(round.instructionKey as AudioKey);
+    playAudioKey(round.instructionKey as AudioKey, 'interrupt');
 
     const timer = window.setTimeout(() => {
       playRoundPrompt({ slower: round.slowedReplay });
@@ -1048,6 +1161,15 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
 
   useEffect(() => {
     return () => {
+      if (choiceGridFeedbackTimeoutRef.current) {
+        window.clearTimeout(choiceGridFeedbackTimeoutRef.current);
+      }
+      if (scorePulseTimeoutRef.current) {
+        window.clearTimeout(scorePulseTimeoutRef.current);
+      }
+      if (midpointContinueTimeoutRef.current) {
+        window.clearTimeout(midpointContinueTimeoutRef.current);
+      }
       audio.stop();
     };
   }, [audio]);
@@ -1077,6 +1199,9 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
     sessionStats.roundsCompleted === 0
       ? 0
       : Math.round((sessionStats.firstAttemptSuccesses / sessionStats.roundsCompleted) * 100);
+  const replayButtonAriaLabel = t('games.letterSoundMatch.instructions.useReplay');
+  const showRoundCelebration = roundMessage.tone === 'success';
+  const showInRoundCoach = !showRoundCelebration;
 
   if (sessionComplete) {
     const hintTrend = getHintTrend(sessionStats.hintUsageByRound);
@@ -1084,28 +1209,78 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
     return (
       <div className="letter-sound-match letter-sound-match--complete">
         <Card padding="lg" className="letter-sound-match__shell">
-          <h2 className="letter-sound-match__title">{t('feedback.youDidIt')}</h2>
-          <p className="letter-sound-match__subtitle">{t('games.letterSoundMatch.feedback.success.amazing')}</p>
+          <div className="letter-sound-match__text-row letter-sound-match__text-row--center">
+            <h2 className="letter-sound-match__title">{t('feedback.youDidIt')}</h2>
+            <button
+              type="button"
+              className="letter-sound-match__replay-button"
+              onClick={() => playAudioKey('feedback.youDidIt')}
+              aria-label={replayButtonAriaLabel}
+            >
+              <span aria-hidden="true">▶</span>
+            </button>
+          </div>
+          <div className="letter-sound-match__text-row letter-sound-match__text-row--center">
+            <p className="letter-sound-match__subtitle">{t('games.letterSoundMatch.feedback.success.amazing')}</p>
+            <button
+              type="button"
+              className="letter-sound-match__replay-button"
+              onClick={() => playAudioKey('games.letterSoundMatch.feedback.success.amazing')}
+              aria-label={replayButtonAriaLabel}
+            >
+              <span aria-hidden="true">▶</span>
+            </button>
+          </div>
 
           <div className="letter-sound-match__stamps" aria-label={t('feedback.excellent')}>
             {Array.from({ length: Math.max(1, stampCount) }).map((_, index) => (
               <span key={`stamp-${index}`} className="letter-sound-match__stamp" aria-hidden="true">
-                🧸
+                🌟
               </span>
             ))}
           </div>
 
           <Card padding="md" className="letter-sound-match__summary-card">
-            <p>
-              {t('parentDashboard.games.letterSoundMatch.progressSummary', {
-                accuracy: sessionAccuracy,
-                confusedPair: strongestPairLabel,
-              })}
-            </p>
-            <p>{t('parentDashboard.games.letterSoundMatch.nextStep')}</p>
+            <div className="letter-sound-match__text-row">
+              <p>
+                {t('parentDashboard.games.letterSoundMatch.progressSummary', {
+                  accuracy: sessionAccuracy,
+                  confusedPair: strongestPairLabel,
+                })}
+              </p>
+              <button
+                type="button"
+                className="letter-sound-match__replay-button"
+                onClick={() => playAudioKey('parentDashboard.games.letterSoundMatch.progressSummary')}
+                aria-label={replayButtonAriaLabel}
+              >
+                <span aria-hidden="true">▶</span>
+              </button>
+            </div>
+            <div className="letter-sound-match__text-row">
+              <p>{t('parentDashboard.games.letterSoundMatch.nextStep')}</p>
+              <button
+                type="button"
+                className="letter-sound-match__replay-button"
+                onClick={() => playAudioKey('parentDashboard.games.letterSoundMatch.nextStep')}
+                aria-label={replayButtonAriaLabel}
+              >
+                <span aria-hidden="true">▶</span>
+              </button>
+            </div>
           </Card>
 
-          <p className="letter-sound-match__hint-note">{t(getFeedbackKeyFromHintTrend(hintTrend))}</p>
+          <div className="letter-sound-match__text-row letter-sound-match__text-row--center">
+            <p className="letter-sound-match__hint-note">{t(getFeedbackKeyFromHintTrend(hintTrend))}</p>
+            <button
+              type="button"
+              className="letter-sound-match__replay-button"
+              onClick={() => playAudioKey(getFeedbackKeyFromHintTrend(hintTrend))}
+              aria-label={replayButtonAriaLabel}
+            >
+              <span aria-hidden="true">▶</span>
+            </button>
+          </div>
         </Card>
 
         <style>{letterSoundMatchStyles}</style>
@@ -1117,16 +1292,38 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
     return (
       <div className="letter-sound-match letter-sound-match--midpoint">
         <Card padding="lg" className="letter-sound-match__shell">
-          <h2 className="letter-sound-match__title">{t('feedback.greatEffort')}</h2>
-          <p className="letter-sound-match__subtitle">{t('games.letterSoundMatch.success.greatListening')}</p>
+          <div className="letter-sound-match__text-row">
+            <h2 className="letter-sound-match__title">{t('feedback.greatEffort')}</h2>
+            <button
+              type="button"
+              className="letter-sound-match__replay-button"
+              onClick={() => playAudioKey('feedback.greatEffort')}
+              aria-label={replayButtonAriaLabel}
+            >
+              <span aria-hidden="true">▶</span>
+            </button>
+          </div>
+          <div className="letter-sound-match__text-row">
+            <p className="letter-sound-match__subtitle">{t('games.letterSoundMatch.success.greatListening')}</p>
+            <button
+              type="button"
+              className="letter-sound-match__replay-button"
+              onClick={() => playAudioKey('games.letterSoundMatch.success.greatListening')}
+              aria-label={replayButtonAriaLabel}
+            >
+              <span aria-hidden="true">▶</span>
+            </button>
+          </div>
 
           <Button
             variant="primary"
             size="lg"
             onClick={handleContinueAfterMidpoint}
+            disabled={!pendingRoundState}
             aria-label={t('nav.next')}
+            style={{ minWidth: '56px', paddingInline: 'var(--space-lg)' }}
           >
-            {t('nav.next')}
+            <span aria-hidden="true">→</span>
           </Button>
         </Card>
 
@@ -1140,8 +1337,28 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
       <Card padding="lg" className="letter-sound-match__shell">
         <header className="letter-sound-match__header">
           <div className="letter-sound-match__heading">
-            <h2 className="letter-sound-match__title">{t('games.letterSoundMatch.title')}</h2>
-            <p className="letter-sound-match__subtitle">{t('games.letterSoundMatch.subtitle')}</p>
+            <div className="letter-sound-match__text-row">
+              <h2 className="letter-sound-match__title">{t('games.letterSoundMatch.title')}</h2>
+              <button
+                type="button"
+                className="letter-sound-match__replay-button"
+                onClick={() => playAudioKey('games.letterSoundMatch.title')}
+                aria-label={replayButtonAriaLabel}
+              >
+                <span aria-hidden="true">▶</span>
+              </button>
+            </div>
+            <div className="letter-sound-match__text-row">
+              <p className="letter-sound-match__subtitle">{t('games.letterSoundMatch.subtitle')}</p>
+              <button
+                type="button"
+                className="letter-sound-match__replay-button"
+                onClick={() => playAudioKey('games.letterSoundMatch.subtitle')}
+                aria-label={replayButtonAriaLabel}
+              >
+                <span aria-hidden="true">▶</span>
+              </button>
+            </div>
           </div>
 
           <div className="letter-sound-match__actions">
@@ -1150,8 +1367,27 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
               size="md"
               onClick={() => handleReplay({ slower: false, gateReleased: true })}
               aria-label={t('games.letterSoundMatch.instructions.useReplay')}
+              style={{ minWidth: 'var(--touch-min)', paddingInline: 'var(--space-md)' }}
             >
-              🔊 {t('games.letterSoundMatch.instructions.useReplay')}
+              <span aria-hidden="true">▶</span>
+            </Button>
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={handleHintControl}
+              aria-label={t('games.letterSoundMatch.hints.lookAndListen')}
+              style={{ minWidth: 'var(--touch-min)', paddingInline: 'var(--space-md)' }}
+            >
+              <span aria-hidden="true">💡</span>
+            </Button>
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={handleRetryControl}
+              aria-label={t('games.letterSoundMatch.hints.gentleRetry')}
+              style={{ minWidth: 'var(--touch-min)', paddingInline: 'var(--space-md)' }}
+            >
+              <span aria-hidden="true">↻</span>
             </Button>
           </div>
         </header>
@@ -1168,21 +1404,63 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
             return (
               <span
                 key={`segment-${segment}`}
-                className={`letter-sound-match__progress-dot letter-sound-match__progress-dot--${state}`}
+                className={[
+                  'letter-sound-match__progress-dot',
+                  `letter-sound-match__progress-dot--${state}`,
+                  state === 'active' ? 'letter-sound-match__progress-dot--active-live' : '',
+                ].join(' ')}
                 aria-hidden="true"
               />
             );
           })}
         </div>
 
-        <p
-          className={`letter-sound-match__message letter-sound-match__message--${roundMessage.tone}`}
-          aria-live="polite"
-        >
-          {t(roundMessage.key)}
-        </p>
+        <div className="letter-sound-match__score-strip" aria-hidden="true">
+          <span
+            className={[
+              'letter-sound-match__score-pill',
+              scorePulse ? 'letter-sound-match__score-pill--pulse' : '',
+            ].join(' ')}
+          >
+            <span>⭐</span>
+            <span>{sessionStats.firstAttemptSuccesses}</span>
+          </span>
+          <span className="letter-sound-match__score-pill">
+            <span>🎯</span>
+            <span>
+              {sessionStats.roundsCompleted}/{TOTAL_ROUNDS}
+            </span>
+          </span>
+        </div>
+
+        <div className={`letter-sound-match__message letter-sound-match__message--${roundMessage.tone}`}>
+          <p className="letter-sound-match__message-text" aria-live="polite">
+            {t(roundMessage.key)}
+          </p>
+          <button
+            type="button"
+            className="letter-sound-match__replay-button"
+            onClick={() => playAudioKey(roundMessage.key as AudioKey)}
+            aria-label={replayButtonAriaLabel}
+          >
+            <span aria-hidden="true">▶</span>
+          </button>
+        </div>
 
         <section className="letter-sound-match__board">
+          <div className="letter-sound-match__scene-props" aria-hidden="true">
+            <span>🔠</span>
+            <span>🧩</span>
+            <span>✨</span>
+            <span>🪁</span>
+            <span>🔤</span>
+          </div>
+          {showInRoundCoach ? (
+            <div className="letter-sound-match__coach" aria-hidden="true">
+              <MascotIllustration variant="hint" size={56} />
+            </div>
+          ) : null}
+
           <Card padding="md" className="letter-sound-match__prompt-card">
             <div className="letter-sound-match__prompt-head">
               <span className="letter-sound-match__target-glyph" aria-hidden="true">
@@ -1202,59 +1480,122 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
               </div>
             </div>
 
-            <p className="letter-sound-match__instruction">
-              {t(round.instructionKey)}
-            </p>
+            <div className="letter-sound-match__text-row">
+              <p className="letter-sound-match__instruction">{t(round.instructionKey)}</p>
+              <button
+                type="button"
+                className="letter-sound-match__replay-button"
+                onClick={() => playAudioKey(round.instructionKey as AudioKey)}
+                aria-label={replayButtonAriaLabel}
+              >
+                <span aria-hidden="true">▶</span>
+              </button>
+            </div>
 
             {round.mode === 'wordBridge' || round.mode === 'remediationWord' ? (
-              <p className="letter-sound-match__word-bridge-note">
-                {t(toSampleWordAudioKey(round.targetLetter))}
-              </p>
+              <div className="letter-sound-match__text-row">
+                <p className="letter-sound-match__word-bridge-note">{t(toSampleWordAudioKey(round.targetLetter))}</p>
+                <button
+                  type="button"
+                  className="letter-sound-match__replay-button"
+                  onClick={() => playAudioKey(currentSampleWordAudioKey)}
+                  aria-label={replayButtonAriaLabel}
+                >
+                  <span aria-hidden="true">▶</span>
+                </button>
+              </div>
             ) : null}
 
             {awaitingReplayGate ? (
-              <p className="letter-sound-match__gate-note">{t('games.letterSoundMatch.hints.replaySlowly')}</p>
+              <div className="letter-sound-match__text-row">
+                <p className="letter-sound-match__gate-note">{t('games.letterSoundMatch.hints.replaySlowly')}</p>
+                <button
+                  type="button"
+                  className="letter-sound-match__replay-button"
+                  onClick={() => playAudioKey('games.letterSoundMatch.hints.replaySlowly')}
+                  aria-label={replayButtonAriaLabel}
+                >
+                  <span aria-hidden="true">▶</span>
+                </button>
+              </div>
             ) : null}
 
             {showStampBurst ? (
               <div className="letter-sound-match__stamp-burst" aria-hidden="true">
-                ✨🧸✨
+                ✨🌟✨
               </div>
             ) : null}
           </Card>
 
-          <div className="letter-sound-match__choices-grid" role="group" aria-label={t('games.letterSoundMatch.instructions.tapMatchingLetter')}>
+          <div
+            className={[
+              'letter-sound-match__choices-grid',
+              choiceGridFeedback === 'success' ? 'letter-sound-match__choices-grid--success' : '',
+              choiceGridFeedback === 'miss' ? 'letter-sound-match__choices-grid--miss' : '',
+            ].join(' ')}
+            role="group"
+            aria-label={t('games.letterSoundMatch.instructions.tapMatchingLetter')}
+          >
             {round.optionLetters.map((letter) => {
               const letterKey = toLetterAudioKey(letter);
-              const glyph = Array.from(t(letterKey))[0] ?? t(letterKey);
+              const letterLabel = t(letterKey);
+              const glyph = Array.from(letterLabel)[0] ?? letterLabel;
               const isCorrectReveal = correctRevealLetter === letter;
               const isInactivePulse = inactivePulseLetter === letter;
 
               return (
-                <button
-                  key={`choice-${letter}`}
-                  type="button"
-                  className={[
-                    'letter-sound-match__choice',
-                    isCorrectReveal ? 'letter-sound-match__choice--correct' : '',
-                    isInactivePulse ? 'letter-sound-match__choice--pulse' : '',
-                  ].join(' ')}
-                  onClick={() => handleOptionTap(letter)}
-                  aria-label={t(letterKey)}
-                >
-                  <span className="letter-sound-match__choice-glyph" aria-hidden="true">
-                    {glyph}
-                  </span>
-                  <span className="letter-sound-match__choice-label">{t(letterKey)}</span>
-                </button>
+                <div className="letter-sound-match__choice-item" key={`choice-${letter}`}>
+                  <button
+                    type="button"
+                    className={[
+                      'letter-sound-match__choice',
+                      isCorrectReveal ? 'letter-sound-match__choice--correct' : '',
+                      isInactivePulse ? 'letter-sound-match__choice--pulse' : '',
+                    ].join(' ')}
+                    onClick={() => handleOptionTap(letter)}
+                    aria-label={letterLabel}
+                  >
+                    <span className="letter-sound-match__choice-glyph" aria-hidden="true">
+                      {glyph}
+                    </span>
+                    <span className="letter-sound-match__choice-label">{letterLabel}</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="letter-sound-match__replay-button"
+                    onClick={() => playAudioKey(letterKey)}
+                    aria-label={`${replayButtonAriaLabel} ${letterLabel}`}
+                  >
+                    <span aria-hidden="true">▶</span>
+                  </button>
+                </div>
               );
             })}
           </div>
 
           {hintStep > 0 ? (
-            <p className="letter-sound-match__hint-note-inline">{t('games.letterSoundMatch.hints.lookAndListen')}</p>
+            <div className="letter-sound-match__text-row">
+              <p className="letter-sound-match__hint-note-inline">{t('games.letterSoundMatch.hints.lookAndListen')}</p>
+              <button
+                type="button"
+                className="letter-sound-match__replay-button"
+                onClick={() => playAudioKey('games.letterSoundMatch.hints.lookAndListen')}
+                aria-label={replayButtonAriaLabel}
+              >
+                <span aria-hidden="true">▶</span>
+              </button>
+            </div>
           ) : null}
         </section>
+
+        {showRoundCelebration ? (
+          <div className="letter-sound-match__celebration-overlay" aria-hidden="true">
+            <SuccessCelebration />
+            <div className="letter-sound-match__celebration-mascot">
+              <MascotIllustration variant="success" size={84} />
+            </div>
+          </div>
+        ) : null}
       </Card>
 
       <style>{letterSoundMatchStyles}</style>
@@ -1265,11 +1606,23 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
 const letterSoundMatchStyles = `
   .letter-sound-match {
     width: 100%;
+    border-radius: var(--radius-xl);
+    padding: var(--space-sm);
+    background:
+      radial-gradient(circle at 14% 18%, color-mix(in srgb, var(--color-accent-primary) 16%, transparent) 0, transparent 44%),
+      radial-gradient(circle at 84% 86%, color-mix(in srgb, var(--color-accent-success) 14%, transparent) 0, transparent 56%),
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-bg-secondary) 74%, #ffffff) 0%,
+        color-mix(in srgb, var(--color-theme-primary) 10%, #ffffff) 100%
+      );
   }
 
   .letter-sound-match__shell {
     display: grid;
     gap: var(--space-md);
+    position: relative;
+    overflow: hidden;
     background:
       radial-gradient(circle at 90% 10%, color-mix(in srgb, var(--color-accent-primary) 18%, transparent) 0, transparent 48%),
       radial-gradient(circle at 10% 90%, color-mix(in srgb, var(--color-accent-success) 18%, transparent) 0, transparent 52%),
@@ -1282,6 +1635,8 @@ const letterSoundMatchStyles = `
     align-items: start;
     gap: var(--space-md);
     flex-wrap: wrap;
+    position: relative;
+    z-index: 2;
   }
 
   .letter-sound-match__heading {
@@ -1307,6 +1662,59 @@ const letterSoundMatchStyles = `
     gap: var(--space-sm);
   }
 
+  .letter-sound-match__text-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xs);
+  }
+
+  .letter-sound-match__text-row > :first-child {
+    flex: 1;
+  }
+
+  .letter-sound-match__text-row--center {
+    justify-content: center;
+  }
+
+  .letter-sound-match__text-row--center > :first-child {
+    flex: initial;
+  }
+
+  [dir='rtl'] .letter-sound-match__text-row .letter-sound-match__replay-button {
+    order: -1;
+  }
+
+  .letter-sound-match__replay-button {
+    inline-size: var(--touch-min);
+    block-size: var(--touch-min);
+    min-inline-size: var(--touch-min);
+    min-block-size: var(--touch-min);
+    border-radius: var(--radius-sm);
+    border: none;
+    background: transparent;
+    color: var(--color-theme-primary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    transition: transform var(--transition-fast), color var(--transition-fast);
+    touch-action: manipulation;
+    flex-shrink: 0;
+  }
+
+  .letter-sound-match__replay-button:hover {
+    color: color-mix(in srgb, var(--color-theme-primary) 75%, var(--color-text-primary));
+    transform: translateY(-1px);
+  }
+
+  .letter-sound-match__replay-button:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--color-accent-primary) 65%, transparent);
+    outline-offset: 2px;
+  }
+
   .letter-sound-match__progress {
     display: grid;
     grid-auto-flow: column;
@@ -1330,13 +1738,53 @@ const letterSoundMatchStyles = `
     transform: scaleY(1.4);
   }
 
+  .letter-sound-match__progress-dot--active-live {
+    animation: letter-sound-match-progress-live 1.1s ease-in-out infinite;
+  }
+
+  .letter-sound-match__score-strip {
+    display: inline-flex;
+    align-items: center;
+    justify-self: start;
+    gap: var(--space-xs);
+  }
+
+  .letter-sound-match__score-pill {
+    min-height: var(--touch-min);
+    padding-inline: var(--space-sm);
+    border-radius: var(--radius-full);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2xs);
+    background: color-mix(in srgb, var(--color-theme-primary) 12%, var(--color-bg-card));
+    border: 1px solid color-mix(in srgb, var(--color-theme-primary) 30%, transparent);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .letter-sound-match__score-pill--pulse {
+    animation: letter-sound-match-score-pill 420ms var(--motion-ease-bounce);
+  }
+
   .letter-sound-match__message {
-    margin: 0;
     padding: var(--space-sm) var(--space-md);
     border-radius: var(--radius-md);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-primary);
     background: color-mix(in srgb, var(--color-theme-secondary) 14%, transparent);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xs);
+    position: relative;
+    z-index: 2;
+  }
+
+  .letter-sound-match__message-text {
+    margin: 0;
+    flex: 1;
   }
 
   .letter-sound-match__message--hint {
@@ -1350,6 +1798,42 @@ const letterSoundMatchStyles = `
   .letter-sound-match__board {
     display: grid;
     gap: var(--space-md);
+    position: relative;
+    z-index: 2;
+  }
+
+  .letter-sound-match__scene-props {
+    position: absolute;
+    inset-inline: var(--space-sm);
+    inset-block-start: calc(-1 * var(--space-md));
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    opacity: 0.82;
+    pointer-events: none;
+    font-size: 1.25rem;
+  }
+
+  .letter-sound-match__coach {
+    position: absolute;
+    inset-inline-end: var(--space-sm);
+    inset-block-start: var(--space-sm);
+    inline-size: 72px;
+    block-size: 72px;
+    border-radius: var(--radius-full);
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+    z-index: 2;
+    background: color-mix(in srgb, var(--color-bg-card) 88%, white);
+    border: 2px solid color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+    box-shadow: var(--shadow-sm);
+    animation: letter-sound-match-coach-float 1600ms ease-in-out infinite;
+  }
+
+  .letter-sound-match__coach,
+  .letter-sound-match__coach * {
+    pointer-events: none;
   }
 
   .letter-sound-match__prompt-card {
@@ -1421,11 +1905,28 @@ const letterSoundMatchStyles = `
 
   .letter-sound-match__choices-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
     gap: var(--space-sm);
+    transform-origin: center;
+  }
+
+  .letter-sound-match__choices-grid--success {
+    animation: letter-sound-match-grid-success 360ms ease-out;
+  }
+
+  .letter-sound-match__choices-grid--miss {
+    animation: letter-sound-match-grid-miss 300ms ease-in-out;
+  }
+
+  .letter-sound-match__choice-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-xs);
+    align-items: center;
   }
 
   .letter-sound-match__choice {
+    width: 100%;
     min-height: 78px;
     border-radius: var(--radius-lg);
     border: 2px solid color-mix(in srgb, var(--color-theme-secondary) 28%, transparent);
@@ -1496,6 +1997,10 @@ const letterSoundMatchStyles = `
     gap: var(--space-xs);
   }
 
+  .letter-sound-match__summary-card p {
+    margin: 0;
+  }
+
   .letter-sound-match__hint-note {
     margin: 0;
     text-align: center;
@@ -1506,6 +2011,26 @@ const letterSoundMatchStyles = `
   .letter-sound-match--midpoint {
     display: grid;
     place-items: center;
+  }
+
+  .letter-sound-match__celebration-overlay {
+    position: absolute;
+    inset-inline: var(--space-md);
+    inset-block-end: var(--space-md);
+    display: grid;
+    justify-items: center;
+    gap: var(--space-xs);
+    pointer-events: none;
+    z-index: 1;
+    animation: letter-sound-match-celebrate 620ms var(--motion-ease-bounce) both;
+  }
+
+  .letter-sound-match__celebration-overlay * {
+    pointer-events: none;
+  }
+
+  .letter-sound-match__celebration-mascot {
+    animation: letter-sound-match-mascot-pop 620ms var(--motion-ease-bounce) both;
   }
 
   @keyframes letter-sound-match-pulse {
@@ -1525,6 +2050,72 @@ const letterSoundMatchStyles = `
     }
   }
 
+  @keyframes letter-sound-match-progress-live {
+    0% {
+      transform: scaleY(1.4);
+    }
+
+    50% {
+      transform: scaleY(1.7);
+    }
+
+    100% {
+      transform: scaleY(1.4);
+    }
+  }
+
+  @keyframes letter-sound-match-score-pill {
+    0% {
+      transform: scale(0.94);
+    }
+
+    65% {
+      transform: scale(1.08);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes letter-sound-match-grid-success {
+    0% {
+      transform: scale(1);
+    }
+
+    40% {
+      transform: scale(1.015);
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-accent-success) 45%, transparent);
+    }
+
+    100% {
+      transform: scale(1);
+      box-shadow: none;
+    }
+  }
+
+  @keyframes letter-sound-match-grid-miss {
+    0% {
+      transform: translateX(0);
+    }
+
+    25% {
+      transform: translateX(6px);
+    }
+
+    50% {
+      transform: translateX(-6px);
+    }
+
+    75% {
+      transform: translateX(3px);
+    }
+
+    100% {
+      transform: translateX(0);
+    }
+  }
+
   @keyframes letter-sound-match-burst {
     from {
       transform: scale(0.5);
@@ -1534,6 +2125,42 @@ const letterSoundMatchStyles = `
     to {
       transform: scale(1);
       opacity: 1;
+    }
+  }
+
+  @keyframes letter-sound-match-celebrate {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes letter-sound-match-mascot-pop {
+    from {
+      transform: scale(0.82) rotate(-3deg);
+    }
+
+    to {
+      transform: scale(1) rotate(0deg);
+    }
+  }
+
+  @keyframes letter-sound-match-coach-float {
+    0% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-4px);
+    }
+
+    100% {
+      transform: translateY(0);
     }
   }
 
@@ -1549,16 +2176,30 @@ const letterSoundMatchStyles = `
     .letter-sound-match__choices-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
+    .letter-sound-match__text-row {
+      flex-wrap: wrap;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .letter-sound-match__choice,
     .letter-sound-match__progress-dot,
+    .letter-sound-match__progress-dot--active-live,
     .letter-sound-match__stamp-burst,
-    .letter-sound-match__choice--pulse {
+    .letter-sound-match__choice--pulse,
+    .letter-sound-match__score-pill--pulse,
+    .letter-sound-match__choices-grid--success,
+    .letter-sound-match__choices-grid--miss {
       animation: none !important;
       transition: none !important;
       transform: none !important;
+    }
+
+    .letter-sound-match__celebration-overlay,
+    .letter-sound-match__celebration-mascot,
+    .letter-sound-match__coach {
+      animation: none !important;
     }
   }
 `;

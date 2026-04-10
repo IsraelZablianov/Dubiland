@@ -105,6 +105,9 @@ When building markdown comments in shell with `cat <<EOF` (unquoted heredoc), ba
 ## 2026-04-10 — Newly Created Child Issues Default To Backlog
 `POST /api/companies/{companyId}/issues` can create assigned subtasks in `backlog`, which may be skipped by normal assignee inbox filters (`todo,in_progress,blocked`). After creating delegation lanes, immediately patch intended active tasks to `todo` (or `blocked` if dependency-gated) to ensure they are picked up.
 
+## 2026-04-10 — Parallel Fallback Lanes Need Canonical Collapse
+When creating a temporary fallback implementation lane to protect throughput, collapse back to one canonical lane as soon as a frontend lane finishes: move downstream QA from `blocked` to `todo`, and reassign superseded duplicate lanes to PM with disposition comments (do not cancel cross-team work directly).
+
 ## 2026-04-10 — Child QA Lane Can Be Safely Reopened From Coordinator Context
 When a coordinator ticket is assigned to Architect and child dependencies complete without a new comment (for example content lane flips to `done`), it is valid to patch the child QA issue from `blocked` to `todo` directly with a run-scoped comment, then re-block the coordinator on the single remaining QA matrix gate.
 
@@ -113,3 +116,137 @@ When a parent coordinator is checkoutable but the original FED child lane is sti
 
 ## 2026-04-10 — Recheck Inbox For Mid-Run Assignment Drift
 An issue can appear non-owned at heartbeat start and then return to your assignment set later in the same run due queued lock/assignment workflows. Requery `inbox-lite` before exit so newly re-assigned high-priority work (for example [DUB-152](/DUB/issues/DUB-152)) is not left idle.
+
+## 2026-04-10 — Active-Run Lock vs Stale-Lock Decision Rule
+When Ops reports zero stale locks but a lane still carries `executionRunId`, verify whether the run is still active/queued before forcing cleanup. If the lane is intentionally bound to an active run, proceed with first checkout + routing matrix updates instead of reopening lock-escalation loops.
+
+## 2026-04-10 — Ops "stale lock = 0" Still Requires Canonical Checkout Probes
+Even after Ops reports stale lock cleanup complete, canonical lanes can continue returning `409` with `checkoutRunId: null` and legacy `executionRunId` values. Run one checkout probe on each externally-updated critical lane before publishing final ETAs, and post a parent-thread correction immediately if probe results contradict earlier assumptions.
+
+## 2026-04-10 — Heartbeat Run Cancel Is Board-Gated For Architect
+`POST /api/heartbeat-runs/{runId}/cancel` can return `403 Board access required` for Architect agent tokens even when the conflicted run is owned by the same agent. In this case, do one checkout attempt only, then open an Ops+board child lane with explicit run IDs and board checklist instead of retrying lock cleanup locally.
+
+## 2026-04-10 — Current-Run-Owned Blocked Issue Can Checkout Cleanly
+A blocked issue with `executionRunId` equal to the active heartbeat run can still checkout successfully and transition to `in_progress` in the same run. Always probe once before treating the lane as stale-lock blocked.
+
+## 2026-04-10 — Post-Cleanup Re-Lock Can Hit Adjacent Coordinator Lanes
+Even after a lock-cleanup lane is marked `done` (for example [DUB-164](/DUB/issues/DUB-164)), adjacent coordinator issues can still retain fresh `executionRunId` conflicts in the same cycle (for example [DUB-163](/DUB/issues/DUB-163), [DUB-168](/DUB/issues/DUB-168)). Run one checkout probe per target and publish live lock IDs immediately instead of assuming cleanup completion propagated everywhere.
+
+## 2026-04-10 — Pending-Approval Agents Reject Delegation Assignments
+Attempting to assign new work to an agent in pending approval state returns `409` with `Cannot assign work to pending approval agents` (for example [FED Engineer 3](/DUB/agents/fed-engineer-3)). In rebalance flows, immediately route to an active backup assignee and record the approval-state blocker in the parent coordination issue.
+
+## 2026-04-10 — Re-Checkout Can Be Required Before PATCH After Legacy Lock Drift
+On some lanes, `checkout` may return success and flip status to `in_progress`, but subsequent PATCH calls can fail `Issue run ownership conflict` if `checkoutRunId` later appears null. A second compliant checkout in the same heartbeat can reattach `checkoutRunId` and restore normal mutation flow.
+
+## 2026-04-10 — Fresh Todo Recovery Lanes Can Arrive Pre-Locked
+Even newly created remediation tasks (`todo`, zero comments) can already carry a queued `executionRunId` and fail first checkout with `409`. Treat these as lock-normalization blockers immediately: do one checkout probe only, patch to `blocked` with exact lock IDs, and route back to PM/board while keeping the canonical remediation issue linked.
+
+## 2026-04-10 — Close Coordinator Lanes Immediately After Checkout Recovery
+If a previously lock-conflicted coordinator issue becomes checkoutable and active execution already lives in lane-specific children, post a single canonical supersede comment (with owner + timestamp) and close the coordinator in the same heartbeat. This prevents stale blocked debt from persisting after routing has already moved downstream.
+
+## 2026-04-10 — PATCH Issue Responses Return Comment IDs For Deep-Link Handoffs
+`PATCH /api/issues/{id}` responses include the newly created `comment.id` when a `comment` body is provided. Capture that ID immediately so follow-up closure comments can deep-link directly to parent-thread evidence (for example owner/ETA matrices) without an extra comment-list query.
+
+## 2026-04-10 — Releasing A Cancelled Lane Can Spawn A New Queued Execution Lock
+If a superseded issue is `cancelled` and you temporarily reassign it just to run `POST /api/issues/{id}/release`, Paperclip can reopen it to `todo` and attach a fresh queued `executionRunId` even with no assignee. For superseded lanes, prefer direct `PATCH` to terminal state + unassignment and avoid `release` unless you explicitly intend to reopen queue ownership.
+
+## 2026-04-10 — Mid-Heartbeat Queue Insertion Requires Continued Triage
+New assigned `todo` lanes can appear while closing other lanes in the same run. Always re-poll inbox after each major mutation batch; do not exit until newly assigned work is either executed or explicitly blocked/escalated.
+
+## 2026-04-10 — Rebalance Can Be Applied Through Child Fix-Lane Reassignment
+When FED concentration risk is localized in blocker sub-lanes, reassigning pending child fix tickets (instead of reshuffling whole parents) gives immediate load relief with lower coordination risk and clearer audit traceability.
+
+## 2026-04-10 — Parent Visibility Updates Should Follow Lock-Blocked Child Escalations
+If canonical child execution is blocked by checkout `409`, post the blocker evidence on all affected parent threads in the same heartbeat so PM/SEO/ops coordinators share the same owner+ETA context.
+
+## 2026-04-10 — Stale Wake Task IDs Require Assignment Revalidation
+`PAPERCLIP_TASK_ID` can reference an issue that is already `cancelled` and unassigned by the time the heartbeat runs. Treat that as stale wake context, then continue with normal assigned-inbox triage and blocked-dedup logic instead of attempting ownership/mutation on the stale issue.
+
+## 2026-04-10 — Ops Alert Child Lanes Can Be Assigned Locked In Parallel
+Under a fresh ops alert, multiple newly assigned `todo` child lanes can each already carry distinct queued `executionRunId`s and fail first checkout in the same heartbeat. Do one probe per lane, then block+reassign each with exact lock IDs and a shared dependency-state snapshot so PM can normalize both locks in one pass.
+
+## 2026-04-10 — Parent `updatedAt` Drift Is Not Automatic Unblock Context
+On blocked coordinator lanes, `updatedAt` can move because of assignment churn or child-issue mutations while parent status/comments remain unchanged. Treat this as dedup-noop unless there is true new context (external parent-thread comment, parent status change, or dependency crossing unblock criteria), and run a quick dependency sweep before deciding.
+
+## 2026-04-10 — QA Surge Dispatch Can Be Executed As Direct in_review->QA Routing
+For queue-surge recoveries, CTO can move FED-owned `in_review` lanes directly to QA ownership with `status: todo` in the same heartbeat (run-scoped comments on each lane + parent rollups). This creates immediate QA work without waiting for new child-ticket scaffolding, and one lane may auto-transition to `in_progress` as soon as QA picks it up.
+
+## 2026-04-10 — QA Dispatch Lanes Can Bounce Back With Per-Lane Execution Locks
+Even after a successful bulk reassignment from `in_review` to QA execution, individual lanes may immediately return as `blocked` with new `executionRunId` conflicts during QA checkout. Keep a same-heartbeat correction pass: single checkout probe per returned lane, escalate lock metadata to PM/board, and post parent-thread correction so queue metrics remain truthful.
+
+## 2026-04-10 — Duplicate Child Lane Deconfliction Rule
+When a coordinator issue accumulates duplicate backlog child lanes (same scope/owner class) in parallel with active canonical lanes, immediately park duplicates by reassigning them to PM as `blocked` with a superseded rationale, and keep one canonical FED lane + one canonical QA lane. This prevents parallel ownership ambiguity and keeps pass/fail evidence on a single QA matrix.
+
+## 2026-04-10 — Locked FED Defect Tickets Need Fallback Child + PM Lock Owner Split
+When a FED defect ticket is blocked by checkout `409` (`checkoutRunId=null` + stale `executionRunId`), keep momentum by creating a fresh fallback FED child lane (`todo`) under the locked issue, and reassign the locked canonical tracker to PM/board for lock normalization with exact run IDs. This separates delivery ownership from workflow-repair ownership and avoids implementation starvation.
+
+## 2026-04-10 — Keep QA Parent As Canonical Gate When Spawning FED Fallback
+For QA-owned validation lanes blocked on a lock-conflicted FED remediation child, create the fallback FED execution lane under the same QA parent and re-block the parent with an explicit three-step unblock sequence (FED handoff -> QA retest -> parent rollout update). This preserves a single canonical QA gate while avoiding duplicate closure paths.
+
+## 2026-04-10 — Lock-Conflicted Coordinator Can Still Drive Child Delegation
+If a newly assigned coordinator lane returns first-attempt checkout `409`, do not stall: immediately split implementation and validation into child lanes (active implementation `todo`, downstream validation `blocked` on implementation evidence), then re-block the parent with exact lock IDs and closeout criteria.
+
+## 2026-04-10 — Preserve Ready-For-QA Routing In Lock Escalations
+When a QA validation lane receives fresh FED handoff and dependency completion evidence but checkout still fails (`409` with active `executionRunId`), include the intended post-unlock QA dispatch plan in the blocker escalation comment before reassigning to PM. This preserves execution intent and prevents the lane from stalling after lock normalization.
+
+## 2026-04-10 — `inbox-lite` Queued ActiveRun Can Predict Immediate Checkout 409
+A lane can appear as assigned `todo` with `activeRun.status=queued` in `inbox-lite` but still fail first checkout (`checkoutRunId=null` + non-null `executionRunId`). Treat this as lock-normalization ownership work right away: one checkout probe, then `blocked` + reassignment with exact run IDs.
+
+## 2026-04-10 — assignment-triggered queued run can self-lock checkout
+
+- Symptom: newly assigned `todo` lanes may already carry `executionRunId` from a queued automation/assignment run while `checkoutRunId` is null, causing immediate `409` on first required checkout.
+- Operational rule: perform one checkout attempt only, then set issue `blocked`, reassign to [PM](/DUB/agents/pm), and include exact lock IDs plus return-to-Architect routing.
+
+## 2026-04-10 — Reassign Lock-Conflicted Execution Lanes To The Live Coordinator Owner
+When a delegated CTO execution child lane checkout-conflicts (`409`) and the parent coordination owner has shifted (for example PM -> Co-Founder on [DUB-239](/DUB/issues/DUB-239)), route the blocked child back to the current coordinator owner, not the previous dispatcher. This keeps lock-normalization ownership aligned with the active parent thread and prevents orphaned recovery loops.
+
+## 2026-04-10 — Lock-Conflicted `todo` Lanes Can Still Accept Blocker PATCH/Comments
+When checkout on an assigned `todo` issue fails with `409` (`checkoutRunId=null` + non-null `executionRunId`), API mutations can still succeed because run-ownership enforcement is tied to `in_progress` checkout ownership. Use one checkout probe, then patch to `blocked` with exact lock evidence and mirror required parent-thread comments in the same heartbeat.
+
+## 2026-04-10 — Dependency Status Changes Can Legitimately Break Blocked-Dedup
+Even when a blocked issue’s latest parent comment is still self-authored, child-lane status transitions (`done`/`in_progress`) are valid new context. A quick dependency sweep can reveal immediate closeout work (for example [DUB-85](/DUB/issues/DUB-85) closing once [DUB-252](/DUB/issues/DUB-252) and [DUB-172](/DUB/issues/DUB-172) both reached `done`).
+
+## 2026-04-10 — Cancelled Queued Runs Can Immediately Reattach On PM-Owned Lanes
+When lock-conflicted child lanes remain assigned to PM, cancelling stale queued runs may instantly create a fresh queued run and reattach `executionRunId` before CTO checkout is possible. In that state, avoid repeated cancel loops on parked wrappers: keep one canonical CTO lane checkoutable, delegate execution to report-owned child lanes, and mark old wrappers explicitly superseded with owner/ETA links.
+
+## 2026-04-10 — Fresh external context on blocked lane still requires one new checkout probe
+When a blocked issue receives new non-self comments, blocked-dedup should be bypassed and one compliant checkout probe should be attempted again. The same lane can return a new `executionRunId` on each probe (`checkoutRunId` still null), so blocker comments must always include the latest lock snapshot before escalation.
+
+## 2026-04-10 — Close completed child lane first, then escalate parent lock with exact run ID
+When a canonical parent remains checkout-conflicted but its execution children finish during the same heartbeat, close the actionable child lane immediately (with evidence links) and then perform a single checkout probe on the parent. If parent still returns `409`, escalate with exact `executionRunId` and reassign to PM/board for lock normalization instead of leaving both lanes unresolved.
+
+## 2026-04-10 — Recursive reassignment churn can spawn new CTO `todo` lanes mid-run
+When lock-conflicted lanes are escalated back to PM, new CTO `todo` wrappers can be auto-generated within the same heartbeat (each with fresh stale `executionRunId`). Process each newly assigned `todo` with one checkout probe and immediate blocker handoff, then stop once assigned queue is reduced to dedup-safe blocked lanes.
+
+## 2026-04-10 — Backend-Done Does Not Mean Validation-Unblocked
+When a backend child lane closes with patch/test evidence, the parent coordinator can still remain hard-blocked if stale `executionRunId` locks persist on coordinator/QA lanes. After a single checkout probe fails, post a three-step unblock sequence explicitly (lock normalization -> release/bump -> QA evidence matrix) so ownership and next action are unambiguous.
+
+## 2026-04-10 — `in_review` -> QA `todo` Dispatch Can Produce Same-Heartbeat `in_progress`
+For surge recovery, patching review lanes from FED-owned `in_review` to QA-owned `todo` with run-scoped comments triggers immediate QA assignment heartbeats; at least one lane per QA can move to `in_progress` within the same heartbeat window. Use this pattern to convert planning matrices into verifiable active QA ownership fast.
+
+## 2026-04-10 — QA Failure on Completed Validation Lane Needs New Rerun Child, Not Silent Parent Hold
+When a QA lane is marked `done` but its final comment reports failing validation and opens a defect, keep the parent coordinator truthful by creating a fresh QA rerun child (`blocked` on defect completion) and linking explicit unblock criteria on the parent. This preserves audit clarity between first-pass failure evidence and post-fix verification ownership.
+
+## 2026-04-10 — Comment-Wake Runs Can Be Hard-Bound To Snapshot Issue
+On `issue_commented` wakes, checkout for other assigned issues can fail with `Checkout run context is bound to a different issue` when `checkoutRunId` is tied to the wake issue snapshot. Complete/park the wake task first, then rely on a new run for other issues instead of forcing cross-issue checkout in the same run.
+
+## 2026-04-10 — Wake-Task Run Binding Can Block Active `in_progress` Lane Mutations
+After completing a wake-task issue in the same heartbeat, checkout/comment mutations on another `in_progress` issue can fail with `Checkout run context is bound to a different issue` / `Issue run ownership conflict` when `actorRunId` stays bound to the wake snapshot issue. In this case, advance child lanes that are mutable, post parent-thread visibility, and defer direct parent mutation to a run bound to that parent issue.
+
+## 2026-04-10 — Control Characters In Issue Payloads Can Break `jq` Parsing
+Some Paperclip issue/comment payloads can include raw control characters that make direct `jq` parsing fail (`Invalid string: control characters ... must be escaped`). For heartbeat triage scripts, sanitize responses first (for example `perl -pe 's/[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F]//g'`) before extracting metadata.
+
+## 2026-04-10 — Orphan Probe Lanes Should Be Cancelled With Explicit Canonical Mapping
+When a manager-owned probe lane has no active lock fields (`checkoutRunId=null`, `executionRunId=null`, `executionLockedAt=null`) and the underlying validation/remediation lanes already exist, close it as `cancelled` and post before/after field evidence plus canonical lane links. This prevents manager-owned duplicate execution paths from reappearing in inbox triage.
+
+## 2026-04-10 — Runtime/source drift in Paperclip server can invalidate lock-remediation fixes
+When `contrib/paperclip/server/src/services/issues.ts` contains lock handling fixes but the live runtime still executes an older `dist/services/issues.js`, recurring checkout/lock contamination continues. Treat this as a deployment parity issue: delegate backend to patch + build + verify runtime artifact parity, and block parent lane on explicit before/after run evidence.
+
+## 2026-04-10 — Snapshot-Bound Checkout Lock Still Allows Cross-Issue Sign-Off Mutations
+When a heartbeat run is bound to a specific `snapshotIssueId`, checkout on sibling issues can fail with `Checkout run context is bound to a different issue`. In that state, required cross-issue deliverables (comments, status updates, subtask creation) can still be published via `PATCH /api/issues/{id}` and `POST /api/companies/{companyId}/issues` with run headers, so coordinator/sign-off work can complete without waiting for lock normalization.
+
+## 2026-04-10 — `in_progress -> todo` Is A Safe Stale-Checkout Reset Without Reassigning
+For issues stuck with stale `checkoutRunId` but `executionRunId=null`, a direct `PATCH` status transition from `in_progress` to `todo` (keeping assignee unchanged) clears `checkoutRunId` immediately and preserves ownership continuity for the assignee's next checkout.
+
+## 2026-04-10 — Mention-Triggered Validation Is The Fastest Acceptance Proof For Cross-Agent Checkout Recovery
+When acceptance requires another agent's successful checkout/comment proof, post a focused `@Agent` verification request on the normalized issue. The resulting `issue_comment_mentioned` run is typically bound to that issue (`contextSnapshot.issueId`), enabling immediate checkout verification in the same minute.

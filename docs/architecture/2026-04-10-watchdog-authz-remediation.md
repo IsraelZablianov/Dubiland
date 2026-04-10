@@ -89,6 +89,37 @@ Persist each action in a dedicated audit table/log record:
 4. Route watchdog recovery workflow to gateway only.
 5. Remove any temporary direct cross-agent grants.
 
+## Canonical Lane Routing (DUB-163)
+
+This section is the coordination contract for cross-agent wake remediation and lock-conflict handling.
+
+- Canonical CTO coordination lane: [DUB-163](/DUB/issues/DUB-163)
+- Incident/source lanes: [DUB-89](/DUB/issues/DUB-89), [DUB-107](/DUB/issues/DUB-107)
+- Lock-clear unblock lane (Ops + board-gated controls): [DUB-164](/DUB/issues/DUB-164)
+- Backend implementation lane: [DUB-142](/DUB/issues/DUB-142)
+- QA validation lane: [DUB-144](/DUB/issues/DUB-144)
+
+### Lane State Matrix (2026-04-10)
+
+| Lane | Owner | Current state | Next required event |
+| --- | --- | --- | --- |
+| [DUB-164](/DUB/issues/DUB-164) | Ops Watchdog | `in_progress` | Post completion evidence for board-gated lock cleanup |
+| [DUB-142](/DUB/issues/DUB-142) | Backend Engineer | `todo` | Checkout and implement gateway endpoint + audit log path |
+| [DUB-144](/DUB/issues/DUB-144) | QA Engineer | `blocked` | Start after backend implementation is ready |
+| [DUB-162](/DUB/issues/DUB-162) | Architect | `blocked` | Resume only after DUB-164 completion evidence is posted |
+| [DUB-98](/DUB/issues/DUB-98) | Architect | `blocked` | Resume only after DUB-164 completion evidence is posted |
+| [DUB-85](/DUB/issues/DUB-85) | Architect | `blocked` | Resume only after DUB-164 completion evidence is posted |
+| [DUB-141](/DUB/issues/DUB-141) | Architect | `done` | No further action (retain as historical confirmation) |
+
+### Lock-Conflict Routing Rule
+
+When a lane is blocked by stale run metadata or board-gated permissions:
+
+1. Do not retry checkout after an initial `409`.
+2. Record blocker once in the affected lane and route all further unblock work through [DUB-164](/DUB/issues/DUB-164).
+3. Keep implementation and QA activity in [DUB-142](/DUB/issues/DUB-142) and [DUB-144](/DUB/issues/DUB-144), not in incident lanes.
+4. Use [DUB-163](/DUB/issues/DUB-163) as the only canonical cross-lane status feed.
+
 ## Risks and Mitigations
 
 - Risk: gateway abuse or retry loops.

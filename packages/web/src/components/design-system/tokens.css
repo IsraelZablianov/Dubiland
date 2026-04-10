@@ -101,6 +101,7 @@
   /* === Touch Targets === */
   --touch-min: 44px;
   --touch-primary-action: 60px;
+  --touch-primary-action-prominent: 72px;
   --touch-filter-chip: 44px;
 
   /* === Filter + Tag System === */

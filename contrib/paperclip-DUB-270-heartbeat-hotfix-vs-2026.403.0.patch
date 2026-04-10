@@ -1,0 +1,120 @@
+--- a/dist/services/heartbeat.js
++++ b/dist/services/heartbeat.js
+@@ -1397,6 +1397,18 @@
+             },
+         });
+         await setWakeupStatus(claimed.wakeupRequestId, "claimed", { claimedAt });
++        const issueIdForLock = readNonEmptyString(context.issueId);
++        if (issueIdForLock) {
++            await db
++                .update(issues)
++                .set({
++                executionRunId: claimed.id,
++                executionAgentNameKey: normalizeAgentNameKey(agent.name),
++                executionLockedAt: claimedAt,
++                updatedAt: claimedAt,
++            })
++                .where(and(eq(issues.id, issueIdForLock), eq(issues.companyId, run.companyId)));
++        }
+         return claimed;
+     }
+     async function finalizeAgentStatus(agentId, outcome) {
+@@ -2559,15 +2571,6 @@
+                     updatedAt: now,
+                 })
+                     .where(eq(agentWakeupRequests.id, deferred.id));
+-                await tx
+-                    .update(issues)
+-                    .set({
+-                    executionRunId: newRun.id,
+-                    executionAgentNameKey: normalizeAgentNameKey(deferredAgent.name),
+-                    executionLockedAt: now,
+-                    updatedAt: now,
+-                })
+-                    .where(eq(issues.id, issue.id));
+                 return newRun;
+             }
+         });
+@@ -2712,6 +2715,22 @@
+                 if (activeExecutionRun && activeExecutionRun.status !== "queued" && activeExecutionRun.status !== "running") {
+                     activeExecutionRun = null;
+                 }
++                if (activeExecutionRun) {
++                    const legacyCtx = parseObject(activeExecutionRun.contextSnapshot);
++                    const snapIssueId = readNonEmptyString(legacyCtx.issueId);
++                    if (snapIssueId && snapIssueId !== issue.id) {
++                        await tx
++                            .update(issues)
++                            .set({
++                            executionRunId: null,
++                            executionAgentNameKey: null,
++                            executionLockedAt: null,
++                            updatedAt: new Date(),
++                        })
++                            .where(eq(issues.id, issue.id));
++                        activeExecutionRun = null;
++                    }
++                }
+                 if (!activeExecutionRun && issue.executionRunId) {
+                     await tx
+                         .update(issues)
+@@ -2727,26 +2746,28 @@
+                     const legacyRun = await tx
+                         .select()
+                         .from(heartbeatRuns)
+-                        .where(and(eq(heartbeatRuns.companyId, issue.companyId), inArray(heartbeatRuns.status, ["queued", "running"]), sql `${heartbeatRuns.contextSnapshot} ->> 'issueId' = ${issue.id}`))
++                        .where(and(eq(heartbeatRuns.companyId, issue.companyId), eq(heartbeatRuns.agentId, agentId), inArray(heartbeatRuns.status, ["queued", "running"]), sql `${heartbeatRuns.contextSnapshot} ->> 'issueId' = ${issue.id}`))
+                         .orderBy(sql `case when ${heartbeatRuns.status} = 'running' then 0 else 1 end`, asc(heartbeatRuns.createdAt))
+                         .limit(1)
+                         .then((rows) => rows[0] ?? null);
+                     if (legacyRun) {
+                         activeExecutionRun = legacyRun;
+-                        const legacyAgent = await tx
+-                            .select({ name: agents.name })
+-                            .from(agents)
+-                            .where(eq(agents.id, legacyRun.agentId))
+-                            .then((rows) => rows[0] ?? null);
+-                        await tx
+-                            .update(issues)
+-                            .set({
+-                            executionRunId: legacyRun.id,
+-                            executionAgentNameKey: normalizeAgentNameKey(legacyAgent?.name),
+-                            executionLockedAt: new Date(),
+-                            updatedAt: new Date(),
+-                        })
+-                            .where(eq(issues.id, issue.id));
++                        if (legacyRun.status === "running") {
++                            const legacyAgent = await tx
++                                .select({ name: agents.name })
++                                .from(agents)
++                                .where(eq(agents.id, legacyRun.agentId))
++                                .then((rows) => rows[0] ?? null);
++                            await tx
++                                .update(issues)
++                                .set({
++                                executionRunId: legacyRun.id,
++                                executionAgentNameKey: normalizeAgentNameKey(legacyAgent?.name),
++                                executionLockedAt: new Date(),
++                                updatedAt: new Date(),
++                            })
++                                .where(eq(issues.id, issue.id));
++                        }
+                     }
+                 }
+                 if (activeExecutionRun) {
+@@ -2872,15 +2893,6 @@
+                     updatedAt: new Date(),
+                 })
+                     .where(eq(agentWakeupRequests.id, wakeupRequest.id));
+-                await tx
+-                    .update(issues)
+-                    .set({
+-                    executionRunId: newRun.id,
+-                    executionAgentNameKey: agentNameKey,
+-                    executionLockedAt: new Date(),
+-                    updatedAt: new Date(),
+-                })
+-                    .where(eq(issues.id, issue.id));
+                 return { kind: "queued", run: newRun };
+             });
+             if (outcome.kind === "deferred" || outcome.kind === "skipped")

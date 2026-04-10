@@ -1,12 +1,28 @@
 import { useTranslation } from 'react-i18next';
 import { Card } from '@/components/design-system';
+import {
+  FeatureIllustration,
+  MascotIllustration,
+  type FeatureIllustrationKind,
+} from '@/components/illustrations';
+import { FloatingElement } from '@/components/motion';
 
 const APPROACH_ITEMS = [
-  { key: '1', icon: '🎮' },
-  { key: '2', icon: '🇮🇱' },
-  { key: '3', icon: '📈' },
-  { key: '4', icon: '🛡️' },
-] as const;
+  { key: '1', icon: 'play' },
+  { key: '2', icon: 'hebrew' },
+  { key: '3', icon: 'adaptive' },
+  { key: '4', icon: 'safe' },
+] as const satisfies ReadonlyArray<{ key: '1' | '2' | '3' | '4'; icon: FeatureIllustrationKind }>;
+
+const APPROACH_TONE_BY_KEY: Record<
+  (typeof APPROACH_ITEMS)[number]['key'],
+  'accent' | 'success'
+> = {
+  '1': 'accent',
+  '2': 'success',
+  '3': 'accent',
+  '4': 'success',
+};
 
 export default function About() {
   const { t } = useTranslation('public');
@@ -47,7 +63,7 @@ export default function About() {
         <div className="about__approach-grid">
           {APPROACH_ITEMS.map(({ key, icon }) => (
             <Card key={key} padding="lg" className="about__approach-card">
-              <span className="about__approach-icon">{icon}</span>
+              <FeatureIllustration kind={icon} size={74} tone={APPROACH_TONE_BY_KEY[key]} />
               <h3 className="about__approach-card-title">{t(`about.approachItem${key}Title`)}</h3>
               <p className="about__approach-card-desc">{t(`about.approachItem${key}Desc`)}</p>
             </Card>
@@ -58,7 +74,9 @@ export default function About() {
       {/* Mascot */}
       <section className="about__section about__mascot-section">
         <div className="about__mascot-inner">
-          <span className="about__mascot-emoji">🧸</span>
+          <FloatingElement className="about__mascot-float">
+            <MascotIllustration variant="hero" size={180} />
+          </FloatingElement>
           <div>
             <h2 className="about__section-title" style={{ textAlign: 'start' }}>
               {t('about.mascotTitle')}
@@ -181,10 +199,6 @@ export default function About() {
           box-shadow: var(--shadow-lg);
         }
 
-        .about__approach-icon {
-          font-size: 2.5rem;
-        }
-
         .about__approach-card-title {
           font-size: var(--font-size-lg);
           font-weight: var(--font-weight-bold);
@@ -211,8 +225,7 @@ export default function About() {
           align-items: center;
         }
 
-        .about__mascot-emoji {
-          font-size: 8rem;
+        .about__mascot-float {
           filter: drop-shadow(0 4px 16px rgba(93, 58, 26, 0.15));
         }
 
@@ -226,7 +239,7 @@ export default function About() {
             text-align: center;
           }
 
-          .about__mascot-emoji { font-size: 5rem; justify-self: center; }
+          .about__mascot-float { justify-self: center; }
 
           .about__mascot-inner .about__section-title,
           .about__mascot-inner .about__section-text {

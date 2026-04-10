@@ -2,7 +2,11 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 
+const isGitHubPages = process.env.GITHUB_ACTIONS === 'true';
+
 export default defineConfig({
+  base: isGitHubPages ? '/Dubiland/' : '/',
+  envDir: path.resolve(__dirname, '../../'),
   plugins: [react()],
   resolve: {
     alias: {

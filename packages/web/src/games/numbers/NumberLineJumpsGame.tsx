@@ -6,6 +6,7 @@ import type { GameCompletionResult, GameProps, ParentSummaryMetrics, StableRange
 type GameConcept = 'within_ten' | 'bridge_to_10' | 'missing_addend';
 type RoundFlow = 'prompt' | 'input' | 'validate' | 'feedback' | 'remediation' | 'next';
 type MessageTone = 'neutral' | 'hint' | 'success';
+type BoardFeedback = 'idle' | 'success' | 'miss';
 
 type InstructionKey =
   | 'games.numberLineJumps.instructions.intro'
@@ -379,6 +380,8 @@ export function NumberLineJumpsGame({ onComplete, audio }: GameProps) {
   const lockChoicesNextRoundRef = useRef(false);
   const remediationNextRoundRef = useRef(false);
   const rapidMistapRef = useRef({ count: 0, lastAt: 0 });
+  const boardFeedbackTimeoutRef = useRef<number | null>(null);
+  const starPulseTimeoutRef = useRef<number | null>(null);
 
   const [round, setRound] = useState<RoundState>(() =>
     buildRound({
@@ -411,6 +414,9 @@ export function NumberLineJumpsGame({ onComplete, audio }: GameProps) {
   const [sessionSummary, setSessionSummary] = useState<SessionSummary | null>(null);
   const [interactionSerial, setInteractionSerial] = useState(0);
   const [inactivityPulse, setInactivityPulse] = useState(false);
+  const [firstAttemptStars, setFirstAttemptStars] = useState(0);
+  const [starPulse, setStarPulse] = useState(false);
+  const [boardFeedback, setBoardFeedback] = useState<BoardFeedback>('idle');
 
   const totalJump = useMemo(() => selectedSteps.reduce((sum, value) => sum + value, 0), [selectedSteps]);
   const previewValue = round.start + totalJump;
@@ -438,6 +444,18 @@ export function NumberLineJumpsGame({ onComplete, audio }: GameProps) {
     setInactivityPulse(false);
   }, []);
 
+  const triggerBoardFeedback = useCallback((nextState: Exclude<BoardFeedback, 'idle'>) => {
+    if (boardFeedbackTimeoutRef.current) {
+      window.clearTimeout(boardFeedbackTimeoutRef.current);
+    }
+
+    setBoardFeedback(nextState);
+    boardFeedbackTimeoutRef.current = window.setTimeout(() => {
+      setBoardFeedback('idle');
+      boardFeedbackTimeoutRef.current = null;
+    }, 420);
+  }, []);
+
   const loadRound = useCallback(
     (roundNumber: number) => {
       const nextRound = buildRound({
@@ -459,6 +477,7 @@ export function NumberLineJumpsGame({ onComplete, audio }: GameProps) {
       setRoundAttempt(0);
       setShowNextAction(false);
       setInactivityPulse(false);
+      setBoardFeedback('idle');
     },
     [],
   );
@@ -534,6 +553,19 @@ export function NumberLineJumpsGame({ onComplete, audio }: GameProps) {
       setRoundFlow('feedback');
       setShowNextAction(true);
       setMessageWithAudio(usedStrategyKey, 'success');
+      triggerBoardFeedback('success');
+
+      if (roundAttempt === 0) {
+        setFirstAttemptStars((value) => value + 1);
+        setStarPulse(true);
+        if (starPulseTimeoutRef.current) {
+          window.clearTimeout(starPulseTimeoutRef.current);
+        }
+        starPulseTimeoutRef.current = window.setTimeout(() => {
+          setStarPulse(false);
+          starPulseTimeoutRef.current = null;
+        }, 520);
+      }
 
       consecutiveMissesRef.current = 0;
 
@@ -546,11 +578,12 @@ export function NumberLineJumpsGame({ onComplete, audio }: GameProps) {
       setResolvedRounds((value) => value + 1);
       setRoundFlow('next');
     },
-    [hintStep, round.showTenAnchor, round.start, round.target, roundAttempt, setMessageWithAudio, usedHintThisRound],
+    [hintStep, round.showTenAnchor, round.start, round.target, roundAttempt, setMessageWithAudio, triggerBoardFeedback, usedHintThisRound],
   );
 
   const handleRoundMiss = useCallback(() => {
     setRoundFlow('feedback');
+    triggerBoardFeedback('miss');
 
     const encouragementKey = ENCOURAGEMENT_ROTATION[roundAttempt % ENCOURAGEMENT_ROTATION.length]!;
     setMessageWithAudio(encouragementKey, 'hint');
@@ -590,7 +623,7 @@ export function NumberLineJumpsGame({ onComplete, audio }: GameProps) {
     window.setTimeout(() => {
       beginRetryWithSupport(shouldRemediate);
     }, 420);
-  }, [beginRetryWithSupport, resolvedRounds, round.concept, roundAttempt, setMessageWithAudio]);
+  }, [beginRetryWithSupport, resolvedRounds, round.concept, roundAttempt, setMessageWithAudio, triggerBoardFeedback]);
 
   const validateCurrentInput = useCallback(
     (steps: number[]) => {
@@ -760,6 +793,15 @@ export function NumberLineJumpsGame({ onComplete, audio }: GameProps) {
     setMessageWithAudio('games.numberLineJumps.instructions.listenAndPlanJump', 'neutral');
   }, [loadRound, pendingRoundNumber, playAudioKey, setMessageWithAudio]);
 
+  const handleCheckpointReplay = useCallback(() => {
+    if (!checkpointPaused) {
+      return;
+    }
+
+    bumpInteraction();
+    playAudioKey('games.numberLineJumps.instructions.listenAndPlanJump');
+  }, [bumpInteraction, checkpointPaused, playAudioKey]);
+
   useEffect(() => {
     if (sessionComplete || checkpointPaused) {
       return;
@@ -820,6 +862,12 @@ export function NumberLineJumpsGame({ onComplete, audio }: GameProps) {
 
   useEffect(() => {
     return () => {
+      if (boardFeedbackTimeoutRef.current) {
+        window.clearTimeout(boardFeedbackTimeoutRef.current);
+      }
+      if (starPulseTimeoutRef.current) {
+        window.clearTimeout(starPulseTimeoutRef.current);
+      }
       audio.stop();
     };
   }, [audio]);
@@ -850,9 +898,26 @@ export function NumberLineJumpsGame({ onComplete, audio }: GameProps) {
       <div className="number-line-jumps number-line-jumps--checkpoint">
         <Card padding="lg" className="number-line-jumps__shell">
           <h2 className="number-line-jumps__title">{t('feedback.greatEffort')}</h2>
-          <p className="number-line-jumps__summary-note">{t('games.numberLineJumps.instructions.listenAndPlanJump')}</p>
-          <Button variant="primary" size="lg" onClick={handleContinueAfterCheckpoint} aria-label={t('nav.next')}>
-            {t('nav.next')}
+          <div className="number-line-jumps__checkpoint-note">
+            <p className="number-line-jumps__summary-note">{t('games.numberLineJumps.instructions.listenAndPlanJump')}</p>
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={handleCheckpointReplay}
+              aria-label={t('games.numberLineJumps.instructions.tapReplay')}
+              style={{ minWidth: 'var(--touch-min)' }}
+            >
+              ▶
+            </Button>
+          </div>
+          <Button
+            variant="primary"
+            size="lg"
+            onClick={handleContinueAfterCheckpoint}
+            aria-label={t('nav.next')}
+            style={{ minWidth: 'var(--touch-min)' }}
+          >
+            →
           </Button>
         </Card>
         <style>{numberLineJumpsStyles}</style>
@@ -918,11 +983,33 @@ export function NumberLineJumpsGame({ onComplete, audio }: GameProps) {
             return (
               <span
                 key={`progress-${segment}`}
-                className={`number-line-jumps__progress-dot number-line-jumps__progress-dot--${state}`}
+                className={[
+                  'number-line-jumps__progress-dot',
+                  `number-line-jumps__progress-dot--${state}`,
+                  state === 'active' && roundFlow === 'input' ? 'number-line-jumps__progress-dot--live' : '',
+                ].join(' ')}
                 aria-hidden="true"
               />
             );
           })}
+        </div>
+
+        <div className="number-line-jumps__score-strip" aria-hidden="true">
+          <div
+            className={[
+              'number-line-jumps__score-pill',
+              starPulse ? 'number-line-jumps__score-pill--pulse' : '',
+            ].join(' ')}
+          >
+            <span>⭐</span>
+            <span>{firstAttemptStars}</span>
+          </div>
+          <div className="number-line-jumps__score-pill">
+            <span>🎯</span>
+            <span>
+              {resolvedRounds}/{TOTAL_ROUNDS}
+            </span>
+          </div>
         </div>
 
         <p className={`number-line-jumps__message number-line-jumps__message--${roundMessage.tone}`} aria-live="polite">
@@ -933,7 +1020,15 @@ export function NumberLineJumpsGame({ onComplete, audio }: GameProps) {
           <p className="number-line-jumps__prompt">{t(round.promptKey, round.promptValues)}</p>
         </Card>
 
-        <section className="number-line-jumps__board" dir="ltr" aria-label={t('games.numberLineJumps.title')}>
+        <section
+          className={[
+            'number-line-jumps__board',
+            boardFeedback === 'success' ? 'number-line-jumps__board--success' : '',
+            boardFeedback === 'miss' ? 'number-line-jumps__board--miss' : '',
+          ].join(' ')}
+          dir="ltr"
+          aria-label={t('games.numberLineJumps.title')}
+        >
           <div className="number-line-jumps__line" role="group" aria-label={t('games.numberLineJumps.instructions.listenAndPlanJump')}>
             {NUMBER_LINE_VALUES.map((value) => {
               const isStart = value === round.start;
@@ -999,7 +1094,7 @@ export function NumberLineJumpsGame({ onComplete, audio }: GameProps) {
               ].join(' ')}
               onClick={() => handleStepTap(step)}
               disabled={roundFlow !== 'input' || sessionComplete}
-              aria-label={t('games.numberLineJumps.instructions.listenAndPlanJump')}
+              aria-label={t('games.numberLineJumps.instructions.jumpByStep', { step })}
             >
               +{step}
             </button>
@@ -1078,8 +1173,36 @@ const numberLineJumpsStyles = `
     background: var(--color-theme-primary);
   }
 
+  .number-line-jumps__progress-dot--live {
+    animation: number-line-jumps-active-dot 1100ms ease-in-out infinite;
+  }
+
   .number-line-jumps__progress-dot--done {
     background: var(--color-accent-success);
+  }
+
+  .number-line-jumps__score-strip {
+    display: inline-flex;
+    gap: var(--space-xs);
+    align-items: center;
+    justify-self: start;
+  }
+
+  .number-line-jumps__score-pill {
+    display: inline-flex;
+    gap: var(--space-2xs);
+    align-items: center;
+    min-height: var(--touch-min);
+    padding-inline: var(--space-sm);
+    border-radius: var(--radius-full);
+    border: 1px solid color-mix(in srgb, var(--color-theme-primary) 28%, white);
+    background: color-mix(in srgb, var(--color-theme-primary) 10%, white);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+  }
+
+  .number-line-jumps__score-pill--pulse {
+    animation: number-line-jumps-star-pill 480ms ease-out;
   }
 
   .number-line-jumps__message {
@@ -1125,6 +1248,14 @@ const numberLineJumpsStyles = `
     border: 1px solid color-mix(in srgb, var(--color-theme-primary) 18%, white);
     padding: var(--space-md);
     overflow-x: auto;
+  }
+
+  .number-line-jumps__board--success {
+    animation: number-line-jumps-board-success 360ms ease-out;
+  }
+
+  .number-line-jumps__board--miss {
+    animation: number-line-jumps-board-miss 320ms ease-in-out;
   }
 
   .number-line-jumps__line {
@@ -1275,6 +1406,13 @@ const numberLineJumpsStyles = `
     color: var(--color-text-secondary);
   }
 
+  .number-line-jumps__checkpoint-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+  }
+
   @keyframes number-line-jumps-pulse {
     0% {
       transform: scale(1);
@@ -1286,6 +1424,72 @@ const numberLineJumpsStyles = `
 
     100% {
       transform: scale(1);
+    }
+  }
+
+  @keyframes number-line-jumps-active-dot {
+    0% {
+      transform: scale(1);
+    }
+
+    50% {
+      transform: scale(1.18);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes number-line-jumps-star-pill {
+    0% {
+      transform: scale(0.92);
+    }
+
+    60% {
+      transform: scale(1.1);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes number-line-jumps-board-success {
+    0% {
+      transform: scale(1);
+    }
+
+    40% {
+      transform: scale(1.015);
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-accent-success) 45%, transparent);
+    }
+
+    100% {
+      transform: scale(1);
+      box-shadow: none;
+    }
+  }
+
+  @keyframes number-line-jumps-board-miss {
+    0% {
+      transform: translateX(0);
+    }
+
+    25% {
+      transform: translateX(6px);
+    }
+
+    50% {
+      transform: translateX(-6px);
+    }
+
+    75% {
+      transform: translateX(3px);
+    }
+
+    100% {
+      transform: translateX(0);
     }
   }
 
@@ -1311,7 +1515,11 @@ const numberLineJumpsStyles = `
   @media (prefers-reduced-motion: reduce) {
     .number-line-jumps__marker,
     .number-line-jumps__step-chip,
-    .number-line-jumps__step-chip--pulse {
+    .number-line-jumps__step-chip--pulse,
+    .number-line-jumps__progress-dot--live,
+    .number-line-jumps__score-pill--pulse,
+    .number-line-jumps__board--success,
+    .number-line-jumps__board--miss {
       transition: none;
       animation: none;
       transform: none;

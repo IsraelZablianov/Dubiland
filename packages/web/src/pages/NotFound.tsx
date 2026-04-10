@@ -1,13 +1,17 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/design-system';
+import { MascotIllustration } from '@/components/illustrations';
+import { FloatingElement } from '@/components/motion';
 
 export default function NotFound() {
   const { t } = useTranslation('public');
 
   return (
     <div className="not-found">
-      <span className="not-found__mascot">🧸</span>
+      <FloatingElement className="not-found__mascot">
+        <MascotIllustration variant="loading" size={160} />
+      </FloatingElement>
       <h1 className="not-found__code">404</h1>
       <h2 className="not-found__title">{t('notFound.title')}</h2>
       <p className="not-found__text">{t('notFound.text')}</p>
@@ -33,17 +37,6 @@ export default function NotFound() {
         }
 
         .not-found a { text-decoration: none; }
-
-        .not-found__mascot {
-          font-size: 5rem;
-          animation: not-found-wobble 2s ease-in-out infinite;
-        }
-
-        @keyframes not-found-wobble {
-          0%, 100% { transform: rotate(0deg); }
-          25% { transform: rotate(-8deg); }
-          75% { transform: rotate(8deg); }
-        }
 
         .not-found__code {
           font-family: var(--font-family-display);

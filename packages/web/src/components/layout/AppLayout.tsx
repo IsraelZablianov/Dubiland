@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
-import { AppHeader } from './AppHeader';
+import { PublicHeader } from './PublicHeader';
+import { PublicFooter } from './PublicFooter';
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -8,8 +9,9 @@ interface AppLayoutProps {
 export function AppLayout({ children }: AppLayoutProps) {
   return (
     <div className="app-layout">
-      <AppHeader />
+      <PublicHeader />
       <div className="app-layout__content">{children}</div>
+      <PublicFooter />
 
       <style>{`
         .app-layout {

@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Card } from '@/components/design-system';
+import { FeatureIllustration } from '@/components/illustrations';
 
 const HOW_IT_WORKS_STEPS = ['1', '2', '3', '4'] as const;
 
@@ -32,7 +33,7 @@ export default function Parents() {
       {/* Safety */}
       <section className="parents__section parents__section--alt">
         <div className="parents__content-block">
-          <span className="parents__block-icon">🛡️</span>
+          <FeatureIllustration kind="safe" size={88} tone="success" className="parents__block-icon" />
           <div>
             <h2 className="parents__section-title" style={{ textAlign: 'start' }}>
               {t('parents.safetyTitle')}
@@ -45,7 +46,7 @@ export default function Parents() {
       {/* Educational Approach */}
       <section className="parents__section">
         <div className="parents__content-block">
-          <span className="parents__block-icon">📚</span>
+          <FeatureIllustration kind="hebrew" size={88} tone="accent" className="parents__block-icon" />
           <div>
             <h2 className="parents__section-title" style={{ textAlign: 'start' }}>
               {t('parents.educationalTitle')}
@@ -155,7 +156,7 @@ export default function Parents() {
         }
 
         .parents__block-icon {
-          font-size: 3rem;
+          flex-shrink: 0;
         }
 
         .parents__text {

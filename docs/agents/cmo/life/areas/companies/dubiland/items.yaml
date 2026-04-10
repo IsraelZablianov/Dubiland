@@ -183,8 +183,8 @@
   category: dependency
   timestamp: "2026-04-10"
   source: "2026-04-10"
-  status: active
-  superseded_by: null
+  status: superseded
+  superseded_by: dubiland-seo-20260410-019
   related_entities:
     - companies/dubiland
   last_accessed: "2026-04-10"
@@ -205,6 +205,474 @@
 - id: dubiland-seo-20260410-018
   fact: "CMO posted DUB-10 program roll-up confirming schema acceptance critical path is now DUB-66 preview URL -> DUB-50 official validator rerun -> DUB-42 closeout."
   category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-019
+  fact: "Preview URL dependency DUB-66 is complete; DUB-42 is now blocked only on final official URL-validator artifacts pending from the active SEO lane DUB-50."
+  category: dependency
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: superseded
+  superseded_by: dubiland-seo-20260410-021
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-020
+  fact: "CMO posted execution follow-up on DUB-50 and re-blocked DUB-42 with owner/ETA on SEO Expert for final Rich Results + Schema.org URL validator outputs."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-021
+  fact: "SEO official-validator rerun found the DUB-66 preview host non-resolvable; DUB-42 is now blocked on FED-owned refreshed preview-host task DUB-169."
+  category: dependency
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-022
+  fact: "CMO updated DUB-42, DUB-24, and DUB-10 to reflect blocker transition from DUB-66 to DUB-169 while keeping final validator artifact closeout routed through DUB-50."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-023
+  fact: "CMO created PM escalation DUB-184 after FED reported a 409 checkout conflict on DUB-169; schema acceptance lane now depends on PM lock normalization before FED can refresh preview URL."
+  category: dependency
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: superseded
+  superseded_by: dubiland-seo-20260410-027
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-024
+  fact: "Board confirmed production domain is not yet available on DUB-20, so GA4/GSC provisioning remains blocked on external domain decision inputs."
+  category: dependency
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-025
+  fact: "CMO created PM decision task DUB-189 under DUB-10 to choose interim-vs-defer analytics-domain policy and publish owner/ETA for remaining GA4/GSC handoff fields."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-026
+  fact: "Wake-comment context from CTO on DUB-42 confirmed lock-recovery churn moved through DUB-184 and DUB-193, and CMO updated DUB-42 blocked note with refreshed owner/ETA matrix."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-027
+  fact: "Deliverable ownership on schema acceptance gate shifted to FED Engineer 2: DUB-169 is reassigned with active execution run context, so primary blocker is preview URL evidence rather than PM lock-only normalization."
+  category: dependency
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: superseded
+  superseded_by: dubiland-seo-20260410-040
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-039
+  fact: "SEO rerun on April 10, 2026 (06:37:19 IDT) found the DUB-169 preview host DNS-unresolvable before promised uptime window, so official Schema.org/Rich Results URL validation remained blocked."
+  category: dependency
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-040
+  fact: "CMO re-blocked DUB-42 on new canonical lane DUB-265 (owned by FED Engineer 2) after DUB-169 completion failed durability; acceptance now depends on fresh stable preview URL evidence from DUB-265."
+  category: dependency
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: superseded
+  superseded_by: dubiland-seo-20260410-042
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-041
+  fact: "Although DUB-265 and DUB-286 were completed with temporary host evidence, SEO reruns still recorded validator reachability and stability regressions (including HTTP 530 reversion), so schema acceptance did not progress."
+  category: dependency
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-042
+  fact: "Active schema unblock dependency shifted to DUB-288 (FED Engineer 2) after latest SEO acceptance update on DUB-42; CMO rolled this canonical blocker path into DUB-10."
+  category: dependency
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: superseded
+  superseded_by: dubiland-seo-20260410-043
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-028
+  fact: "CMO published analytics-domain policy Option B (defer GA4/GSC completion until production-domain milestone) on DUB-20 with owner+ETA matrix and explicit unblock sequence for DUB-21 and DUB-18."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-029
+  fact: "CMO checkout on DUB-195 returned first-attempt 409 lock conflict; issue was re-blocked with evidence and PM normalization lane DUB-201 was opened under DUB-189."
+  category: dependency
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: superseded
+  superseded_by: dubiland-seo-20260410-030
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-030
+  fact: "Lock state on DUB-195 later normalized; CMO checked out and completed DUB-195 with policy acceptance evidence, leaving DUB-201 as cleanup/supersession follow-up."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-031
+  fact: "A later CMO heartbeat could not re-checkout DUB-10 because checkoutRunId remained attached to a succeeded run (6307312a); PM normalization task DUB-207 was opened while delegated SEO lane DUB-205 continued in progress."
+  category: dependency
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: superseded
+  superseded_by: dubiland-seo-20260410-045
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-001
+  fact: "DUB-10 now includes active GEO baseline child issue DUB-205 assigned to SEO Expert."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-002
+  fact: "As of April 10, 2026, DUB-10 remains in progress with two blocker chains: schema acceptance (DUB-169 -> DUB-50 -> DUB-42) and analytics provisioning (DUB-20 -> DUB-18 -> DUB-21)."
+  category: status
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: superseded
+  superseded_by: dubiland-seo-20260410-043
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-032
+  fact: "SEO baseline lane DUB-205 is now done and posted a full AI visibility report update; CMO opened DUB-209 as a todo follow-up for manual April evidence capture and quantified citation-share refresh."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-033
+  fact: "CMO still cannot checkout DUB-10 because checkoutRunId remains attached to succeeded run 6307312a; PM normalization lane DUB-207 is active and tracked from DUB-10 blocker comments."
+  category: dependency
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: superseded
+  superseded_by: dubiland-seo-20260410-045
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-003
+  fact: "SEO delivered AI visibility baseline artifacts for DUB-10 (DUB-205 and DUB-209), but all assistant lanes were access-gated before answer rendering, keeping citation-confidence low."
+  category: status
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-004
+  fact: "CMO opened PM decision lane DUB-217 to choose AI visibility measurement operating model and tooling/budget path for Q2."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-034
+  fact: "CMO completed DUB-226 with a staged hybrid AI-visibility measurement model, budget envelope, KPI set, and reporting cadence linked to DUB-10/DUB-20/DUB-217."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-035
+  fact: "CMO created DUB-229 as the delegated SEO execution lane for monthly AI visibility cadence under DUB-226; the issue transitioned to in_progress after assignment."
+  category: dependency
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-005
+  fact: "DUB-226 and DUB-229 are completed; the AI visibility operating model is now decided and first monthly checkpoint is published in DUB-10 comments."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-006
+  fact: "Duplicate PM lane DUB-217 remains todo with executionRunId lock; CMO first checkout cleanup attempt returned 409 and was not retried."
+  category: dependency
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: superseded
+  superseded_by: dubiland-seo-20260410-036
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-007
+  fact: "Schema unblock precursor DUB-169 is done with fresh preview URL evidence, but DUB-50 is still blocked/stale pending SEO rerun of official URL validators."
+  category: dependency
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: superseded
+  superseded_by: dubiland-seo-20260410-037
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-036
+  fact: "CMO completed DUB-233 and posted a decision-ready recommendation on DUB-217 selecting Option A now (manual-first monthly capture) with staged Option B tooling activation gates, $600/month cap, and 7-14 day post-approval ETA."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-037
+  fact: "PM finalized the AI-visibility model decision and closed DUB-217 on DUB-10; CMO reopened DUB-50 to todo using fresh DUB-169 preview-host evidence so SEO can run final official URL validators."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-038
+  fact: "After CMO reopen, DUB-50 moved to in_progress under SEO Expert; DUB-10 remains in progress pending final validator artifacts for DUB-42 -> DUB-24 closeout."
+  category: status
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: superseded
+  superseded_by: dubiland-seo-20260410-044
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-043
+  fact: "As of April 10, 2026 (12:07 UTC), the active schema critical path shifted to DUB-299 -> DUB-50 -> DUB-42 -> DUB-24; DUB-288 is done but no longer the canonical blocker."
+  category: dependency
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: superseded
+  superseded_by: dubiland-seo-20260410-047
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-044
+  fact: "DUB-50 is back to blocked after latest SEO rerun observed route 502 regression on the active preview host and Schema API 429 from SEO runtime; unblock ownership remains FED via DUB-299."
+  category: status
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: superseded
+  superseded_by: dubiland-seo-20260410-048
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-045
+  fact: "PM checkout-lock normalization lane DUB-207 is done and CMO checkout on DUB-10 is restored, confirmed by successful parent checkouts and continued roll-up execution."
+  category: status
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-046
+  fact: "CMO posted heartbeat roll-up comment da0441dd on DUB-10 documenting the blocker shift from DUB-288 to DUB-299 and keeping the analytics handoff target at April 12, 2026."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-047
+  fact: "DUB-299 was cancelled while DUB-50 remained blocked, so CMO restored canonical schema unblock tracking by creating replacement FED lane DUB-375 under DUB-50."
+  category: dependency
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-048
+  fact: "SEO rerun at April 10, 2026 13:00 UTC still failed on DUB-50 (route 502 + Schema API 429), keeping schema acceptance blocked pending the new DUB-375 unblock lane."
+  category: status
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-049
+  fact: "CMO posted DUB-10 roll-up comment b1a5ae0a documenting DUB-299 cancellation, DUB-375 creation, and the updated schema closeout path DUB-375 -> DUB-50 -> DUB-42 -> DUB-24."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-seo-20260410-050
+  fact: "Analytics provisioning lane issues DUB-20, DUB-18, and DUB-21 are now tracked in backlog state under the deferment policy while awaiting the production-domain handoff target date of April 12, 2026."
+  category: status
   timestamp: "2026-04-10"
   source: "2026-04-10"
   status: active

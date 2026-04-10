@@ -1,0 +1,50 @@
+--- a/server/src/services/issues.ts
++++ b/server/src/services/issues.ts
+@@ -905,6 +905,7 @@
+       const run = await tx
+         .select({
+           id: heartbeatRuns.id,
+           companyId: heartbeatRuns.companyId,
++          agentId: heartbeatRuns.agentId,
+           contextSnapshot: heartbeatRuns.contextSnapshot,
+         })
+         .from(heartbeatRuns)
+@@ -920,15 +921,35 @@
+       const ctx = parseObject(run.contextSnapshot);
+       const bound = snapshotBoundIssueId(ctx);
+       if (bound && bound !== issueId) {
+-        throw conflict("Checkout run context is bound to a different issue", {
+-          checkoutRunId,
+-          issueId,
+-          snapshotIssueId: bound,
+-        });
++        const boundIssue = await tx
++          .select({
++            status: issues.status,
++            assigneeAgentId: issues.assigneeAgentId,
++          })
++          .from(issues)
++          .where(and(eq(issues.id, bound), eq(issues.companyId, issueCompanyId)))
++          .then((rows) => rows[0] ?? null);
++        if (!boundIssue) {
++          throw conflict("Checkout run context is bound to a different issue", {
++            checkoutRunId,
++            issueId,
++            snapshotIssueId: bound,
++          });
++        }
++        const terminal = boundIssue.status === "done" || boundIssue.status === "cancelled";
++        const reassignedAway = boundIssue.assigneeAgentId !== run.agentId;
++        if (!terminal && !reassignedAway) {
++          throw conflict("Checkout run context is bound to a different issue", {
++            checkoutRunId,
++            issueId,
++            snapshotIssueId: bound,
++          });
++        }
+       }
+-      if (!bound) {
++      if (!bound || bound !== issueId) {
+         const nextSnapshot = { ...ctx, issueId, taskId: issueId };
+         await tx
+           .update(heartbeatRuns)

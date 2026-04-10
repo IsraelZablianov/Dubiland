@@ -32,6 +32,7 @@ export function MascotIllustration({
     height: dimension,
     objectFit: 'contain',
     transform: mirrored ? 'scaleX(-1)' : undefined,
+    pointerEvents: 'none',
     ...style,
   };
 

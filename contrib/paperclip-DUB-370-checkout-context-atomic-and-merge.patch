@@ -1,0 +1,609 @@
+diff --git a/server/src/__tests__/heartbeat-workspace-session.test.ts b/server/src/__tests__/heartbeat-workspace-session.test.ts
+index d97f63c..74849ac 100644
+--- a/server/src/__tests__/heartbeat-workspace-session.test.ts
++++ b/server/src/__tests__/heartbeat-workspace-session.test.ts
+@@ -395,6 +395,38 @@ describe("comment wake batching", () => {
+     expect(merged.wakeCommentId).toBe("comment-2");
+     expect(merged.paperclipWake).toBeUndefined();
+   });
++
++  it("does not overwrite issue identity when coalescing wakes for a different issue", () => {
++    const merged = mergeCoalescedContextSnapshot(
++      { issueId: "issue-a", taskId: "issue-a", taskKey: "issue-a", wakeReason: "timer" },
++      { issueId: "issue-b", wakeReason: "issue_commented" },
++    );
++    expect(merged.issueId).toBe("issue-a");
++    expect(merged.taskId).toBe("issue-a");
++    expect(merged.taskKey).toBe("issue-a");
++    expect(merged.wakeReason).toBe("issue_commented");
++  });
++
++  it("does not strip issue binding when incoming omits issue id (DUB-370)", () => {
++    const merged = mergeCoalescedContextSnapshot(
++      { issueId: "issue-a", taskId: "issue-a", taskKey: "issue-a", wakeReason: "assignment" },
++      { wakeReason: "issue_commented", wakeCommentId: "c1" },
++    );
++    expect(merged.issueId).toBe("issue-a");
++    expect(merged.taskId).toBe("issue-a");
++    expect(merged.taskKey).toBe("issue-a");
++    expect(merged.wakeCommentId).toBe("c1");
++  });
++
++  it("does not strip issue binding when incoming nulls issue id (DUB-370)", () => {
++    const merged = mergeCoalescedContextSnapshot(
++      { issueId: "issue-a", taskId: "issue-a", wakeReason: "assignment" },
++      { issueId: null, taskId: null, wakeReason: "timer" },
++    );
++    expect(merged.issueId).toBe("issue-a");
++    expect(merged.taskId).toBe("issue-a");
++    expect(merged.wakeReason).toBe("timer");
++  });
+ });
+ 
+ describe("buildExplicitResumeSessionOverride", () => {
+diff --git a/server/src/services/heartbeat.ts b/server/src/services/heartbeat.ts
+index 45c5efd..81ff2b5 100644
+--- a/server/src/services/heartbeat.ts
++++ b/server/src/services/heartbeat.ts
+@@ -862,6 +862,28 @@ export function mergeCoalescedContextSnapshot(
+     ...existing,
+     ...incoming,
+   };
++
++  // Coalescing must not retarget an already issue-bound run to a different issue.
++  // Otherwise a running run's context_snapshot can drift (locks on issue A while
++  // snapshot references issue B) — see lock-integrity remediation (DUB-314).
++  const existingBound =
++    readNonEmptyString(existing.issueId) ?? readNonEmptyString(existing.taskId);
++  const incomingBound =
++    readNonEmptyString(incoming.issueId) ?? readNonEmptyString(incoming.taskId);
++  if (existingBound && incomingBound && existingBound !== incomingBound) {
++    merged.issueId = existing.issueId;
++    merged.taskId = existing.taskId;
++    merged.taskKey = existing.taskKey;
++  } else if (existingBound && !incomingBound) {
++    // DUB-370: `{ ...existing, ...incoming }` lets incoming use `issueId: null` or omit
++    // identity keys, wiping a bound snapshot after checkout. Preserve the binding.
++    merged.issueId = existing.issueId;
++    merged.taskId = existing.taskId;
++    merged.taskKey = readNonEmptyString(merged.taskKey as unknown)
++      ? merged.taskKey
++      : existing.taskKey;
++  }
++
+   const mergedCommentIds = mergeWakeCommentIds(existing, incoming);
+   if (mergedCommentIds.length > 0) {
+     const latestCommentId = mergedCommentIds[mergedCommentIds.length - 1];
+diff --git a/server/src/services/issues.ts b/server/src/services/issues.ts
+index bb40be7..4932842 100644
+--- a/server/src/services/issues.ts
++++ b/server/src/services/issues.ts
+@@ -33,12 +33,29 @@ import {
+ } from "./execution-workspace-policy.js";
+ import { instanceSettingsService } from "./instance-settings.js";
+ import { redactCurrentUserText } from "../log-redaction.js";
++import { parseObject } from "../adapters/utils.js";
+ import { resolveIssueGoalId, resolveNextIssueGoalId } from "./issue-goal-fallback.js";
+ import { getDefaultCompanyGoal } from "./goals.js";
++import { logActivity } from "./activity-log.js";
++import {
++  isImplementationLaneTitle,
++  resolveManagerAssigneeGuardrail,
++  type ManagerAssigneeGuardrailLogDetails,
++} from "./issue-manager-assignee-guardrail.js";
+ 
+ const ALL_ISSUE_STATUSES = ["backlog", "todo", "in_progress", "in_review", "blocked", "done", "cancelled"];
+ const MAX_ISSUE_COMMENT_PAGE_LIMIT = 500;
+ 
++function readNonEmptyString(value: unknown): string | null {
++  if (typeof value !== "string") return null;
++  const t = value.trim();
++  return t.length > 0 ? t : null;
++}
++
++function snapshotBoundIssueId(ctx: Record<string, unknown>): string | null {
++  return readNonEmptyString(ctx.issueId) ?? readNonEmptyString(ctx.taskId);
++}
++
+ function assertTransition(from: string, to: string) {
+   if (from === to) return;
+   if (!ALL_ISSUE_STATUSES.includes(to)) {
+@@ -119,6 +136,8 @@ type IssueCreateInput = Omit<typeof issues.$inferInsert, "companyId"> & {
+   labelIds?: string[];
+   blockedByIssueIds?: string[];
+   inheritExecutionWorkspaceFromIssueId?: string | null;
++  managerAssigneeOverride?: boolean;
++  managerAssigneeOverrideRationale?: string | null;
+ };
+ type IssueRelationSummaryMap = {
+   blockedBy: IssueRelationIssueSummary[];
+@@ -871,40 +890,164 @@ export function issueService(db: Db) {
+     return TERMINAL_HEARTBEAT_RUN_STATUSES.has(run.status);
+   }
+ 
++  type IssuesDbTx = Parameters<Parameters<typeof db.transaction>[0]>[0];
++
++  /**
++   * Before attaching checkoutRunId / executionRunId to an issue, ensure the actor
++   * heartbeat run's context_snapshot is either unbound (then bind to this issue)
++   * or already references this issue. Prevents locks on issue A while the run
++   * snapshot still points at issue B (DUB-314). If the snapshot points at another
++   * issue, allow rebinding when that issue is terminal (done/cancelled) or no
++   * longer assigned to this run's agent (DUB-350).
++   *
++   * Call inside an outer transaction so snapshot binding commits together with
++   * issue lock writes (DUB-370).
++   */
++  async function bindCheckoutRunSnapshotForIssueTx(
++    tx: IssuesDbTx,
++    checkoutRunId: string,
++    issueId: string,
++    issueCompanyId: string,
++  ) {
++    await tx.execute(sql`select id from heartbeat_runs where id = ${checkoutRunId} for update`);
++    const run = await tx
++      .select({
++        id: heartbeatRuns.id,
++        companyId: heartbeatRuns.companyId,
++        agentId: heartbeatRuns.agentId,
++        contextSnapshot: heartbeatRuns.contextSnapshot,
++      })
++      .from(heartbeatRuns)
++      .where(eq(heartbeatRuns.id, checkoutRunId))
++      .then((rows) => rows[0] ?? null);
++    if (!run) {
++      throw conflict("Checkout heartbeat run not found", { checkoutRunId });
++    }
++    if (run.companyId !== issueCompanyId) {
++      throw conflict("Checkout heartbeat run company mismatch", { checkoutRunId, issueId });
++    }
++    const ctx = parseObject(run.contextSnapshot);
++    const bound = snapshotBoundIssueId(ctx);
++    if (bound && bound !== issueId) {
++      const boundIssue = await tx
++        .select({
++          status: issues.status,
++          assigneeAgentId: issues.assigneeAgentId,
++        })
++        .from(issues)
++        .where(and(eq(issues.id, bound), eq(issues.companyId, issueCompanyId)))
++        .then((rows) => rows[0] ?? null);
++      if (!boundIssue) {
++        throw conflict("Checkout run context is bound to a different issue", {
++          checkoutRunId,
++          issueId,
++          snapshotIssueId: bound,
++        });
++      }
++      const terminal = boundIssue.status === "done" || boundIssue.status === "cancelled";
++      const reassignedAway = boundIssue.assigneeAgentId !== run.agentId;
++      if (!terminal && !reassignedAway) {
++        throw conflict("Checkout run context is bound to a different issue", {
++          checkoutRunId,
++          issueId,
++          snapshotIssueId: bound,
++        });
++      }
++    }
++    if (!bound || bound !== issueId) {
++      const nextSnapshot = { ...ctx, issueId, taskId: issueId };
++      await tx
++        .update(heartbeatRuns)
++        .set({
++          contextSnapshot: nextSnapshot,
++          updatedAt: new Date(),
++        })
++        .where(eq(heartbeatRuns.id, checkoutRunId));
++    }
++  }
++
++  async function prepareCheckoutHeartbeatRunForIssue(
++    checkoutRunId: string,
++    issueId: string,
++    issueCompanyId: string,
++  ) {
++    await db.transaction(async (tx) => {
++      await bindCheckoutRunSnapshotForIssueTx(tx, checkoutRunId, issueId, issueCompanyId);
++    });
++  }
++
++  async function clearStaleIssueExecutionLockTx(tx: IssuesDbTx, issueId: string, now: Date) {
++    await tx.execute(sql`select id from issues where id = ${issueId} for update`);
++    const preCheckRow = await tx
++      .select({ executionRunId: issues.executionRunId })
++      .from(issues)
++      .where(eq(issues.id, issueId))
++      .then((rows) => rows[0] ?? null);
++    if (!preCheckRow?.executionRunId) return;
++    const lockRun = await tx
++      .select({ id: heartbeatRuns.id, status: heartbeatRuns.status })
++      .from(heartbeatRuns)
++      .where(eq(heartbeatRuns.id, preCheckRow.executionRunId))
++      .then((rows) => rows[0] ?? null);
++    if (!lockRun || (lockRun.status !== "queued" && lockRun.status !== "running")) {
++      await tx
++        .update(issues)
++        .set({ executionRunId: null, executionAgentNameKey: null, executionLockedAt: null, updatedAt: now })
++        .where(
++          and(eq(issues.id, issueId), eq(issues.executionRunId, preCheckRow.executionRunId)),
++        );
++    }
++  }
++
+   async function adoptStaleCheckoutRun(input: {
+     issueId: string;
+     actorAgentId: string;
+     actorRunId: string;
+     expectedCheckoutRunId: string;
+   }) {
++    const issueMeta = await db
++      .select({ companyId: issues.companyId })
++      .from(issues)
++      .where(eq(issues.id, input.issueId))
++      .then((rows) => rows[0] ?? null);
++    if (!issueMeta) return null;
++
+     const stale = await isTerminalOrMissingHeartbeatRun(input.expectedCheckoutRunId);
+     if (!stale) return null;
+ 
+     const now = new Date();
+-    const adopted = await db
+-      .update(issues)
+-      .set({
+-        checkoutRunId: input.actorRunId,
+-        executionRunId: input.actorRunId,
+-        executionLockedAt: now,
+-        updatedAt: now,
+-      })
+-      .where(
+-        and(
+-          eq(issues.id, input.issueId),
+-          eq(issues.status, "in_progress"),
+-          eq(issues.assigneeAgentId, input.actorAgentId),
+-          eq(issues.checkoutRunId, input.expectedCheckoutRunId),
+-        ),
+-      )
+-      .returning({
+-        id: issues.id,
+-        status: issues.status,
+-        assigneeAgentId: issues.assigneeAgentId,
+-        checkoutRunId: issues.checkoutRunId,
+-        executionRunId: issues.executionRunId,
+-      })
+-      .then((rows) => rows[0] ?? null);
++    const adopted = await db.transaction(async (tx) => {
++      await bindCheckoutRunSnapshotForIssueTx(
++        tx,
++        input.actorRunId,
++        input.issueId,
++        issueMeta.companyId,
++      );
++      return await tx
++        .update(issues)
++        .set({
++          checkoutRunId: input.actorRunId,
++          executionRunId: input.actorRunId,
++          executionLockedAt: now,
++          updatedAt: now,
++        })
++        .where(
++          and(
++            eq(issues.id, input.issueId),
++            eq(issues.status, "in_progress"),
++            eq(issues.assigneeAgentId, input.actorAgentId),
++            eq(issues.checkoutRunId, input.expectedCheckoutRunId),
++          ),
++        )
++        .returning({
++          id: issues.id,
++          status: issues.status,
++          assigneeAgentId: issues.assigneeAgentId,
++          checkoutRunId: issues.checkoutRunId,
++          executionRunId: issues.executionRunId,
++        })
++        .then((rows) => rows[0] ?? null);
++    });
+ 
+     return adopted;
+   }
+@@ -1383,6 +1526,8 @@ export function issueService(db: Db) {
+         labelIds: inputLabelIds,
+         blockedByIssueIds,
+         inheritExecutionWorkspaceFromIssueId,
++        managerAssigneeOverride,
++        managerAssigneeOverrideRationale,
+         ...issueData
+       } = data;
+       const isolatedWorkspacesEnabled = (await instanceSettings.getExperimental()).enableIsolatedWorkspaces;
+@@ -1391,16 +1536,29 @@ export function issueService(db: Db) {
+         delete issueData.executionWorkspacePreference;
+         delete issueData.executionWorkspaceSettings;
+       }
+-      if (data.assigneeAgentId && data.assigneeUserId) {
++      if (issueData.assigneeAgentId && issueData.assigneeUserId) {
+         throw unprocessable("Issue can only have one assignee");
+       }
+-      if (data.assigneeAgentId) {
+-        await assertAssignableAgent(companyId, data.assigneeAgentId);
++      let managerGuardrailLog: ManagerAssigneeGuardrailLogDetails | null = null;
++      if (issueData.assigneeAgentId) {
++        const resolved = await resolveManagerAssigneeGuardrail(db, companyId, {
++          title: issueData.title,
++          assigneeAgentId: issueData.assigneeAgentId,
++          managerAssigneeOverride,
++          managerAssigneeOverrideRationale,
++        });
++        if (resolved.resolution.kind === "rerouted") {
++          issueData.assigneeAgentId = resolved.assigneeAgentId;
++        }
++        managerGuardrailLog = resolved.logDetails;
++      }
++      if (issueData.assigneeAgentId) {
++        await assertAssignableAgent(companyId, issueData.assigneeAgentId);
+       }
+-      if (data.assigneeUserId) {
+-        await assertAssignableUser(companyId, data.assigneeUserId);
++      if (issueData.assigneeUserId) {
++        await assertAssignableUser(companyId, issueData.assigneeUserId);
+       }
+-      if (data.status === "in_progress" && !data.assigneeAgentId && !data.assigneeUserId) {
++      if (issueData.status === "in_progress" && !issueData.assigneeAgentId && !issueData.assigneeUserId) {
+         throw unprocessable("in_progress issues require an assignee");
+       }
+       return db.transaction(async (tx) => {
+@@ -1534,6 +1692,18 @@ export function issueService(db: Db) {
+         }
+ 
+         const [issue] = await tx.insert(issues).values(values).returning();
++        if (managerGuardrailLog) {
++          await logActivity(tx, {
++            companyId,
++            actorType: issue.createdByAgentId ? "agent" : issue.createdByUserId ? "user" : "system",
++            actorId: issue.createdByAgentId ?? issue.createdByUserId ?? "system",
++            agentId: issue.createdByAgentId ?? null,
++            action: "issue.manager_assignee_guardrail",
++            entityType: "issue",
++            entityId: issue.id,
++            details: managerGuardrailLog,
++          });
++        }
+         if (inputLabelIds) {
+           await syncIssueLabels(issue.id, companyId, inputLabelIds, tx);
+         }
+@@ -1576,8 +1746,13 @@ export function issueService(db: Db) {
+         blockedByIssueIds,
+         actorAgentId,
+         actorUserId,
++        managerAssigneeOverride,
++        managerAssigneeOverrideRationale,
+         ...issueData
+-      } = data;
++      } = data as typeof data & {
++        managerAssigneeOverride?: boolean;
++        managerAssigneeOverrideRationale?: string | null;
++      };
+       const isolatedWorkspacesEnabled = (await instanceSettings.getExperimental()).enableIsolatedWorkspaces;
+       if (!isolatedWorkspacesEnabled) {
+         delete issueData.executionWorkspaceId;
+@@ -1585,6 +1760,38 @@ export function issueService(db: Db) {
+         delete issueData.executionWorkspaceSettings;
+       }
+ 
++      let managerGuardrailLog: ManagerAssigneeGuardrailLogDetails | null = null;
++      const dbReader = dbOrTx === db ? db : dbOrTx;
++      const mergedAssigneeUserId =
++        issueData.assigneeUserId !== undefined ? issueData.assigneeUserId : existing.assigneeUserId;
++      if (!mergedAssigneeUserId) {
++        const effectiveTitle = issueData.title !== undefined ? issueData.title : existing.title;
++        const effectiveAgentAssignee =
++          issueData.assigneeAgentId !== undefined ? issueData.assigneeAgentId : existing.assigneeAgentId;
++        const assigneeAgentPatched =
++          issueData.assigneeAgentId !== undefined &&
++          issueData.assigneeAgentId !== existing.assigneeAgentId;
++        const titlePatched =
++          issueData.title !== undefined && issueData.title !== existing.title;
++        if (
++          typeof effectiveAgentAssignee === "string" &&
++          effectiveAgentAssignee &&
++          ((assigneeAgentPatched && issueData.assigneeAgentId !== null) ||
++            (titlePatched && isImplementationLaneTitle(effectiveTitle)))
++        ) {
++          const resolved = await resolveManagerAssigneeGuardrail(dbReader, existing.companyId, {
++            title: effectiveTitle,
++            assigneeAgentId: effectiveAgentAssignee,
++            managerAssigneeOverride,
++            managerAssigneeOverrideRationale,
++          });
++          if (resolved.resolution.kind === "rerouted") {
++            issueData.assigneeAgentId = resolved.assigneeAgentId;
++          }
++          managerGuardrailLog = resolved.logDetails;
++        }
++      }
++
+       if (issueData.status) {
+         assertTransition(existing.status, issueData.status);
+       }
+@@ -1630,9 +1837,12 @@ export function issueService(db: Db) {
+       if (issueData.status && issueData.status !== "cancelled") {
+         patch.cancelledAt = null;
+       }
+-      if (issueData.status && issueData.status !== "in_progress") {
++      // Non–in_progress issues must never retain checkout/execution lock metadata.
++      // Use merged next status so a PATCH without `status` still repairs rows that are
++      // already done/cancelled/etc. but carry stale locks from older server versions (DUB-342).
++      const nextStatus = issueData.status !== undefined ? issueData.status : existing.status;
++      if (nextStatus !== "in_progress") {
+         patch.checkoutRunId = null;
+-        // Fix B: also clear the execution lock when leaving in_progress
+         patch.executionRunId = null;
+         patch.executionAgentNameKey = null;
+         patch.executionLockedAt = null;
+@@ -1690,6 +1900,18 @@ export function issueService(db: Db) {
+           );
+         }
+         const [enriched] = await withIssueLabels(tx, [updated]);
++        if (managerGuardrailLog) {
++          await logActivity(tx, {
++            companyId: existing.companyId,
++            actorType: actorAgentId ? "agent" : actorUserId ? "user" : "system",
++            actorId: actorAgentId ?? actorUserId ?? "system",
++            agentId: actorAgentId ?? null,
++            action: "issue.manager_assignee_guardrail",
++            entityType: "issue",
++            entityId: updated.id,
++            details: managerGuardrailLog,
++          });
++        }
+         return enriched;
+       };
+ 
+@@ -1741,39 +1963,6 @@ export function issueService(db: Db) {
+ 
+       const now = new Date();
+ 
+-      // Fix C: staleness detection — if executionRunId references a run that is no
+-      // longer queued or running, clear it before applying the execution lock condition
+-      // so a dead lock can't produce a spurious 409.
+-      // Wrapped in a transaction with SELECT FOR UPDATE to make the read + clear atomic,
+-      // matching the existing pattern in enqueueWakeup().
+-      await db.transaction(async (tx) => {
+-        await tx.execute(
+-          sql`select id from issues where id = ${id} for update`,
+-        );
+-        const preCheckRow = await tx
+-          .select({ executionRunId: issues.executionRunId })
+-          .from(issues)
+-          .where(eq(issues.id, id))
+-          .then((rows) => rows[0] ?? null);
+-        if (!preCheckRow?.executionRunId) return;
+-        const lockRun = await tx
+-          .select({ id: heartbeatRuns.id, status: heartbeatRuns.status })
+-          .from(heartbeatRuns)
+-          .where(eq(heartbeatRuns.id, preCheckRow.executionRunId))
+-          .then((rows) => rows[0] ?? null);
+-        if (!lockRun || (lockRun.status !== "queued" && lockRun.status !== "running")) {
+-          await tx
+-            .update(issues)
+-            .set({ executionRunId: null, executionAgentNameKey: null, executionLockedAt: null, updatedAt: now })
+-            .where(
+-              and(
+-                eq(issues.id, id),
+-                eq(issues.executionRunId, preCheckRow.executionRunId),
+-              ),
+-            );
+-        }
+-      });
+-
+       const sameRunAssigneeCondition = checkoutRunId
+         ? and(
+           eq(issues.assigneeAgentId, agentId),
+@@ -1783,6 +1972,50 @@ export function issueService(db: Db) {
+       const executionLockCondition = checkoutRunId
+         ? or(isNull(issues.executionRunId), eq(issues.executionRunId, checkoutRunId))
+         : isNull(issues.executionRunId);
++
++      // DUB-370: bind run snapshot + clear stale execution lock + stamp issue locks in one
++      // transaction so we never commit checkout/execution fields while the run row is still
++      // unbound (and coalescing cannot interleave a snapshot wipe between two commits).
++      if (checkoutRunId) {
++        const atomicCheckout = await db.transaction(async (tx) => {
++          await bindCheckoutRunSnapshotForIssueTx(tx, checkoutRunId, id, issueCompany.companyId);
++          await clearStaleIssueExecutionLockTx(tx, id, now);
++          return await tx
++            .update(issues)
++            .set({
++              assigneeAgentId: agentId,
++              assigneeUserId: null,
++              checkoutRunId,
++              executionRunId: checkoutRunId,
++              status: "in_progress",
++              startedAt: now,
++              updatedAt: now,
++            })
++            .where(
++              and(
++                eq(issues.id, id),
++                inArray(issues.status, expectedStatuses),
++                or(isNull(issues.assigneeAgentId), sameRunAssigneeCondition),
++                executionLockCondition,
++              ),
++            )
++            .returning()
++            .then((rows) => rows[0] ?? null);
++        });
++        if (atomicCheckout) {
++          const [enriched] = await withIssueLabels(db, [atomicCheckout]);
++          return enriched;
++        }
++        await prepareCheckoutHeartbeatRunForIssue(checkoutRunId, id, issueCompany.companyId);
++      }
++
++      // Fix C: staleness detection — if executionRunId references a run that is no
++      // longer queued or running, clear it before applying the execution lock condition
++      // so a dead lock can't produce a spurious 409.
++      await db.transaction(async (tx) => {
++        await clearStaleIssueExecutionLockTx(tx, id, now);
++      });
++
+       const updated = await db
+         .update(issues)
+         .set({
+@@ -1831,24 +2064,27 @@ export function issueService(db: Db) {
+         (current.executionRunId == null || current.executionRunId === checkoutRunId) &&
+         checkoutRunId
+       ) {
+-        const adopted = await db
+-          .update(issues)
+-          .set({
+-            checkoutRunId,
+-            executionRunId: checkoutRunId,
+-            updatedAt: new Date(),
+-          })
+-          .where(
+-            and(
+-              eq(issues.id, id),
+-              eq(issues.status, "in_progress"),
+-              eq(issues.assigneeAgentId, agentId),
+-              isNull(issues.checkoutRunId),
+-              or(isNull(issues.executionRunId), eq(issues.executionRunId, checkoutRunId)),
+-            ),
+-          )
+-          .returning()
+-          .then((rows) => rows[0] ?? null);
++        const adopted = await db.transaction(async (tx) => {
++          await bindCheckoutRunSnapshotForIssueTx(tx, checkoutRunId, id, issueCompany.companyId);
++          return await tx
++            .update(issues)
++            .set({
++              checkoutRunId,
++              executionRunId: checkoutRunId,
++              updatedAt: new Date(),
++            })
++            .where(
++              and(
++                eq(issues.id, id),
++                eq(issues.status, "in_progress"),
++                eq(issues.assigneeAgentId, agentId),
++                isNull(issues.checkoutRunId),
++                or(isNull(issues.executionRunId), eq(issues.executionRunId, checkoutRunId)),
++              ),
++            )
++            .returning()
++            .then((rows) => rows[0] ?? null);
++        });
+         if (adopted) return adopted;
+       }
+ 
+@@ -1980,6 +2216,11 @@ export function issueService(db: Db) {
+           status: "todo",
+           assigneeAgentId: null,
+           checkoutRunId: null,
++          // Release must clear orchestration lock metadata together with checkout;
++          // otherwise stale executionRunId contaminates future checkouts (DUB-341).
++          executionRunId: null,
++          executionAgentNameKey: null,
++          executionLockedAt: null,
+           updatedAt: new Date(),
+         })
+         .where(eq(issues.id, id))

@@ -1,10 +1,13 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, Button, Card, StarRating } from '@/components/design-system';
+import { FeatureIllustration, MascotIllustration } from '@/components/illustrations';
+import { FloatingElement } from '@/components/motion';
 import { useAuth } from '@/hooks/useAuth';
-import { isSupabaseConfigured } from '@/lib/supabase';
-import { disableGuestMode, getActiveChildProfile } from '@/lib/session';
+import { childAvatarToEmoji } from '@/lib/childAvatarEmoji';
+import { isSupabaseConfigured, supabase } from '@/lib/supabase';
+import { clearActiveChildProfile, disableGuestMode, isGuestModeEnabled } from '@/lib/session';
 
 interface ChildProgressRow {
   id: string;
@@ -16,57 +19,97 @@ interface ChildProgressRow {
   stars: number;
 }
 
-const DEFAULT_PROFILE_NAME_KEYS = {
-  maya: 'profile.defaultNames.maya',
-  noam: 'profile.defaultNames.noam',
-  liel: 'profile.defaultNames.liel',
-} as const;
-
 export default function ParentDashboard() {
   const { t } = useTranslation('common');
   const navigate = useNavigate();
-  const { signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const [error, setError] = useState('');
+  const [showAudioSettings, setShowAudioSettings] = useState(false);
 
-  const activeChild = getActiveChildProfile();
+  const useHostedData = isSupabaseConfigured && Boolean(user) && !isGuestModeEnabled();
+  const [children, setChildren] = useState<ChildProgressRow[]>([]);
+  const [loading, setLoading] = useState(useHostedData);
 
-  const getLocalizedChildName = (id: string, fallbackName: string) => {
-    if (id === 'guest') {
-      return t('profile.guestName');
+  useEffect(() => {
+    if (!useHostedData) {
+      setChildren([]);
+      setLoading(false);
+      return;
     }
 
-    const key = DEFAULT_PROFILE_NAME_KEYS[id as keyof typeof DEFAULT_PROFILE_NAME_KEYS];
-    if (!key) return fallbackName;
-    return t(key);
-  };
+    let cancelled = false;
 
-  const children = useMemo<ChildProgressRow[]>(() => {
-    const primaryName = activeChild
-      ? getLocalizedChildName(activeChild.id, activeChild.name)
-      : t('profile.guestName');
-    const primaryEmoji = activeChild?.emoji ?? '🧒';
+    async function fetchDashboard() {
+      try {
+        const { data: dbChildren } = await supabase
+          .from('children')
+          .select('id, name, avatar')
+          .order('created_at', { ascending: true });
 
-    return [
-      {
-        id: 'primary',
-        name: primaryName,
-        emoji: primaryEmoji,
-        gamesPlayed: 8,
-        learningMinutes: 31,
-        streak: 5,
-        stars: 3,
-      },
-      {
-        id: 'maya',
-        name: t('profile.defaultNames.maya'),
-        emoji: '🦊',
-        gamesPlayed: 6,
-        learningMinutes: 22,
-        streak: 3,
-        stars: 2,
-      },
-    ];
-  }, [activeChild, t]);
+        if (cancelled || !dbChildren?.length) {
+          if (!cancelled) { setChildren([]); setLoading(false); }
+          return;
+        }
+
+        const childIds = dbChildren.map((c) => c.id);
+
+        const [summariesRes, sessionsRes] = await Promise.all([
+          supabase
+            .from('child_game_summaries')
+            .select('child_id, total_sessions, total_attempts, best_stars')
+            .in('child_id', childIds),
+          supabase
+            .from('game_sessions')
+            .select('child_id, started_at, ended_at')
+            .in('child_id', childIds),
+        ]);
+
+        if (cancelled) return;
+
+        const summaries = summariesRes.data ?? [];
+        const sessions = sessionsRes.data ?? [];
+
+        const rows: ChildProgressRow[] = dbChildren.map((child) => {
+          const childSummaries = summaries.filter((s) => s.child_id === child.id);
+          const childSessions = sessions.filter((s) => s.child_id === child.id);
+
+          const gamesPlayed = childSummaries.reduce((sum, s) => sum + s.total_sessions, 0);
+          const bestStars = childSummaries.length > 0
+            ? Math.max(...childSummaries.map((s) => s.best_stars))
+            : 0;
+
+          let totalMs = 0;
+          for (const s of childSessions) {
+            if (s.ended_at && s.started_at) {
+              totalMs += new Date(s.ended_at).getTime() - new Date(s.started_at).getTime();
+            }
+          }
+
+          const uniqueDays = new Set(
+            childSessions.map((s) => s.started_at.slice(0, 10)),
+          );
+          const streak = uniqueDays.size;
+
+          return {
+            id: child.id,
+            name: child.name,
+            emoji: childAvatarToEmoji(child.avatar),
+            gamesPlayed,
+            learningMinutes: Math.round(totalMs / 60_000),
+            streak,
+            stars: bestStars,
+          };
+        });
+
+        if (!cancelled) { setChildren(rows); setLoading(false); }
+      } catch {
+        if (!cancelled) { setChildren([]); setLoading(false); }
+      }
+    }
+
+    void fetchDashboard();
+    return () => { cancelled = true; };
+  }, [useHostedData]);
 
   const totals = useMemo(() => {
     return children.reduce(
@@ -84,6 +127,7 @@ export default function ParentDashboard() {
     setError('');
 
     disableGuestMode();
+    clearActiveChildProfile();
 
     if (isSupabaseConfigured) {
       try {
@@ -94,8 +138,26 @@ export default function ParentDashboard() {
       }
     }
 
-    navigate('/login');
+    navigate('/');
   };
+
+  const handleViewReports = () => {
+    document
+      .getElementById('parent-dashboard-weekly-progress')
+      ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const handleAudioSettings = () => {
+    setShowAudioSettings((current) => !current);
+  };
+
+  if (loading) {
+    return (
+      <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '70vh' }}>
+        <MascotIllustration variant="loading" size={120} className="floating-element" />
+      </main>
+    );
+  }
 
   return (
     <main
@@ -108,17 +170,30 @@ export default function ParentDashboard() {
       }}
     >
       <section style={{ width: 'min(1080px, 100%)', display: 'grid', gap: 'var(--space-lg)' }}>
-        <header style={{ display: 'grid', gap: 'var(--space-xs)' }}>
-          <h1
-            style={{
-              fontSize: 'var(--font-size-2xl)',
-              color: 'var(--color-text-primary)',
-              fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
-            }}
-          >
-            {t('parentDashboard.title')}
-          </h1>
-          <p style={{ color: 'var(--color-text-secondary)' }}>{t('parentDashboard.subtitle')}</p>
+        <header
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr auto',
+            alignItems: 'center',
+            gap: 'var(--space-md)',
+          }}
+        >
+          <div style={{ display: 'grid', gap: 'var(--space-xs)' }}>
+            <h1
+              style={{
+                fontSize: 'var(--font-size-2xl)',
+                color: 'var(--color-text-primary)',
+                fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
+              }}
+            >
+              {t('parentDashboard.title')}
+            </h1>
+            <p style={{ color: 'var(--color-text-secondary)' }}>{t('parentDashboard.subtitle')}</p>
+          </div>
+
+          <FloatingElement>
+            <MascotIllustration variant="hint" size={110} />
+          </FloatingElement>
         </header>
 
         <div
@@ -129,6 +204,7 @@ export default function ParentDashboard() {
           }}
         >
           <Card padding="md" style={{ display: 'grid', gap: 'var(--space-xs)' }}>
+            <FeatureIllustration kind="games" size={56} />
             <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
               {t('parentDashboard.gamesPlayed')}
             </span>
@@ -138,6 +214,7 @@ export default function ParentDashboard() {
           </Card>
 
           <Card padding="md" style={{ display: 'grid', gap: 'var(--space-xs)' }}>
+            <FeatureIllustration kind="minutes" size={56} />
             <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
               {t('parentDashboard.learningMinutes')}
             </span>
@@ -147,6 +224,7 @@ export default function ParentDashboard() {
           </Card>
 
           <Card padding="md" style={{ display: 'grid', gap: 'var(--space-xs)' }}>
+            <FeatureIllustration kind="streak" size={56} />
             <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
               {t('parentDashboard.streak')}
             </span>
@@ -156,16 +234,17 @@ export default function ParentDashboard() {
           </Card>
 
           <Card padding="md" style={{ display: 'grid', gap: 'var(--space-xs)' }}>
+            <FeatureIllustration kind="activity" size={56} />
             <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
               {t('parentDashboard.todayActivity')}
             </span>
             <strong style={{ fontSize: 'var(--font-size-2xl)', color: 'var(--color-text-primary)' }}>
-              72%
+              {totals.learningMinutes > 0 ? Math.min(100, Math.round((totals.learningMinutes / 20) * 100)) : 0}%
             </strong>
           </Card>
         </div>
 
-        <section style={{ display: 'grid', gap: 'var(--space-sm)' }}>
+        <section id="parent-dashboard-weekly-progress" style={{ display: 'grid', gap: 'var(--space-sm)' }}>
           <h2 style={{ fontSize: 'var(--font-size-lg)', color: 'var(--color-text-primary)' }}>
             {t('parentDashboard.weeklyProgress')}
           </h2>
@@ -204,11 +283,31 @@ export default function ParentDashboard() {
           </div>
         </section>
 
+        {showAudioSettings ? (
+          <section id="parent-dashboard-audio-settings">
+            <Card padding="md" style={{ display: 'grid', gap: 'var(--space-sm)' }}>
+              <h2 style={{ fontSize: 'var(--font-size-lg)', color: 'var(--color-text-primary)' }}>
+                {t('parentDashboard.audioSettings')}
+              </h2>
+              <p style={{ color: 'var(--color-text-secondary)' }}>{t('parentDashboard.subtitle')}</p>
+              <Button variant="ghost" size="md" onClick={() => setShowAudioSettings(false)}>
+                {t('nav.back')}
+              </Button>
+            </Card>
+          </section>
+        ) : null}
+
         <footer style={{ display: 'flex', gap: 'var(--space-sm)', flexWrap: 'wrap' }}>
-          <Button variant="secondary" size="md">
+          <Button variant="secondary" size="md" onClick={handleViewReports}>
             {t('parentDashboard.viewReports')}
           </Button>
-          <Button variant="secondary" size="md">
+          <Button
+            variant="secondary"
+            size="md"
+            onClick={handleAudioSettings}
+            aria-controls="parent-dashboard-audio-settings"
+            aria-expanded={showAudioSettings}
+          >
             {t('parentDashboard.audioSettings')}
           </Button>
           <Button variant="danger" size="md" onClick={handleLogout}>

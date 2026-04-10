@@ -21,7 +21,7 @@ const COUNTING_PICNIC_GAME: Game = {
   componentKey: 'CountingPicnicGame',
   difficulty: 2,
   sortOrder: 1,
-  thumbnailUrl: null,
+  thumbnailUrl: '/images/games/thumbnails/countingPicnic/thumb-16x10.webp',
   audioUrl: '/audio/he/games/counting-picnic/instructions/intro.mp3',
   isPublished: true,
   createdAt: '2026-04-09T00:00:00.000Z',
@@ -84,24 +84,11 @@ export default function CountingPicnicPage() {
           style={{
             display: 'flex',
             gap: 'var(--space-sm)',
-            justifyContent: 'space-between',
+            justifyContent: 'flex-start',
             alignItems: 'center',
             flexWrap: 'wrap',
           }}
         >
-          <div style={{ display: 'grid', gap: 'var(--space-xs)' }}>
-            <h1
-              style={{
-                fontSize: 'var(--font-size-2xl)',
-                color: 'var(--color-text-primary)',
-                fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
-              }}
-            >
-              {t('games.countingPicnic.title')}
-            </h1>
-            <p style={{ color: 'var(--color-text-secondary)' }}>{t('games.countingPicnic.subtitle')}</p>
-          </div>
-
           <Button
             variant="secondary"
             size="lg"

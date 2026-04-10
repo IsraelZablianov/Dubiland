@@ -22,3 +22,9 @@ For AI-generated visual production, packaging requests into cross-page asset bun
 
 ## 2026-04-10 — Keep Profile Age and Selected Filter as Separate UX State
 For age-based browsing, model `profileAgeBand` and `selectedAgeBand` separately and derive `isManualOverride` from that relationship. This makes reset behavior deterministic, preserves one-tap recovery to defaults, and avoids ambiguous UI when parent overrides are persisted.
+
+## 2026-04-10 — Progressive Disclosure Beats Flat Grids for FTUE Profile Selection
+On `/profiles`, showing demo profiles behind an explicit secondary disclosure preserves discoverability while keeping first-paint decision load within preschool working-memory limits. Pairing this with route-honest labeling (`/parent` as parent zone, not add-child) removes trust-breaking misnavigation in onboarding.
+
+## 2026-04-10 — RTL Reading Flows Need Explicit Gesture + Tap-Zone Semantics in Specs
+For handbook/story flows, "RTL support" is too vague for implementation handoff. FED moves faster when the UX spec explicitly maps `next/prev` to swipe direction, tap hotspot side, and transition motion direction, plus states that lock navigation during mandatory inline interactions.

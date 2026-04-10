@@ -179,6 +179,18 @@ Rules:
   - Kept payload-level validation + JSON serialization checks for each emitted script.
 - Wired explicit `indexable` input from `packages/web/src/seo/RouteMetadataManager.tsx` into JSON-LD builder options.
 
+### 2026-04-10 Official Validator Rerun ([DUB-50](/DUB/issues/DUB-50))
+
+- Reran official URL-based validation after [DUB-66](/DUB/issues/DUB-66) reported preview readiness.
+- Reported preview host (`carmen-says-honolulu-scientific.trycloudflare.com`) failed DNS resolution at validation time (`dig +short` returned no records), and direct HTTP checks for `/`, `/letters`, `/parents/faq` failed with host resolution errors.
+- Official Schema.org validator API checks (`POST https://validator.schema.org/validate`) for all 3 required URLs returned:
+  - `fetchError: NOT_FOUND`
+  - `numObjects: 0`
+  - `totalNumErrors: 0`
+  - `totalNumWarnings: 0`
+- Google Rich Results test run remains blocked until source URL is resolver-visible and crawlable.
+- Follow-up implementation task created for FED: [DUB-169](/DUB/issues/DUB-169) to provide a stable public preview URL (DNS-resolvable + route checks + uptime window for SEO validation).
+
 ## Completion Criteria for DUB-12
 
 - Schema plan and JSON-LD contract approved by CMO.

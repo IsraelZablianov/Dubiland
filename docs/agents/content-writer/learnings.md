@@ -46,3 +46,36 @@ When validating profile-name coverage after FED/i18n changes, always verify `com
 
 ## 2026-04-10 — Close stale content lanes with fresh parity evidence and parent handoff
 When an assigned content issue stays `in_progress` without comments, rerun parity checks against current locale/manifest/files, then post a concise handoff comment on the parent implementation lane before marking the content issue `done` so implementation owners have direct integration evidence.
+
+## 2026-04-10 — Profile picker FTUE labels should stay under `common.profile` with slug parity checks
+When onboarding/profile-picker UX introduces secondary controls (parent zone, demo disclosure, demo sheet title), keep labels in `common.profile.*` and verify generated audio slug/path parity (`parent-zone`, `more-demo-profiles`, `demo-sheet-title`) in both manifest and filesystem before closing content work.
+
+## 2026-04-10 — Shape Safari QA-compliance should verify required family bundles as one parity unit
+When QA requires specific nested families (for example `prompts.inactivity`, `hints.corners`, `hints.edges`, `recovery.demo`, `rewards`), add them together in one locale pass, run `yarn generate-audio`, then report one family-scoped parity result (`locale key count`, `missing manifest`, `missing files`) so FED can wire runtime flows without key-by-key follow-up.
+
+## 2026-04-10 — Letter Sky Catcher packs need four synchronized families
+For `letterSkyCatcher`, ship narration as one synchronized set: `common.games.letterSkyCatcher.*` gameplay lines, `common.letters.anchorWords.*` per-letter anchors (22), `common.objects.names.*` vocabulary bank (88), and `common.parentDashboard.games.letterSkyCatcher.*` summary keys with audio overrides for placeholder-heavy lines.
+
+## 2026-04-10 — One heartbeat run can be issue-bound for checkout mutations
+When `checkout` returns `Checkout run context is bound to a different issue`, finish/comment the currently bound task and wait for a new run to handle other assigned tickets (even if they are in your inbox), instead of forcing cross-issue mutations in the same run.
+
+## 2026-04-10 — Letter Sky Catcher key evolution should preserve runtime aliases while expanding spec families
+When a game key schema evolves mid-implementation, keep current runtime keys (used in component logic) and add spec-complete families in parallel (`confusionContrast`, `remediation`, `precisionNudge`, icon-control instructions) instead of replacing keys in one sweep. Then run `yarn generate-audio` and report one consolidated parity check across `common.games.letterSkyCatcher.*`, `common.letters.{pronunciation,anchorWords}.*`, `common.objects.names.*`, and parent dashboard keys.
+
+## 2026-04-10 — Confusion remediation scripts should always name the first phoneme
+For confusion-pair lanes, keep copy in `common.games.letterSkyCatcher.prompts.{confusionContrast,remediation,precisionNudge}` explicitly centered on `הצליל הראשון` so narration aligns with fixed remediation sequencing. Regenerate only touched clips by deleting those mp3 targets before `yarn generate-audio`.
+
+## 2026-04-10 — Handbook script packs should bundle story pages, interaction lines, and reader shell under `common.handbooks`
+For interactive storybooks, keep all child-facing narration under one structured family (`common.handbooks.<slug>`) with explicit `pages`, `interactions`, `feedback`, `transitions`, and `completion` blocks, plus parent summary keys under `common.parentDashboard.handbooks.<slug>`. Then run one parity sweep against manifest and files so FE can integrate the full book without missing audio gaps.
+
+## 2026-04-10 — Root-family packs need synchronized game/root/word/dashboard families
+For morphology-light reading games, ship one synchronized set: `common.games.<gameKey>.*` gameplay narration, `common.roots.common.*` root labels, `common.words.pronunciation.*` pointed word clips, and `common.parentDashboard.games.<gameKey>.*` parent insights. Add audio overrides for placeholder-heavy dashboard strings and root-letter pronunciation so spoken output stays clear for ages 6-7, then run one parity sweep across all four families before handoff.
+
+## 2026-04-10 — Handbook literacy lanes need explicit pointed-text progression keys
+When Reading PM requires L1-L3 reading progression, encode it directly in i18n/audio under the handbook family (`readingProgression.level1/2/3` plus dedicated `decodePointedWord`, `decodePointedPhrase`, `decodeBridgePhrase`, `literalComprehension` interactions). This avoids ambiguity and makes progression testable in FE/QA.
+
+## 2026-04-10 — Decodable story packs should ship with implementation-contract aliases
+When FED wires a new game before content lands, i18n key contracts can diverge (for example `pages.<id>.narration.text` vs richer nested narration fields). For content lanes like `decodableMicroStories`, add a compatibility key layer that exactly matches runtime references (`controls`, `status`, `completion`, `adaptive`, page prompt/options) and then regenerate audio so typecheck and runtime both stay green.
+
+## 2026-04-10 — Sight-word lanes need spec keys plus runtime frame/phrase aliases
+For `sightWordSprint`, spec-complete families are not enough by themselves: the live component expects explicit `games.sightWordSprint.frames.*` and matching `phrases.pronunciation.<phraseId>` keys (`aniPo`, `ataKan`, etc.). Run `yarn typecheck` before final audio generation so missing runtime aliases are caught early and shipped in the same content pass.

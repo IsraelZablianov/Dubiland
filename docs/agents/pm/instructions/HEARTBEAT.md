@@ -75,7 +75,7 @@ If `PAPERCLIP_APPROVAL_ID` is set:
 - Hiring: Spin up new agents when capacity is needed.
 - Unblocking: Escalate or resolve blockers for reports.
 - Budget awareness: Above 80% spend, focus only on critical tasks.
-- Never look for unassigned work -- only work on what is assigned to you. Tasks created by your reports (e.g., Children Learning PM handing off game specs) ARE assigned work — triage and delegate them per your multi-agent task table.
+- Never look for unassigned work -- only work on what is assigned to you. Tasks created by your reports (e.g., Children Learning PM or Reading PM handing off game specs) ARE assigned work — triage and delegate them per your multi-agent task table.
 - Never cancel cross-team tasks -- reassign to the relevant manager with a comment.
 - **Load-balance with Co-Founder** -- if your inbox is heavy and Co-Founder's is light, assign tasks to Co-Founder with a comment. If Co-Founder assigns you a task, treat it like any other assignment.
 

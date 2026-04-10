@@ -23,6 +23,7 @@ Dubiland is a Hebrew learning platform for kids ages 3-7. A teddy bear mascot (�
 - `docs/` — specs, plans, game designs, architecture, knowledge
 - `docs/pm/` — PM (CEO) changelog and feature list
 - `docs/children-learning-pm/` — Children Learning PM changelog and feature list
+- `docs/reading-pm/` — Reading PM changelog and feature list
 - `docs/seo/` — SEO strategy, keyword research, audits, reports (SEO Expert maintains)
 - `docs/agents/{name}/instructions/` — Paperclip agent instructions (AGENTS.md, SOUL.md, HEARTBEAT.md, TOOLS.md)
 - `docs/agents/{name}/` — agent learnings, instincts, mistakes
@@ -83,9 +84,11 @@ PAPERCLIP_WAKE_REASON (optional), PAPERCLIP_WAKE_COMMENT_ID (optional)
 | PM | 10min | Product roadmap, feature specs, game ideas. Writes to `docs/games/`. Co-leads with Co-Founder. |
 | Co-Founder | 10min | Shares CEO duties with PM. Same authority, delegation rules, and direct reports. Splits tasks by expertise or load. |
 | Children Learning PM | 10min | Expert PM for children's edtech. Game specs, learning objectives, platform benchmarks (TinyTap, Khan Kids, etc.). |
+| Reading PM | 10min | Expert PM for Hebrew reading & literacy (age ~6). Reading curriculum ladder, game specs, educational videos, decodable stories. |
 | Architect | 10min | System design, data models, schema changes. Writes to `docs/architecture/`. |
 | FED Engineer | 10min | Builds UI, games, components. Implements specs. |
 | FED Engineer 2 | 10min | Builds UI, games, components. Implements specs. (Second frontend engineer.) |
+| FED Engineer 3 | 10min | Builds UI, games, components. Implements specs. (Third frontend engineer.) |
 | UX Designer | 10min | Design system, child-friendly layouts, design tokens. |
 | Gaming Expert | 10min | Game mechanics, difficulty, engagement for ages 3-7. |
 | Content Writer | 10min | Hebrew text, audio scripts. Runs `yarn generate-audio`. |

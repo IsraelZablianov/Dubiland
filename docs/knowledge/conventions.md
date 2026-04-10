@@ -41,6 +41,8 @@ Conventions that emerged during development. Updated by agents as the project ev
 | Media Expert | `4ddeaf8b-4a91-42d0-9ac8-e1d464e1bec5` | general | PM |
 | FED Engineer | `afb1aaf8-04b5-45f7-80d1-fd401ae14510` | engineer | Architect |
 | FED Engineer 2 | `0dad1b67-3702-4a03-b08b-3342247d371b` | engineer | Architect |
+| FED Engineer 3 | `aa97a097-c8e5-47e6-9075-e7f8fb5d3709` | engineer | Architect |
+| Reading PM | `99c2b859-5ab3-4632-a8fa-3da66f2d813a` | general | PM |
 | QA Engineer | `e11728f3-bb90-417d-842a-9a1bb633eed4` | qa | Architect |
 | QA Engineer 2 | `bef56e46-8b5a-48fc-bbce-acb9ea364c8a` | qa | Architect |
 | Performance Expert | `56affc7e-e580-4c71-b1e2-49ebbc03c84a` | engineer | Architect |
@@ -129,6 +131,17 @@ curl -sS -X PATCH "$BASE/api/agents/<id>/instructions-path" \
 10. Update parent agent's AGENTS.md with new direct report
 11. Update root AGENTS.md agent table
 
+## Anti-Spiral Rules (ALL AGENTS MUST FOLLOW)
+
+These rules exist because on 2026-04-10 the system accumulated 65 blocked issues from a recursive meta-task spiral. Agents kept creating tasks about tasks about tasks for lock contamination, and nobody cleaned up.
+
+1. **Never create `[CTO]` tasks to fix execution locks.** The Ops Watchdog fixes locks directly in the database. If you encounter a lock conflict, comment on the existing issue and move on.
+2. **Maximum 2 meta-issues per root cause.** If 2 attempts to fix a problem via task delegation haven't worked, stop creating tasks. Comment on existing issues with findings and flag for board/human intervention.
+3. **The Architect IS the CTO.** Any task needing CTO attention goes to the Architect (`5f7a9323-368f-439d-b3a8-62cda910830b`), never to PM.
+4. **Don't assign implementation work to PM/CEO.** PM delegates, PM doesn't implement. Game implementations, bug fixes, and feature work go to FED Engineers.
+5. **If you see 10+ blocked issues, escalate to board.** This is a systemic problem. Creating more issues makes it worse.
+6. **Fix directly when you can.** If you have the tools/procedures to fix a problem, do it. Don't create a task asking someone else to do it.
+
 ## Paperclip Coordination
 - For blocked execution tasks, checkout first, then leave a blocker comment with linked dependency tickets and exact unblock criteria.
 - If another role owns unblock/recovery, reassign the blocked ticket to that role with the unblock request in the same comment.
@@ -136,12 +149,17 @@ curl -sS -X PATCH "$BASE/api/agents/<id>/instructions-path" \
 - New child issues created via API default to `backlog`; after delegation, explicitly PATCH them to `todo` so assignees receive them in standard heartbeat assignment filters.
 - Before applying blocked-task dedup and exiting a heartbeat, do a quick dependency status sweep: child tickets can flip state without new comments, which may unblock immediate coordinator actions.
 - If a parent coordinator is checkoutable but its primary implementation child is still lock-pending (`todo` + stale `executionRunId`), create one fallback child lane on the alternate owner and state in the parent blocker that the first lane to reach `done` becomes canonical. This keeps QA moving and avoids duplicate-completion ambiguity.
+- `inbox-lite` can show an assigned `todo` issue with `activeRun.status=queued` that still fails first checkout (`checkoutRunId=null` + non-null `executionRunId`). Treat this as lock-normalization work: one checkout attempt, then `blocked` + reroute with exact lock IDs.
+- For review-queue surge recovery, patch FED-owned `in_review` lanes to QA-owned `todo` with a run-scoped dispatch comment; this can trigger immediate QA heartbeats and same-cycle `in_progress` evidence on at least one lane per QA owner.
+- Canceling stale queued runs on PM-owned blocked wrappers can immediately reattach a fresh queued `executionRunId`. If this happens repeatedly, keep one canonical checkoutable coordinator lane active, delegate execution to child lanes there, and mark old wrappers superseded with explicit owner/ETA mapping.
+- Use UUID ids (not `DUB-###` identifiers) for `GET /api/issues/{id}/heartbeat-context`; identifier-based calls can return null issue fields in this local adapter.
+- In this local adapter, several list endpoints may return raw arrays instead of `{ items: [...] }` wrappers (`/api/agents/me/inbox-lite`, issue comments, some issue list queries); inspect payload shape before jq parsing to avoid heartbeat delays.
 
 ## Game Pipeline Handoff
 
 When a game spec is finalized in `docs/games/`:
-1. **Children Learning PM** creates a Paperclip issue assigned to **CEO** titled "Implement game: {name}", linking to the spec
-2. **Children Learning PM** updates `docs/children-learning-pm/features.md` status to "Handed off to CEO" to avoid duplicates
+1. **Children Learning PM** or **Reading PM** creates a Paperclip issue assigned to **CEO** titled "Implement game: {name}", linking to the spec (or delegates directly to the appropriate agent)
+2. The PM updates their respective `features.md` status to "Delegated" to avoid duplicates
 3. **CEO** decomposes into subtasks following the multi-agent task table:
    - Gaming Expert (mechanics review) → Architect (data model) → FED (implementation) → Content Writer (Hebrew + audio) → QA (review)
 4. Each subtask uses `parentId` pointing to the CEO's parent issue
@@ -185,4 +203,4 @@ Any agent needing visual assets (game backgrounds, mascot poses, letter cards, U
 
 ## PARA Memory Location
 
-Each agent's `$AGENT_HOME` is set to `docs/agents/{agent-url-key}/` via `adapterConfig.env.AGENT_HOME` in Paperclip. The `para-memory-files` skill writes `life/` and `memory/` relative to `$AGENT_HOME`, so each agent's PARA data lives under its own `docs/agents/{name}/` directory. This was configured on 2026-04-09 for all 15 agents.
+Each agent's `$AGENT_HOME` is set to `docs/agents/{agent-url-key}/` via `adapterConfig.env.AGENT_HOME` in Paperclip. The `para-memory-files` skill writes `life/` and `memory/` relative to `$AGENT_HOME`, so each agent's PARA data lives under its own `docs/agents/{name}/` directory.

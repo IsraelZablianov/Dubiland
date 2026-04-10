@@ -10,6 +10,11 @@ const FAQ_ITEMS = [
   { questionKey: 'parents.faq5Q', answerKey: 'parents.faq5A' },
 ] as const;
 
+const PUBLIC_ENTRY_PRIMARY_CTA_STYLE = {
+  minHeight: 'var(--touch-primary-action-prominent)',
+  padding: 'var(--space-md) var(--space-xl)',
+};
+
 export default function ParentsFaq() {
   const { t } = useTranslation('public');
 
@@ -38,7 +43,7 @@ export default function ParentsFaq() {
           </Button>
         </Link>
         <Link to="/login">
-          <Button variant="primary" size="lg">
+          <Button variant="primary" size="lg" style={PUBLIC_ENTRY_PRIMARY_CTA_STYLE}>
             {t('header.tryFree')}
           </Button>
         </Link>

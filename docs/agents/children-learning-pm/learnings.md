@@ -8,6 +8,12 @@ Append new entries after each completed task.
 What was learned and why it matters.
 -->
 
+## 2026-04-10 — Storybook Features Need Explicit Session Boundaries to Protect Learning Quality
+Interactive handbook concepts can easily drift into passive video consumption unless the spec defines mandatory interaction beats, mid-book stopping points, and non-autoplay exit behavior. Writing those boundaries directly into the product loop keeps sessions short, active, and measurable for ages 3-7.
+
+## 2026-04-10 — Movement Mechanics Increase Phonics Engagement but Require Tight Distractor Ratios
+Runner-style letter catching can improve engagement for ages 4-7, but learning quality drops fast if non-target density is too high too early. Keeping early rounds near 60/40 target-to-distractor and only increasing one variable at a time preserves both confidence and measurable phonics signal.
+
 ## 2026-04-10 — Blocked Engineering Lanes Need Scope Patches, Not Replacement Tickets
 When QA blocks execution lanes for incomplete acceptance criteria, the fastest PM action is to patch the existing child issue descriptions with line-level requirements and reopen them to `todo`. Reusing active lanes keeps ownership/history intact and prevents duplicate ticket sprawl.
 

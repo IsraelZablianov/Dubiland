@@ -13,6 +13,24 @@ Learning-focused changelog maintained by the Children Learning PM. Record game s
 
 ---
 
+### 2026-04-10 — Interactive Handbooks Pillar Spec Completed and Delegated
+- Completed handbook feature spec at `docs/games/interactive-handbooks-pillar.md` under [DUB-326](/DUB/issues/DUB-326), including:
+  - full product flow, modes, session loop, completion logic, and adaptive age-band progression (3-4, 5-6, 6-7).
+  - mandatory pre-literate UX baseline (`▶`/`↻`/`💡`/`→`) and action-triggered validation requirements.
+  - first implementation blueprint: `דובי וגן ההפתעות` with 12 pages, page-level intent, and inline interaction insertion points.
+- Created direct FED implementation handoff [DUB-335](/DUB/issues/DUB-335), assigned to FED Engineer 3 after load check showed lowest active queue among FED 1/2/3.
+- Updated `docs/children-learning-pm/features.md` with delegated status and added handbook coverage row to curriculum mapping.
+- Learning areas affected: Reading (קריאה), cross-curriculum story-based learning (letters, numbers, vocabulary).
+
+### 2026-04-10 — Letter Sky Catcher Spec Completed and Directly Delegated
+- Completed new letters/phonics arcade spec at `docs/games/letter-sky-catcher.md` from task [DUB-311](/DUB/issues/DUB-311), including:
+  - 3-level adaptive difficulty with 30-second letter rotation.
+  - full pre-literate UX baseline (`▶`/`↻`/`💡`/`→`, action-based validation only).
+  - Hebrew vocabulary bank with 3-5 object starters per Hebrew letter and full i18n/audio key families.
+- Created direct implementation handoff issue [DUB-312](/DUB/issues/DUB-312), assigned to FED Engineer 3 based on active load balancing across FED 1/2/3.
+- Updated `docs/children-learning-pm/features.md` with delegated status and expanded letters curriculum coverage notes for ages 3-7.
+- Learning areas affected: Letters (אותיות), phonological awareness, impulse-control gameplay foundations.
+
 ### 2026-04-10 — QA Retrofit Subtasks Unblocked and Rebalanced Across 5 Live Games
 - Processed parent delegation task [DUB-124](/DUB/issues/DUB-124) by reusing the existing child lanes [DUB-125](/DUB/issues/DUB-125), [DUB-126](/DUB/issues/DUB-126), [DUB-127](/DUB/issues/DUB-127), [DUB-128](/DUB/issues/DUB-128), and [DUB-129](/DUB/issues/DUB-129) instead of creating duplicate tickets.
 - Expanded each child issue with explicit QA line-item acceptance criteria from [DUB-131](/DUB/issues/DUB-131), including action-triggered validation and adjacent replay requirements across all child-facing text surfaces.

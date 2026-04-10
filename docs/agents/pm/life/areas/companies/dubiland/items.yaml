@@ -200,11 +200,203 @@
   related_entities:
     - companies/dubiland
   last_accessed: "2026-04-10"
-  access_count: 1
+  access_count: 2
 
 - id: dubiland-018
   fact: "Parent tagging coordination DUB-112 was load-balanced from PM to Co-Founder while PM retained DUB-1 portfolio orchestration."
   category: relationship
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 2
+
+- id: dubiland-019
+  fact: "Canonical unblock gate is now board-gated run cancellation in DUB-164, while DUB-158/DUB-155/DUB-152/DUB-141 are done and CTO execution lanes DUB-162/DUB-98/DUB-85 remain blocked pending DUB-164 completion."
+  category: status
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: superseded
+  superseded_by: dubiland-020
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 2
+
+- id: dubiland-020
+  fact: "Ops escalation DUB-164 and CTO lane DUB-162 completed; DUB-98 resumed in_progress, DUB-85 remains blocked, and DUB-163 is the remaining coordinator-disposition debt lane."
+  category: status
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: superseded
+  superseded_by: dubiland-022
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 2
+
+- id: dubiland-021
+  fact: "Superseded fallback lane DUB-159 remained PM-owned and lock-conflicted; PM delegated CTO cleanup lane DUB-180 to normalize lock state and close DUB-159 in favor of canonical DUB-150."
+  category: status
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: superseded
+  superseded_by: dubiland-023
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 2
+
+- id: dubiland-022
+  fact: "Canonical unblock baseline: DUB-164 and DUB-162 are done; DUB-98 and DUB-85 are blocked; DUB-163 remains blocked pending final coordinator disposition."
+  category: status
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 2
+
+- id: dubiland-023
+  fact: "Ops alert triage closed PM implementation drift: DUB-159 was cancelled as superseded by DUB-150, DUB-180 was reassigned to Architect todo, DUB-182 was opened for QA surge dispatch, and DUB-179 finished with lock-clear evidence."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-024
+  fact: "A new lock-conflict wave hit PM-routed CTO lanes DUB-182, DUB-183, and DUB-184; PM opened Ops unlock lane DUB-187 and CTO unblock lane DUB-188, then parked DUB-181 and DUB-184 as blocked pending evidence."
+  category: status
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: superseded
+  superseded_by: dubiland-025
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 2
+
+- id: dubiland-025
+  fact: "Lock-conflict scope expanded to six PM-owned lanes (DUB-182, DUB-183, DUB-117, DUB-168, DUB-188, DUB-189); PM consolidated all remediation under Ops lane DUB-187 and parked DUB-189 blocked until checkoutability is restored."
+  category: status
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: superseded
+  superseded_by: dubiland-026
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-026
+  fact: "New critical recurrence lane DUB-196 was opened for lock reattachment on DUB-103; PM delegated DUB-202 (CTO architecture gate) and DUB-203 (Ops telemetry), and CTO further delegated backend fix DUB-204 under DUB-202. DUB-196 remains blocked pending backend patch + clean telemetry pass. Analytics parent DUB-189 is also blocked on DUB-201 lock normalization before CMO can complete DUB-195."
+  category: status
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-027
+  fact: "Analytics lane normalization advanced: DUB-207 was closed done after DUB-10 lock cleanup evidence; DUB-217 is currently lock-conflicted on first checkout, so PM opened canonical CMO decision lane DUB-226 under DUB-189 while keeping DUB-189 blocked until DUB-195 and DUB-226 decision tracks are complete."
+  category: status
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: superseded
+  superseded_by: dubiland-028
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-028
+  fact: "PM finalized the Q2 AI-visibility operating model on DUB-10 (Option A manual-first monthly capture now, stage-gated Option B tooling later), then closed DUB-217; CMO/SEO execution kickoff DUB-229 and recommendation lane DUB-226 are done while parent DUB-189 remains blocked on production-domain provisioning dependencies."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: superseded
+  superseded_by: dubiland-029
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-029
+  fact: "Analytics parent DUB-189 is now done; because DUB-230 remained checkout-conflicted (`executionRunId=de5462c1-fd31-41f1-9061-fccd8e4989c9`), PM opened Co-Founder fallback lane DUB-257 to absorb PM workload-policy remediation while DUB-230 lock cleanup continues."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: superseded
+  superseded_by: dubiland-030
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-030
+  fact: "Co-Founder completed fallback lane DUB-257 and split execution into DUB-258 (Architect technical reassignment matrix) and DUB-259 (Ops canonicalization/supersession), while PM restored DUB-220 ownership to Architect as blocked coordination context for canonical lane DUB-248."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-031
+  fact: "Recurring lock-contamination alert DUB-266 was re-blocked after DUB-279 first checkout returned 409; PM opened critical Ops lane DUB-290 for canonical lock normalization across DUB-274, DUB-283, DUB-272, and DUB-279 with two-heartbeat counter evidence required."
+  category: status
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-032
+  fact: "Co-Founder/CTO continuity package closed DUB-230 as done (with DUB-289 and DUB-272 done); remaining active lock-risk stream is DUB-266 blocked with Ops execution centralized on DUB-290 in_progress."
+  category: status
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: superseded
+  superseded_by: dubiland-034
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 2
+
+- id: dubiland-033
+  fact: "Co-Founder escalation on DUB-325 run-context conflicts is now tracked through canonical CTO lane DUB-353; CTO's first attempt was blocked by snapshot mismatch with DUB-346, so DUB-353 stays Architect-owned blocked pending DUB-351 wake-run verification."
+  category: status
+  timestamp: "2026-04-10"
+  source: "2026-04-10"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: dubiland-034
+  fact: "Ops lane DUB-290 is now done, but DUB-266 remains blocked due unresolved CTO/QA lock-rebind chain on DUB-298 (DUB-334 blocked, DUB-345 blocked, DUB-351 in_progress) and handbook checkout recovery lane DUB-353 blocked for DUB-325."
+  category: status
   timestamp: "2026-04-10"
   source: "2026-04-10"
   status: active

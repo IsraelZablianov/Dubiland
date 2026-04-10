@@ -21,7 +21,7 @@ const COLOR_GARDEN_GAME: Game = {
   componentKey: 'ColorGardenGame',
   difficulty: 2,
   sortOrder: 2,
-  thumbnailUrl: null,
+  thumbnailUrl: '/images/games/thumbnails/colorGarden/thumb-16x10.webp',
   audioUrl: '/audio/he/games/color-garden/instructions/intro.mp3',
   isPublished: true,
   createdAt: '2026-04-10T00:00:00.000Z',

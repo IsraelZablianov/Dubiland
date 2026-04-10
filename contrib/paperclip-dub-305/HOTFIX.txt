@@ -1,0 +1,42 @@
+DUB-305: Manager-assignee guardrail missing from published @paperclipai/server@2026.403.0
+
+Root cause
+----------
+npm/npx `@paperclipai/server@2026.403.0` + `@paperclipai/shared@2026.403.0` did not include the DUB-284 guardrail (create/update reroute, override + rationale validation, activity log).
+
+Hotfix (local npx tree)
+-----------------------
+Target: the resolved npx directory, e.g.
+  ~/.npm/_npx/43414d9b790239bb/node_modules/
+
+1) Add file:
+   @paperclipai/server/dist/services/issue-manager-assignee-guardrail.js
+   (copy from this folder: issue-manager-assignee-guardrail.js)
+
+2) Patch @paperclipai/shared/dist/validators/issue.js
+   - Introduce managerAssigneeOverrideShape + refineManagerAssigneeOverride
+   - Split createIssueCoreSchema; export createIssueSchema / updateIssueSchema with merge + superRefine
+   (match contrib/paperclip packages/shared/src/validators/issue.ts on branch with DUB-284)
+
+3) Patch @paperclipai/server/dist/services/issues.js
+   - import isImplementationLaneTitle, resolveManagerAssigneeGuardrail; import logActivity
+   - create(): destructure managerAssigneeOverride fields; run guardrail before assertAssignableAgent; log after insert
+   - update(): destructure actorAgentId, actorUserId, managerAssigneeOverride fields; backfill guardrail; log after update
+
+4) Patch @paperclipai/server/dist/routes/issues.js
+   - updateIssueRouteSchema must not use .extend on ZodEffects — use:
+     updateIssueSchema.and(z.object({ interrupt: z.boolean().optional() }))
+   - PATCH handler: pass actorAgentId / actorUserId into svc.update for audit trail
+
+5) Restart `npx paperclipai run` (Node does not reload patched dist).
+
+Verification
+------------
+- POST create with [FED] title + PM assignee → assignee becomes first IC by name (agents.name ASC).
+- POST with managerAssigneeOverride:true and no / short rationale → 400 validation error.
+- PATCH title from non-implementation to [FED] with PM assignee → reroute.
+- GET /api/issues/:id/activity includes action issue.manager_assignee_guardrail.
+
+Upstream
+--------
+Ship DUB-284 (or equivalent) in a released `@paperclipai/server` and remove this hotfix.

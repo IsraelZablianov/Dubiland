@@ -1,0 +1,20 @@
+--- a/server/src/services/issues.ts
++++ b/server/src/services/issues.ts
+@@ -1626,12 +1626,15 @@
+       if (issueData.status && issueData.status !== "cancelled") {
+         patch.cancelledAt = null;
+       }
+-      if (issueData.status && issueData.status !== "in_progress") {
++      // Non–in_progress issues must never retain checkout/execution lock metadata.
++      // Use merged next status so a PATCH without `status` still repairs rows that are
++      // already done/cancelled/etc. but carry stale locks from older server versions (DUB-342).
++      const nextStatus = issueData.status !== undefined ? issueData.status : existing.status;
++      if (nextStatus !== "in_progress") {
+         patch.checkoutRunId = null;
+-        // Fix B: also clear the execution lock when leaving in_progress
+         patch.executionRunId = null;
+         patch.executionAgentNameKey = null;
+         patch.executionLockedAt = null;
+       }
+       if (
+         (issueData.assigneeAgentId !== undefined && issueData.assigneeAgentId !== existing.assigneeAgentId) ||

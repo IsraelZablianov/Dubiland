@@ -87,3 +87,39 @@ Why it matters:
 - prevents culturally mismatched cues in Hebrew learning surfaces,
 - keeps acceptance reviews smoother for PM/FED,
 - provides reproducible visual proof in task comments without adding heavy tooling.
+
+## 2026-04-10 — P0 thumbnail pack gate: text-free + RTL-flow + contact sheet
+
+For game thumbnail packs, run a fast acceptance gate before closing:
+- verify no baked glyphs/letters inside assets,
+- verify directional visuals honor RTL learning flow where relevant,
+- export a single contact sheet from the 1x set for PM/UX quick review.
+
+Why it matters:
+- prevents locale regressions in Hebrew-first surfaces,
+- catches art-direction mismatch before FED integration,
+- shortens review cycles with one preview artifact.
+
+## 2026-04-10 — Handbook media planning should lock a manifest contract before rendering
+
+For interactive handbook features, media delivery should start with a manifest-first plan:
+- per-page video bed mapping,
+- audio-key/timestamp pause points,
+- preload tiers and byte budgets,
+- fixed render profiles.
+
+Why it matters:
+- allows FED to wire a deterministic preload + interaction pause engine,
+- lets Content Writer and Media run in parallel using stable key contracts,
+- avoids re-render churn when only narration timing changes.
+
+## 2026-04-10 — Handle stale `issue_assigned` wakes by trusting inbox state
+
+If `PAPERCLIP_WAKE_REASON=issue_assigned` points to a task that is already `done` and not assigned to this agent, treat it as a stale wake signal:
+- verify with `inbox-lite`,
+- run one fallback assigned-issue query,
+- if still empty, exit heartbeat without checkout.
+
+Why it matters:
+- avoids accidental takeovers,
+- keeps heartbeats fast and deterministic.

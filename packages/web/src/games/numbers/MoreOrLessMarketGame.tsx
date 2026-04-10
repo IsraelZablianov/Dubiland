@@ -113,10 +113,11 @@ interface SummaryReport {
 
 const TOTAL_ROUNDS = 9;
 const CHECKPOINT_ROUNDS = [4, 7];
+const NON_CRITICAL_AUDIO_DELAY_MS = 5000;
 
 const TOKEN_POOL_BY_THEME: Record<ThemeKey, string[]> = {
   basketFruits: ['🍊', '🍎', '🍐', '🍓'],
-  basketToys: ['🧸', '🧩', '🚗', '🪀'],
+  basketToys: ['🪁', '🧩', '🚗', '🪀'],
   basketShells: ['🐚', '🪸', '🦀', '🏖️'],
 };
 
@@ -417,6 +418,10 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
 
   const [selectedSide, setSelectedSide] = useState<Side | null>(null);
   const [selectedBadge, setSelectedBadge] = useState<ComparisonKind | null>(null);
+  const [draggingBadgeKind, setDraggingBadgeKind] = useState<ComparisonKind | null>(null);
+  const [badgeSlotHot, setBadgeSlotHot] = useState(false);
+  const [badgeSlotAcceptPulse, setBadgeSlotAcceptPulse] = useState(false);
+  const [badgeSlotRejectPulse, setBadgeSlotRejectPulse] = useState(false);
 
   const [showCountScaffold, setShowCountScaffold] = useState(round.showCountScaffold);
   const [revealedCountBySide, setRevealedCountBySide] = useState<Record<Side, boolean>>({
@@ -434,6 +439,8 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
 
   const [sessionComplete, setSessionComplete] = useState(false);
   const [summary, setSummary] = useState<SummaryReport | null>(null);
+  const [scorePulse, setScorePulse] = useState(false);
+  const [nonCriticalAudioReady, setNonCriticalAudioReady] = useState(false);
 
   const [roundMessage, setRoundMessage] = useState<RoundMessage>({
     key: 'games.moreOrLessMarket.instructions.intro',
@@ -474,15 +481,24 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
     [playAudioKey],
   );
 
+  const markNonCriticalAudioReady = useCallback(() => {
+    setNonCriticalAudioReady(true);
+  }, []);
+
   const resetRoundInteractions = useCallback((nextRound: RoundState) => {
     setSelectedSide(null);
     setSelectedBadge(null);
+    setDraggingBadgeKind(null);
+    setBadgeSlotHot(false);
+    setBadgeSlotAcceptPulse(false);
+    setBadgeSlotRejectPulse(false);
     setShowCountScaffold(nextRound.showCountScaffold);
     setRevealedCountBySide({ left: false, right: false });
     setHighlightCorrectSide(false);
     setMistakesThisRound(0);
     setHintStep(0);
     setUsedHintThisRound(false);
+    setScorePulse(false);
   }, []);
 
   const loadRound = useCallback(
@@ -535,6 +551,9 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
       }
 
       const roundWasStruggle = forcedStruggle || usedHintThisRound || mistakesThisRound > 0;
+      if (!roundWasStruggle) {
+        setScorePulse(true);
+      }
 
       const updatedComparisonStats: SessionStats['comparisonStats'] = {
         ...sessionStats.comparisonStats,
@@ -679,10 +698,17 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
             : candidateSide === round.correctSide;
 
       if (isCorrect) {
+        if (round.requiresBadge) {
+          setBadgeSlotHot(false);
+          setBadgeSlotAcceptPulse(true);
+        }
         completeRound();
         return;
       }
 
+      if (round.requiresBadge) {
+        setBadgeSlotRejectPulse(true);
+      }
       registerMistake();
     },
     [
@@ -703,6 +729,7 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
         return;
       }
 
+      markNonCriticalAudioReady();
       setSelectedSide(side);
 
       if (!round.requiresBadge) {
@@ -720,6 +747,7 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
     [
       checkpointPaused,
       evaluateSelection,
+      markNonCriticalAudioReady,
       round.requiresBadge,
       selectedBadge,
       sessionComplete,
@@ -733,6 +761,7 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
         return;
       }
 
+      markNonCriticalAudioReady();
       setSelectedBadge(badge);
 
       if (round.comparison === 'equal') {
@@ -750,6 +779,7 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
     [
       checkpointPaused,
       evaluateSelection,
+      markNonCriticalAudioReady,
       round.comparison,
       round.requiresBadge,
       selectedSide,
@@ -760,12 +790,16 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
 
   const handleBadgeDrop = useCallback(
     (badgeText: string) => {
+      markNonCriticalAudioReady();
+
       if (badgeText !== 'more' && badgeText !== 'less' && badgeText !== 'equal') {
+        setBadgeSlotRejectPulse(true);
         return;
       }
+      setBadgeSlotHot(false);
       handleBadgeChoice(badgeText);
     },
-    [handleBadgeChoice],
+    [handleBadgeChoice, markNonCriticalAudioReady],
   );
 
   const handleReplayPrompt = useCallback(() => {
@@ -773,6 +807,7 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
       return;
     }
 
+    markNonCriticalAudioReady();
     setUsedHintThisRound(true);
     setHintStep((current) => Math.max(current, 1));
     setMessageWithAudio('games.moreOrLessMarket.hints.useReplay', 'hint');
@@ -780,13 +815,20 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
     window.setTimeout(() => {
       setMessageWithAudio(round.promptKey, 'neutral');
     }, 180);
-  }, [checkpointPaused, round.promptKey, sessionComplete, setMessageWithAudio]);
+  }, [
+    checkpointPaused,
+    markNonCriticalAudioReady,
+    round.promptKey,
+    sessionComplete,
+    setMessageWithAudio,
+  ]);
 
   const handleHint = useCallback(() => {
     if (sessionComplete || checkpointPaused) {
       return;
     }
 
+    markNonCriticalAudioReady();
     setUsedHintThisRound(true);
     setShowCountScaffold(true);
 
@@ -811,20 +853,21 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
 
       return nextHintStep;
     });
-  }, [checkpointPaused, round, sessionComplete, setMessageWithAudio]);
+  }, [checkpointPaused, markNonCriticalAudioReady, round, sessionComplete, setMessageWithAudio]);
 
   const handleRetry = useCallback(() => {
     if (sessionComplete || checkpointPaused) {
       return;
     }
 
+    markNonCriticalAudioReady();
     setSelectedSide(null);
     setSelectedBadge(null);
     setShowCountScaffold(true);
     setUsedHintThisRound(true);
     setHintStep((current) => Math.max(current, 1));
     setMessageWithAudio('games.moreOrLessMarket.hints.gentleRetry', 'hint');
-  }, [checkpointPaused, sessionComplete, setMessageWithAudio]);
+  }, [checkpointPaused, markNonCriticalAudioReady, sessionComplete, setMessageWithAudio]);
 
   const revealCountOnSide = useCallback(
     (side: Side) => {
@@ -832,6 +875,7 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
         return;
       }
 
+      markNonCriticalAudioReady();
       setUsedHintThisRound(true);
       setShowCountScaffold(true);
       setRevealedCountBySide((current) => ({
@@ -840,7 +884,7 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
       }));
       setMessageWithAudio('games.moreOrLessMarket.hints.tapToCount', 'hint');
     },
-    [round.level, setMessageWithAudio],
+    [markNonCriticalAudioReady, round.level, setMessageWithAudio],
   );
 
   const handleContinueAfterCheckpoint = useCallback(() => {
@@ -858,13 +902,78 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
     accuracy: summary ? `${summary.firstAttemptAccuracy}%` : '0%',
     hintLevel: summary?.averageHintLevel ?? '0.0',
   });
+  const hasRoundInteraction = selectedSide !== null || selectedBadge !== null || hintStep > 0 || mistakesThisRound > 0;
 
   useEffect(() => {
-    setMessageWithAudio('games.moreOrLessMarket.instructions.intro', 'neutral');
+    let readinessTimeout: number | null = null;
+    const paintFrame = window.requestAnimationFrame(() => {
+      readinessTimeout = window.setTimeout(() => {
+        setNonCriticalAudioReady(true);
+      }, NON_CRITICAL_AUDIO_DELAY_MS);
+    });
+
+    return () => {
+      window.cancelAnimationFrame(paintFrame);
+      if (readinessTimeout !== null) {
+        window.clearTimeout(readinessTimeout);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    let introTimeout: number | null = null;
+    const paintFrame = window.requestAnimationFrame(() => {
+      introTimeout = window.setTimeout(() => {
+        setMessageWithAudio('games.moreOrLessMarket.instructions.intro', 'neutral');
+      }, 320);
+    });
+
+    return () => {
+      window.cancelAnimationFrame(paintFrame);
+      if (introTimeout !== null) {
+        window.clearTimeout(introTimeout);
+      }
+    };
   }, [setMessageWithAudio]);
 
   useEffect(() => {
-    if (sessionComplete || checkpointPaused) {
+    if (!badgeSlotAcceptPulse) {
+      return;
+    }
+    const timeout = window.setTimeout(() => {
+      setBadgeSlotAcceptPulse(false);
+    }, 260);
+    return () => {
+      window.clearTimeout(timeout);
+    };
+  }, [badgeSlotAcceptPulse]);
+
+  useEffect(() => {
+    if (!badgeSlotRejectPulse) {
+      return;
+    }
+    const timeout = window.setTimeout(() => {
+      setBadgeSlotRejectPulse(false);
+    }, 220);
+    return () => {
+      window.clearTimeout(timeout);
+    };
+  }, [badgeSlotRejectPulse]);
+
+  useEffect(() => {
+    if (!scorePulse) {
+      return;
+    }
+    const timeout = window.setTimeout(() => {
+      setScorePulse(false);
+    }, 340);
+    return () => {
+      window.clearTimeout(timeout);
+    };
+  }, [scorePulse]);
+
+  useEffect(() => {
+    if (sessionComplete || checkpointPaused || !nonCriticalAudioReady || hasRoundInteraction) {
       return;
     }
 
@@ -875,7 +984,7 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
     return () => {
       window.clearTimeout(promptTimeout);
     };
-  }, [checkpointPaused, playAudioKey, round.promptKey, sessionComplete]);
+  }, [checkpointPaused, hasRoundInteraction, nonCriticalAudioReady, playAudioKey, round.promptKey, sessionComplete]);
 
   useEffect(() => {
     return () => {
@@ -977,6 +1086,25 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
           })}
         </div>
 
+        <div className="more-less-market__score-strip" aria-live="polite">
+          <span
+            className={[
+              'more-less-market__score-pill',
+              scorePulse ? 'more-less-market__score-pill--pulse' : '',
+            ].join(' ')}
+            aria-label={t('feedback.excellent')}
+          >
+            <span aria-hidden="true">⭐</span>
+            <span>{sessionStats.firstAttemptSuccesses}</span>
+          </span>
+          <span className="more-less-market__score-pill" aria-label={t('nav.next')}>
+            <span aria-hidden="true">🧩</span>
+            <span>
+              {roundConfig.roundNumber} / {TOTAL_ROUNDS}
+            </span>
+          </span>
+        </div>
+
         <p className={`more-less-market__message more-less-market__message--${roundMessage.tone}`} aria-live="polite">
           {messageText}
         </p>
@@ -1050,10 +1178,16 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
                     className={[
                       'more-less-market__badge',
                       selectedBadge === badgeKind ? 'more-less-market__badge--selected' : '',
+                      draggingBadgeKind === badgeKind ? 'more-less-market__badge--dragging' : '',
                     ].join(' ')}
                     draggable
                     onDragStart={(event) => {
                       event.dataTransfer.setData('text/plain', badgeKind);
+                      setDraggingBadgeKind(badgeKind);
+                    }}
+                    onDragEnd={() => {
+                      setDraggingBadgeKind((current) => (current === badgeKind ? null : current));
+                      setBadgeSlotHot(false);
                     }}
                     onClick={() => handleBadgeChoice(badgeKind)}
                     aria-label={t(`games.moreOrLessMarket.prompts.${badgeKind}.numbers` as const)}
@@ -1064,12 +1198,26 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
               </div>
 
               <div
-                className="more-less-market__badge-slot"
+                className={[
+                  'more-less-market__badge-slot',
+                  (badgeSlotHot || draggingBadgeKind !== null) ? 'more-less-market__badge-slot--hot' : '',
+                  badgeSlotAcceptPulse ? 'more-less-market__badge-slot--accept' : '',
+                  badgeSlotRejectPulse ? 'more-less-market__badge-slot--reject' : '',
+                ].join(' ')}
+                onDragEnter={(event) => {
+                  event.preventDefault();
+                  setBadgeSlotHot(true);
+                }}
+                onDragLeave={() => {
+                  setBadgeSlotHot(false);
+                }}
                 onDragOver={(event) => {
                   event.preventDefault();
+                  setBadgeSlotHot(true);
                 }}
                 onDrop={(event) => {
                   event.preventDefault();
+                  setDraggingBadgeKind(null);
                   const badgeText = event.dataTransfer.getData('text/plain');
                   handleBadgeDrop(badgeText);
                 }}
@@ -1214,6 +1362,7 @@ const moreLessMarketStyles = `
   .more-less-market__progress-dot--active {
     background: linear-gradient(90deg, var(--color-accent-info), var(--color-accent-success));
     box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-accent-info) 28%, transparent);
+    animation: more-less-progress-breathe 1.2s ease-in-out infinite;
   }
 
   .more-less-market__progress-dot--done {
@@ -1229,6 +1378,31 @@ const moreLessMarketStyles = `
     color: var(--color-text-primary);
     line-height: 1.6;
     font-size: var(--font-size-md);
+  }
+
+  .more-less-market__score-strip {
+    display: flex;
+    gap: var(--space-xs);
+    flex-wrap: wrap;
+  }
+
+  .more-less-market__score-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: var(--radius-full);
+    border: 2px solid color-mix(in srgb, var(--color-theme-primary) 24%, transparent);
+    background: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    font-weight: var(--font-weight-bold);
+    min-height: 44px;
+    padding-inline: var(--space-sm);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  }
+
+  .more-less-market__score-pill--pulse {
+    animation: more-less-score-bump 340ms var(--motion-ease-bounce);
+    box-shadow: 0 8px 16px color-mix(in srgb, var(--color-accent-success) 20%, transparent);
   }
 
   .more-less-market__message--hint {
@@ -1366,11 +1540,17 @@ const moreLessMarketStyles = `
     font-size: 1.35rem;
     font-weight: var(--font-weight-extrabold);
     cursor: grab;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
   }
 
   .more-less-market__badge--selected {
     border-color: var(--color-accent-info);
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent-info) 20%, transparent);
+  }
+
+  .more-less-market__badge--dragging {
+    transform: scale(1.06);
+    box-shadow: 0 10px 18px color-mix(in srgb, var(--color-accent-info) 28%, transparent);
   }
 
   .more-less-market__badge-slot {
@@ -1384,6 +1564,27 @@ const moreLessMarketStyles = `
     font-size: 1.6rem;
     color: var(--color-text-primary);
     background: color-mix(in srgb, var(--color-accent-warning) 10%, white);
+    transition:
+      transform var(--transition-fast),
+      border-color var(--transition-fast),
+      background var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+
+  .more-less-market__badge-slot--hot {
+    border-style: solid;
+    border-color: var(--color-accent-primary);
+    background: color-mix(in srgb, var(--color-accent-primary) 12%, white);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent-primary) 14%, transparent);
+    transform: scale(1.02);
+  }
+
+  .more-less-market__badge-slot--accept {
+    animation: more-less-slot-pop 260ms ease-out;
+  }
+
+  .more-less-market__badge-slot--reject {
+    animation: more-less-slot-shake 220ms ease-in-out;
   }
 
   .more-less-market__helper-note {
@@ -1401,6 +1602,62 @@ const moreLessMarketStyles = `
   .more-less-market--summary,
   .more-less-market--checkpoint {
     align-items: center;
+  }
+
+  @keyframes more-less-progress-breathe {
+    0%,
+    100% {
+      transform: scaleX(1);
+    }
+    50% {
+      transform: scaleX(1.04);
+    }
+  }
+
+  @keyframes more-less-slot-pop {
+    0% {
+      transform: scale(1);
+    }
+    65% {
+      transform: scale(1.06);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes more-less-slot-shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-5px);
+    }
+    75% {
+      transform: translateX(5px);
+    }
+  }
+
+  @keyframes more-less-score-bump {
+    0% {
+      transform: scale(1);
+    }
+    45% {
+      transform: scale(1.08);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .more-less-market__progress-dot--active,
+    .more-less-market__badge-slot--accept,
+    .more-less-market__badge-slot--reject,
+    .more-less-market__score-pill--pulse {
+      animation: none;
+    }
   }
 
   @media (max-width: 900px) {

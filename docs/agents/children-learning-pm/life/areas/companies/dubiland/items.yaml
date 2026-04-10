@@ -105,3 +105,51 @@
     - companies/dubiland
   last_accessed: "2026-04-10"
   access_count: 1
+
+- id: clpm-dubiland-010
+  fact: "Letter Sky Catcher spec was added as a letters/phonics arcade game for ages 4-7, with 30-second letter rotation and full pre-literate icon/audio baseline."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "docs/games/letter-sky-catcher.md"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: clpm-dubiland-011
+  fact: "Letter Sky Catcher was directly delegated to FED Engineer 3 via DUB-312 after load balancing showed FED Engineer 3 had the lightest active queue."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "docs/children-learning-pm/features.md"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: clpm-dubiland-012
+  fact: "Interactive Handbooks pillar spec was completed in docs/games/interactive-handbooks-pillar.md with full flow/modes/completion logic, 3-level age adaptation, and a 12-page first-book blueprint."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "docs/games/interactive-handbooks-pillar.md"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1
+
+- id: clpm-dubiland-013
+  fact: "Handbook implementation was directly delegated to FED Engineer 3 via DUB-335 after active-load comparison across FED Engineer 1/2/3."
+  category: milestone
+  timestamp: "2026-04-10"
+  source: "docs/children-learning-pm/features.md"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-10"
+  access_count: 1

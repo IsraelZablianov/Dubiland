@@ -21,7 +21,7 @@ const PICTURE_TO_WORD_BUILDER_GAME: Game = {
   componentKey: 'PictureToWordBuilderGame',
   difficulty: 3,
   sortOrder: 3,
-  thumbnailUrl: null,
+  thumbnailUrl: '/images/games/thumbnails/pictureToWordBuilder/thumb-16x10.webp',
   audioUrl: '/audio/he/games/picture-to-word-builder/instructions/intro.mp3',
   isPublished: true,
   createdAt: '2026-04-10T00:00:00.000Z',

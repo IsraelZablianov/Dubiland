@@ -1,0 +1,378 @@
+diff --git a/server/src/__tests__/heartbeat-legacy-execution-lock.test.ts b/server/src/__tests__/heartbeat-legacy-execution-lock.test.ts
+new file mode 100644
+index 0000000..13e53ba
+--- /dev/null
++++ b/server/src/__tests__/heartbeat-legacy-execution-lock.test.ts
+@@ -0,0 +1,179 @@
++import { randomUUID } from "node:crypto";
++import { eq } from "drizzle-orm";
++import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
++import {
++  agents,
++  agentRuntimeState,
++  agentTaskSessions,
++  agentWakeupRequests,
++  companies,
++  companySkills,
++  createDb,
++  heartbeatRunEvents,
++  heartbeatRuns,
++  issues,
++} from "@paperclipai/db";
++import {
++  getEmbeddedPostgresTestSupport,
++  startEmbeddedPostgresTestDatabase,
++} from "./helpers/embedded-postgres.js";
++
++const mockTelemetryClient = vi.hoisted(() => ({ track: vi.fn() }));
++const mockTrackAgentFirstHeartbeat = vi.hoisted(() => vi.fn());
++
++vi.mock("../telemetry.ts", () => ({
++  getTelemetryClient: () => mockTelemetryClient,
++}));
++
++vi.mock("@paperclipai/shared/telemetry", async () => {
++  const actual = await vi.importActual<typeof import("@paperclipai/shared/telemetry")>(
++    "@paperclipai/shared/telemetry",
++  );
++  return {
++    ...actual,
++    trackAgentFirstHeartbeat: mockTrackAgentFirstHeartbeat,
++  };
++});
++
++import { heartbeatService } from "../services/heartbeat.ts";
++
++const embeddedPostgresSupport = await getEmbeddedPostgresTestSupport();
++const describeEmbeddedPostgres = embeddedPostgresSupport.supported ? describe : describe.skip;
++
++if (!embeddedPostgresSupport.supported) {
++  console.warn(
++    `Skipping legacy execution lock tests on this host: ${embeddedPostgresSupport.reason ?? "unsupported environment"}`,
++  );
++}
++
++describeEmbeddedPostgres("enqueueWakeup legacy execution lock (cross-agent guard)", () => {
++  let db!: ReturnType<typeof createDb>;
++  let tempDb: Awaited<ReturnType<typeof startEmbeddedPostgresTestDatabase>> | null = null;
++
++  beforeAll(async () => {
++    tempDb = await startEmbeddedPostgresTestDatabase("paperclip-legacy-exec-lock-");
++    db = createDb(tempDb.connectionString);
++  }, 20_000);
++
++  afterEach(async () => {
++    vi.clearAllMocks();
++    const hb = heartbeatService(db);
++    const runIds = await db
++      .select({ id: heartbeatRuns.id })
++      .from(heartbeatRuns)
++      .then((rows) => rows.map((r) => r.id));
++    for (const rid of runIds) {
++      await hb.cancelRun(rid).catch(() => undefined);
++    }
++    await db.delete(heartbeatRunEvents);
++    await db.delete(issues);
++    await db.delete(heartbeatRuns);
++    await db.delete(agentWakeupRequests);
++    await db.delete(agentTaskSessions);
++    await db.delete(agentRuntimeState);
++    await db.delete(agents);
++    await db.delete(companySkills);
++    await db.delete(companies);
++  });
++
++  afterAll(async () => {
++    await tempDb?.cleanup();
++  });
++
++  it("does not attach another agent's running run when issue execution was cleared", async () => {
++    const companyId = randomUUID();
++    const agentA = randomUUID();
++    const agentB = randomUUID();
++    const issueId = randomUUID();
++    const strayWakeupId = randomUUID();
++    const strayRunId = randomUUID();
++    const issuePrefix = `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
++    const now = new Date("2026-04-10T12:00:00.000Z");
++
++    await db.insert(companies).values({
++      id: companyId,
++      name: "Paperclip",
++      issuePrefix,
++      requireBoardApprovalForNewAgents: false,
++    });
++
++    await db.insert(agents).values([
++      {
++        id: agentA,
++        companyId,
++        name: "AgentA",
++        role: "engineer",
++        status: "idle",
++        adapterType: "codex_local",
++        adapterConfig: {},
++        runtimeConfig: { heartbeat: { wakeOnDemand: true } },
++        permissions: {},
++      },
++      {
++        id: agentB,
++        companyId,
++        name: "AgentB",
++        role: "engineer",
++        status: "idle",
++        adapterType: "codex_local",
++        adapterConfig: {},
++        runtimeConfig: {},
++        permissions: {},
++      },
++    ]);
++
++    await db.insert(agentWakeupRequests).values({
++      id: strayWakeupId,
++      companyId,
++      agentId: agentB,
++      source: "on_demand",
++      triggerDetail: null,
++      reason: "test_stray",
++      payload: { issueId },
++      status: "claimed",
++      runId: strayRunId,
++      claimedAt: now,
++    });
++
++    await db.insert(heartbeatRuns).values({
++      id: strayRunId,
++      companyId,
++      agentId: agentB,
++      invocationSource: "on_demand",
++      triggerDetail: null,
++      status: "running",
++      wakeupRequestId: strayWakeupId,
++      contextSnapshot: { issueId },
++      startedAt: now,
++      updatedAt: now,
++    });
++
++    await db.insert(issues).values({
++      id: issueId,
++      companyId,
++      title: "Target issue",
++      status: "todo",
++      priority: "medium",
++      assigneeAgentId: agentA,
++      createdByAgentId: agentA,
++      issueNumber: 1,
++      identifier: `${issuePrefix}-1`,
++      executionRunId: null,
++      checkoutRunId: null,
++    });
++
++    const heartbeat = heartbeatService(db);
++    const newRun = await heartbeat.wakeup(agentA, {
++      source: "on_demand",
++      payload: { issueId },
++    });
++
++    const [row] = await db.select().from(issues).where(eq(issues.id, issueId));
++    // Regression: without the agent filter on legacy adoption, another agent's run
++    // reattached here and wakeup often returned null while leaving executionRunId poisoned.
++    expect(row?.executionRunId).not.toBe(strayRunId);
++    expect(newRun).not.toBeNull();
++    expect(newRun!.agentId).toBe(agentA);
++    expect(row?.executionRunId).toBe(newRun!.id);
++  });
++});
+diff --git a/server/src/__tests__/issues-checkout-run-context.test.ts b/server/src/__tests__/issues-checkout-run-context.test.ts
+new file mode 100644
+index 0000000..86ce176
+--- /dev/null
++++ b/server/src/__tests__/issues-checkout-run-context.test.ts
+@@ -0,0 +1,112 @@
++import { randomUUID } from "node:crypto";
++import { eq } from "drizzle-orm";
++import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
++import { agents, companies, createDb, heartbeatRuns, issues } from "@paperclipai/db";
++import {
++  getEmbeddedPostgresTestSupport,
++  startEmbeddedPostgresTestDatabase,
++} from "./helpers/embedded-postgres.js";
++import { issueService } from "../services/issues.ts";
++
++const embeddedPostgresSupport = await getEmbeddedPostgresTestSupport();
++const describeEmbeddedPostgres = embeddedPostgresSupport.supported ? describe : describe.skip;
++
++if (!embeddedPostgresSupport.supported) {
++  console.warn(
++    `Skipping checkout run-context tests on this host: ${embeddedPostgresSupport.reason ?? "unsupported environment"}`,
++  );
++}
++
++describeEmbeddedPostgres("issueService.checkout actor run context guard", () => {
++  let db!: ReturnType<typeof createDb>;
++  let svc!: ReturnType<typeof issueService>;
++  let tempDb: Awaited<ReturnType<typeof startEmbeddedPostgresTestDatabase>> | null = null;
++
++  beforeAll(async () => {
++    tempDb = await startEmbeddedPostgresTestDatabase("paperclip-checkout-run-ctx-");
++    db = createDb(tempDb.connectionString);
++    svc = issueService(db);
++  }, 20_000);
++
++  afterEach(async () => {
++    await db.delete(issues);
++    await db.delete(heartbeatRuns);
++    await db.delete(agents);
++    await db.delete(companies);
++  });
++
++  afterAll(async () => {
++    await tempDb?.cleanup();
++  });
++
++  it("rejects checkout when the actor run snapshot is bound to a different issue", async () => {
++    const companyId = randomUUID();
++    const agentId = randomUUID();
++    const issueA = randomUUID();
++    const issueB = randomUUID();
++    const runId = randomUUID();
++    const prefix = `T${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`;
++    const now = new Date("2026-04-10T12:00:00.000Z");
++
++    await db.insert(companies).values({
++      id: companyId,
++      name: "Paperclip",
++      issuePrefix: prefix,
++      requireBoardApprovalForNewAgents: false,
++    });
++
++    await db.insert(agents).values({
++      id: agentId,
++      companyId,
++      name: "Worker",
++      role: "engineer",
++      status: "active",
++      adapterType: "codex_local",
++      adapterConfig: {},
++      runtimeConfig: {},
++      permissions: {},
++    });
++
++    await db.insert(heartbeatRuns).values({
++      id: runId,
++      companyId,
++      agentId,
++      invocationSource: "on_demand",
++      status: "running",
++      contextSnapshot: { issueId: issueB },
++      startedAt: now,
++      updatedAt: now,
++    });
++
++    await db.insert(issues).values([
++      {
++        id: issueA,
++        companyId,
++        title: "Issue A",
++        status: "todo",
++        priority: "medium",
++        createdByAgentId: agentId,
++        issueNumber: 1,
++        identifier: `${prefix}-1`,
++      },
++      {
++        id: issueB,
++        companyId,
++        title: "Issue B",
++        status: "todo",
++        priority: "medium",
++        createdByAgentId: agentId,
++        issueNumber: 2,
++        identifier: `${prefix}-2`,
++      },
++    ]);
++
++    await expect(svc.checkout(issueA, agentId, ["todo"], runId)).rejects.toThrow(
++      /different issue/i,
++    );
++
++    const [row] = await db.select().from(issues).where(eq(issues.id, issueA));
++    expect(row?.status).toBe("todo");
++    expect(row?.checkoutRunId).toBeNull();
++  });
++});
+diff --git a/server/src/services/heartbeat.ts b/server/src/services/heartbeat.ts
+index 45c5efd..20a62b4 100644
+--- a/server/src/services/heartbeat.ts
++++ b/server/src/services/heartbeat.ts
+@@ -3811,12 +3811,16 @@ export function heartbeatService(db: Db) {
+         }
+ 
+         if (!activeExecutionRun) {
++          // Only recover a legacy run owned by the same agent being woken. Without this guard,
++          // another agent's queued/running run whose snapshot still mentions this issueId
++          // (stale/coalesced context) could reattach to the row after ops cleared execution_run_id.
+           const legacyRun = await tx
+             .select()
+             .from(heartbeatRuns)
+             .where(
+               and(
+                 eq(heartbeatRuns.companyId, issue.companyId),
++                eq(heartbeatRuns.agentId, agentId),
+                 inArray(heartbeatRuns.status, ["queued", "running"]),
+                 sql`${heartbeatRuns.contextSnapshot} ->> 'issueId' = ${issue.id}`,
+               ),
+diff --git a/server/src/services/issues.ts b/server/src/services/issues.ts
+index bb40be7..db659ae 100644
+--- a/server/src/services/issues.ts
++++ b/server/src/services/issues.ts
+@@ -39,6 +39,12 @@ import { getDefaultCompanyGoal } from "./goals.js";
+ const ALL_ISSUE_STATUSES = ["backlog", "todo", "in_progress", "in_review", "blocked", "done", "cancelled"];
+ const MAX_ISSUE_COMMENT_PAGE_LIMIT = 500;
+ 
++function readSnapshotIssueId(snapshot: unknown): string | null {
++  if (!snapshot || typeof snapshot !== "object") return null;
++  const v = (snapshot as Record<string, unknown>).issueId;
++  return typeof v === "string" && v.trim().length > 0 ? v.trim() : null;
++}
++
+ function assertTransition(from: string, to: string) {
+   if (from === to) return;
+   if (!ALL_ISSUE_STATUSES.includes(to)) {
+@@ -1739,6 +1745,36 @@ export function issueService(db: Db) {
+       if (!issueCompany) throw notFound("Issue not found");
+       await assertAssignableAgent(issueCompany.companyId, agentId);
+ 
++      if (checkoutRunId) {
++        const actorRun = await db
++          .select({
++            id: heartbeatRuns.id,
++            agentId: heartbeatRuns.agentId,
++            companyId: heartbeatRuns.companyId,
++            contextSnapshot: heartbeatRuns.contextSnapshot,
++          })
++          .from(heartbeatRuns)
++          .where(eq(heartbeatRuns.id, checkoutRunId))
++          .then((rows) => rows[0] ?? null);
++        if (!actorRun) {
++          throw conflict("Checkout run not found", { checkoutRunId });
++        }
++        if (actorRun.companyId !== issueCompany.companyId) {
++          throw conflict("Checkout run company mismatch", { checkoutRunId, issueId: id });
++        }
++        if (actorRun.agentId !== agentId) {
++          throw conflict("Checkout run agent mismatch", { checkoutRunId, agentId });
++        }
++        const snapshotIssueId = readSnapshotIssueId(actorRun.contextSnapshot);
++        if (snapshotIssueId && snapshotIssueId !== id) {
++          throw conflict("Checkout run context is bound to a different issue", {
++            checkoutRunId,
++            issueId: id,
++            snapshotIssueId,
++          });
++        }
++      }
++
+       const now = new Date();
+ 
+       // Fix C: staleness detection — if executionRunId references a run that is no

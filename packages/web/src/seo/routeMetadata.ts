@@ -13,12 +13,18 @@ export type RouteMetadataKey =
   | 'home'
   | 'parent'
   | 'countingPicnicGame'
+  | 'shapeSafariGame'
   | 'moreOrLessMarketGame'
   | 'numberLineJumpsGame'
   | 'colorGardenGame'
   | 'letterSoundMatchGame'
   | 'letterTracingTrailGame'
+  | 'letterSkyCatcherGame'
   | 'pictureToWordBuilderGame'
+  | 'sightWordSprintGame'
+  | 'decodableMicroStoriesGame'
+  | 'interactiveHandbookGame'
+  | 'rootFamilyStickersGame'
   | 'notFound'
   | 'default';
 
@@ -105,6 +111,11 @@ const ROUTE_METADATA_BY_PATH: Record<string, RouteMetadataDefinition> = {
     canonicalPath: '/games/numbers/counting-picnic',
     indexable: false,
   },
+  '/games/numbers/shape-safari': {
+    key: 'shapeSafariGame',
+    canonicalPath: '/games/numbers/shape-safari',
+    indexable: false,
+  },
   '/games/numbers/more-or-less-market': {
     key: 'moreOrLessMarketGame',
     canonicalPath: '/games/numbers/more-or-less-market',
@@ -130,9 +141,34 @@ const ROUTE_METADATA_BY_PATH: Record<string, RouteMetadataDefinition> = {
     canonicalPath: '/games/letters/letter-tracing-trail',
     indexable: false,
   },
+  '/games/letters/letter-sky-catcher': {
+    key: 'letterSkyCatcherGame',
+    canonicalPath: '/games/letters/letter-sky-catcher',
+    indexable: false,
+  },
   '/games/reading/picture-to-word-builder': {
     key: 'pictureToWordBuilderGame',
     canonicalPath: '/games/reading/picture-to-word-builder',
+    indexable: false,
+  },
+  '/games/reading/sight-word-sprint': {
+    key: 'sightWordSprintGame',
+    canonicalPath: '/games/reading/sight-word-sprint',
+    indexable: false,
+  },
+  '/games/reading/decodable-micro-stories': {
+    key: 'decodableMicroStoriesGame',
+    canonicalPath: '/games/reading/decodable-micro-stories',
+    indexable: false,
+  },
+  '/games/reading/interactive-handbook': {
+    key: 'interactiveHandbookGame',
+    canonicalPath: '/games/reading/interactive-handbook',
+    indexable: false,
+  },
+  '/games/reading/root-family-stickers': {
+    key: 'rootFamilyStickersGame',
+    canonicalPath: '/games/reading/root-family-stickers',
     indexable: false,
   },
 };

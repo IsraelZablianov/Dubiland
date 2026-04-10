@@ -1,0 +1,278 @@
+[
+  {
+    "route": "landing",
+    "path": "/",
+    "viewport": "mobile-375",
+    "width": 375,
+    "height": 812,
+    "state": "before-emulated",
+    "screenshot": "/Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-214/landing-before-emulated-mobile-375.png",
+    "metrics": {
+      "headerTryFree": {
+        "height": 44,
+        "width": 106.29
+      },
+      "landingHeroPrimary": {
+        "height": 56,
+        "width": 237.94
+      },
+      "landingFinalPrimary": {
+        "height": 80,
+        "width": 311
+      },
+      "topicHeroPrimary": null,
+      "parentsFaqPrimary": null
+    }
+  },
+  {
+    "route": "landing",
+    "path": "/",
+    "viewport": "mobile-375",
+    "width": 375,
+    "height": 812,
+    "state": "after-current",
+    "screenshot": "/Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-214/landing-after-current-mobile-375.png",
+    "metrics": {
+      "headerTryFree": {
+        "height": 60,
+        "width": 106.29
+      },
+      "landingHeroPrimary": {
+        "height": 72,
+        "width": 237.94
+      },
+      "landingFinalPrimary": {
+        "height": 80,
+        "width": 311
+      },
+      "topicHeroPrimary": null,
+      "parentsFaqPrimary": null
+    }
+  },
+  {
+    "route": "landing",
+    "path": "/",
+    "viewport": "tablet-834",
+    "width": 834,
+    "height": 1112,
+    "state": "before-emulated",
+    "screenshot": "/Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-214/landing-before-emulated-tablet-834.png",
+    "metrics": {
+      "headerTryFree": {
+        "height": 44,
+        "width": 106.29
+      },
+      "landingHeroPrimary": {
+        "height": 56,
+        "width": 237.94
+      },
+      "landingFinalPrimary": {
+        "height": 56,
+        "width": 352.69
+      },
+      "topicHeroPrimary": null,
+      "parentsFaqPrimary": null
+    }
+  },
+  {
+    "route": "landing",
+    "path": "/",
+    "viewport": "tablet-834",
+    "width": 834,
+    "height": 1112,
+    "state": "after-current",
+    "screenshot": "/Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-214/landing-after-current-tablet-834.png",
+    "metrics": {
+      "headerTryFree": {
+        "height": 60,
+        "width": 106.29
+      },
+      "landingHeroPrimary": {
+        "height": 72,
+        "width": 237.94
+      },
+      "landingFinalPrimary": {
+        "height": 72,
+        "width": 352.69
+      },
+      "topicHeroPrimary": null,
+      "parentsFaqPrimary": null
+    }
+  },
+  {
+    "route": "letters",
+    "path": "/letters",
+    "viewport": "mobile-375",
+    "width": 375,
+    "height": 812,
+    "state": "before-emulated",
+    "screenshot": "/Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-214/letters-before-emulated-mobile-375.png",
+    "metrics": {
+      "headerTryFree": {
+        "height": 44,
+        "width": 106.29
+      },
+      "landingHeroPrimary": null,
+      "landingFinalPrimary": null,
+      "topicHeroPrimary": {
+        "height": 56,
+        "width": 237.94
+      },
+      "parentsFaqPrimary": null
+    }
+  },
+  {
+    "route": "letters",
+    "path": "/letters",
+    "viewport": "mobile-375",
+    "width": 375,
+    "height": 812,
+    "state": "after-current",
+    "screenshot": "/Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-214/letters-after-current-mobile-375.png",
+    "metrics": {
+      "headerTryFree": {
+        "height": 60,
+        "width": 106.29
+      },
+      "landingHeroPrimary": null,
+      "landingFinalPrimary": null,
+      "topicHeroPrimary": {
+        "height": 72,
+        "width": 237.94
+      },
+      "parentsFaqPrimary": null
+    }
+  },
+  {
+    "route": "letters",
+    "path": "/letters",
+    "viewport": "tablet-834",
+    "width": 834,
+    "height": 1112,
+    "state": "before-emulated",
+    "screenshot": "/Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-214/letters-before-emulated-tablet-834.png",
+    "metrics": {
+      "headerTryFree": {
+        "height": 44,
+        "width": 106.29
+      },
+      "landingHeroPrimary": null,
+      "landingFinalPrimary": null,
+      "topicHeroPrimary": {
+        "height": 56,
+        "width": 237.94
+      },
+      "parentsFaqPrimary": null
+    }
+  },
+  {
+    "route": "letters",
+    "path": "/letters",
+    "viewport": "tablet-834",
+    "width": 834,
+    "height": 1112,
+    "state": "after-current",
+    "screenshot": "/Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-214/letters-after-current-tablet-834.png",
+    "metrics": {
+      "headerTryFree": {
+        "height": 60,
+        "width": 106.29
+      },
+      "landingHeroPrimary": null,
+      "landingFinalPrimary": null,
+      "topicHeroPrimary": {
+        "height": 72,
+        "width": 237.94
+      },
+      "parentsFaqPrimary": null
+    }
+  },
+  {
+    "route": "parents-faq",
+    "path": "/parents/faq",
+    "viewport": "mobile-375",
+    "width": 375,
+    "height": 812,
+    "state": "before-emulated",
+    "screenshot": "/Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-214/parents-faq-before-emulated-mobile-375.png",
+    "metrics": {
+      "headerTryFree": {
+        "height": 44,
+        "width": 106.29
+      },
+      "landingHeroPrimary": null,
+      "landingFinalPrimary": null,
+      "topicHeroPrimary": null,
+      "parentsFaqPrimary": {
+        "height": 56,
+        "width": 147.27
+      }
+    }
+  },
+  {
+    "route": "parents-faq",
+    "path": "/parents/faq",
+    "viewport": "mobile-375",
+    "width": 375,
+    "height": 812,
+    "state": "after-current",
+    "screenshot": "/Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-214/parents-faq-after-current-mobile-375.png",
+    "metrics": {
+      "headerTryFree": {
+        "height": 60,
+        "width": 106.29
+      },
+      "landingHeroPrimary": null,
+      "landingFinalPrimary": null,
+      "topicHeroPrimary": null,
+      "parentsFaqPrimary": {
+        "height": 72,
+        "width": 147.27
+      }
+    }
+  },
+  {
+    "route": "parents-faq",
+    "path": "/parents/faq",
+    "viewport": "tablet-834",
+    "width": 834,
+    "height": 1112,
+    "state": "before-emulated",
+    "screenshot": "/Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-214/parents-faq-before-emulated-tablet-834.png",
+    "metrics": {
+      "headerTryFree": {
+        "height": 44,
+        "width": 106.29
+      },
+      "landingHeroPrimary": null,
+      "landingFinalPrimary": null,
+      "topicHeroPrimary": null,
+      "parentsFaqPrimary": {
+        "height": 56,
+        "width": 147.27
+      }
+    }
+  },
+  {
+    "route": "parents-faq",
+    "path": "/parents/faq",
+    "viewport": "tablet-834",
+    "width": 834,
+    "height": 1112,
+    "state": "after-current",
+    "screenshot": "/Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-214/parents-faq-after-current-tablet-834.png",
+    "metrics": {
+      "headerTryFree": {
+        "height": 60,
+        "width": 106.29
+      },
+      "landingHeroPrimary": null,
+      "landingFinalPrimary": null,
+      "topicHeroPrimary": null,
+      "parentsFaqPrimary": {
+        "height": 72,
+        "width": 147.27
+      }
+    }
+  }
+]

@@ -25,3 +25,123 @@ When a FED parent issue depends on child execution lanes, immediately re-check c
 
 ## 2026-04-10 — Number-line game integration checklist prevents regressions
 When adding a new game lane, ship all integration surfaces together in the same heartbeat: component, page wrapper, `App.tsx` route, Home topic option, route metadata key/path, SEO route copy, and an idempotent Supabase seed migration. Missing any one of these leaves the game partially reachable or untracked by infra/QA.
+
+## 2026-04-10 — QA blocked-task reactivation needs child-thread context
+When QA marks a child lane `blocked`, posting completion evidence only on the parent thread is not enough; add a linked unblock comment on the blocked child issue and move it back to `todo` so the assignee sees new context and re-engages instead of skipping via blocked-task dedup.
+
+## 2026-04-10 — Audio-first retrofit pattern for existing game copy
+When QA flags text-only affordances in mature game components, the fastest safe fix is to add reusable adjacent replay icon controls around each existing text surface (message, prompts, hints, summary lines) and map any missing keys to existing audio files, instead of introducing new copy keys.
+
+## 2026-04-10 — Trace games should validate on pointer completion, not extra confirm
+For pre-literate tracing flows, replacing a separate "finish/check" button with pointer-up evaluation keeps the interaction one-step and reduces cognitive load; the same heartbeat should also convert replay/reset/next controls to icon-only buttons with 44px tap targets.
+
+## 2026-04-10 — Visual polish lane: switch home game picker to GameCard + per-game scene overlays
+When a polish task asks for "not text-only" game selection and celebration feedback, the fastest stable pattern is: render home choices via `GameCard` with `thumbnailUrl` metadata and, inside each game shell, drive scene props + `SuccessCelebration` + `MascotIllustration` overlays from existing per-round success state rather than adding new game-flow branches.
+
+## 2026-04-10 — DB-driven topic content should normalize `common.` i18n keys at the UI edge
+Supabase content rows can store fully-qualified keys like `common.videos...`; frontend topic surfaces should normalize that prefix once for translation lookup and derive audio paths from the same key so DB content stays i18n/a11y/audio-safe without hardcoded Hebrew copy.
+
+## 2026-04-10 — Prevent auth-boundary nav jumps with one auth-aware header shell
+When public and protected routes use different header components, login creates a perceived navigation reset; reusing one header shell and only swapping the action cluster by auth state keeps orientation stable and resolves the jarring "whole header changed" bug without introducing new i18n/audio copy debt.
+
+## 2026-04-10 — Catalog-RPC UI should degrade to local tagged cards when child identity is non-UUID
+For local/demo profile ids, gate RPC usage and return a `null` capability signal rather than an empty list; this lets Home keep age-filter behavior via local tagged fallback data while preserving the same `AgeRangeFilterBar` + `GameCard` contract that production uses with `dubiland_catalog_for_child`.
+
+## 2026-04-10 — Rule-mode QA fixes should validate on tap and use explicit play affordance
+When QA flags check/submit controls in child games, shift validation to per-item taps (wrong tap => immediate feedback, full target set => auto-complete) and keep replay as a persistent `▶` control with 44px tap-safe sizing. This satisfies action-based UX and accessibility requirements without introducing new i18n/audio keys.
+
+## 2026-04-10 — Word-builder QA retrofit: auto-check on full slots + icon-only controls
+For pre-literate word construction games, replace manual check buttons with one-shot auto-validation when all slots are filled (guarded by slot-signature dedupe to avoid repeat retries on unchanged layouts), and pair every visible instruction/feedback text surface with adjacent replay icons using existing i18n/audio keys.
+
+## 2026-04-10 — Color game text surfaces can reuse existing title/subtitle audio assets
+`ColorGardenGame` already had generated `title.mp3` and `subtitle.mp3` under `public/audio/he/games/color-garden/`; wiring those into `AUDIO_PATH_BY_KEY` enables replay controls on header text without introducing new content-writer dependencies.
+
+## 2026-04-10 — Ownership-transfer patches can spawn queued self-run locks before checkout
+When reassigning an issue to FED2 via issue patch, Paperclip may immediately enqueue a new assignment run and set `executionRunId` to that queued run, causing same-heartbeat checkout `409` conflicts. For absorb lanes, post transfer evidence, avoid retrying checkout, and escalate lock normalization to Architect/PM with the exact run link.
+
+## 2026-04-10 — Public-shell auth chunk removal needs route-level lazy boundaries too
+Removing `useAuth` from `PublicHeader` is necessary but not sufficient if `App.tsx` still statically imports `ProtectedRoute`; that import alone can pull `useAuth`/Supabase into landing-page startup. Lazy-loading `ProtectedRoute` eliminated remaining eager auth requests on `/` while keeping protected-route behavior unchanged.
+
+## 2026-04-10 — Mascot identity rule: never reuse דובי as a draggable/countable emoji
+When games use the same bear emoji as both guide character and gameplay token, kids can conflate helper-vs-object roles. Keep mascot presence as `MascotIllustration` UI and swap toy/object pools away from `🧸` (for example `🪁`) while adding an in-round `variant="hint"` coach layer.
+
+## 2026-04-10 — Treat stale execution locks as the real blocker in todo lanes
+When assigned `todo` issues return checkout conflict with an existing `executionRunId`, do not retry checkout; capture the blocking run ID in a parent/blocked escalation comment and switch to another actionable issue. This keeps heartbeat output useful and avoids lock-churn.
+
+## 2026-04-10 — `issue/release` clears assignee but does not clear execution lock
+Paperclip `POST /api/issues/{id}/release` resets `status` to `todo`, clears `assigneeAgentId`, and clears `checkoutRunId`, but leaves `executionRunId` untouched. For checkout `409` lock conflicts, release is not sufficient; escalate lock normalization to Architect/PM instead of expecting release to make checkout available.
+
+## 2026-04-10 — Checkpoint screens must keep replay + icon-only navigation parity
+In Number Line Jumps, QA can fail a lane even after core round controls are icon-first if checkpoint/interstitial screens regress to text-only actions. Treat checkpoint views as full child surfaces: keep an adjacent replay play icon (`▶`) for visible instruction copy and use icon-first continue controls with `aria-label` text.
+
+## 2026-04-10 — Cloudflare preview validation needs Vite host allowlist override
+When exposing `vite preview` through a `trycloudflare.com` hostname, Vite can return `403` (`host is not allowed`) even though the tunnel is up. Set `__VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS=<tunnel-host>` for the preview process, then re-run external `curl` checks to confirm `200` on all required routes before posting SEO handoff evidence.
+
+## 2026-04-10 — Blocked dedup applies even when wake task differs from inbox ownership
+If `PAPERCLIP_TASK_ID` points to an issue no longer assigned to FED2, do not act on it; re-check assigned inbox lanes and apply blocked-task dedup there. When the latest comment on each assigned blocked issue is already your blocker update with no newer external comments, skip checkout/comment churn and exit the heartbeat cleanly.
+
+## 2026-04-10 — Close absorb-rebalance tickets once transferred child work lands
+Absorb tickets can remain stale `blocked` after initial checkout conflicts; on later heartbeats, re-check transferred child lane status and, if a moved lane has reached `done`, checkout the absorb ticket and close it with direct links to transfer and completion evidence.
+
+## 2026-04-10 — Replay affordance standard for PictureToWordBuilder uses `▶`, not `🔊`
+For child-facing replay controls in `PictureToWordBuilderGame`, keep the visible glyph as `▶` while preserving existing replay audio handlers and `aria-label` text. This keeps affordance consistent with current QA expectations without changing i18n/audio behavior.
+
+## 2026-04-10 — Blocked-task dedup still requires dependency status re-checks
+If your latest comment on a blocked task is already a blocker update, skip comment churn only when there is no new context. A dependency status flip (for example blocker/QA issues moving to `done`) is new context: checkout the parent and close it immediately so completed work does not remain stale `blocked`.
+
+## 2026-04-10 — Fallback hint-control lanes should close with evidence-first verification when code already landed
+For lock-conflicted fallback lanes, check whether the target game already contains the required hint button + hint audio handler before adding more edits. If the implementation is already present, close the lane by posting line-level evidence (control UI, handler logic, touch token, audio manifest) plus fresh `yarn typecheck`/`yarn dev` verification to avoid duplicate conflicting changes.
+
+## 2026-04-10 — Canonical reassignment lanes should reuse fallback evidence before touching code
+When a previously blocked canonical issue is reassigned after lock cleanup, first re-validate the live implementation and close the canonical ticket with the same evidence pattern if acceptance is already met. This avoids churn edits across parallel FED lanes and gets QA the exact proof links quickly.
+
+## 2026-04-10 — Stable tunnel proof flow should pin host before final build
+For external SEO validator handoffs, first obtain the quick-tunnel hostname, then rebuild with `VITE_SITE_URL` set to that exact host, and run preview on a fixed port with `__VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS=<host>`. This guarantees DNS/HTTP checks and emitted schema origin all match one host in the evidence block.
+
+## 2026-04-10 — Letter Sound Match QA gate expects strict icon inventory symbols
+When QA audits child-facing controls against the game spec, replay must render as `▶` (not `🔊`) across all instruction/feedback text surfaces, and continue buttons on checkpoint screens should use `→` to match the mandatory icon inventory.
+
+## 2026-04-10 — Keep tunnel validation flows in a persistent TTY session
+In this execution environment, background preview/tunnel processes started from one-shot commands can terminate before external checks run. For SEO host-unblock lanes, run `cloudflared` + `vite preview` inside one persistent TTY shell, then collect public `dig`/`curl` proof while that shell stays open.
+
+## 2026-04-10 — Paperclip comment safety for shell-driven evidence posts
+When posting issue comments via shell, avoid markdown backticks and long inline code blobs inside double-quoted heredocs; zsh can interpret them as command substitutions and silently corrupt evidence text. Use plain text bullets (or fully escaped JSON payload files) for authoritative proofs, then add short correction comments only if needed.
+
+## 2026-04-10 — DUB-288 start gate must include validator API success, not just route 200s
+For preview-host unblock lanes, treat start-of-window as valid only when all of the following are true at the same timestamp: route HTTP 200 on `/`, `/letters`, `/parents/faq`, `/robots.txt`; validator-like UA probes return 200; and Schema.org validator API returns `fetchError: null` with `isRendered: true` on content pages. This prevents false-positive handoffs where browser checks pass but validator fetchers still fail.
+
+## 2026-04-10 — Schema validator API can transiently return non-JSON anti-abuse pages
+When probing `POST https://validator.schema.org/validate` repeatedly from one runtime, responses can temporarily switch from JSON (`)]}'` prefix + payload) to HTML redirect/anti-abuse pages, causing false parser failures. For unblock decisions, treat single non-JSON responses as transient until retried with backoff and only conclude host-level failure when paced retries still fail.
+
+## 2026-04-10 — Board-created todo issues can still be uncheckoutable immediately via queued executionRunId
+Even fresh `todo` assignments from board/manual creation may return checkout `409` when `checkoutRunId` is null but `executionRunId` is pre-populated from a queued run. Treat this exactly like other lock conflicts: single attempt only, no retry, then patch issue to `blocked` with captured lock metadata.
+
+## 2026-04-10 — RTL replay alignment can be fixed safely with scoped `order` rules
+For existing text+replay layouts, adding `[dir='rtl'] ...__text-row ...__replay-button { order: -1; }` in component-local CSS moves replay icons to inline-start (right in Hebrew) without risky JSX reordering across many call sites. Pair that with transparent, borderless replay button styling while preserving `44px` min size + `focus-visible` outlines to satisfy UX cleanup requests without regressing touch accessibility.
+
+## 2026-04-10 — Single heartbeat run can be hard-bound to one checked-out issue
+If a heartbeat run is already bound to issue A, checkout or PATCH on issue B can return 409 run-ownership conflicts even when both are assigned to the same agent. In that case, finish issue A, avoid retries, and wait for a dedicated wake/run for issue B.
+
+## 2026-04-10 — Validator handoff blockers must include raw non-JSON bodies and runtime class
+When Schema.org validator calls are challenged (for example HTTP 302 to Google "sorry"), treat it as an execution-runtime blocker, not a schema result. Post full raw response bodies plus route status probes, then hand off rerun responsibility to a clean runtime/IP instead of reporting summary-only failures.
+
+## 2026-04-10 — Rule-mode duplicate taps need explicit response feedback, not silent idempotence
+In selection games, keeping duplicate taps idempotent is fine for state but must still produce audible/visual acknowledgment. In Color Garden rule mode, reusing an existing gentle retry i18n/audio key plus a short per-item pulse resolves "dead tap" perception without adding new copy/audio debt.
+
+## 2026-04-10 — Numeric step chips need dedicated i18n aria keys in number-line games
+When step options share one generic instruction `aria-label`, screen readers cannot differentiate controls. Add a dedicated localized key with an interpolated step value (for example `jumpByStep`) so each chip announces a unique action without changing child-facing visuals.
+
+## 2026-04-10 — Replay compliance on summary/header text needs typed audio-key expansion
+When adding adjacent replay buttons to non-round UI text in `PictureToWordBuilderGame` (header title/subtitle and completion summary paragraphs), extend the local `StatusKey` union to include those i18n keys first; otherwise `playStatusAudio` calls won’t type-check even when matching audio files already exist in `public/audio/he`.
+
+## 2026-04-10 — Decodable story lanes should bind to existing key-contract trees before adding new copy
+`common.json` already carries a full `games.decodableMicroStories` + `words.pronunciation` + `phrases.pronunciation` contract (including page-level decode/comprehension keys), so FED implementation can ship faster by matching that schema exactly and only patching placeholder mismatches (for example parent summary interpolation vars) instead of creating a parallel key tree.
+
+## 2026-04-10 — Close parent implementation lanes only after validating child defect closure
+When a parent game lane stays open after a QA defect follow-up is already done, verify the follow-up issue status and run fresh workspace checks (`yarn typecheck` plus `yarn dev` boot smoke) before closing the parent task with linked evidence.
+
+## 2026-04-10 — LetterTracing header replay fixes need explicit key-union updates
+For `LetterTracingTrailGame`, replay buttons added to header `games.letterTracingTrail.title/subtitle` require adding both keys to the local `StatusKey` union before calling `playAudioKey`; audio assets can already exist, but TypeScript still blocks the fix without union coverage.
+
+## 2026-04-10 — Stale RTL bug tickets should close via fresh code+verification evidence when fix already exists
+If an assigned implementation issue describes an old regression but current code already satisfies acceptance (for example tray direction already `row` in RTL), avoid redundant edits. Re-verify with `yarn typecheck` + `yarn dev` smoke, post precise line-level evidence, and close with QA rerun handoff.

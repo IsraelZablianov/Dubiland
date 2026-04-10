@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Card } from '@/components/design-system';
+import { MascotIllustration } from '@/components/illustrations';
+import { SuccessCelebration } from '@/components/motion';
 import type { GameProps, ParentSummaryMetrics, StableRange } from '@/games/engine';
 
 type GameLevelId = 1 | 2 | 3;
 type HintTone = 'neutral' | 'hint' | 'success';
 type HintTrend = ParentSummaryMetrics['hintTrend'];
+type BoardFeedback = 'idle' | 'success' | 'miss';
 
 type LetterId =
   | 'alef'
@@ -49,6 +52,8 @@ type StatusKey =
   | LetterPronunciationKey
   | WordPromptKey
   | WordAudioKey
+  | 'games.pictureToWordBuilder.title'
+  | 'games.pictureToWordBuilder.subtitle'
   | 'games.pictureToWordBuilder.instructions.intro'
   | 'games.pictureToWordBuilder.instructions.dragLetters'
   | 'games.pictureToWordBuilder.instructions.tapReplayWord'
@@ -71,6 +76,8 @@ type StatusKey =
   | 'games.pictureToWordBuilder.summary.hintTrend.steady'
   | 'games.pictureToWordBuilder.summary.hintTrend.needsSupport'
   | 'games.pictureToWordBuilder.summary.noConfusionPair'
+  | 'parentDashboard.games.pictureToWordBuilder.progressSummary'
+  | 'parentDashboard.games.pictureToWordBuilder.nextStep'
   | 'feedback.greatEffort'
   | 'feedback.excellent'
   | 'feedback.keepGoing'
@@ -450,6 +457,8 @@ function createInitialSlots(round: RoundState): Array<SlotState | null> {
 
 export function PictureToWordBuilderGame({ onComplete, audio }: GameProps) {
   const { t } = useTranslation('common');
+  const boardFeedbackTimeoutRef = useRef<number | null>(null);
+  const scorePulseTimeoutRef = useRef<number | null>(null);
 
   const [level, setLevel] = useState<GameLevelId>(1);
   const [roundNumber, setRoundNumber] = useState(1);
@@ -475,6 +484,7 @@ export function PictureToWordBuilderGame({ onComplete, audio }: GameProps) {
   const [slots, setSlots] = useState<Array<SlotState | null>>(() => createInitialSlots(round));
   const [selectedTileId, setSelectedTileId] = useState<string | null>(null);
   const [draggedTileId, setDraggedTileId] = useState<string | null>(null);
+  const [coachVisible, setCoachVisible] = useState(true);
   const [invalidSlotIndexes, setInvalidSlotIndexes] = useState<number[]>([]);
   const [attemptsThisRound, setAttemptsThisRound] = useState(0);
   const [hintCountThisRound, setHintCountThisRound] = useState(0);
@@ -483,9 +493,12 @@ export function PictureToWordBuilderGame({ onComplete, audio }: GameProps) {
     key: 'games.pictureToWordBuilder.instructions.intro',
     tone: 'neutral',
   });
+  const [scorePulse, setScorePulse] = useState(false);
+  const [boardFeedback, setBoardFeedback] = useState<BoardFeedback>('idle');
 
   const completionReportedRef = useRef(false);
   const previousWordIdRef = useRef<WordId | null>(round.word.id);
+  const lastAutoValidationSignatureRef = useRef<string | null>(null);
   const sessionStatsRef = useRef<SessionStats>({
     firstAttemptSuccesses: 0,
     hintUsageByRound: [],
@@ -503,6 +516,10 @@ export function PictureToWordBuilderGame({ onComplete, audio }: GameProps) {
 
   const usedTileIds = useMemo(
     () => new Set(slots.filter((slot): slot is SlotState => Boolean(slot)).map((slot) => slot.tileId)),
+    [slots],
+  );
+  const filledSlotsSignature = useMemo(
+    () => slots.map((slot) => slot?.tileId ?? 'empty').join('|'),
     [slots],
   );
 
@@ -524,7 +541,40 @@ export function PictureToWordBuilderGame({ onComplete, audio }: GameProps) {
     [audio],
   );
 
+  const triggerBoardFeedback = useCallback((nextState: Exclude<BoardFeedback, 'idle'>) => {
+    if (boardFeedbackTimeoutRef.current) {
+      window.clearTimeout(boardFeedbackTimeoutRef.current);
+    }
+
+    setBoardFeedback(nextState);
+    boardFeedbackTimeoutRef.current = window.setTimeout(() => {
+      setBoardFeedback('idle');
+      boardFeedbackTimeoutRef.current = null;
+    }, 360);
+  }, []);
+
+  const triggerScorePulse = useCallback(() => {
+    setScorePulse(true);
+    if (scorePulseTimeoutRef.current) {
+      window.clearTimeout(scorePulseTimeoutRef.current);
+    }
+
+    scorePulseTimeoutRef.current = window.setTimeout(() => {
+      setScorePulse(false);
+      scorePulseTimeoutRef.current = null;
+    }, 460);
+  }, []);
+
   const resetRoundInteractionState = useCallback((nextRound: RoundState) => {
+    if (boardFeedbackTimeoutRef.current) {
+      window.clearTimeout(boardFeedbackTimeoutRef.current);
+      boardFeedbackTimeoutRef.current = null;
+    }
+    if (scorePulseTimeoutRef.current) {
+      window.clearTimeout(scorePulseTimeoutRef.current);
+      scorePulseTimeoutRef.current = null;
+    }
+
     setSlots(createInitialSlots(nextRound));
     setSelectedTileId(null);
     setDraggedTileId(null);
@@ -532,6 +582,8 @@ export function PictureToWordBuilderGame({ onComplete, audio }: GameProps) {
     setAttemptsThisRound(0);
     setHintCountThisRound(0);
     setUsedHintThisRound(false);
+    setBoardFeedback('idle');
+    setScorePulse(false);
   }, []);
 
   const loadRound = useCallback(
@@ -599,6 +651,11 @@ export function PictureToWordBuilderGame({ onComplete, audio }: GameProps) {
     const successKey =
       ROUND_SUCCESS_ROTATION[(nextStats.hintUsageByRound.length - 1) % ROUND_SUCCESS_ROTATION.length];
     const feedbackKey = FEEDBACK_ROTATION[(nextStats.hintUsageByRound.length - 1) % FEEDBACK_ROTATION.length];
+
+    triggerBoardFeedback('success');
+    if (firstAttemptSuccess) {
+      triggerScorePulse();
+    }
 
     setRoundMessage({
       key: successKey,
@@ -677,6 +734,8 @@ export function PictureToWordBuilderGame({ onComplete, audio }: GameProps) {
     round.word.letters.length,
     sessionComplete,
     struggleRoundsInRow,
+    triggerBoardFeedback,
+    triggerScorePulse,
     usedHintThisRound,
   ]);
 
@@ -813,6 +872,7 @@ export function PictureToWordBuilderGame({ onComplete, audio }: GameProps) {
     }
 
     setAttemptsThisRound((value) => value + 1);
+    triggerBoardFeedback('miss');
     setInvalidSlotIndexes(mismatchIndexes);
     setMessageWithAudio('games.pictureToWordBuilder.feedback.encouragement.keepTrying', 'hint');
 
@@ -843,7 +903,27 @@ export function PictureToWordBuilderGame({ onComplete, audio }: GameProps) {
     sessionComplete,
     setMessageWithAudio,
     slots,
+    triggerBoardFeedback,
   ]);
+
+  useEffect(() => {
+    if (sessionComplete || midpointPaused) {
+      return;
+    }
+
+    const allSlotsFilled = slots.every((slot) => Boolean(slot));
+    if (!allSlotsFilled) {
+      lastAutoValidationSignatureRef.current = null;
+      return;
+    }
+
+    if (lastAutoValidationSignatureRef.current === filledSlotsSignature) {
+      return;
+    }
+
+    lastAutoValidationSignatureRef.current = filledSlotsSignature;
+    validateCurrentWord();
+  }, [filledSlotsSignature, midpointPaused, sessionComplete, slots, validateCurrentWord]);
 
   const handleTileTap = useCallback(
     (tileId: string) => {
@@ -901,6 +981,13 @@ export function PictureToWordBuilderGame({ onComplete, audio }: GameProps) {
     });
     audio.play(getAudioPathForKey(`reading.wordAudio.${round.word.id}`));
   }, [audio, midpointPaused, round.word.id, sessionComplete]);
+
+  const playStatusAudio = useCallback(
+    (key: StatusKey) => {
+      audio.play(getAudioPathForKey(key));
+    },
+    [audio],
+  );
 
   const handleContinueAfterMidpoint = useCallback(() => {
     setMidpointPaused(false);
@@ -960,7 +1047,28 @@ export function PictureToWordBuilderGame({ onComplete, audio }: GameProps) {
   }, [audio, midpointPaused, round.contrastLetter, round.id, round.word.id, sessionComplete]);
 
   useEffect(() => {
+    if (sessionComplete || midpointPaused || roundMessage.tone === 'success' || draggedTileId) {
+      setCoachVisible(false);
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setCoachVisible(true);
+    }, 2000);
+
     return () => {
+      window.clearTimeout(timer);
+    };
+  }, [draggedTileId, midpointPaused, round.id, roundMessage.tone, sessionComplete]);
+
+  useEffect(() => {
+    return () => {
+      if (boardFeedbackTimeoutRef.current) {
+        window.clearTimeout(boardFeedbackTimeoutRef.current);
+      }
+      if (scorePulseTimeoutRef.current) {
+        window.clearTimeout(scorePulseTimeoutRef.current);
+      }
       audio.stop();
     };
   }, [audio]);
@@ -975,35 +1083,90 @@ export function PictureToWordBuilderGame({ onComplete, audio }: GameProps) {
   const hintTrendLabel = summaryReport
     ? t(getHintTrendLabelKey(summaryReport.hintTrend))
     : t('games.pictureToWordBuilder.summary.hintTrend.steady');
+  const replayButtonAriaLabel = t('games.pictureToWordBuilder.instructions.tapReplayWord');
+  const showRoundCelebration = roundMessage.tone === 'success';
+  const showInRoundCoach = coachVisible && !showRoundCelebration;
+  const firstAttemptStars = sessionStatsRef.current.firstAttemptSuccesses;
+  const resolvedRounds = sessionStatsRef.current.hintUsageByRound.length;
 
   if (sessionComplete && summaryReport && summaryMetrics) {
     return (
       <div className="picture-word-builder picture-word-builder--complete">
         <Card padding="lg" className="picture-word-builder__shell">
-          <h2 className="picture-word-builder__title">{t('feedback.youDidIt')}</h2>
-          <p className="picture-word-builder__subtitle">{t('games.pictureToWordBuilder.roundComplete.wordBuilt')}</p>
+          <div className="picture-word-builder__text-row picture-word-builder__text-row--center">
+            <h2 className="picture-word-builder__title">{t('feedback.youDidIt')}</h2>
+            <button
+              type="button"
+              className="picture-word-builder__replay-button"
+              onClick={() => playStatusAudio('feedback.youDidIt')}
+              aria-label={replayButtonAriaLabel}
+            >
+              <span aria-hidden="true">▶</span>
+            </button>
+          </div>
+          <div className="picture-word-builder__text-row picture-word-builder__text-row--center">
+            <p className="picture-word-builder__subtitle">{t('games.pictureToWordBuilder.roundComplete.wordBuilt')}</p>
+            <button
+              type="button"
+              className="picture-word-builder__replay-button"
+              onClick={() => playStatusAudio('games.pictureToWordBuilder.roundComplete.wordBuilt')}
+              aria-label={replayButtonAriaLabel}
+            >
+              <span aria-hidden="true">▶</span>
+            </button>
+          </div>
 
           <div className="picture-word-builder__stickers" aria-label={t('games.pictureToWordBuilder.roundComplete.stickerEarned')}>
             {Array.from({ length: Math.max(1, stickerCount) }).map((_, index) => (
               <span key={`sticker-${index}`} className="picture-word-builder__sticker" aria-hidden="true">
-                🧸
+                🌟
               </span>
             ))}
           </div>
 
           <Card padding="md" className="picture-word-builder__summary-card">
-            <p>
-              {t('parentDashboard.games.pictureToWordBuilder.progressSummary', {
-                range: summaryReport.lengthBand,
-                successRate: summaryReport.firstAttemptSuccessRate,
-                hintTrend: hintTrendLabel,
-                confusedPair: confusionPairText,
-              })}
-            </p>
-            <p>{t('parentDashboard.games.pictureToWordBuilder.nextStep')}</p>
+            <div className="picture-word-builder__text-row">
+              <p>
+                {t('parentDashboard.games.pictureToWordBuilder.progressSummary', {
+                  range: summaryReport.lengthBand,
+                  successRate: summaryReport.firstAttemptSuccessRate,
+                  hintTrend: hintTrendLabel,
+                  confusedPair: confusionPairText,
+                })}
+              </p>
+              <button
+                type="button"
+                className="picture-word-builder__replay-button"
+                onClick={() => playStatusAudio('parentDashboard.games.pictureToWordBuilder.progressSummary')}
+                aria-label={replayButtonAriaLabel}
+              >
+                <span aria-hidden="true">▶</span>
+              </button>
+            </div>
+            <div className="picture-word-builder__text-row">
+              <p>{t('parentDashboard.games.pictureToWordBuilder.nextStep')}</p>
+              <button
+                type="button"
+                className="picture-word-builder__replay-button"
+                onClick={() => playStatusAudio('parentDashboard.games.pictureToWordBuilder.nextStep')}
+                aria-label={replayButtonAriaLabel}
+              >
+                <span aria-hidden="true">▶</span>
+              </button>
+            </div>
           </Card>
 
-          <p className="picture-word-builder__hint-note">{t(getHintTrendLabelKey(summaryMetrics.hintTrend))}</p>
+          <div className="picture-word-builder__text-row picture-word-builder__text-row--center">
+            <p className="picture-word-builder__hint-note">{t(getHintTrendLabelKey(summaryMetrics.hintTrend))}</p>
+            <button
+              type="button"
+              className="picture-word-builder__replay-button"
+              onClick={() => playStatusAudio(getHintTrendLabelKey(summaryMetrics.hintTrend))}
+              aria-label={replayButtonAriaLabel}
+            >
+              <span aria-hidden="true">▶</span>
+            </button>
+          </div>
         </Card>
         <style>{pictureWordBuilderStyles}</style>
       </div>
@@ -1014,15 +1177,36 @@ export function PictureToWordBuilderGame({ onComplete, audio }: GameProps) {
     return (
       <div className="picture-word-builder picture-word-builder--midpoint">
         <Card padding="lg" className="picture-word-builder__shell">
-          <h2 className="picture-word-builder__title">{t('feedback.greatEffort')}</h2>
-          <p className="picture-word-builder__subtitle">{t('games.pictureToWordBuilder.roundComplete.nextWord')}</p>
+          <div className="picture-word-builder__text-row picture-word-builder__text-row--center">
+            <h2 className="picture-word-builder__title">{t('feedback.greatEffort')}</h2>
+            <button
+              type="button"
+              className="picture-word-builder__replay-button"
+              onClick={() => playStatusAudio('feedback.greatEffort')}
+              aria-label={replayButtonAriaLabel}
+            >
+              <span aria-hidden="true">▶</span>
+            </button>
+          </div>
+          <div className="picture-word-builder__text-row picture-word-builder__text-row--center">
+            <p className="picture-word-builder__subtitle">{t('games.pictureToWordBuilder.roundComplete.nextWord')}</p>
+            <button
+              type="button"
+              className="picture-word-builder__replay-button"
+              onClick={() => playStatusAudio('games.pictureToWordBuilder.roundComplete.nextWord')}
+              aria-label={replayButtonAriaLabel}
+            >
+              <span aria-hidden="true">▶</span>
+            </button>
+          </div>
           <Button
             variant="primary"
             size="lg"
             onClick={handleContinueAfterMidpoint}
             aria-label={t('nav.next')}
+            style={{ minWidth: '56px', paddingInline: 'var(--space-lg)' }}
           >
-            {t('nav.next')}
+            <span aria-hidden="true">⏭️</span>
           </Button>
         </Card>
         <style>{pictureWordBuilderStyles}</style>
@@ -1035,8 +1219,28 @@ export function PictureToWordBuilderGame({ onComplete, audio }: GameProps) {
       <Card padding="lg" className="picture-word-builder__shell">
         <header className="picture-word-builder__header">
           <div className="picture-word-builder__heading">
-            <h2 className="picture-word-builder__title">{t('games.pictureToWordBuilder.title')}</h2>
-            <p className="picture-word-builder__subtitle">{t('games.pictureToWordBuilder.subtitle')}</p>
+            <div className="picture-word-builder__text-row">
+              <h2 className="picture-word-builder__title">{t('games.pictureToWordBuilder.title')}</h2>
+              <button
+                type="button"
+                className="picture-word-builder__replay-button"
+                onClick={() => playStatusAudio('games.pictureToWordBuilder.title')}
+                aria-label={replayButtonAriaLabel}
+              >
+                <span aria-hidden="true">▶</span>
+              </button>
+            </div>
+            <div className="picture-word-builder__text-row">
+              <p className="picture-word-builder__subtitle">{t('games.pictureToWordBuilder.subtitle')}</p>
+              <button
+                type="button"
+                className="picture-word-builder__replay-button"
+                onClick={() => playStatusAudio('games.pictureToWordBuilder.subtitle')}
+                aria-label={replayButtonAriaLabel}
+              >
+                <span aria-hidden="true">▶</span>
+              </button>
+            </div>
           </div>
 
           <div className="picture-word-builder__actions">
@@ -1045,24 +1249,18 @@ export function PictureToWordBuilderGame({ onComplete, audio }: GameProps) {
               size="md"
               onClick={handleReplayWord}
               aria-label={t('games.pictureToWordBuilder.instructions.tapReplayWord')}
+              style={{ minWidth: 'var(--touch-min)', paddingInline: 'var(--space-md)' }}
             >
-              🔊 {t('games.pictureToWordBuilder.instructions.tapReplayWord')}
+              <span aria-hidden="true">▶</span>
             </Button>
             <Button
               variant="secondary"
               size="md"
               onClick={() => handleSegmentedHint(false)}
               aria-label={t('games.pictureToWordBuilder.instructions.tapSegmentedHint')}
+              style={{ minWidth: 'var(--touch-min)', paddingInline: 'var(--space-md)' }}
             >
-              🎧 {t('games.pictureToWordBuilder.instructions.tapSegmentedHint')}
-            </Button>
-            <Button
-              variant="primary"
-              size="md"
-              onClick={validateCurrentWord}
-              aria-label={t('games.pictureToWordBuilder.instructions.tapCheckWord')}
-            >
-              {t('games.pictureToWordBuilder.instructions.tapCheckWord')}
+              <span aria-hidden="true">🧩</span>
             </Button>
           </div>
         </header>
@@ -1079,18 +1277,69 @@ export function PictureToWordBuilderGame({ onComplete, audio }: GameProps) {
             return (
               <span
                 key={`segment-${segment}`}
-                className={`picture-word-builder__round-dot picture-word-builder__round-dot--${state}`}
+                className={[
+                  'picture-word-builder__round-dot',
+                  `picture-word-builder__round-dot--${state}`,
+                  state === 'active' ? 'picture-word-builder__round-dot--active-live' : '',
+                ].join(' ')}
                 aria-hidden="true"
               />
             );
           })}
         </div>
 
-        <p className={`picture-word-builder__message picture-word-builder__message--${roundMessage.tone}`} aria-live="polite">
-          {t(roundMessage.key)}
-        </p>
+        <div className="picture-word-builder__score-strip" aria-hidden="true">
+          <span
+            className={[
+              'picture-word-builder__score-pill',
+              scorePulse ? 'picture-word-builder__score-pill--pulse' : '',
+            ].join(' ')}
+          >
+            <span>⭐</span>
+            <span>{firstAttemptStars}</span>
+          </span>
+          <span className="picture-word-builder__score-pill">
+            <span>🎯</span>
+            <span>
+              {resolvedRounds}/{TOTAL_ROUNDS}
+            </span>
+          </span>
+        </div>
 
-        <section className="picture-word-builder__board">
+        <div className={`picture-word-builder__message picture-word-builder__message--${roundMessage.tone}`}>
+          <p className="picture-word-builder__message-text" aria-live="polite">
+            {t(roundMessage.key)}
+          </p>
+          <button
+            type="button"
+            className="picture-word-builder__replay-button"
+            onClick={() => playStatusAudio(roundMessage.key)}
+            aria-label={replayButtonAriaLabel}
+          >
+            <span aria-hidden="true">▶</span>
+          </button>
+        </div>
+
+        <section
+          className={[
+            'picture-word-builder__board',
+            boardFeedback === 'success' ? 'picture-word-builder__board--success' : '',
+            boardFeedback === 'miss' ? 'picture-word-builder__board--miss' : '',
+          ].join(' ')}
+        >
+          <div className="picture-word-builder__scene-props" aria-hidden="true">
+            <span>📘</span>
+            <span>🧩</span>
+            <span>✨</span>
+            <span>🪁</span>
+            <span>🔤</span>
+          </div>
+          {showInRoundCoach && (
+            <div className="picture-word-builder__coach" aria-hidden="true">
+              <MascotIllustration variant="hint" size={56} />
+            </div>
+          )}
+
           <Card padding="md" className="picture-word-builder__target-card">
             <div className="picture-word-builder__image-wrap" aria-hidden="true">
               <span className="picture-word-builder__image">{round.word.pictureEmoji}</span>
@@ -1148,7 +1397,17 @@ export function PictureToWordBuilderGame({ onComplete, audio }: GameProps) {
           </Card>
 
           <Card padding="md" className="picture-word-builder__tiles-card">
-            <p className="picture-word-builder__tiles-title">{t('games.pictureToWordBuilder.instructions.dragLetters')}</p>
+            <div className="picture-word-builder__text-row">
+              <p className="picture-word-builder__tiles-title">{t('games.pictureToWordBuilder.instructions.dragLetters')}</p>
+              <button
+                type="button"
+                className="picture-word-builder__replay-button"
+                onClick={() => playStatusAudio('games.pictureToWordBuilder.instructions.dragLetters')}
+                aria-label={replayButtonAriaLabel}
+              >
+                <span aria-hidden="true">▶</span>
+              </button>
+            </div>
 
             <div className="picture-word-builder__tiles-grid" dir="rtl">
               {availableTiles.map((tile) => {
@@ -1179,6 +1438,15 @@ export function PictureToWordBuilderGame({ onComplete, audio }: GameProps) {
             </div>
           </Card>
         </section>
+
+        {showRoundCelebration && (
+          <div className="picture-word-builder__celebration-overlay" aria-hidden="true">
+            <SuccessCelebration />
+            <div className="picture-word-builder__celebration-mascot">
+              <MascotIllustration variant="success" size={84} />
+            </div>
+          </div>
+        )}
       </Card>
 
       <style>{pictureWordBuilderStyles}</style>
@@ -1189,11 +1457,23 @@ export function PictureToWordBuilderGame({ onComplete, audio }: GameProps) {
 const pictureWordBuilderStyles = `
   .picture-word-builder {
     width: 100%;
+    border-radius: var(--radius-xl);
+    padding: var(--space-sm);
+    background:
+      radial-gradient(circle at 14% 18%, color-mix(in srgb, var(--color-accent-primary) 18%, transparent) 0, transparent 46%),
+      radial-gradient(circle at 88% 86%, color-mix(in srgb, var(--color-accent-success) 14%, transparent) 0, transparent 56%),
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-bg-secondary) 76%, #ffffff) 0%,
+        color-mix(in srgb, var(--color-theme-primary) 8%, #ffffff) 100%
+      );
   }
 
   .picture-word-builder__shell {
     display: grid;
     gap: var(--space-md);
+    position: relative;
+    overflow: hidden;
     background: linear-gradient(180deg, color-mix(in srgb, var(--color-theme-primary) 9%, #ffffff), #ffffff);
     border: 2px solid color-mix(in srgb, var(--color-theme-primary) 22%, transparent);
   }
@@ -1204,6 +1484,8 @@ const pictureWordBuilderStyles = `
     gap: var(--space-sm);
     justify-content: space-between;
     align-items: flex-start;
+    position: relative;
+    z-index: 2;
   }
 
   .picture-word-builder__heading {
@@ -1223,10 +1505,62 @@ const pictureWordBuilderStyles = `
   }
 
   .picture-word-builder__actions {
-    display: flex;
-    flex-wrap: wrap;
+    display: inline-flex;
+    align-items: center;
     gap: var(--space-xs);
-    justify-content: flex-end;
+  }
+
+  .picture-word-builder__text-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xs);
+  }
+
+  .picture-word-builder__text-row > :first-child {
+    flex: 1;
+  }
+
+  .picture-word-builder__text-row--center {
+    justify-content: center;
+  }
+
+  .picture-word-builder__text-row--center > :first-child {
+    flex: initial;
+  }
+
+  [dir='rtl'] .picture-word-builder__text-row .picture-word-builder__replay-button {
+    order: -1;
+  }
+
+  .picture-word-builder__replay-button {
+    inline-size: var(--touch-min);
+    block-size: var(--touch-min);
+    min-inline-size: var(--touch-min);
+    min-block-size: var(--touch-min);
+    border-radius: var(--radius-sm);
+    border: none;
+    background: transparent;
+    color: var(--color-theme-primary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    transition: transform var(--transition-fast), color var(--transition-fast);
+    touch-action: manipulation;
+    flex-shrink: 0;
+  }
+
+  .picture-word-builder__replay-button:hover {
+    color: color-mix(in srgb, var(--color-theme-primary) 75%, var(--color-text-primary));
+    transform: translateY(-1px);
+  }
+
+  .picture-word-builder__replay-button:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--color-accent-primary) 65%, transparent);
+    outline-offset: 2px;
   }
 
   .picture-word-builder__round-progress {
@@ -1253,6 +1587,34 @@ const pictureWordBuilderStyles = `
     transform: scale(1.1);
   }
 
+  .picture-word-builder__round-dot--active-live {
+    animation: picture-word-builder-active-dot 1100ms ease-in-out infinite;
+  }
+
+  .picture-word-builder__score-strip {
+    display: inline-flex;
+    gap: var(--space-xs);
+    align-items: center;
+    justify-self: start;
+  }
+
+  .picture-word-builder__score-pill {
+    display: inline-flex;
+    gap: var(--space-2xs);
+    align-items: center;
+    min-height: var(--touch-min);
+    padding-inline: var(--space-sm);
+    border-radius: var(--radius-full);
+    border: 1px solid color-mix(in srgb, var(--color-theme-primary) 26%, #ffffff);
+    background: color-mix(in srgb, var(--color-theme-primary) 10%, #ffffff);
+    color: var(--color-text-primary);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .picture-word-builder__score-pill--pulse {
+    animation: picture-word-builder-score-pill 480ms ease-out;
+  }
+
   .picture-word-builder__message {
     margin: 0;
     padding: var(--space-sm);
@@ -1260,6 +1622,17 @@ const pictureWordBuilderStyles = `
     background: color-mix(in srgb, var(--color-bg-secondary) 78%, #ffffff);
     color: var(--color-text-primary);
     font-size: var(--font-size-md);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xs);
+    position: relative;
+    z-index: 2;
+  }
+
+  .picture-word-builder__message-text {
+    margin: 0;
+    flex: 1;
   }
 
   .picture-word-builder__message--hint {
@@ -1274,6 +1647,50 @@ const pictureWordBuilderStyles = `
     display: grid;
     gap: var(--space-md);
     grid-template-columns: 1fr;
+    position: relative;
+    z-index: 2;
+  }
+
+  .picture-word-builder__board--success {
+    animation: picture-word-builder-board-success 340ms ease-out;
+  }
+
+  .picture-word-builder__board--miss {
+    animation: picture-word-builder-board-miss 320ms ease-in-out;
+  }
+
+  .picture-word-builder__scene-props {
+    position: absolute;
+    inset-inline: var(--space-sm);
+    inset-block-start: calc(-1 * var(--space-md));
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    opacity: 0.82;
+    pointer-events: none;
+    font-size: 1.25rem;
+  }
+
+  .picture-word-builder__coach {
+    position: absolute;
+    inset-inline-end: var(--space-sm);
+    inset-block-start: var(--space-sm);
+    inline-size: 72px;
+    block-size: 72px;
+    border-radius: var(--radius-full);
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+    z-index: 2;
+    background: color-mix(in srgb, var(--color-bg-card) 88%, white);
+    border: 2px solid color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+    box-shadow: var(--shadow-sm);
+    animation: picture-word-builder-coach-float 1600ms ease-in-out infinite;
+  }
+
+  .picture-word-builder__coach,
+  .picture-word-builder__coach * {
+    pointer-events: none;
   }
 
   .picture-word-builder__target-card,
@@ -1401,6 +1818,26 @@ const pictureWordBuilderStyles = `
     text-align: center;
   }
 
+  .picture-word-builder__celebration-overlay {
+    position: absolute;
+    inset-inline: var(--space-md);
+    inset-block-end: var(--space-md);
+    display: grid;
+    justify-items: center;
+    gap: var(--space-xs);
+    pointer-events: none;
+    z-index: 1;
+    animation: picture-word-builder-celebrate 620ms var(--motion-ease-bounce) both;
+  }
+
+  .picture-word-builder__celebration-overlay * {
+    pointer-events: none;
+  }
+
+  .picture-word-builder__celebration-mascot {
+    animation: picture-word-builder-mascot-pop 620ms var(--motion-ease-bounce) both;
+  }
+
   .picture-word-builder__sr-only {
     position: absolute;
     inline-size: 1px;
@@ -1412,6 +1849,92 @@ const pictureWordBuilderStyles = `
     clip: rect(0 0 0 0);
   }
 
+  @keyframes picture-word-builder-celebrate {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes picture-word-builder-mascot-pop {
+    from {
+      transform: scale(0.82) rotate(-3deg);
+    }
+
+    to {
+      transform: scale(1) rotate(0deg);
+    }
+  }
+
+  @keyframes picture-word-builder-coach-float {
+    0% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-4px);
+    }
+
+    100% {
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes picture-word-builder-active-dot {
+    0%,
+    100% {
+      transform: scale(1.1);
+    }
+
+    50% {
+      transform: scale(1.24);
+    }
+  }
+
+  @keyframes picture-word-builder-score-pill {
+    0% {
+      transform: scale(1);
+    }
+
+    45% {
+      transform: scale(1.08);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes picture-word-builder-board-success {
+    0% {
+      transform: scale(0.99);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes picture-word-builder-board-miss {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+
+    25% {
+      transform: translateX(-4px);
+    }
+
+    75% {
+      transform: translateX(4px);
+    }
+  }
+
   @media (min-width: 860px) {
     .picture-word-builder__board {
       grid-template-columns: 1.1fr 1fr;
@@ -1421,11 +1944,11 @@ const pictureWordBuilderStyles = `
   @media (max-width: 640px) {
     .picture-word-builder__actions {
       inline-size: 100%;
-      justify-content: stretch;
+      justify-content: flex-start;
     }
 
     .picture-word-builder__actions > button {
-      flex: 1 1 100%;
+      flex: 0 0 auto;
     }
   }
 
@@ -1434,6 +1957,16 @@ const pictureWordBuilderStyles = `
     .picture-word-builder__round-dot--active {
       transition: none !important;
       transform: none !important;
+    }
+
+    .picture-word-builder__round-dot--active-live,
+    .picture-word-builder__score-pill--pulse,
+    .picture-word-builder__board--success,
+    .picture-word-builder__board--miss,
+    .picture-word-builder__celebration-overlay,
+    .picture-word-builder__celebration-mascot,
+    .picture-word-builder__coach {
+      animation: none !important;
     }
   }
 `;

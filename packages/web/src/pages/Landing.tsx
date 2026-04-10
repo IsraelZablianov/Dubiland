@@ -29,6 +29,11 @@ const TRUST_ITEMS: Array<{ key: 'Safe' | 'Hebrew' | 'Adaptive' | 'Audio'; icon: 
   { key: 'Audio', icon: 'audio' },
 ];
 
+const PROMINENT_MARKETING_CTA_STYLE = {
+  minHeight: 'var(--touch-primary-action-prominent)',
+  padding: 'var(--space-md) var(--space-xl)',
+};
+
 export default function Landing() {
   const { t } = useTranslation('public');
 
@@ -41,7 +46,9 @@ export default function Landing() {
             <p className="landing__hero-subtitle">{t('landing.heroSubtitle')}</p>
             <div className="landing__hero-actions">
               <Link to="/login">
-                <Button variant="primary" size="lg">{t('landing.heroCta')}</Button>
+                <Button variant="primary" size="lg" style={PROMINENT_MARKETING_CTA_STYLE}>
+                  {t('landing.heroCta')}
+                </Button>
               </Link>
               <Link to="/parents">
                 <Button variant="secondary" size="lg">{t('landing.heroSecondary')}</Button>
@@ -108,7 +115,9 @@ export default function Landing() {
         <h2 className="landing__cta-title">{t('landing.ctaTitle')}</h2>
         <p className="landing__cta-subtitle">{t('landing.ctaSubtitle')}</p>
         <Link to="/login">
-          <Button variant="primary" size="lg">{t('landing.ctaButton')}</Button>
+          <Button variant="primary" size="lg" style={PROMINENT_MARKETING_CTA_STYLE}>
+            {t('landing.ctaButton')}
+          </Button>
         </Link>
       </section>
 

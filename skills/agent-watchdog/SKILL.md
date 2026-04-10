@@ -145,6 +145,85 @@ resumed.
 still being written to. Not necessarily broken, but worth flagging. Some
 complex heartbeats legitimately take time — only escalate if > 60 minutes.
 
+### Heuristic 7: Ghost running — status stuck after completion (CRITICAL)
+
+**Signature:** Agent status is `running` in the `agents` table, there is a
+`heartbeat_runs` record in `running` status with either NULL `process_pid` or
+a dead PID, BUT `agent_runtime_state.last_run_status` = `succeeded`. The run
+actually completed but the server failed to transition the heartbeat_run
+record and the agent status.
+
+**Why it happens:** The Paperclip server can lose track of a run's lifecycle —
+especially after a server restart, memory pressure, or an internal error. The
+codex process finishes normally and writes `last_run_status = 'succeeded'` to
+`agent_runtime_state`, but the server never updates the `heartbeat_runs`
+record from `running` to `succeeded` and never sets the agent back to `idle`.
+
+**Cascading effect:** Every scheduled heartbeat gets queued but cannot start
+because the agent is "already running." The queue grows by 1 every heartbeat
+interval (e.g., 6/hour for a 10-min agent). After a few hours, a 10-min-
+interval agent can have 20+ queued runs that will never execute.
+
+**Detection query (DB only — check PID liveness separately via `ps`):**
+
+```bash
+cd /tmp && node -e "
+const { Client } = require('pg');
+const c = new Client({ host: '127.0.0.1', port: 54329, user: 'paperclip', database: 'paperclip', password: 'paperclip' });
+c.connect().then(async () => {
+  const r = await c.query(\`
+    SELECT a.id, a.name, a.status as agent_status,
+           rs.last_run_status, rs.session_id, rs.updated_at as runtime_updated,
+           hr.id as run_id, hr.status as run_status, hr.process_pid,
+           hr.started_at as run_started,
+           hr.error as run_error,
+           (SELECT COUNT(*) FROM heartbeat_runs q
+            WHERE q.agent_id = a.id AND q.status = 'queued') as queued_count
+    FROM agents a
+    JOIN agent_runtime_state rs ON rs.agent_id = a.id
+    LEFT JOIN heartbeat_runs hr ON hr.agent_id = a.id AND hr.status = 'running'
+    WHERE a.company_id = '\$COMPANY_ID'
+      AND a.status = 'running'
+  \`);
+  r.rows.forEach(row => {
+    const isGhost = row.run_status === 'running' && row.last_run_status === 'succeeded';
+    const isLostHandle = (row.run_error || '').includes('Lost in-memory process handle');
+    if (isGhost || isLostHandle) {
+      console.log('GHOST_RUNNING:', row.name,
+        '| run_status:', row.run_status,
+        '| last_run_status:', row.last_run_status,
+        '| pid:', row.process_pid,
+        '| queued:', row.queued_count,
+        '| lost_handle:', isLostHandle);
+    }
+  });
+  await c.end();
+}).catch(e => console.error(e.message));
+"
+
+# For each PID reported above, verify liveness:
+# ps -p $PID -o pid= 2>/dev/null && echo "ALIVE" || echo "DEAD"
+```
+
+**Decision matrix:**
+
+| `last_run_status` | heartbeat_run `running`? | PID alive? | Action |
+|---|---|---|---|
+| `succeeded` | Yes, NULL PID | N/A | **Ghost** — Procedure H |
+| `succeeded` | Yes, dead PID | No | **Ghost** — Procedure H |
+| `succeeded` | Yes, alive PID | Yes | **Lost handle** — Kill PID, then Procedure H |
+| `failed` | Yes, alive PID | Yes | **Hung** — use existing Procedure A + B + C + D |
+| `failed` | Yes, dead PID | No | **Dead** — use existing Procedure B + C + D |
+
+### Heuristic 8: Lost process handle (CRITICAL)
+
+**Signature:** A `heartbeat_runs` record has `error` containing "Lost
+in-memory process handle, but child pid X is still alive". The Paperclip
+server restarted or had an internal error and lost its reference to the child
+process. The process may still be running as an orphan.
+
+**Recovery:** Kill the orphaned process, then apply Procedure H.
+
 ## Phase 2b — Detect Idle PM (CEO)
 
 The PM (CEO) drives the entire team. If it's idle for too long without a
@@ -427,6 +506,106 @@ npx paperclipai heartbeat run --agent-id $AGENT_ID --source on_demand --trigger 
 If this works but the agent goes silent again after one cycle, the Paperclip
 scheduler may need a restart. Log this for escalation.
 
+### Procedure H: Detect and fix all ghost running agents (batch)
+
+When an agent's status is `running` but the run actually completed (Heuristic
+7/8), the `/resume` API won't work because the agent isn't in `error` state.
+You must fix the DB directly. This script detects AND fixes all ghosts in one
+pass — run it as-is, no per-agent substitution needed.
+
+```bash
+cd /tmp && node -e "
+const { Client } = require('pg');
+const c = new Client({ host: '127.0.0.1', port: 54329, user: 'paperclip', database: 'paperclip', password: 'paperclip' });
+c.connect().then(async () => {
+  // --- DETECT all ghost running agents ---
+  const ghosts = await c.query(\`
+    SELECT a.id, a.name,
+           rs.last_run_status,
+           hr.id as stale_run_id, hr.process_pid, hr.error as run_error,
+           (SELECT COUNT(*) FROM heartbeat_runs q
+            WHERE q.agent_id = a.id AND q.status = 'queued') as queued_count
+    FROM agents a
+    JOIN agent_runtime_state rs ON rs.agent_id = a.id
+    LEFT JOIN heartbeat_runs hr ON hr.agent_id = a.id AND hr.status = 'running'
+    WHERE a.company_id = '\$COMPANY_ID'
+      AND a.status = 'running'
+      AND (
+        rs.last_run_status = 'succeeded'
+        OR hr.error LIKE '%Lost in-memory process handle%'
+      )
+  \`);
+
+  if (ghosts.rows.length === 0) {
+    console.log('GHOST_CHECK: clean — no ghost running agents');
+    await c.end();
+    return;
+  }
+
+  console.log('GHOST_CHECK: found', ghosts.rows.length, 'ghost running agent(s)');
+
+  // --- FIX each ghost ---
+  for (const g of ghosts.rows) {
+    console.log('\\n--- Fixing:', g.name, '---');
+    console.log('  last_run_status:', g.last_run_status, '| pid:', g.process_pid, '| queued:', g.queued_count);
+
+    // Step 1: Mark stale 'running' heartbeat_runs as failed
+    const r1 = await c.query(
+      \"UPDATE heartbeat_runs SET status = 'failed', finished_at = NOW(), \" +
+      \"error = 'Watchdog: ghost running - completed but not transitioned' \" +
+      \"WHERE agent_id = '\" + g.id + \"' AND status = 'running' RETURNING id\"
+    );
+    console.log('  [1] Marked', r1.rows.length, 'stale running run(s) as failed');
+
+    // Step 2: Cancel all queued runs (accumulated while stuck)
+    const r2 = await c.query(
+      \"UPDATE heartbeat_runs SET status = 'cancelled', finished_at = NOW(), \" +
+      \"error = 'Watchdog: cancelled - queued while agent was ghost running' \" +
+      \"WHERE agent_id = '\" + g.id + \"' AND status = 'queued' RETURNING id\"
+    );
+    console.log('  [2] Cancelled', r2.rows.length, 'queued run(s)');
+
+    // Step 3: Reset agent status to idle (NOT /resume — agent is 'running', not 'error')
+    const r3 = await c.query(
+      \"UPDATE agents SET status = 'idle' WHERE id = '\" + g.id + \"' AND status = 'running' RETURNING name\"
+    );
+    console.log('  [3] Reset agent to idle:', r3.rows.length > 0 ? 'done' : 'FAILED');
+
+    // Step 4: Clear session state so next heartbeat starts fresh
+    await c.query(
+      \"UPDATE agent_runtime_state SET session_id = NULL, last_error = NULL, \" +
+      \"last_run_status = 'completed' WHERE agent_id = '\" + g.id + \"'\"
+    );
+    console.log('  [4] Cleared session state');
+
+    // Report orphaned PID for manual kill
+    if (g.process_pid) {
+      console.log('  [!] Orphan PID', g.process_pid, '— verify and kill if alive');
+    }
+  }
+
+  console.log('\\nGHOST_RECOVERY: done —', ghosts.rows.length, 'agent(s) reset to idle');
+  await c.end();
+}).catch(e => console.error('GHOST_CHECK_ERROR:', e.message));
+"
+
+# Kill any orphaned PIDs reported by the script above:
+# ps -p $PID -o pid= 2>/dev/null && kill $PID
+```
+
+**After running:** For each PID printed with `[!]`, check if it's alive
+(`ps -p $PID -o pid=`) and kill it if so. Then verify all fixed agents show
+`idle` via the API.
+
+**Key facts about Procedure H:**
+- Directly updates `agents.status` to `idle` — the `/resume` API rejects
+  agents in `running` state (it only works for `error`/`paused`)
+- Cancels queued runs instead of letting them drain — they accumulated while
+  the agent was stuck and would fire in a burst otherwise
+- Clears `session_id` to force a fresh session on next heartbeat
+- The detection query matches BOTH `last_run_status = 'succeeded'` ghosts AND
+  `Lost in-memory process handle` orphans in one pass
+
 ### Recovery Flowchart
 
 ```
@@ -436,6 +615,11 @@ For each agent with a problem:
    ├─ Process alive + log stale > 10min? → Kill (A) → Clear session (B) → Mark run failed (C) → Resume (D)
    ├─ Process dead? → Clear session (B) → Mark run failed (C) → Resume (D)
    └─ Process alive + log fresh? → Skip (healthy)
+
+1b. Is status "running" but last_run_status = "succeeded"? (GHOST)
+   ├─ PID alive? → Kill (A) → Reset ghost (H)
+   ├─ PID dead or NULL? → Reset ghost (H)
+   └─ Lost-handle error? → Kill (A) → Reset ghost (H)
 
 2. Is status "error"?
    └─ Has stale session_id? → Clear session (B) → Resume (D)

@@ -61,3 +61,66 @@ Calling `POST /api/issues/{id}/release` after a blocker update can transition th
 
 ## 2026-04-10 — Assignment-triggered wake alone is not enough to re-open blocked QA loops
 If `PAPERCLIP_WAKE_REASON=issue_assigned` wakes QA on an issue that is still `blocked` and there are no newer comments/status changes after the latest QA blocker note, apply blocked-task dedup and exit quietly. This avoids duplicate blocker comments while waiting for real unblocking context.
+
+## 2026-04-10 — Freshly created QA blockers still need first explicit dependency handoff
+If a newly assigned QA issue arrives already `blocked` with no thread history, run a dependency status sweep immediately; when upstream implementation lanes are incomplete, checkout once, post the first blocker comment with linked unblock criteria, and reassign to the technical coordinator so the lane does not idle in QA.
+
+## 2026-04-10 — Comment-triggered wake can be the unblock signal for stale blocked QA lanes
+When a wake is triggered by a new issue comment and the comment reports dependency completion, treat it as fresh unblock context (not blocked-task dedup): read the exact comment first, checkout once, post an execution-start checkpoint with ETA, then run and close the QA matrix if gates pass.
+
+## 2026-04-10 — Closure retests should include script-backed audio parity evidence
+For game QA signoff, pair the pass/fail matrix with a deterministic namespace parity check (extracted keys vs `manifest.json` plus on-disk file existence). Reporting explicit counts (for example `49/49` mapped, `0` missing) speeds unblock decisions and reduces debate on audio completeness.
+
+## 2026-04-10 — Runtime-proof blockers should be routed back with explicit evidence checklist
+When backend handoff includes code-level readiness but QA cannot execute required environment-level validation (secrets/allowlist/deployed endpoint/policy probe), post a pass/fail matrix that separates code-level vs runtime-level evidence, set status `blocked`, and reassign to the technical owner with concrete repro/proof requirements for re-handoff.
+
+## 2026-04-10 — Dependency status flips can override blocked-comment dedup
+If a blocked QA lane has no new comments but upstream dependency tickets changed state to `done`, re-checkout and run a fresh validation pass instead of skipping the heartbeat on dedup rules alone.
+
+## 2026-04-10 — Audio-first audits must verify title/subtitle and full icon inventory, not just prior line-item fixes
+When re-testing a FED fix issue sourced from the audio-first/icon-driven audit, treat the audit baseline as authoritative: remaining title/subtitle replay gaps and missing persistent `↻`/`💡` controls should keep QA blocked even if previously reported message/instruction gaps are fixed.
+
+## 2026-04-10 — QA shell handoff should fail on raw backend error copy in auth flows
+Even when route structure and build checks pass, rendering `err.message` directly in login/auth UI violates Hebrew i18n guarantees and can surface uncontrolled English text. Treat this as a blocker and require mapped i18n error keys before QA signoff.
+
+## 2026-04-10 — Report out-of-scope typecheck failures as scoped caveats in targeted closure lanes
+When validating a narrow QA fix (for example a checkpoint-control defect) in a shared workspace, a repo-wide `yarn typecheck` failure outside the touched lane should be documented with exact file/line evidence and marked non-blocking for that lane's closure decision. This preserves signal for the validated fix while still surfacing platform health risk.
+
+## 2026-04-10 — Validate audio-overlap behavior against `play` vs `playNow` semantics
+A game can appear audio-complete (keys mapped, files present, replay controls wired) and still violate overlap requirements if prompt/instruction cues only use queued `audio.play(...)`. For specs that require latest-instruction preemption, QA should compare game call sites to `useAudioManager` semantics (`play` queues, `playNow` interrupts) and block signoff when interrupt priority is missing.
+
+## 2026-04-10 — `issues?identifier=` can return unfiltered lists on local Paperclip API
+In this environment, querying `/api/companies/{companyId}/issues?identifier=...` returned the full issue set instead of a single filtered record. For blocker checks, fetch concise issue fields and filter by `.identifier` client-side (for example with `jq`) before citing dependency status.
+
+## 2026-04-10 — Queued comment-triggered runs can lock QA-ready `todo` lanes
+Even when all implementation dependencies are `done`, a queued run attached from issue-comment context can set `executionRunId` on a QA-assigned `todo` issue and force first checkout to return `409`. Handle as lock-normalization work: no retry, block with exact run id, and reassign to the run owner for cleanup.
+
+## 2026-04-10 — Collapsed `aria-hidden` panels still fail if focusable children stay mounted
+For accordion/sheet UIs, visual collapse (`max-height: 0`, opacity, pointer-events) plus `aria-hidden` is insufficient when interactive descendants remain in DOM with `tabIndex`/button roles. QA should explicitly verify hidden panels are removed from sequential focus (conditional render, `inert`, or equivalent) before signoff.
+
+## 2026-04-10 — Validate spec-required i18n/audio families even if runtime keys compile cleanly
+A game can pass typecheck and runtime key/file checks for currently referenced keys but still fail spec-level audio requirements when mandatory key families are missing (for example `prompts.inactivity`, `hints.corners/edges`, `recovery.demo`, `rewards`). QA should diff mandatory spec families against locale/audio tree before signoff.
+
+## 2026-04-10 — Icon-first buttons must not override distinct visible values with a shared `aria-label`
+When multiple action chips display different visible values (for example `+1`, `+2`, `+3`), applying the same `aria-label` to all of them erases that distinction for assistive tech. QA should treat this as an accessibility blocker and require unique, localized accessible names per option.
+
+## 2026-04-10 — Audio-first "child-visible text" includes headers and summary cards, not only instruction blocks
+For issues using the [DUB-131](/DUB/issues/DUB-131) baseline, treat any visible text surface as in-scope for adjacent replay validation, including game title/subtitle rows and completion-summary paragraphs. If those strings lack per-surface replay controls, keep QA blocked even when check-button removal and message-row replay work are complete.
+
+## 2026-04-10 — Single-run checkout context can prevent multi-issue QA within one heartbeat
+When a run is wake-bound to one issue, a second checkout in the same run can fail with `Checkout run context is bound to a different issue` (includes `snapshotIssueId`). In that case, complete and hand off the wake-bound issue, then wait for the queued run on the other issue instead of forcing a cross-issue checkout.
+
+## 2026-04-10 — Verify claimed UX removals against both route shell and in-game markup
+When implementation notes claim duplicate heading cleanup, confirm both the page shell (`h1`/subtitle) and game-card header (`h2`/subtitle) in code before signoff. In [DUB-110](/DUB/issues/DUB-110), the update comment stated removal, but both title surfaces were still rendered and required a blocker re-handoff.
+
+## 2026-04-10 — Use `/issues/{id}/activity` as the canonical checkout evidence source
+For QA checkout validation, `/api/issues/{id}/activity` reliably provides `issue.checked_out` events with `runId`, actor, and timestamp, which is cleaner than parsing heartbeat log blobs. Use logs only for conflict payload details (`snapshotIssueId`, error body), and build pass/fail matrices from activity + targeted conflict snippets.
+
+## 2026-04-10 — A mention-triggered PM run can remain queued long enough to block same-heartbeat QA closure
+Even when QA posts an explicit `@PM` request with concrete validation steps, the triggered run may stay `queued` (no checkout events, no comment updates) for the full QA heartbeat window. In this case, post the matrix with completed evidence, set QA issue to `blocked`, and pin unblock to the queued run id and required output fields.
+
+## 2026-04-10 — Closure retests should explicitly re-verify previously blocked surfaces and their audio files
+When a lane is re-opened after targeted replay-affordance fixes, close QA only after re-checking the exact previously blocked text surfaces (with line refs) and confirming matching audio files exist on disk. This keeps closure decisions objective and prevents regressions from being missed in broad visual scans.
+
+## 2026-04-10 — Treat icon inventory narration rules as explicit QA gates
+When a game spec marks icon inventory as mandatory (for example replay/hint/retry/next), QA should verify each icon tap has its required narrated cue, not just icon presence and control wiring. A next/continue icon without tap narration is a blocker even if navigation logic works.

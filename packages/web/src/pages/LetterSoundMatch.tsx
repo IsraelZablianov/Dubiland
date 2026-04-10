@@ -21,7 +21,7 @@ const LETTER_SOUND_MATCH_GAME: Game = {
   componentKey: 'LetterSoundMatchGame',
   difficulty: 3,
   sortOrder: 1,
-  thumbnailUrl: null,
+  thumbnailUrl: '/images/games/thumbnails/letterSoundMatch/thumb-16x10.webp',
   audioUrl: '/audio/he/games/letter-sound-match/instructions/intro.mp3',
   isPublished: true,
   createdAt: '2026-04-10T00:00:00.000Z',

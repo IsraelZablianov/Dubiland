@@ -1,0 +1,639 @@
+diff --git a/packages/shared/src/validators/issue.ts b/packages/shared/src/validators/issue.ts
+index 63b070a..6bcba3b 100644
+--- a/packages/shared/src/validators/issue.ts
++++ b/packages/shared/src/validators/issue.ts
+@@ -113,7 +113,38 @@ export const issueExecutionStateSchema = z.object({
+   lastDecisionOutcome: z.enum(ISSUE_EXECUTION_DECISION_OUTCOMES).nullable(),
+ });
+ 
+-export const createIssueSchema = z.object({
++const managerAssigneeOverrideShape = z.object({
++  managerAssigneeOverride: z.boolean().optional(),
++  managerAssigneeOverrideRationale: z.string().max(2000).optional().nullable(),
++});
++
++function refineManagerAssigneeOverride(
++  value: z.infer<typeof managerAssigneeOverrideShape>,
++  ctx: z.RefinementCtx,
++) {
++  if (value.managerAssigneeOverride === true) {
++    const rationale = value.managerAssigneeOverrideRationale?.trim() ?? "";
++    if (rationale.length < 10) {
++      ctx.addIssue({
++        code: z.ZodIssueCode.custom,
++        message: "managerAssigneeOverride requires managerAssigneeOverrideRationale (min 10 characters)",
++        path: ["managerAssigneeOverrideRationale"],
++      });
++    }
++  }
++  const hasRationale =
++    value.managerAssigneeOverrideRationale != null &&
++    value.managerAssigneeOverrideRationale.trim().length > 0;
++  if (hasRationale && value.managerAssigneeOverride !== true) {
++    ctx.addIssue({
++      code: z.ZodIssueCode.custom,
++      message: "managerAssigneeOverrideRationale requires managerAssigneeOverride: true",
++      path: ["managerAssigneeOverride"],
++    });
++  }
++}
++
++const createIssueCoreSchema = z.object({
+   projectId: z.string().uuid().optional().nullable(),
+   projectWorkspaceId: z.string().uuid().optional().nullable(),
+   goalId: z.string().uuid().optional().nullable(),
+@@ -136,6 +167,10 @@ export const createIssueSchema = z.object({
+   labelIds: z.array(z.string().uuid()).optional(),
+ });
+ 
++export const createIssueSchema = createIssueCoreSchema
++  .merge(managerAssigneeOverrideShape)
++  .superRefine(refineManagerAssigneeOverride);
++
+ export type CreateIssue = z.infer<typeof createIssueSchema>;
+ 
+ export const createIssueLabelSchema = z.object({
+@@ -145,12 +180,16 @@ export const createIssueLabelSchema = z.object({
+ 
+ export type CreateIssueLabel = z.infer<typeof createIssueLabelSchema>;
+ 
+-export const updateIssueSchema = createIssueSchema.partial().extend({
+-  comment: z.string().min(1).optional(),
+-  reopen: z.boolean().optional(),
+-  interrupt: z.boolean().optional(),
+-  hiddenAt: z.string().datetime().nullable().optional(),
+-});
++export const updateIssueSchema = createIssueCoreSchema
++  .partial()
++  .merge(managerAssigneeOverrideShape)
++  .extend({
++    comment: z.string().min(1).optional(),
++    reopen: z.boolean().optional(),
++    interrupt: z.boolean().optional(),
++    hiddenAt: z.string().datetime().nullable().optional(),
++  })
++  .superRefine(refineManagerAssigneeOverride);
+ 
+ export type UpdateIssue = z.infer<typeof updateIssueSchema>;
+ export type IssueExecutionWorkspaceSettings = z.infer<typeof issueExecutionWorkspaceSettingsSchema>;
+diff --git a/server/src/__tests__/issue-manager-assignee-guardrail.test.ts b/server/src/__tests__/issue-manager-assignee-guardrail.test.ts
+new file mode 100644
+index 0000000..d1025ec
+--- /dev/null
++++ b/server/src/__tests__/issue-manager-assignee-guardrail.test.ts
+@@ -0,0 +1,264 @@
++import { randomUUID } from "node:crypto";
++import { eq } from "drizzle-orm";
++import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
++import {
++  activityLog,
++  agents,
++  companies,
++  createDb,
++  instanceSettings,
++  issues,
++} from "@paperclipai/db";
++import {
++  getEmbeddedPostgresTestSupport,
++  startEmbeddedPostgresTestDatabase,
++} from "./helpers/embedded-postgres.js";
++import { issueService } from "../services/issues.ts";
++import {
++  isImplementationLaneTitle,
++  resolveManagerAssigneeGuardrail,
++} from "../services/issue-manager-assignee-guardrail.js";
++
++const embeddedPostgresSupport = await getEmbeddedPostgresTestSupport();
++const describeEmbeddedPostgres = embeddedPostgresSupport.supported ? describe : describe.skip;
++
++if (!embeddedPostgresSupport.supported) {
++  console.warn(
++    `Skipping embedded Postgres manager-assignee guardrail tests: ${embeddedPostgresSupport.reason ?? "unsupported"}`,
++  );
++}
++
++describeEmbeddedPostgres("issue.manager_assignee_guardrail", () => {
++  let db!: ReturnType<typeof createDb>;
++  let svc!: ReturnType<typeof issueService>;
++  let tempDb: Awaited<ReturnType<typeof startEmbeddedPostgresTestDatabase>> | null = null;
++
++  beforeAll(async () => {
++    tempDb = await startEmbeddedPostgresTestDatabase("paperclip-manager-guardrail-");
++    db = createDb(tempDb.connectionString);
++    svc = issueService(db);
++  }, 20_000);
++
++  afterEach(async () => {
++    await db.delete(activityLog);
++    await db.delete(issues);
++    await db.delete(agents);
++    await db.delete(instanceSettings);
++    await db.delete(companies);
++  });
++
++  afterAll(async () => {
++    await tempDb?.cleanup();
++  });
++
++  it("detects implementation lane titles", () => {
++    expect(isImplementationLaneTitle("[FED] Ship feature")).toBe(true);
++    expect(isImplementationLaneTitle("[Backend] Add API")).toBe(true);
++    expect(isImplementationLaneTitle("Implement game: Foo")).toBe(true);
++    expect(isImplementationLaneTitle("Planning only")).toBe(false);
++  });
++
++  it("reroutes manager assignee to default IC on create", async () => {
++    const companyId = randomUUID();
++    const pmId = randomUUID();
++    const fedId = randomUUID();
++
++    await db.insert(companies).values({
++      id: companyId,
++      name: "Co",
++      issuePrefix: `G${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
++      requireBoardApprovalForNewAgents: false,
++    });
++
++    await db.insert(agents).values([
++      {
++        id: pmId,
++        companyId,
++        name: "PM",
++        role: "ceo",
++        status: "active",
++        adapterType: "cursor",
++        adapterConfig: {},
++        runtimeConfig: {},
++        permissions: {},
++      },
++      {
++        id: fedId,
++        companyId,
++        name: "FED",
++        role: "engineer",
++        status: "active",
++        adapterType: "cursor",
++        adapterConfig: {},
++        runtimeConfig: {},
++        permissions: {},
++      },
++    ]);
++
++    const issue = await svc.create(companyId, {
++      title: "[FED] Fix the thing",
++      status: "todo",
++      assigneeAgentId: pmId,
++      createdByAgentId: pmId,
++      createdByUserId: null,
++    });
++
++    expect(issue.assigneeAgentId).toBe(fedId);
++
++    const logs = await db
++      .select()
++      .from(activityLog)
++      .where(eq(activityLog.entityId, issue.id));
++    const guardLog = logs.find((row) => row.action === "issue.manager_assignee_guardrail");
++    expect(guardLog).toBeDefined();
++    expect(guardLog?.details).toMatchObject({
++      outcome: "rerouted",
++      fromAgentId: pmId,
++      toAgentId: fedId,
++    });
++  });
++
++  it("allows manager assignee when override + rationale is provided", async () => {
++    const companyId = randomUUID();
++    const pmId = randomUUID();
++    const fedId = randomUUID();
++
++    await db.insert(companies).values({
++      id: companyId,
++      name: "Co",
++      issuePrefix: `H${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
++      requireBoardApprovalForNewAgents: false,
++    });
++
++    await db.insert(agents).values([
++      {
++        id: pmId,
++        companyId,
++        name: "PM",
++        role: "pm",
++        status: "active",
++        adapterType: "cursor",
++        adapterConfig: {},
++        runtimeConfig: {},
++        permissions: {},
++      },
++      {
++        id: fedId,
++        companyId,
++        name: "FED",
++        role: "engineer",
++        status: "active",
++        adapterType: "cursor",
++        adapterConfig: {},
++        runtimeConfig: {},
++        permissions: {},
++      },
++    ]);
++
++    const issue = await svc.create(companyId, {
++      title: "[QA] Review pass",
++      status: "todo",
++      assigneeAgentId: pmId,
++      managerAssigneeOverride: true,
++      managerAssigneeOverrideRationale: "PM owns this coordination lane until FED handoff.",
++      createdByAgentId: pmId,
++      createdByUserId: null,
++    });
++
++    expect(issue.assigneeAgentId).toBe(pmId);
++
++    const logs = await db
++      .select()
++      .from(activityLog)
++      .where(eq(activityLog.entityId, issue.id));
++    const guardLog = logs.find((row) => row.action === "issue.manager_assignee_guardrail");
++    expect(guardLog?.details).toMatchObject({ outcome: "override" });
++  });
++
++  it("resolveManagerAssigneeGuardrail throws when override is true but rationale is too short", async () => {
++    const companyId = randomUUID();
++    const pmId = randomUUID();
++
++    await db.insert(companies).values({
++      id: companyId,
++      name: "Co",
++      issuePrefix: `I${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
++      requireBoardApprovalForNewAgents: false,
++    });
++
++    await db.insert(agents).values({
++      id: pmId,
++      companyId,
++      name: "PM",
++      role: "ceo",
++      status: "active",
++      adapterType: "cursor",
++      adapterConfig: {},
++      runtimeConfig: {},
++      permissions: {},
++    });
++
++    await expect(
++      resolveManagerAssigneeGuardrail(db, companyId, {
++        title: "[FED] X",
++        assigneeAgentId: pmId,
++        managerAssigneeOverride: true,
++        managerAssigneeOverrideRationale: "short",
++      }),
++    ).rejects.toMatchObject({ status: 422 });
++  });
++
++  it("patches assignee on title change to implementation lane", async () => {
++    const companyId = randomUUID();
++    const pmId = randomUUID();
++    const fedId = randomUUID();
++
++    await db.insert(companies).values({
++      id: companyId,
++      name: "Co",
++      issuePrefix: `J${companyId.replace(/-/g, "").slice(0, 6).toUpperCase()}`,
++      requireBoardApprovalForNewAgents: false,
++    });
++
++    await db.insert(agents).values([
++      {
++        id: pmId,
++        companyId,
++        name: "PM",
++        role: "pm",
++        status: "active",
++        adapterType: "cursor",
++        adapterConfig: {},
++        runtimeConfig: {},
++        permissions: {},
++      },
++      {
++        id: fedId,
++        companyId,
++        name: "FED",
++        role: "engineer",
++        status: "active",
++        adapterType: "cursor",
++        adapterConfig: {},
++        runtimeConfig: {},
++        permissions: {},
++      },
++    ]);
++
++    const created = await svc.create(companyId, {
++      title: "Coordination task",
++      status: "todo",
++      assigneeAgentId: pmId,
++      createdByAgentId: pmId,
++      createdByUserId: null,
++    });
++    expect(created.assigneeAgentId).toBe(pmId);
++
++    const updated = await svc.update(created.id, {
++      title: "[FED] Now implementation",
++      actorAgentId: pmId,
++      actorUserId: null,
++    });
++    expect(updated?.assigneeAgentId).toBe(fedId);
++  });
++});
+diff --git a/server/src/services/issue-manager-assignee-guardrail.ts b/server/src/services/issue-manager-assignee-guardrail.ts
+new file mode 100644
+index 0000000..ede6349
+--- /dev/null
++++ b/server/src/services/issue-manager-assignee-guardrail.ts
+@@ -0,0 +1,122 @@
++import { and, asc, eq, inArray, notInArray } from "drizzle-orm";
++import type { Db } from "@paperclipai/db";
++import { agents } from "@paperclipai/db";
++import type { AgentRole } from "@paperclipai/shared";
++import { unprocessable } from "../errors.js";
++
++const MANAGER_ASSIGNMENT_ROLES = new Set<AgentRole>(["ceo", "cto", "cmo", "cfo", "pm"]);
++
++const IC_ASSIGNMENT_ROLES: AgentRole[] = [
++  "engineer",
++  "designer",
++  "qa",
++  "devops",
++  "researcher",
++  "general",
++];
++
++const IMPLEMENTATION_LANE_BRACKET_RE =
++  /\[(?:FED|Backend|QA|Performance|Architect|UX|Media|SEO|Content|Gaming|DevOps)\b[^\]]*\]/i;
++
++const IMPLEMENTATION_TITLE_PREFIX_RE = /^Implement(?:ing)?\b/i;
++
++export function isImplementationLaneTitle(title: string): boolean {
++  const t = title.trim();
++  if (IMPLEMENTATION_TITLE_PREFIX_RE.test(t)) return true;
++  return IMPLEMENTATION_LANE_BRACKET_RE.test(t);
++}
++
++export function isManagerAssignmentRole(role: string): boolean {
++  return MANAGER_ASSIGNMENT_ROLES.has(role as AgentRole);
++}
++
++export type ManagerAssigneeGuardrailResolution =
++  | { kind: "noop" }
++  | { kind: "override_allowed"; managerAgentId: string }
++  | { kind: "rerouted"; fromAgentId: string; toAgentId: string | null };
++
++export type ManagerAssigneeGuardrailLogDetails = {
++  outcome: "rerouted" | "override";
++  implementationLaneTitle: true;
++  fromAgentId: string;
++  toAgentId: string | null;
++  rationalePreview?: string;
++};
++
++async function pickDefaultIcAgent(db: Pick<Db, "select">, companyId: string): Promise<string | null> {
++  const row = await db
++    .select({ id: agents.id })
++    .from(agents)
++    .where(
++      and(
++        eq(agents.companyId, companyId),
++        inArray(agents.role, IC_ASSIGNMENT_ROLES),
++        notInArray(agents.status, ["pending_approval", "terminated"]),
++      ),
++    )
++    .orderBy(asc(agents.name))
++    .limit(1)
++    .then((rows) => rows[0] ?? null);
++  return row?.id ?? null;
++}
++
++export async function resolveManagerAssigneeGuardrail(
++  db: Pick<Db, "select">,
++  companyId: string,
++  input: {
++    title: string;
++    assigneeAgentId: string;
++    managerAssigneeOverride?: boolean | null;
++    managerAssigneeOverrideRationale?: string | null;
++  },
++): Promise<{
++  assigneeAgentId: string | null;
++  resolution: ManagerAssigneeGuardrailResolution;
++  logDetails: ManagerAssigneeGuardrailLogDetails | null;
++}> {
++  if (!isImplementationLaneTitle(input.title)) {
++    return { assigneeAgentId: input.assigneeAgentId, resolution: { kind: "noop" }, logDetails: null };
++  }
++
++  const assigneeRow = await db
++    .select({ id: agents.id, role: agents.role })
++    .from(agents)
++    .where(and(eq(agents.id, input.assigneeAgentId), eq(agents.companyId, companyId)))
++    .then((rows) => rows[0] ?? null);
++
++  if (!assigneeRow || !isManagerAssignmentRole(assigneeRow.role)) {
++    return { assigneeAgentId: input.assigneeAgentId, resolution: { kind: "noop" }, logDetails: null };
++  }
++
++  if (input.managerAssigneeOverride === true) {
++    const rationale = input.managerAssigneeOverrideRationale?.trim() ?? "";
++    if (rationale.length < 10) {
++      throw unprocessable(
++        "managerAssigneeOverride requires managerAssigneeOverrideRationale with at least 10 characters",
++      );
++    }
++    return {
++      assigneeAgentId: input.assigneeAgentId,
++      resolution: { kind: "override_allowed", managerAgentId: input.assigneeAgentId },
++      logDetails: {
++        outcome: "override",
++        implementationLaneTitle: true,
++        fromAgentId: input.assigneeAgentId,
++        toAgentId: input.assigneeAgentId,
++        rationalePreview: rationale.slice(0, 240),
++      },
++    };
++  }
++
++  const toAgentId = await pickDefaultIcAgent(db, companyId);
++  return {
++    assigneeAgentId: toAgentId,
++    resolution: { kind: "rerouted", fromAgentId: input.assigneeAgentId, toAgentId },
++    logDetails: {
++      outcome: "rerouted",
++      implementationLaneTitle: true,
++      fromAgentId: input.assigneeAgentId,
++      toAgentId,
++    },
++  };
++}
+diff --git a/server/src/services/issues.ts b/server/src/services/issues.ts
+index bb40be7..f0d3f68 100644
+--- a/server/src/services/issues.ts
++++ b/server/src/services/issues.ts
+@@ -35,6 +35,12 @@ import { instanceSettingsService } from "./instance-settings.js";
+ import { redactCurrentUserText } from "../log-redaction.js";
+ import { resolveIssueGoalId, resolveNextIssueGoalId } from "./issue-goal-fallback.js";
+ import { getDefaultCompanyGoal } from "./goals.js";
++import { logActivity } from "./activity-log.js";
++import {
++  isImplementationLaneTitle,
++  resolveManagerAssigneeGuardrail,
++  type ManagerAssigneeGuardrailLogDetails,
++} from "./issue-manager-assignee-guardrail.js";
+ 
+ const ALL_ISSUE_STATUSES = ["backlog", "todo", "in_progress", "in_review", "blocked", "done", "cancelled"];
+ const MAX_ISSUE_COMMENT_PAGE_LIMIT = 500;
+@@ -119,6 +125,8 @@ type IssueCreateInput = Omit<typeof issues.$inferInsert, "companyId"> & {
+   labelIds?: string[];
+   blockedByIssueIds?: string[];
+   inheritExecutionWorkspaceFromIssueId?: string | null;
++  managerAssigneeOverride?: boolean;
++  managerAssigneeOverrideRationale?: string | null;
+ };
+ type IssueRelationSummaryMap = {
+   blockedBy: IssueRelationIssueSummary[];
+@@ -1383,6 +1391,8 @@ export function issueService(db: Db) {
+         labelIds: inputLabelIds,
+         blockedByIssueIds,
+         inheritExecutionWorkspaceFromIssueId,
++        managerAssigneeOverride,
++        managerAssigneeOverrideRationale,
+         ...issueData
+       } = data;
+       const isolatedWorkspacesEnabled = (await instanceSettings.getExperimental()).enableIsolatedWorkspaces;
+@@ -1391,16 +1401,29 @@ export function issueService(db: Db) {
+         delete issueData.executionWorkspacePreference;
+         delete issueData.executionWorkspaceSettings;
+       }
+-      if (data.assigneeAgentId && data.assigneeUserId) {
++      if (issueData.assigneeAgentId && issueData.assigneeUserId) {
+         throw unprocessable("Issue can only have one assignee");
+       }
+-      if (data.assigneeAgentId) {
+-        await assertAssignableAgent(companyId, data.assigneeAgentId);
++      let managerGuardrailLog: ManagerAssigneeGuardrailLogDetails | null = null;
++      if (issueData.assigneeAgentId) {
++        const resolved = await resolveManagerAssigneeGuardrail(db, companyId, {
++          title: issueData.title,
++          assigneeAgentId: issueData.assigneeAgentId,
++          managerAssigneeOverride,
++          managerAssigneeOverrideRationale,
++        });
++        if (resolved.resolution.kind === "rerouted") {
++          issueData.assigneeAgentId = resolved.assigneeAgentId;
++        }
++        managerGuardrailLog = resolved.logDetails;
+       }
+-      if (data.assigneeUserId) {
+-        await assertAssignableUser(companyId, data.assigneeUserId);
++      if (issueData.assigneeAgentId) {
++        await assertAssignableAgent(companyId, issueData.assigneeAgentId);
+       }
+-      if (data.status === "in_progress" && !data.assigneeAgentId && !data.assigneeUserId) {
++      if (issueData.assigneeUserId) {
++        await assertAssignableUser(companyId, issueData.assigneeUserId);
++      }
++      if (issueData.status === "in_progress" && !issueData.assigneeAgentId && !issueData.assigneeUserId) {
+         throw unprocessable("in_progress issues require an assignee");
+       }
+       return db.transaction(async (tx) => {
+@@ -1534,6 +1557,18 @@ export function issueService(db: Db) {
+         }
+ 
+         const [issue] = await tx.insert(issues).values(values).returning();
++        if (managerGuardrailLog) {
++          await logActivity(tx, {
++            companyId,
++            actorType: issue.createdByAgentId ? "agent" : issue.createdByUserId ? "user" : "system",
++            actorId: issue.createdByAgentId ?? issue.createdByUserId ?? "system",
++            agentId: issue.createdByAgentId ?? null,
++            action: "issue.manager_assignee_guardrail",
++            entityType: "issue",
++            entityId: issue.id,
++            details: managerGuardrailLog,
++          });
++        }
+         if (inputLabelIds) {
+           await syncIssueLabels(issue.id, companyId, inputLabelIds, tx);
+         }
+@@ -1576,8 +1611,13 @@ export function issueService(db: Db) {
+         blockedByIssueIds,
+         actorAgentId,
+         actorUserId,
++        managerAssigneeOverride,
++        managerAssigneeOverrideRationale,
+         ...issueData
+-      } = data;
++      } = data as typeof data & {
++        managerAssigneeOverride?: boolean;
++        managerAssigneeOverrideRationale?: string | null;
++      };
+       const isolatedWorkspacesEnabled = (await instanceSettings.getExperimental()).enableIsolatedWorkspaces;
+       if (!isolatedWorkspacesEnabled) {
+         delete issueData.executionWorkspaceId;
+@@ -1585,6 +1625,38 @@ export function issueService(db: Db) {
+         delete issueData.executionWorkspaceSettings;
+       }
+ 
++      let managerGuardrailLog: ManagerAssigneeGuardrailLogDetails | null = null;
++      const dbReader = dbOrTx === db ? db : dbOrTx;
++      const mergedAssigneeUserId =
++        issueData.assigneeUserId !== undefined ? issueData.assigneeUserId : existing.assigneeUserId;
++      if (!mergedAssigneeUserId) {
++        const effectiveTitle = issueData.title !== undefined ? issueData.title : existing.title;
++        const effectiveAgentAssignee =
++          issueData.assigneeAgentId !== undefined ? issueData.assigneeAgentId : existing.assigneeAgentId;
++        const assigneeAgentPatched =
++          issueData.assigneeAgentId !== undefined &&
++          issueData.assigneeAgentId !== existing.assigneeAgentId;
++        const titlePatched =
++          issueData.title !== undefined && issueData.title !== existing.title;
++        if (
++          typeof effectiveAgentAssignee === "string" &&
++          effectiveAgentAssignee &&
++          ((assigneeAgentPatched && issueData.assigneeAgentId !== null) ||
++            (titlePatched && isImplementationLaneTitle(effectiveTitle)))
++        ) {
++          const resolved = await resolveManagerAssigneeGuardrail(dbReader, existing.companyId, {
++            title: effectiveTitle,
++            assigneeAgentId: effectiveAgentAssignee,
++            managerAssigneeOverride,
++            managerAssigneeOverrideRationale,
++          });
++          if (resolved.resolution.kind === "rerouted") {
++            issueData.assigneeAgentId = resolved.assigneeAgentId;
++          }
++          managerGuardrailLog = resolved.logDetails;
++        }
++      }
++
+       if (issueData.status) {
+         assertTransition(existing.status, issueData.status);
+       }
+@@ -1690,6 +1762,18 @@ export function issueService(db: Db) {
+           );
+         }
+         const [enriched] = await withIssueLabels(tx, [updated]);
++        if (managerGuardrailLog) {
++          await logActivity(tx, {
++            companyId: existing.companyId,
++            actorType: actorAgentId ? "agent" : actorUserId ? "user" : "system",
++            actorId: actorAgentId ?? actorUserId ?? "system",
++            agentId: actorAgentId ?? null,
++            action: "issue.manager_assignee_guardrail",
++            entityType: "issue",
++            entityId: updated.id,
++            details: managerGuardrailLog,
++          });
++        }
+         return enriched;
+       };
+ 

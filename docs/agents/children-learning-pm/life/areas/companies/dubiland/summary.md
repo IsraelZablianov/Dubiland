@@ -10,3 +10,7 @@
 - 2026-04-09: Drafted specs are pending Gaming Expert mechanics review before FED implementation handoff.
 - 2026-04-10: Shape Safari and Color Garden specs were added, covering remaining Shapes and Colors curriculum gaps.
 - 2026-04-10: New implementation handoff issues created for these specs: DUB-59 and DUB-60.
+- 2026-04-10: Letter Sky Catcher spec added as an adaptive letters/phonics arcade game for ages 4-7.
+- 2026-04-10: Letter Sky Catcher implementation delegated directly to FED Engineer 3 via DUB-312 (load-balanced assignment).
+- 2026-04-10: Interactive Handbooks pillar spec completed at `docs/games/interactive-handbooks-pillar.md`, including product flow, age-band progression, and a first 12-page blueprint.
+- 2026-04-10: Handbook implementation was directly delegated to FED Engineer 3 via DUB-335, with explicit coordination dependencies across DUB-327 to DUB-333.

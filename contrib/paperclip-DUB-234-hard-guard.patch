@@ -1,0 +1,56 @@
+diff --git a/server/src/services/heartbeat.ts b/server/src/services/heartbeat.ts
+--- a/server/src/services/heartbeat.ts
++++ b/server/src/services/heartbeat.ts
+@@ -2705,6 +2705,28 @@ export function heartbeatService(db: Db) {
+                 if (activeExecutionRun && activeExecutionRun.status !== "queued" && activeExecutionRun.status !== "running") {
+                   activeExecutionRun = null;
+                 }
++                if (activeExecutionRun) {
++                  const legacyCtx = parseObject(activeExecutionRun.contextSnapshot);
++                  const snapIssueId = readNonEmptyString(legacyCtx.issueId);
++                  if (snapIssueId && snapIssueId !== issue.id) {
++                    await tx
++                      .update(issues)
++                      .set({
++                        executionRunId: null,
++                        executionAgentNameKey: null,
++                        executionLockedAt: null,
++                        updatedAt: new Date(),
++                      })
++                      .where(eq(issues.id, issue.id));
++                    activeExecutionRun = null;
++                  }
++                }
+                 if (!activeExecutionRun && issue.executionRunId) {
+                   await tx
+                     .update(issues)
+diff --git a/server/src/services/issues.ts b/server/src/services/issues.ts
+--- a/server/src/services/issues.ts
++++ b/server/src/services/issues.ts
+@@ -524,6 +524,33 @@ export function issueService(db: Db) {
+     async function adoptStaleCheckoutRun(input: AdoptStaleCheckoutRunInput) {
+       const stale = await isTerminalOrMissingHeartbeatRun(input.expectedCheckoutRunId);
+       if (!stale) return null;
++      const actorRun = await db
++        .select({
++          id: heartbeatRuns.id,
++          agentId: heartbeatRuns.agentId,
++          companyId: heartbeatRuns.companyId,
++          contextSnapshot: heartbeatRuns.contextSnapshot,
++        })
++        .from(heartbeatRuns)
++        .where(eq(heartbeatRuns.id, input.actorRunId))
++        .then((rows) => rows[0] ?? null);
++      if (!actorRun) return null;
++      const issueCompany = await db
++        .select({ companyId: issues.companyId })
++        .from(issues)
++        .where(eq(issues.id, input.issueId))
++        .then((rows) => rows[0] ?? null);
++      if (!issueCompany || actorRun.companyId !== issueCompany.companyId) return null;
++      if (actorRun.agentId !== input.actorAgentId) return null;
++      const adoptSnapshotIssueId = readSnapshotIssueId(actorRun.contextSnapshot);
++      if (adoptSnapshotIssueId && adoptSnapshotIssueId !== input.issueId) return null;
+       const now = new Date();
+       const adopted = await db
+         .update(issues)

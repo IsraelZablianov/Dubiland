@@ -1,8 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { MascotIllustration } from '@/components/illustrations';
 
 export function PublicFooter() {
-  const { t } = useTranslation('public');
+  const { t } = useTranslation(['public', 'common']);
   const year = new Date().getFullYear();
 
   return (
@@ -10,8 +11,8 @@ export function PublicFooter() {
       <div className="public-footer__inner">
         <div className="public-footer__brand">
           <Link to="/" className="public-footer__logo">
-            <span className="public-footer__logo-icon">🧸</span>
-            <span className="public-footer__logo-text">דובילנד</span>
+            <MascotIllustration variant="hero" size={36} className="public-footer__logo-icon" />
+            <span className="public-footer__logo-text">{t('common:branding.appName')}</span>
           </Link>
           <p className="public-footer__tagline">{t('footer.tagline')}</p>
         </div>
@@ -80,7 +81,7 @@ export function PublicFooter() {
         }
 
         .public-footer__logo-icon {
-          font-size: 1.75rem;
+          flex-shrink: 0;
         }
 
         .public-footer__logo-text {

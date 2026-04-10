@@ -2,7 +2,9 @@ import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { Button, Card, useTheme } from '@/components/design-system';
+import { Button, Card } from '@/components/design-system';
+import { MascotIllustration } from '@/components/illustrations';
+import { FloatingElement } from '@/components/motion';
 import { useAuth } from '@/hooks/useAuth';
 import { isSupabaseConfigured } from '@/lib/supabase';
 import { enableGuestMode, setActiveChildProfile } from '@/lib/session';
@@ -10,7 +12,6 @@ import { enableGuestMode, setActiveChildProfile } from '@/lib/session';
 export default function Login() {
   const { t } = useTranslation(['onboarding', 'common']);
   const navigate = useNavigate();
-  const { themeConfig } = useTheme();
   const { user, signInWithGoogle, signInWithEmail, signUp } = useAuth();
 
   const [showEmailForm, setShowEmailForm] = useState(false);
@@ -35,14 +36,21 @@ export default function Login() {
     setError('');
 
     if (!canUseHostedAuth) {
-      handleGuestContinue();
+      setError(t('onboarding:googleNeedsSupabase'));
       return;
     }
 
     try {
       await signInWithGoogle();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : t('common:errors.generic'));
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : typeof err === 'object' && err !== null && 'message' in err
+            ? String((err as { message: unknown }).message)
+            : '';
+      const looksDisabled = /not enabled|disabled|provider|unsupported/i.test(message);
+      setError(looksDisabled ? t('onboarding:googleDisabledOnServer') : t('common:errors.generic'));
     }
   };
 
@@ -61,8 +69,8 @@ export default function Login() {
       } else {
         await signInWithEmail(email, password);
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : t('common:errors.generic'));
+    } catch {
+      setError(t('common:errors.generic'));
     }
   };
 
@@ -91,7 +99,9 @@ export default function Login() {
         >
           {/* Welcome header */}
           <header style={{ display: 'grid', gap: 'var(--space-sm)', textAlign: 'center' }}>
-            <p style={{ fontSize: '3.5rem' }}>{themeConfig.mascotEmoji}</p>
+            <FloatingElement className="login-page__hero-mascot" delayMs={120}>
+              <MascotIllustration variant="hero" size={148} />
+            </FloatingElement>
             <h1
               style={{
                 fontSize: 'var(--font-size-2xl)',
@@ -107,9 +117,14 @@ export default function Login() {
           </header>
 
           {/* Primary CTA — try for free (guest mode) */}
-          <Button variant="primary" size="lg" onClick={handleGuestContinue} style={{ width: '100%' }}>
-            {t('onboarding:continueAsGuest')}
-          </Button>
+          <div className="login-page__guest-cta">
+            <Button variant="primary" size="lg" onClick={handleGuestContinue} style={{ width: '100%' }}>
+              {t('onboarding:continueAsGuest')}
+            </Button>
+            <FloatingElement className="login-page__guest-hint" delayMs={280}>
+              <MascotIllustration variant="hint" size={72} />
+            </FloatingElement>
+          </div>
 
           {/* Divider */}
           <div className="login-page__divider">
@@ -188,6 +203,25 @@ export default function Login() {
           min-height: 70vh;
         }
 
+        .login-page__hero-mascot {
+          display: flex;
+          justify-content: center;
+        }
+
+        .login-page__guest-cta {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          align-items: center;
+          gap: var(--space-sm);
+        }
+
+        .login-page__guest-hint {
+          inline-size: 72px;
+          block-size: 72px;
+          display: grid;
+          place-items: center;
+        }
+
         .login-page__divider {
           display: flex;
           align-items: center;
@@ -206,6 +240,16 @@ export default function Login() {
           color: var(--color-text-light);
           font-size: var(--font-size-xs);
           white-space: nowrap;
+        }
+
+        @media (max-width: 560px) {
+          .login-page__guest-cta {
+            grid-template-columns: minmax(0, 1fr);
+          }
+
+          .login-page__guest-hint {
+            justify-self: end;
+          }
         }
       `}</style>
     </div>

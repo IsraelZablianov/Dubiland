@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Card } from '@/components/design-system';
+import { MascotIllustration } from '@/components/illustrations';
+import { SuccessCelebration } from '@/components/motion';
 import type { GameProps, ParentSummaryMetrics, StableRange } from '@/games/engine';
 
 type GameLevelId = 1 | 2 | 3;
@@ -8,6 +10,8 @@ type HintTone = 'neutral' | 'hint' | 'success';
 type CountingNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
 type StatusKey =
+  | 'games.countingPicnic.title'
+  | 'games.countingPicnic.subtitle'
   | 'games.countingPicnic.instructions.intro'
   | 'games.countingPicnic.instructions.dragOneByOne'
   | 'games.countingPicnic.instructions.tapCheck'
@@ -25,7 +29,10 @@ type StatusKey =
   | 'feedback.greatEffort'
   | 'feedback.keepGoing'
   | 'feedback.excellent'
-  | 'feedback.youDidIt';
+  | 'feedback.youDidIt'
+  | 'nav.next'
+  | 'parentDashboard.games.countingPicnic.progressSummary'
+  | 'parentDashboard.games.countingPicnic.nextStep';
 
 type AudioKey = keyof typeof AUDIO_PATH_BY_KEY;
 
@@ -77,7 +84,7 @@ const OBJECT_PACKS = [
     distractors: ['🍋', '🥝'],
   },
   {
-    targets: ['🧸', '🪀', '🧩'],
+    targets: ['🪁', '🪀', '🧩'],
     distractors: ['🚗', '🎈'],
   },
   {
@@ -110,6 +117,8 @@ const NUMBER_KEY_BY_VALUE: Record<CountingNumber, AudioKey> = {
 };
 
 const AUDIO_PATH_BY_KEY = {
+  'games.countingPicnic.title': '/audio/he/games/counting-picnic/title.mp3',
+  'games.countingPicnic.subtitle': '/audio/he/games/counting-picnic/subtitle.mp3',
   'games.countingPicnic.instructions.intro':
     '/audio/he/games/counting-picnic/instructions/intro.mp3',
   'games.countingPicnic.instructions.dragOneByOne':
@@ -140,6 +149,15 @@ const AUDIO_PATH_BY_KEY = {
     '/audio/he/games/counting-picnic/feedback/success/amazing.mp3',
   'games.countingPicnic.feedback.success.celebrate':
     '/audio/he/games/counting-picnic/feedback/success/celebrate.mp3',
+  'feedback.greatEffort': '/audio/he/feedback/great-effort.mp3',
+  'feedback.keepGoing': '/audio/he/feedback/keep-going.mp3',
+  'feedback.excellent': '/audio/he/feedback/excellent.mp3',
+  'feedback.youDidIt': '/audio/he/feedback/you-did-it.mp3',
+  'nav.next': '/audio/he/nav/next.mp3',
+  'parentDashboard.games.countingPicnic.progressSummary':
+    '/audio/he/parent-dashboard/games/counting-picnic/progress-summary.mp3',
+  'parentDashboard.games.countingPicnic.nextStep':
+    '/audio/he/parent-dashboard/games/counting-picnic/next-step.mp3',
   'games.countingPicnic.numbers.1': '/audio/he/games/counting-picnic/numbers/1.mp3',
   'games.countingPicnic.numbers.2': '/audio/he/games/counting-picnic/numbers/2.mp3',
   'games.countingPicnic.numbers.3': '/audio/he/games/counting-picnic/numbers/3.mp3',
@@ -352,8 +370,15 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
   const [mistakesThisRound, setMistakesThisRound] = useState(0);
   const [highlightTargetItems, setHighlightTargetItems] = useState(false);
   const [wiggleItemId, setWiggleItemId] = useState<string | null>(null);
+  const [draggingItemId, setDraggingItemId] = useState<string | null>(null);
+  const [coachVisible, setCoachVisible] = useState(true);
+  const [dropzoneHot, setDropzoneHot] = useState(false);
+  const [dropzoneAcceptPulse, setDropzoneAcceptPulse] = useState(false);
+  const [dropzoneRejectPulse, setDropzoneRejectPulse] = useState(false);
   const [basketCelebrating, setBasketCelebrating] = useState(false);
+  const [scorePulse, setScorePulse] = useState(false);
   const [replayCountAudioArmed, setReplayCountAudioArmed] = useState(false);
+  const previousStarTokensRef = useRef(starTokens);
   const [roundMessage, setRoundMessage] = useState<RoundMessage>({
     key: 'games.countingPicnic.instructions.dragOneByOne',
     tone: 'neutral',
@@ -407,7 +432,12 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
     setMistakesThisRound(0);
     setHighlightTargetItems(false);
     setWiggleItemId(null);
+    setDraggingItemId(null);
+    setDropzoneHot(false);
+    setDropzoneAcceptPulse(false);
+    setDropzoneRejectPulse(false);
     setBasketCelebrating(false);
+    setScorePulse(false);
     setReplayCountAudioArmed(false);
   }, []);
 
@@ -587,11 +617,18 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
       setUsedHintThisRound(true);
       setRoundMessage({ key, tone: 'hint' });
       setWiggleItemId(itemId);
+      setDropzoneHot(false);
+      setDropzoneAcceptPulse(false);
+      setDropzoneRejectPulse(true);
       playAudioKey('games.countingPicnic.feedback.encouragement.keepTrying');
 
       window.setTimeout(() => {
         setWiggleItemId((current) => (current === itemId ? null : current));
       }, 260);
+
+      window.setTimeout(() => {
+        setDropzoneRejectPulse(false);
+      }, 280);
     },
     [playAudioKey],
   );
@@ -652,26 +689,13 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
     targetItemsRemaining,
   ]);
 
-  const validateBasket = useCallback(
-    (candidateBasket: string[]) => {
-      if (candidateBasket.length === round.targetCount) {
-        completeRound(candidateBasket);
-        return;
-      }
+  const handleHintAction = useCallback(() => {
+    if (sessionComplete || midpointPaused) {
+      return;
+    }
 
-      if (candidateBasket.length > round.targetCount) {
-        setRoundMessage({
-          key: 'games.countingPicnic.hints.gentleRetry',
-          tone: 'hint',
-        });
-        playAudioKey('games.countingPicnic.hints.gentleRetry');
-        return;
-      }
-
-      applyHintEscalation();
-    },
-    [applyHintEscalation, completeRound, playAudioKey, round.targetCount],
-  );
+    applyHintEscalation();
+  }, [applyHintEscalation, midpointPaused, sessionComplete]);
 
   const handleTrayItemAction = useCallback(
     (itemId: string) => {
@@ -698,10 +722,16 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
       const nextCount = nextBasket.length;
       setBasketItemIds(nextBasket);
       setHighlightTargetItems(false);
+      setDropzoneHot(false);
+      setDropzoneRejectPulse(false);
+      setDropzoneAcceptPulse(true);
       setRoundMessage({
         key: 'games.countingPicnic.instructions.dragOneByOne',
         tone: 'neutral',
       });
+      window.setTimeout(() => {
+        setDropzoneAcceptPulse(false);
+      }, 260);
 
       const narrationLimit = getEmojiPools(round.level, round.roundNumber).narratedDropsLimit;
       const shouldPlayNumber = nextCount <= narrationLimit || replayCountAudioArmed;
@@ -714,7 +744,7 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
 
       if (nextCount === round.targetCount) {
         window.setTimeout(() => {
-          validateBasket(nextBasket);
+          completeRound(nextBasket);
         }, 260);
       }
     },
@@ -729,7 +759,7 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
       round.targetCount,
       sessionComplete,
       trayItemById,
-      validateBasket,
+      completeRound,
     ],
   );
 
@@ -747,6 +777,7 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
   }, [playAudioKey, playNumberAudio, round.targetCount]);
 
   const handleContinueAfterMidpoint = useCallback(() => {
+    playAudioKey('nav.next');
     setMidpointPaused(false);
 
     const fallbackMode = fallbackRoundsRemaining > 0;
@@ -758,7 +789,7 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
       previousRound: previousRoundRef.current,
     });
     loadRound(nextRound);
-  }, [fallbackRoundsRemaining, level, loadRound, rangeOverride, roundNumber]);
+  }, [fallbackRoundsRemaining, level, loadRound, playAudioKey, rangeOverride, roundNumber]);
 
   useEffect(() => {
     if (midpointPaused || sessionComplete) {
@@ -782,21 +813,78 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
   }, [midpointPaused, playAudioKey, playNumberAudio, round.id, round.targetCount, sessionComplete]);
 
   useEffect(() => {
+    const previousStarTokens = previousStarTokensRef.current;
+    previousStarTokensRef.current = starTokens;
+
+    if (starTokens <= previousStarTokens) {
+      return;
+    }
+
+    setScorePulse(true);
+    const timeout = window.setTimeout(() => {
+      setScorePulse(false);
+    }, 320);
+
+    return () => {
+      window.clearTimeout(timeout);
+    };
+  }, [starTokens]);
+
+  useEffect(() => {
     return () => {
       audio.stop();
     };
   }, [audio]);
 
+  useEffect(() => {
+    if (sessionComplete || midpointPaused || basketCelebrating || draggingItemId) {
+      setCoachVisible(false);
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setCoachVisible(true);
+    }, 2000);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [basketCelebrating, draggingItemId, midpointPaused, round.id, sessionComplete]);
+
   const currentMessageText = roundMessage.values
     ? t(roundMessage.key, roundMessage.values)
     : t(roundMessage.key);
+  const replayButtonAriaLabel = t('games.countingPicnic.hints.useReplay');
+  const showInRoundCoach = coachVisible && !sessionComplete && !midpointPaused && !basketCelebrating;
 
   if (sessionComplete && summaryMetrics) {
+    const summaryHintKey = getFeedbackKeyFromHintTrend(summaryMetrics.hintTrend);
+
     return (
       <div className="counting-picnic counting-picnic--complete">
         <Card padding="lg" className="counting-picnic__shell">
-          <h2 className="counting-picnic__title">{t('feedback.youDidIt')}</h2>
-          <p className="counting-picnic__subtitle">{t('games.countingPicnic.roundComplete.basketReady')}</p>
+          <div className="counting-picnic__text-row counting-picnic__text-row--center">
+            <h2 className="counting-picnic__title">{t('feedback.youDidIt')}</h2>
+            <button
+              type="button"
+              className="counting-picnic__replay-button"
+              onClick={() => playAudioKey('feedback.youDidIt')}
+              aria-label={replayButtonAriaLabel}
+            >
+              <span aria-hidden="true">🔊</span>
+            </button>
+          </div>
+          <div className="counting-picnic__text-row counting-picnic__text-row--center">
+            <p className="counting-picnic__subtitle">{t('games.countingPicnic.roundComplete.basketReady')}</p>
+            <button
+              type="button"
+              className="counting-picnic__replay-button"
+              onClick={() => playAudioKey('games.countingPicnic.roundComplete.basketReady')}
+              aria-label={replayButtonAriaLabel}
+            >
+              <span aria-hidden="true">🔊</span>
+            </button>
+          </div>
 
           <div className="counting-picnic__stars" aria-label={t('feedback.excellent')}>
             {Array.from({ length: Math.max(1, starTokens) }).map((_, index) => (
@@ -807,16 +895,46 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
           </div>
 
           <Card padding="md" className="counting-picnic__summary-card">
-            <p>
-              {t('parentDashboard.games.countingPicnic.progressSummary', {
-                range: summaryMetrics.highestStableRange,
-                successRate: summaryMetrics.firstAttemptSuccessRate,
-              })}
-            </p>
-            <p>{t('parentDashboard.games.countingPicnic.nextStep')}</p>
+            <div className="counting-picnic__text-row">
+              <p>
+                {t('parentDashboard.games.countingPicnic.progressSummary', {
+                  range: summaryMetrics.highestStableRange,
+                  successRate: summaryMetrics.firstAttemptSuccessRate,
+                })}
+              </p>
+              <button
+                type="button"
+                className="counting-picnic__replay-button"
+                onClick={() => playAudioKey('parentDashboard.games.countingPicnic.progressSummary')}
+                aria-label={replayButtonAriaLabel}
+              >
+                <span aria-hidden="true">🔊</span>
+              </button>
+            </div>
+            <div className="counting-picnic__text-row">
+              <p>{t('parentDashboard.games.countingPicnic.nextStep')}</p>
+              <button
+                type="button"
+                className="counting-picnic__replay-button"
+                onClick={() => playAudioKey('parentDashboard.games.countingPicnic.nextStep')}
+                aria-label={replayButtonAriaLabel}
+              >
+                <span aria-hidden="true">🔊</span>
+              </button>
+            </div>
           </Card>
 
-          <p className="counting-picnic__hint-note">{t(getFeedbackKeyFromHintTrend(summaryMetrics.hintTrend))}</p>
+          <div className="counting-picnic__text-row counting-picnic__text-row--center">
+            <p className="counting-picnic__hint-note">{t(summaryHintKey)}</p>
+            <button
+              type="button"
+              className="counting-picnic__replay-button"
+              onClick={() => playAudioKey(summaryHintKey)}
+              aria-label={replayButtonAriaLabel}
+            >
+              <span aria-hidden="true">🔊</span>
+            </button>
+          </div>
         </Card>
 
         <style>{countingPicnicStyles}</style>
@@ -828,15 +946,36 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
     return (
       <div className="counting-picnic counting-picnic--midpoint">
         <Card padding="lg" className="counting-picnic__shell">
-          <h2 className="counting-picnic__title">{t('feedback.greatEffort')}</h2>
-          <p className="counting-picnic__subtitle">{t('games.countingPicnic.roundComplete.nextNumber')}</p>
+          <div className="counting-picnic__text-row counting-picnic__text-row--center">
+            <h2 className="counting-picnic__title">{t('feedback.greatEffort')}</h2>
+            <button
+              type="button"
+              className="counting-picnic__replay-button"
+              onClick={() => playAudioKey('feedback.greatEffort')}
+              aria-label={replayButtonAriaLabel}
+            >
+              <span aria-hidden="true">🔊</span>
+            </button>
+          </div>
+          <div className="counting-picnic__text-row counting-picnic__text-row--center">
+            <p className="counting-picnic__subtitle">{t('games.countingPicnic.roundComplete.nextNumber')}</p>
+            <button
+              type="button"
+              className="counting-picnic__replay-button"
+              onClick={() => playAudioKey('games.countingPicnic.roundComplete.nextNumber')}
+              aria-label={replayButtonAriaLabel}
+            >
+              <span aria-hidden="true">🔊</span>
+            </button>
+          </div>
           <Button
             variant="primary"
             size="lg"
             onClick={handleContinueAfterMidpoint}
             aria-label={t('nav.next')}
+            style={{ minWidth: 'var(--touch-min)' }}
           >
-            {t('nav.next')}
+            →
           </Button>
         </Card>
 
@@ -849,22 +988,49 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
     <div className="counting-picnic">
       <Card padding="lg" className="counting-picnic__shell">
         <header className="counting-picnic__header">
+          <div className="counting-picnic__heading">
+            <div className="counting-picnic__text-row">
+              <h2 className="counting-picnic__title">{t('games.countingPicnic.title')}</h2>
+              <button
+                type="button"
+                className="counting-picnic__replay-button"
+                onClick={() => playAudioKey('games.countingPicnic.title')}
+                aria-label={replayButtonAriaLabel}
+              >
+                <span aria-hidden="true">🔊</span>
+              </button>
+            </div>
+            <div className="counting-picnic__text-row">
+              <p className="counting-picnic__subtitle">{t('games.countingPicnic.subtitle')}</p>
+              <button
+                type="button"
+                className="counting-picnic__replay-button"
+                onClick={() => playAudioKey('games.countingPicnic.subtitle')}
+                aria-label={replayButtonAriaLabel}
+              >
+                <span aria-hidden="true">🔊</span>
+              </button>
+            </div>
+          </div>
+
           <div className="counting-picnic__actions">
             <Button
               variant="secondary"
               size="md"
               onClick={handleReplayInstruction}
               aria-label={t('games.countingPicnic.hints.useReplay')}
+              style={{ minWidth: 'var(--touch-min)' }}
             >
-              🔊 {t('games.countingPicnic.hints.useReplay')}
+              ▶
             </Button>
             <Button
-              variant="primary"
+              variant="secondary"
               size="md"
-              onClick={() => validateBasket(basketItemIds)}
-              aria-label={t('games.countingPicnic.instructions.tapCheck')}
+              onClick={handleHintAction}
+              aria-label={t('games.countingPicnic.hints.countSlowly')}
+              style={{ minWidth: 'var(--touch-min)' }}
             >
-              {t('games.countingPicnic.instructions.tapCheck')}
+              💡
             </Button>
           </div>
         </header>
@@ -888,16 +1054,68 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
           })}
         </div>
 
-        <p
-          className={`counting-picnic__message counting-picnic__message--${roundMessage.tone}`}
-          aria-live="polite"
-        >
-          {currentMessageText}
-        </p>
+        <div className="counting-picnic__score-strip" aria-live="polite">
+          <span
+            className={[
+              'counting-picnic__score-pill',
+              scorePulse ? 'counting-picnic__score-pill--pulse' : '',
+            ].join(' ')}
+            aria-label={t('feedback.excellent')}
+          >
+            <span aria-hidden="true">⭐</span>
+            <span>{Math.min(3, starTokens)}</span>
+          </span>
+          <span className="counting-picnic__score-pill" aria-label={t('nav.next')}>
+            <span aria-hidden="true">🧩</span>
+            <span>
+              {round.roundNumber} / {TOTAL_ROUNDS}
+            </span>
+          </span>
+        </div>
+
+        <div className="counting-picnic__text-row">
+          <p
+            className={`counting-picnic__message counting-picnic__message--${roundMessage.tone}`}
+            aria-live="polite"
+          >
+            {currentMessageText}
+          </p>
+          <button
+            type="button"
+            className="counting-picnic__replay-button"
+            onClick={() => playAudioKey(roundMessage.key)}
+            aria-label={replayButtonAriaLabel}
+          >
+            <span aria-hidden="true">🔊</span>
+          </button>
+        </div>
 
         <section className="counting-picnic__board">
+          <div className="counting-picnic__scene-props" aria-hidden="true">
+            <span>🧺</span>
+            <span>🍎</span>
+            <span>🌼</span>
+            <span>🪁</span>
+            <span>🍓</span>
+          </div>
+          {showInRoundCoach && (
+            <div className="counting-picnic__coach" aria-hidden="true">
+              <MascotIllustration variant="hint" size={58} />
+            </div>
+          )}
+
           <Card padding="md" className="counting-picnic__tray-card">
-            <p className="counting-picnic__tray-instruction">{t('games.countingPicnic.instructions.dragOneByOne')}</p>
+            <div className="counting-picnic__text-row">
+              <p className="counting-picnic__tray-instruction">{t('games.countingPicnic.instructions.dragOneByOne')}</p>
+              <button
+                type="button"
+                className="counting-picnic__replay-button"
+                onClick={() => playAudioKey('games.countingPicnic.instructions.dragOneByOne')}
+                aria-label={replayButtonAriaLabel}
+              >
+                <span aria-hidden="true">🔊</span>
+              </button>
+            </div>
 
             <div className="counting-picnic__tray-grid">
               {sourceTrayItems.map((item, index) => {
@@ -911,11 +1129,17 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
                       'counting-picnic__item',
                       wiggle ? 'counting-picnic__item--wiggle' : '',
                       highlighted ? 'counting-picnic__item--highlight' : '',
+                      draggingItemId === item.id ? 'counting-picnic__item--dragging' : '',
                       item.isTarget ? '' : 'counting-picnic__item--distractor',
                     ].join(' ')}
                     draggable
                     onDragStart={(event) => {
                       event.dataTransfer.setData('text/plain', item.id);
+                      setDraggingItemId(item.id);
+                    }}
+                    onDragEnd={() => {
+                      setDraggingItemId((current) => (current === item.id ? null : current));
+                      setDropzoneHot(false);
                     }}
                     onClick={() => handleTrayItemAction(item.id)}
                     aria-label={`${t('games.countingPicnic.instructions.dragOneByOne')} ${item.emoji} ${index + 1}`}
@@ -956,26 +1180,34 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
             </div>
 
             <div
-              className="counting-picnic__basket-dropzone"
+              className={[
+                'counting-picnic__basket-dropzone',
+                (dropzoneHot || draggingItemId !== null) ? 'counting-picnic__basket-dropzone--hot' : '',
+                dropzoneAcceptPulse ? 'counting-picnic__basket-dropzone--accept' : '',
+                dropzoneRejectPulse ? 'counting-picnic__basket-dropzone--reject' : '',
+              ].join(' ')}
+              onDragEnter={(event) => {
+                event.preventDefault();
+                setDropzoneHot(true);
+              }}
+              onDragLeave={() => {
+                setDropzoneHot(false);
+              }}
               onDragOver={(event) => {
                 event.preventDefault();
+                setDropzoneHot(true);
               }}
               onDrop={(event) => {
                 event.preventDefault();
+                setDropzoneHot(false);
+                setDraggingItemId(null);
                 const itemId = event.dataTransfer.getData('text/plain');
                 if (itemId) {
                   handleTrayItemAction(itemId);
                 }
               }}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter' || event.key === ' ') {
-                  event.preventDefault();
-                  validateBasket(basketItemIds);
-                }
-              }}
-              aria-label={t('games.countingPicnic.instructions.tapCheck')}
+              role="group"
+              aria-label={t('games.countingPicnic.instructions.intro', { count: round.targetCount })}
             >
               <span className="counting-picnic__basket-emoji" aria-hidden="true">
                 🧺
@@ -989,16 +1221,43 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
             </div>
 
             {round.fallbackMode && (
-              <p className="counting-picnic__fallback-note">
-                {t('games.countingPicnic.instructions.listenAndCount')}
-              </p>
+              <div className="counting-picnic__text-row">
+                <p className="counting-picnic__fallback-note">{t('games.countingPicnic.instructions.listenAndCount')}</p>
+                <button
+                  type="button"
+                  className="counting-picnic__replay-button"
+                  onClick={() => playAudioKey('games.countingPicnic.instructions.listenAndCount')}
+                  aria-label={replayButtonAriaLabel}
+                >
+                  <span aria-hidden="true">🔊</span>
+                </button>
+              </div>
             )}
 
             {isRoundTargetMet && (
-              <p className="counting-picnic__done-note">{t('games.countingPicnic.roundComplete.greatCounting')}</p>
+              <div className="counting-picnic__text-row">
+                <p className="counting-picnic__done-note">{t('games.countingPicnic.roundComplete.greatCounting')}</p>
+                <button
+                  type="button"
+                  className="counting-picnic__replay-button"
+                  onClick={() => playAudioKey('games.countingPicnic.roundComplete.greatCounting')}
+                  aria-label={replayButtonAriaLabel}
+                >
+                  <span aria-hidden="true">🔊</span>
+                </button>
+              </div>
             )}
           </Card>
         </section>
+
+        {basketCelebrating && (
+          <div className="counting-picnic__celebration-overlay" aria-hidden="true">
+            <SuccessCelebration />
+            <div className="counting-picnic__celebration-mascot">
+              <MascotIllustration variant="success" size={88} />
+            </div>
+          </div>
+        )}
       </Card>
 
       <style>{countingPicnicStyles}</style>
@@ -1011,7 +1270,14 @@ const countingPicnicStyles = `
     display: flex;
     justify-content: center;
     padding: var(--space-xl);
-    background: var(--color-theme-bg);
+    background:
+      radial-gradient(circle at 16% 12%, color-mix(in srgb, var(--color-accent-warning) 24%, transparent) 0, transparent 46%),
+      radial-gradient(circle at 84% 88%, color-mix(in srgb, var(--color-accent-success) 20%, transparent) 0, transparent 52%),
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-theme-bg) 82%, #ffffff) 0%,
+        color-mix(in srgb, var(--color-accent-success) 10%, #ffffff) 100%
+      );
     min-height: 100%;
   }
 
@@ -1020,6 +1286,14 @@ const countingPicnicStyles = `
     display: grid;
     gap: var(--space-md);
     border: 2px solid color-mix(in srgb, var(--color-theme-primary) 28%, white);
+    position: relative;
+    overflow: hidden;
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-bg-card) 88%, #ffffff) 0%,
+        color-mix(in srgb, var(--color-accent-success) 10%, #ffffff) 100%
+      );
   }
 
   .counting-picnic__header {
@@ -1028,6 +1302,8 @@ const countingPicnicStyles = `
     gap: var(--space-md);
     align-items: center;
     justify-content: space-between;
+    position: relative;
+    z-index: 2;
   }
 
   .counting-picnic__heading {
@@ -1058,6 +1334,31 @@ const countingPicnicStyles = `
     gap: var(--space-xs);
   }
 
+  .counting-picnic__score-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+  }
+
+  .counting-picnic__score-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-height: 44px;
+    border-radius: var(--radius-full);
+    border: 2px solid color-mix(in srgb, var(--color-theme-primary) 28%, transparent);
+    background: white;
+    color: var(--color-text-primary);
+    font-weight: var(--font-weight-bold);
+    padding: 0.35rem 0.8rem;
+  }
+
+  .counting-picnic__score-pill--pulse {
+    animation: score-bump 320ms ease-out;
+  }
+
   .counting-picnic__round-dot {
     height: 14px;
     border-radius: var(--radius-full);
@@ -1074,9 +1375,11 @@ const countingPicnicStyles = `
     background: var(--color-accent-primary);
     border-color: color-mix(in srgb, var(--color-accent-primary) 72%, transparent);
     transform: scaleY(1.2);
+    animation: dot-breathe 1.1s ease-in-out infinite;
   }
 
   .counting-picnic__message {
+    margin: 0;
     border-radius: var(--radius-md);
     padding: var(--space-sm) var(--space-md);
     font-size: var(--font-size-md);
@@ -1084,6 +1387,8 @@ const countingPicnicStyles = `
     display: inline-flex;
     align-items: center;
     border: 2px solid transparent;
+    position: relative;
+    z-index: 2;
   }
 
   .counting-picnic__message--neutral {
@@ -1103,11 +1408,101 @@ const countingPicnicStyles = `
     border-color: color-mix(in srgb, var(--color-accent-success) 60%, transparent);
   }
 
+  .counting-picnic__text-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xs);
+  }
+
+  .counting-picnic__text-row > :first-child {
+    flex: 1;
+    margin: 0;
+  }
+
+  .counting-picnic__text-row--center {
+    justify-content: center;
+  }
+
+  .counting-picnic__text-row--center > :first-child {
+    flex: initial;
+  }
+
+  [dir='rtl'] .counting-picnic__text-row .counting-picnic__replay-button {
+    order: -1;
+  }
+
+  .counting-picnic__replay-button {
+    inline-size: var(--touch-min);
+    block-size: var(--touch-min);
+    min-inline-size: var(--touch-min);
+    min-block-size: var(--touch-min);
+    border-radius: var(--radius-sm);
+    border: none;
+    background: transparent;
+    color: var(--color-theme-primary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    transition: transform var(--transition-fast), color var(--transition-fast);
+    touch-action: manipulation;
+    flex-shrink: 0;
+  }
+
+  .counting-picnic__replay-button:hover {
+    color: color-mix(in srgb, var(--color-theme-primary) 75%, var(--color-text-primary));
+    transform: translateY(-1px);
+  }
+
+  .counting-picnic__replay-button:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--color-accent-primary) 65%, transparent);
+    outline-offset: 2px;
+  }
+
   .counting-picnic__board {
     display: flex;
     flex-direction: row;
     gap: var(--space-md);
     align-items: stretch;
+    position: relative;
+    z-index: 2;
+  }
+
+  .counting-picnic__scene-props {
+    position: absolute;
+    inset-inline: var(--space-sm);
+    inset-block-start: calc(-1 * var(--space-md));
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    opacity: 0.84;
+    pointer-events: none;
+    font-size: 1.35rem;
+  }
+
+  .counting-picnic__coach {
+    position: absolute;
+    inset-inline-end: var(--space-sm);
+    inset-block-start: var(--space-sm);
+    inline-size: 72px;
+    block-size: 72px;
+    border-radius: var(--radius-full);
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+    z-index: 2;
+    background: color-mix(in srgb, var(--color-bg-card) 86%, white);
+    border: 2px solid color-mix(in srgb, var(--color-accent-primary) 26%, transparent);
+    box-shadow: var(--shadow-sm);
+    animation: counting-picnic-coach-float 1600ms ease-in-out infinite;
+  }
+
+  .counting-picnic__coach,
+  .counting-picnic__coach * {
+    pointer-events: none;
   }
 
   .counting-picnic__tray-card,
@@ -1141,6 +1536,11 @@ const countingPicnicStyles = `
     justify-content: center;
     transition: transform var(--transition-fast), box-shadow var(--transition-fast);
     box-shadow: var(--shadow-sm);
+  }
+
+  .counting-picnic__item--dragging {
+    transform: scale(1.06);
+    box-shadow: 0 10px 18px color-mix(in srgb, var(--color-theme-primary) 24%, transparent);
   }
 
   .counting-picnic__item:active {
@@ -1191,6 +1591,27 @@ const countingPicnicStyles = `
     gap: var(--space-xs);
     text-align: center;
     padding: var(--space-md);
+    transition:
+      transform var(--transition-fast),
+      border-color var(--transition-fast),
+      background var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+
+  .counting-picnic__basket-dropzone--hot {
+    border-style: solid;
+    border-color: var(--color-accent-primary);
+    background: color-mix(in srgb, var(--color-accent-primary) 14%, white);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent-primary) 16%, transparent);
+    transform: scale(1.01);
+  }
+
+  .counting-picnic__basket-dropzone--accept {
+    animation: basket-pop 260ms ease-out;
+  }
+
+  .counting-picnic__basket-dropzone--reject {
+    animation: basket-shake 220ms ease-in-out;
   }
 
   .counting-picnic__basket-emoji {
@@ -1211,6 +1632,26 @@ const countingPicnicStyles = `
   .counting-picnic__basket-card--celebrate .counting-picnic__basket-dropzone {
     border-color: var(--color-accent-success);
     background: color-mix(in srgb, var(--color-accent-success) 20%, white);
+  }
+
+  .counting-picnic__celebration-overlay {
+    position: absolute;
+    inset-inline: var(--space-md);
+    inset-block-end: var(--space-md);
+    display: grid;
+    justify-items: center;
+    gap: var(--space-xs);
+    pointer-events: none;
+    z-index: 1;
+    animation: counting-picnic-celebrate 620ms var(--motion-ease-bounce) both;
+  }
+
+  .counting-picnic__celebration-overlay * {
+    pointer-events: none;
+  }
+
+  .counting-picnic__celebration-mascot {
+    animation: counting-picnic-mascot-pop 620ms var(--motion-ease-bounce) both;
   }
 
   .counting-picnic__fallback-note,
@@ -1264,6 +1705,67 @@ const countingPicnicStyles = `
     100% { transform: translateX(0); }
   }
 
+  @keyframes basket-pop {
+    0% { transform: scale(1); }
+    45% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+
+  @keyframes basket-shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+    100% { transform: translateX(0); }
+  }
+
+  @keyframes score-bump {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+  }
+
+  @keyframes dot-breathe {
+    0% { transform: scaleY(1.16); }
+    50% { transform: scaleY(1.36); }
+    100% { transform: scaleY(1.16); }
+  }
+
+  @keyframes counting-picnic-celebrate {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes counting-picnic-mascot-pop {
+    from {
+      transform: scale(0.8) rotate(-3deg);
+    }
+
+    to {
+      transform: scale(1) rotate(0deg);
+    }
+  }
+
+  @keyframes counting-picnic-coach-float {
+    0% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-4px);
+    }
+
+    100% {
+      transform: translateY(0);
+    }
+  }
+
   @media (max-width: 860px) {
     .counting-picnic {
       padding: var(--space-md);
@@ -1285,6 +1787,12 @@ const countingPicnicStyles = `
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
+    }
+
+    .counting-picnic__celebration-overlay,
+    .counting-picnic__celebration-mascot,
+    .counting-picnic__coach {
+      animation: none !important;
     }
   }
 `;

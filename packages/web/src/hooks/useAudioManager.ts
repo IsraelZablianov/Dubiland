@@ -1,11 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import type { AudioController } from '@/games/engine';
 
-interface QueueItem {
-  path: string;
-  resolve: () => void;
-  reject: (reason?: unknown) => void;
-}
+type VoidFn = () => void;
 
 /**
  * Queue-based audio controller for games.
@@ -17,74 +13,92 @@ interface QueueItem {
  */
 export function useAudioManager(): AudioController {
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const queueRef = useRef<QueueItem[]>([]);
-  const drainingRef = useRef(false);
+  const queueTailRef = useRef<Promise<void>>(Promise.resolve());
+  const queueGenerationRef = useRef(0);
+  const currentSettleRef = useRef<VoidFn | null>(null);
   const unmountedRef = useRef(false);
 
-  const stopCurrent = useCallback(() => {
-    if (!audioRef.current) return;
-    audioRef.current.pause();
-    audioRef.current.currentTime = 0;
-    audioRef.current.onended = null;
-    audioRef.current.onerror = null;
-    audioRef.current = null;
+  const clearPlaybackHandlers = useCallback((audio: HTMLAudioElement) => {
+    audio.onended = null;
+    audio.onerror = null;
   }, []);
+
+  const settleActivePlayback = useCallback(() => {
+    const settle = currentSettleRef.current;
+    if (!settle) return;
+    currentSettleRef.current = null;
+    settle();
+  }, []);
+
+  const stopCurrent = useCallback(() => {
+    const activeAudio = audioRef.current;
+    if (activeAudio) {
+      clearPlaybackHandlers(activeAudio);
+      activeAudio.pause();
+      activeAudio.currentTime = 0;
+      audioRef.current = null;
+    }
+    settleActivePlayback();
+  }, [clearPlaybackHandlers, settleActivePlayback]);
 
   const clearQueue = useCallback(() => {
-    const pending = queueRef.current.splice(0);
-    for (const item of pending) {
-      item.resolve();
-    }
+    queueGenerationRef.current += 1;
+    queueTailRef.current = Promise.resolve();
   }, []);
 
-  const drain = useCallback(() => {
-    if (drainingRef.current || unmountedRef.current) return;
+  const playClip = useCallback(
+    (path: string, generation: number): Promise<void> =>
+      new Promise<void>((resolve) => {
+        if (!path || unmountedRef.current || generation !== queueGenerationRef.current) {
+          resolve();
+          return;
+        }
 
-    const next = queueRef.current[0];
-    if (!next) return;
+        const audio = new Audio(path);
+        audio.preload = 'auto';
+        audioRef.current = audio;
 
-    drainingRef.current = true;
+        let settled = false;
+        const settle = () => {
+          if (settled) return;
+          settled = true;
+          clearPlaybackHandlers(audio);
+          if (audioRef.current === audio) {
+            audioRef.current = null;
+          }
+          if (currentSettleRef.current === settle) {
+            currentSettleRef.current = null;
+          }
+          resolve();
+        };
 
-    stopCurrent();
+        currentSettleRef.current = settle;
+        audio.onended = settle;
+        audio.onerror = settle;
 
-    const el = new Audio(next.path);
-    el.preload = 'auto';
-    audioRef.current = el;
-
-    el.onended = () => {
-      queueRef.current.shift();
-      next.resolve();
-      drainingRef.current = false;
-      drain();
-    };
-
-    el.onerror = () => {
-      queueRef.current.shift();
-      next.resolve();
-      drainingRef.current = false;
-      drain();
-    };
-
-    el.play().catch(() => {
-      queueRef.current.shift();
-      next.resolve();
-      drainingRef.current = false;
-      drain();
-    });
-  }, [stopCurrent]);
+        try {
+          const playbackPromise = audio.play();
+          playbackPromise?.catch(() => {
+            settle();
+          });
+        } catch {
+          settle();
+        }
+      }),
+    [clearPlaybackHandlers],
+  );
 
   const enqueue = useCallback(
     (path: string): Promise<void> => {
-      if (!path) return Promise.resolve();
+      if (!path || unmountedRef.current) return Promise.resolve();
 
-      return new Promise<void>((resolve, reject) => {
-        queueRef.current.push({ path, resolve, reject });
-        if (!drainingRef.current) {
-          drain();
-        }
-      });
+      const generation = queueGenerationRef.current;
+      const run = () => playClip(path, generation);
+      const next = queueTailRef.current.then(run, run);
+      queueTailRef.current = next.catch(() => undefined);
+      return next;
     },
-    [drain],
+    [playClip],
   );
 
   const play = useCallback((audioPath: string) => enqueue(audioPath), [enqueue]);
@@ -93,17 +107,22 @@ export function useAudioManager(): AudioController {
     (audioPath: string): Promise<void> => {
       stopCurrent();
       clearQueue();
-      drainingRef.current = false;
       return enqueue(audioPath);
     },
     [stopCurrent, clearQueue, enqueue],
   );
 
   const playSequence = useCallback(
-    async (audioPaths: string[]): Promise<void> => {
-      for (const p of audioPaths) {
-        await enqueue(p);
+    (audioPaths: string[]): Promise<void> => {
+      if (audioPaths.length === 0) {
+        return Promise.resolve();
       }
+
+      let last: Promise<void> = Promise.resolve();
+      for (const path of audioPaths) {
+        last = enqueue(path);
+      }
+      return last;
     },
     [enqueue],
   );
@@ -111,18 +130,15 @@ export function useAudioManager(): AudioController {
   const stop = useCallback(() => {
     stopCurrent();
     clearQueue();
-    drainingRef.current = false;
   }, [stopCurrent, clearQueue]);
 
   useEffect(() => {
     unmountedRef.current = false;
     return () => {
       unmountedRef.current = true;
-      stopCurrent();
-      clearQueue();
-      drainingRef.current = false;
+      stop();
     };
-  }, [stopCurrent, clearQueue]);
+  }, [stop]);
 
   return useMemo(
     () => ({ play, playNow, playSequence, stop }),

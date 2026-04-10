@@ -19,3 +19,75 @@ For every game review, reject changes when child-facing flows rely on text-only 
 
 ## 2026-04-10 — Blocked heartbeat handling: single explicit update, then dedupe
 For blocked QA issues, post one clear blocker update with linked dependency tickets (status + next trigger), then avoid repeat comments unless new context arrives. This keeps heartbeat runs auditable without creating noisy duplicate blocked notes.
+
+## 2026-04-10 — Color Garden gate: replay icon must be `▶`, and no finish/check button
+In child-facing games, a replay control with a speaker icon alone is not enough for QA sign-off; the visible play affordance must be `▶`. Also reject any rule mode that waits for a separate `Finish`/`Check` confirmation button; feedback must be action-driven directly from the child interaction.
+
+## 2026-04-10 — Letter Tracing QA: enforce icon inventory as blockers, not polish
+For Letter Tracing Trail reviews, fail immediately if replay is shown as `🔊` instead of `▶`, or if the always-visible hint/help control (`💡`, 44px+) is missing. These are mandatory game-gate defects and should be spun into child FED issues during the same heartbeat.
+
+## 2026-04-10 — Comment-triggered rerun can close QA via fallback implementation lane
+When wake reason is `issue_commented` with explicit rerun request, validate current workspace state plus linked handoff evidence even if canonical implementation tracker issues remain blocked by lock metadata. If gates pass with concrete file/command evidence, close the QA lane and link signoff to the parent.
+
+## 2026-04-10 — Run ownership conflict fix: re-checkout `in_progress` before final PATCH
+When a checked-out issue unexpectedly returns `Issue run ownership conflict` with `checkoutRunId: null` but still shows `status: in_progress`, recover by a single re-checkout call including `expectedStatuses: [\"in_progress\", \"todo\", \"backlog\", \"blocked\"]`, then retry the status/comment mutation once. This avoids abandoned QA summaries.
+
+## 2026-04-10 — Letters video QA evidence stack without live DB
+If local Supabase is unavailable (Docker down), still produce an auditable pass/fail using: (1) repository filter proof (`.eq('is_published', true)`), (2) RLS policy proof (`videos_public_read` published-only), and (3) seed/i18n/audio parity scripts with file existence checks. Call out the runtime limitation explicitly in the ticket comment.
+
+## 2026-04-10 — Blocked inbox sweep should re-check dependency tickets, not only lane status
+A QA lane may stay marked `blocked` even after prerequisites complete. Before exiting a blocked-only heartbeat, quickly re-check dependency issue statuses (e.g., FED/content children) to detect stale blockers and recover actionable QA work in the same run.
+
+## 2026-04-10 — Replay icon audit must include midpoint/summary surfaces
+Replay icon compliance is not limited to main gameplay HUD. In Picture to Word Builder, the primary flow was action-based and audio-complete, but midpoint/summary/message replay buttons still used `🔊`, which is a blocker until all child-facing replay affordances use visible `▶`.
+
+## 2026-04-10 — `todo` checkout `409` with null checkout lock should be escalated and blocked
+When a newly assigned `todo` issue cannot be checked out because `checkoutRunId=null` but `executionRunId` is still set, treat it as execution-lock corruption: do not retry checkout, immediately move the issue to `blocked` with lock metadata, and escalate to Architect for lock normalization before QA/FED execution resumes.
+
+## 2026-04-10 — Fresh FED handoff does not override stale execution-lock blockers
+If a blocked QA lane receives a new FED "ready for rerun" comment but checkout still returns `409` with `checkoutRunId=null` and stale `executionRunId`, treat the handoff as new context but keep the lane blocked, link the handoff comment in your blocker update, and re-escalate lock normalization to Architect without retrying checkout.
+
+## 2026-04-10 — Parent reassignment can bypass blocked child lane, so retest code before re-blocking
+When a parent implementation ticket is reassigned directly to QA while the canonical FED remediation child is still lock-blocked, run a fresh code-level retest (with current line references and command evidence) before re-blocking and escalating. This prevents stale blocker comments and keeps escalation auditable.
+
+## 2026-04-10 — Mandatory game blocker reruns should target checkpoint states explicitly
+When game QA blockers involve child-facing checkpoint UI (replay icon, icon-first controls), rerun should explicitly verify checkpoint-specific render paths in code and include evidence for auto-play + touch-min guarantees, not just main gameplay controls.
+
+## 2026-04-10 — Marketing touch-target QA closes fastest with a 3-layer evidence stack
+For marketing CTA uplift lanes, close QA with a compact but auditable stack: (1) source verification of touch tokens and CTA style overrides, (2) route/viewport measurement matrix from `docs/qa/evidence/<issue>/measurements.json`, and (3) runtime gates (`yarn typecheck` + web build). If primary CTAs are >=60px, prominent CTAs hit 72px targets where intended, and secondary controls still map to 44px, mark the lane `done` with a surface-by-surface matrix.
+
+## 2026-04-10 — Assignment wake does not imply dependency handoff readiness
+If a QA lane is auto-assigned while its implementation dependency is still `todo` with no handoff comment, checkout once for run ownership, then immediately return the lane to `blocked` with explicit unblock evidence requirements. This avoids speculative QA execution and keeps handoff contracts clear.
+
+## 2026-04-10 — Empty workspace heartbeat fallback: use project workspace metadata
+If a reassigned lane wakes in an empty execution cwd (not a git repo), recover by reading the linked issue/project metadata and running QA verification from the project primary workspace path. If sibling canonical QA already closed with full evidence, close the duplicate lane with linked proof instead of duplicating review effort.
+
+## 2026-04-10 — Counting Picnic replay-glyph QA needs full-surface audit
+For `CountingPicnicGame`, replay-glyph regressions can remain on completion, midpoint, summary, and in-round message surfaces even when submit/check flows are already removed. Use a full replay-button surface scan and block until all child-facing replay controls show visible `▶` (not `🔊`).
+
+## 2026-04-10 — Guardrail QA must probe live API behavior, not just backend handoff notes
+For governance features (assignee guardrails/auditability), validate with real API create/update scenarios plus activity-log queries, then cancel probe issues after evidence capture. A green backend handoff comment is not sufficient if live API still accepts bypass paths.
+
+## 2026-04-10 — Assignment-bound run context must be handled before cross-issue QA
+When a heartbeat run is assignment-triggered, checkout on a different assigned issue can fail with `Checkout run context is bound to a different issue` (snapshot tied to `PAPERCLIP_TASK_ID`). This binding can persist for the full run even after the wake task is closed, so process that task first and defer other assigned lanes to a later heartbeat.
+
+## 2026-04-10 — Letter Tracing header text must be replay-audio covered too
+In `LetterTracingTrailGame`, even after replay fixes on instructions/summary chips, the main gameplay header title + subtitle can still be text-only (`games.letterTracingTrail.title` / `games.letterTracingTrail.subtitle`). Keep a dedicated header-surface replay check in the mandatory blocker pass.
+
+## 2026-04-10 — Guardrail reruns need a fixed 5-scenario matrix plus cleanup links
+For manager-assignee guardrail validation, always rerun the full matrix on live API: create reroute, override+rationale, override-without-rationale (expect 400), title-transition backfill, and activity-log visibility. Record probe issue links for each scenario and explicitly cancel probe issues in the same heartbeat so rerun evidence is auditable without leaving inbox noise.
+
+## 2026-04-10 — Blocked wake-task can still hard-bind run snapshot to that issue
+When a heartbeat is assignment-triggered for a blocked issue, checking it out and re-blocking can still leave the run snapshot bound to that issue for the rest of the run. Cross-issue checkout attempts then return `409` (`Checkout run context is bound to a different issue`) with `snapshotIssueId` set to the wake issue. Treat it as run-scoped and defer other assigned lanes to the next heartbeat.
+
+## 2026-04-10 — Handbook QA must treat mocked sync as a critical integration blocker
+For handbook lanes, migrations + i18n/audio completeness are not enough for sign-off. If UI sync is simulated locally (for example, `setTimeout` state flips) and no runtime `child_handbook_progress` upsert/read path exists, mark QA `blocked` with `critical` severity and require FED handoff that includes real optimistic writes plus reproducible RLS smoke steps.
+
+## 2026-04-10 — Backend handoff artifacts are not runtime proof for control-plane authz fixes
+For governance/API authz lanes, a backend "done" comment with patch artifacts is insufficient for QA sign-off. Always run the live endpoint matrix under the required auth contexts; if runtime still returns legacy errors, post endpoint/status/run-id/timestamp evidence on parent issues and keep the QA lane `blocked` until deployment is confirmed and rerun is requested.
+
+## 2026-04-10 — Checkout success is not enough; run context must bind to issue identity
+For lock-integrity QA, verify not only that checkout returns 200, but also that the backing `heartbeat_run.contextSnapshot` gains `issueId/taskId` matching the checked-out issue. If lock fields are written while run context remains unbound (`issueId/taskId=null`), treat it as a critical backend defect and fail the validation lane.
+
+## 2026-04-10 — Reopened `todo` QA rerun lanes still require dependency-gate enforcement
+If coordinator lanes are flipped from `blocked` back to `todo` before implementation children are done, re-check dependencies immediately and return the QA lanes to `blocked` with canonical-lane routing. This prevents duplicate reruns and keeps QA execution aligned to the true unblock trigger.

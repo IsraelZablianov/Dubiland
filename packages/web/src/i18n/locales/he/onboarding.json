@@ -4,6 +4,8 @@
   "continueAsGuest": "התחילו לשחק בחינם",
   "orSignIn": "או התחברו עם חשבון",
   "loginWithGoogle": "התחברות עם גוגל",
+  "googleNeedsSupabase": "חסר חיבור לשרת (Supabase). בדקו את קובץ ההגדרות או התחברו באימייל, או המשיכו כאורחים למטה.",
+  "googleDisabledOnServer": "התחברות גוגל כבויה בשרת. הפעילו את ספק גוגל בלוח הבקרה של Supabase והוסיפו מזהה וסוד מ-Google Cloud.",
   "loginWithEmail": "התחברות עם אימייל",
   "createAccount": "יצירת חשבון",
   "switchToSignIn": "יש לי כבר חשבון",

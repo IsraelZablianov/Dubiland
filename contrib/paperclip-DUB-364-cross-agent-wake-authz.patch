@@ -1,0 +1,316 @@
+diff --git a/server/src/routes/agents.ts b/server/src/routes/agents.ts
+index 266803e..023a74b 100644
+--- a/server/src/routes/agents.ts
++++ b/server/src/routes/agents.ts
+@@ -330,6 +330,29 @@ export function agentRoutes(db: Db) {
+     }
+   }
+ 
++  /**
++   * Cross-agent wake/heartbeat invoke: allow non-self agent callers only with explicit
++   * `tasks:assign` in the same company (board/users unchanged). See architecture addendum DUB-360.
++   */
++  async function assertAgentHeartbeatInvokeAuthorization(
++    req: Request,
++    targetAgent: { id: string; companyId: string },
++  ) {
++    if (req.actor.type !== "agent") return;
++    if (!req.actor.agentId) throw forbidden("Agent authentication required");
++    if (req.actor.agentId === targetAgent.id) return;
++
++    const allowedByGrant = await access.hasPermission(
++      targetAgent.companyId,
++      "agent",
++      req.actor.agentId,
++      "tasks:assign",
++    );
++    if (!allowedByGrant) {
++      throw forbidden("Missing permission: tasks:assign");
++    }
++  }
++
+   function assertKnownAdapterType(type: string | null | undefined): string {
+     const adapterType = typeof type === "string" ? type.trim() : "";
+     if (!adapterType) {
+@@ -2094,11 +2117,7 @@ export function agentRoutes(db: Db) {
+       return;
+     }
+     assertCompanyAccess(req, agent.companyId);
+-
+-    if (req.actor.type === "agent" && req.actor.agentId !== id) {
+-      res.status(403).json({ error: "Agent can only invoke itself" });
+-      return;
+-    }
++    await assertAgentHeartbeatInvokeAuthorization(req, agent);
+ 
+     const run = await heartbeat.wakeup(id, {
+       source: req.body.source,
+@@ -2144,11 +2163,7 @@ export function agentRoutes(db: Db) {
+       return;
+     }
+     assertCompanyAccess(req, agent.companyId);
+-
+-    if (req.actor.type === "agent" && req.actor.agentId !== id) {
+-      res.status(403).json({ error: "Agent can only invoke itself" });
+-      return;
+-    }
++    await assertAgentHeartbeatInvokeAuthorization(req, agent);
+ 
+     const run = await heartbeat.invoke(
+       id,
+diff --git a/server/src/__tests__/agent-wake-authz-routes.test.ts b/server/src/__tests__/agent-wake-authz-routes.test.ts
+new file mode 100644
+index 0000000..087f55a
+--- /dev/null
++++ b/server/src/__tests__/agent-wake-authz-routes.test.ts
+@@ -0,0 +1,250 @@
++import express from "express";
++import request from "supertest";
++import { beforeEach, describe, expect, it, vi } from "vitest";
++
++const targetAgentId = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
++const callerAgentId = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb";
++const companyId = "cccccccc-cccc-4ccc-8ccc-cccccccccccc";
++
++const mockAgentService = vi.hoisted(() => ({
++  getById: vi.fn(),
++  resolveByReference: vi.fn(),
++}));
++
++const mockAccessService = vi.hoisted(() => ({
++  hasPermission: vi.fn(),
++  canUser: vi.fn(),
++  getMembership: vi.fn(),
++  listPrincipalGrants: vi.fn(),
++  ensureMembership: vi.fn(),
++  setPrincipalPermission: vi.fn(),
++}));
++
++const mockHeartbeatService = vi.hoisted(() => ({
++  wakeup: vi.fn(),
++  invoke: vi.fn(),
++}));
++
++const mockLogActivity = vi.hoisted(() => vi.fn());
++
++function registerMocks() {
++  vi.doMock("../services/index.js", () => ({
++    agentService: () => mockAgentService,
++    agentInstructionsService: () => ({}),
++    accessService: () => mockAccessService,
++    approvalService: () => ({}),
++    budgetService: () => ({}),
++    heartbeatService: () => mockHeartbeatService,
++    issueApprovalService: () => ({}),
++    issueService: () => ({}),
++    companySkillService: () => ({}),
++    logActivity: mockLogActivity,
++    secretService: () => ({
++      normalizeAdapterConfigForPersistence: vi.fn(async (_c: string, cfg: Record<string, unknown>) => cfg),
++      resolveAdapterConfigForRuntime: vi.fn(async () => ({ config: {} })),
++    }),
++    syncInstructionsBundleConfigFromFilePath: vi.fn((_a: unknown, cfg: Record<string, unknown>) => cfg),
++    workspaceOperationService: () => ({}),
++  }));
++
++  vi.doMock("../telemetry.js", () => ({ getTelemetryClient: vi.fn() }));
++  vi.doMock("@paperclipai/shared/telemetry", () => ({
++    trackAgentCreated: vi.fn(),
++    trackErrorHandlerCrash: vi.fn(),
++  }));
++
++  vi.doMock("../adapters/index.js", () => ({
++    findServerAdapter: vi.fn(),
++    findActiveServerAdapter: vi.fn(),
++    listAdapterModels: vi.fn(),
++    detectAdapterModel: vi.fn(),
++  }));
++}
++
++function stubDb() {
++  return { select: vi.fn() } as unknown as import("@paperclipai/db").Db;
++}
++
++async function createApp(actor: Record<string, unknown>) {
++  const [{ agentRoutes }, { errorHandler }] = await Promise.all([
++    import("../routes/agents.js"),
++    import("../middleware/index.js"),
++  ]);
++  const app = express();
++  app.use(express.json());
++  app.use((req, _res, next) => {
++    (req as express.Request & { actor: unknown }).actor = actor;
++    next();
++  });
++  app.use("/api", agentRoutes(stubDb()));
++  app.use(errorHandler);
++  return app;
++}
++
++function targetAgent() {
++  return {
++    id: targetAgentId,
++    companyId,
++    name: "Target",
++    role: "engineer",
++    title: "Target",
++    status: "idle",
++    reportsTo: null,
++    capabilities: null,
++    adapterType: "cursor",
++    adapterConfig: {},
++    runtimeConfig: {},
++    permissions: {},
++    lastHeartbeatAt: null,
++    metadata: null,
++    createdAt: new Date(),
++    updatedAt: new Date(),
++  };
++}
++
++describe("agent wake / heartbeat invoke authorization (tasks:assign)", () => {
++  beforeEach(() => {
++    vi.resetModules();
++    registerMocks();
++    vi.resetAllMocks();
++    mockAgentService.resolveByReference.mockResolvedValue({
++      ambiguous: false,
++      agent: targetAgent(),
++    });
++    mockAgentService.getById.mockImplementation(async (id: string) => {
++      if (id === targetAgentId) return targetAgent();
++      return null;
++    });
++    mockHeartbeatService.wakeup.mockResolvedValue({
++      id: "run-wake-1",
++      companyId,
++      agentId: targetAgentId,
++      status: "queued",
++    });
++    mockHeartbeatService.invoke.mockResolvedValue({
++      id: "run-invoke-1",
++      companyId,
++      agentId: targetAgentId,
++      status: "queued",
++    });
++    mockLogActivity.mockResolvedValue(undefined);
++  });
++
++  it("allows agent self-wakeup without tasks:assign", async () => {
++    mockAccessService.hasPermission.mockResolvedValue(false);
++
++    const app = await createApp({
++      type: "agent",
++      agentId: targetAgentId,
++      companyId,
++      runId: "actor-run-1",
++    });
++
++    const res = await request(app)
++      .post(`/api/agents/${targetAgentId}/wakeup?companyId=${companyId}`)
++      .send({});
++
++    expect(res.status).toBe(202);
++    expect(mockAccessService.hasPermission).not.toHaveBeenCalled();
++    expect(mockHeartbeatService.wakeup).toHaveBeenCalled();
++    expect(mockLogActivity).toHaveBeenCalledWith(
++      expect.anything(),
++      expect.objectContaining({
++        action: "heartbeat.invoked",
++        entityId: "run-wake-1",
++      }),
++    );
++  });
++
++  it("returns 403 when another agent invokes wakeup without tasks:assign", async () => {
++    mockAccessService.hasPermission.mockResolvedValue(false);
++
++    const app = await createApp({
++      type: "agent",
++      agentId: callerAgentId,
++      companyId,
++      runId: "actor-run-2",
++    });
++
++    const res = await request(app)
++      .post(`/api/agents/${targetAgentId}/wakeup?companyId=${companyId}`)
++      .send({});
++
++    expect(res.status).toBe(403);
++    expect(res.body.error).toContain("tasks:assign");
++    expect(mockAccessService.hasPermission).toHaveBeenCalledWith(
++      companyId,
++      "agent",
++      callerAgentId,
++      "tasks:assign",
++    );
++    expect(mockHeartbeatService.wakeup).not.toHaveBeenCalled();
++    expect(mockLogActivity).not.toHaveBeenCalled();
++  });
++
++  it("allows cross-agent wakeup when caller has tasks:assign", async () => {
++    mockAccessService.hasPermission.mockResolvedValue(true);
++
++    const app = await createApp({
++      type: "agent",
++      agentId: callerAgentId,
++      companyId,
++      runId: "actor-run-3",
++    });
++
++    const res = await request(app)
++      .post(`/api/agents/${targetAgentId}/wakeup?companyId=${companyId}`)
++      .send({});
++
++    expect(res.status).toBe(202);
++    expect(mockHeartbeatService.wakeup).toHaveBeenCalled();
++    expect(mockLogActivity).toHaveBeenCalledWith(
++      expect.anything(),
++      expect.objectContaining({
++        action: "heartbeat.invoked",
++        agentId: callerAgentId,
++        runId: "actor-run-3",
++      }),
++    );
++  });
++
++  it("returns 403 for cross-agent heartbeat/invoke without tasks:assign", async () => {
++    mockAccessService.hasPermission.mockResolvedValue(false);
++
++    const app = await createApp({
++      type: "agent",
++      agentId: callerAgentId,
++      companyId,
++      runId: "actor-run-4",
++    });
++
++    const res = await request(app)
++      .post(`/api/agents/${targetAgentId}/heartbeat/invoke?companyId=${companyId}`)
++      .send({});
++
++    expect(res.status).toBe(403);
++    expect(mockHeartbeatService.invoke).not.toHaveBeenCalled();
++  });
++
++  it("allows cross-agent heartbeat/invoke with tasks:assign", async () => {
++    mockAccessService.hasPermission.mockResolvedValue(true);
++
++    const app = await createApp({
++      type: "agent",
++      agentId: callerAgentId,
++      companyId,
++      runId: "actor-run-5",
++    });
++
++    const res = await request(app)
++      .post(`/api/agents/${targetAgentId}/heartbeat/invoke?companyId=${companyId}`)
++      .send({});
++
++    expect(res.status).toBe(202);
++    expect(mockHeartbeatService.invoke).toHaveBeenCalled();
++    expect(mockLogActivity).toHaveBeenCalledWith(
++      expect.anything(),
++      expect.objectContaining({ action: "heartbeat.invoked", entityId: "run-invoke-1" }),
++    );
++  });
++});

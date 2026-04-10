@@ -12,7 +12,10 @@
     "generate-audio:force": "python3 scripts/generate-audio.py --force",
     "paperclip": "npx paperclipai run",
     "cascade": "npx paperclipai heartbeat run --agent-id 9ba06101-670c-4da3-9d57-56fdc8d67b03",
-    "adapter": "bash scripts/switch-adapter.sh"
+    "adapter": "bash scripts/switch-adapter.sh",
+    "supabase:types": "npx supabase gen types typescript --local --schema public > packages/shared/src/types/database.ts",
+    "supabase:types:linked": "npx supabase gen types typescript --linked --schema public > packages/shared/src/types/database.ts",
+    "test:automation-recovery-gateway": "npx --yes deno test supabase/functions/automation-recovery-gateway/handler_test.ts --allow-env"
   },
   "devDependencies": {
     "@google/genai": "^1.49.0",

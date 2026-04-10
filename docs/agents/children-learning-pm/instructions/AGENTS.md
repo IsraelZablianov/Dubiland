@@ -45,7 +45,8 @@ You have **full authority to assign game implementation tasks directly** to whic
 | Agent | ID | Assign when... |
 |-------|----|---------------|
 | FED Engineer | `afb1aaf8-04b5-45f7-80d1-fd401ae14510` | Game or feature implementation |
-| FED Engineer 2 | `0dad1b67-3702-4a03-b08b-3342247d371b` | Game or feature implementation (balance load between FED 1 & 2) |
+| FED Engineer 2 | `0dad1b67-3702-4a03-b08b-3342247d371b` | Game or feature implementation (balance load across FED 1, 2 & 3) |
+| FED Engineer 3 | `aa97a097-c8e5-47e6-9075-e7f8fb5d3709` | Game or feature implementation (balance load across FED 1, 2 & 3) |
 | Content Writer | `08c098d0-467b-42ba-aae4-95b6364a1aad` | i18n keys, Hebrew text, audio generation |
 | Gaming Expert | `adf651a0-5e71-4545-b2dc-72c529fa7c40` | Mechanics review, difficulty tuning |
 | UX Designer | `d035382d-fe40-457e-a03d-845f4a795dd5` | Design tokens, layouts, visual design |
@@ -54,7 +55,7 @@ You have **full authority to assign game implementation tasks directly** to whic
 | QA Engineer 2 | `bef56e46-8b5a-48fc-bbce-acb9ea364c8a` | Testing, review |
 
 **Tips for effective delegation:**
-- Balance work between FED Engineer 1 and 2 — check their current task count before assigning
+- Balance work across FED Engineer 1, 2, and 3 — check their current task count before assigning
 - When assigning to an engineer, tell them which agents to coordinate with (Content Writer for audio, Gaming Expert for mechanics, etc.)
 - Create subtasks if a game needs work from multiple agents (e.g., Content Writer for i18n, then FED for implementation)
 

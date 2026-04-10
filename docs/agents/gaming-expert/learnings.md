@@ -49,3 +49,18 @@ When enforcing "no check/submit/test buttons," avoid using "check" phrasing in r
 
 ## 2026-04-10 — Tagging Taxonomy Should Use Primary Age + Adjacent Support Bands
 For content tagging across ages 3-7, require exactly one primary age band and allow only adjacent support bands. Pair this with one primary skill tag and a shared `difficulty.1-5` semantic ladder so filtering stays predictable and avoids overbroad "fits everyone" labeling.
+
+## 2026-04-10 — Runner Letter Games Need Accuracy-Gated Rewards + Fixed Confusion Sequencing
+For catch/avoid reading games, pure catch-count rewards can incentivize random tapping. Keep no-punishment feedback, but gate cosmetic rewards on precision thresholds and cap one confusion-pair family per block with deterministic 3-step remediation triggers so FED/QA can implement and verify state transitions consistently.
+
+## 2026-04-10 — Storybook Interactions Require a Hard Pause/Resume Contract
+For interactive handbook pages, learning quality and narrative continuity improve when every inline challenge uses an explicit state sequence (`story_playing -> interaction_prompt -> feedback -> story_resume`) with checkpoint resume, action-triggered validation, and one-step adaptive simplification after two failures. Writing this as a reusable matrix (mechanic x age band x adaptation) made PM/FED handoff concrete and testable.
+
+## 2026-04-10 — Root-Family Decoding Specs Need Decoy Caps + Anti-Guess Gates
+For ages 6-7 morphology-light reading games, sorting quality improves when decoy density is explicitly capped in the core path (about 1 decoy per 6-7 cards), while higher decoy density is restricted to mastery extension only. Rewarding stickers only on strategy-quality rounds (first-try accuracy + low hint use) and adding a rapid-tap "pause + model" recovery gate prevents random-drag success loops and keeps the learning signal tied to decoding behavior.
+
+## 2026-04-10 — Decodable Stories Need Decode-First Quotas + Text-Lock Gates
+For ages 5.5-7 decodable story flows, image support is useful only when checkpoints enforce decode-first behavior with measurable rules (text interaction before image tap, delayed image reveal, and a decode-first checkpoint quota per story). Pairing these with explicit mastery gates based on first-attempt decoding accuracy prevents hint-assisted progression and keeps story engagement from diluting phonics rigor.
+
+## 2026-04-10 — Sight-Word Fluency Should Separate Orthography Fade from Speed Pressure
+For ages 5.5-7 sight-word games, avoid introducing partial nikud fade and soft-timer pressure in the same progression step. Sequence as fade-first mastery, then optional timer cue unlock, and pair with decoy caps plus rapid-tap recovery gates so fluency rewards remain accuracy-driven instead of guess-driven.

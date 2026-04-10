@@ -1,6 +1,8 @@
 node_modules/
 dist/
 .env
+# Supabase CLI link metadata (machine-local)
+supabase/.temp/
 .superpowers/
 .DS_Store
 *.local
@@ -13,3 +15,6 @@ dist/
 !.yarn/sdks
 !.yarn/versions
 *.tsbuildinfo
+
+# External repos vendored locally
+contrib/

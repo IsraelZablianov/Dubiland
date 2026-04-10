@@ -1,7 +1,10 @@
+type AgeBand = '3-4' | '4-5' | '5-6' | '6-7';
+
 export interface ActiveChildProfile {
   id: string;
   name: string;
   emoji: string;
+  ageBand?: AgeBand;
 }
 
 const GUEST_MODE_KEY = 'dubiland:guest-mode';
@@ -40,6 +43,15 @@ export function getActiveChildProfile(): ActiveChildProfile | null {
   try {
     const parsed = JSON.parse(value) as ActiveChildProfile;
     if (!parsed.id || !parsed.name || !parsed.emoji) {
+      return null;
+    }
+    if (
+      parsed.ageBand &&
+      parsed.ageBand !== '3-4' &&
+      parsed.ageBand !== '4-5' &&
+      parsed.ageBand !== '5-6' &&
+      parsed.ageBand !== '6-7'
+    ) {
       return null;
     }
     return parsed;
