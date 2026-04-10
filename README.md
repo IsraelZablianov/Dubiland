@@ -1,25 +1,112 @@
-# 🧸 דובילנד — Dubiland
+<p align="center">
+  <img src="packages/web/public/images/mascot/dubi-hero-wave-rtl.svg" width="180" alt="Dubi the bear mascot waving" />
+</p>
 
-**A Hebrew learning platform for kids ages 3–7, built and maintained by a team of AI agents.**
+<h1 align="center">דובילנד — Dubiland</h1>
 
-> A friendly teddy bear named דובי (Dubi) guides children through math, letters, and reading
-> via games, videos, and songs — all in Hebrew, all listenable, all fun.
+<p align="center">
+  <strong>A Hebrew learning platform for kids ages 3–7, built and maintained by a team of AI agents.</strong>
+</p>
+
+<p align="center">
+  <a href="https://israelzablianov.github.io/Dubiland/">🌐 Live App</a>&nbsp;&nbsp;·&nbsp;&nbsp;
+  <a href="#the-ai-team">🤖 Meet the Team</a>&nbsp;&nbsp;·&nbsp;&nbsp;
+  <a href="#getting-started">🚀 Get Started</a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/React-19-61dafb?logo=react" alt="React 19" />
+  <img src="https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Supabase-Backend-3ecf8e?logo=supabase" alt="Supabase" />
+  <img src="https://img.shields.io/badge/Vite-6-646cff?logo=vite" alt="Vite" />
+  <img src="https://img.shields.io/badge/Agents-20+-ff6b6b" alt="20+ AI Agents" />
+</p>
 
 ---
 
+A friendly teddy bear named **דובי** (Dubi) guides children through math, letters, and reading via games, videos, and songs — all in Hebrew, all listenable, all fun.
+
 ## What is this?
 
-Dubiland is an open-source edtech platform where **13 AI agents** collaborate autonomously to design, build, test, and improve a children's learning app. A human (the "board of directors") provides direction — the agents do the rest.
+Dubiland is an open-source edtech platform where **20+ AI agents** collaborate autonomously to design, build, test, and improve a children's learning app. A human (the "board of directors") provides direction — the agents do the rest.
 
 The entire product — from game design documents to React components to Hebrew audio files — is created and evolved by agents running on [Paperclip](https://paperclip.dev), an AI agent orchestration platform.
 
 ### Core principles
 
 - **Gaming is the primary learning method** — no worksheets, no drills
-- **Everything is listenable** — kids don't read, they hear (Edge TTS with Hebrew voice)
+- **Everything is listenable** — kids don't read, they hear (gTTS with Hebrew voice)
 - **Hebrew-first** — full RTL, i18n-ready for future languages
 - **No restrictions** — difficulty is suggested, never enforced
 - **Agents continuously improve** — they learn from mistakes, accumulate knowledge, and get better over time
+
+---
+
+## Content Areas
+
+<table>
+  <tr>
+    <td align="center" width="33%">
+      <img src="packages/web/public/images/topics/topic-numbers.svg" width="120" alt="Numbers topic" /><br />
+      <strong>מספרים</strong> — Numbers<br />
+      <sub>Counting, number recognition, bigger/smaller, basic arithmetic</sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="packages/web/public/images/topics/topic-letters.svg" width="120" alt="Letters topic" /><br />
+      <strong>אותיות</strong> — Letters<br />
+      <sub>Hebrew alphabet, letter shapes, letter sounds, tracing</sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="packages/web/public/images/topics/topic-reading.svg" width="120" alt="Reading topic" /><br />
+      <strong>קריאה</strong> — Reading<br />
+      <sub>Word building, syllables, sight words, decodable stories</sub>
+    </td>
+  </tr>
+</table>
+
+---
+
+## Games
+
+| Game | Topic | What kids do |
+|---|---|---|
+| 🧮 Counting Picnic | Numbers | Count items at a picnic, tap the right number |
+| ⚖️ More or Less Market | Numbers | Compare quantities in a market setting |
+| 🔢 Number Line Jumps | Numbers | Jump along a number line to practice sequences |
+| 🎨 Color Garden | Colors | Match colors by name in a garden scene |
+| 🔤 Letter Sound Match | Letters | Match Hebrew letters to their sounds |
+| ✏️ Letter Tracing Trail | Letters | Trace letter shapes with guided animation |
+| 🌟 Letter Sky Catcher | Letters | Catch falling letters matching a target sound |
+| 🧩 Picture to Word Builder | Reading | Drag Hebrew letters to build words from pictures |
+| 📖 Decodable Micro Stories | Reading | Read short stories at graduated difficulty |
+| 👁️ Sight Word Sprint | Reading | Recognize high-frequency Hebrew words quickly |
+| 🌿 Root Family Stickers | Reading | Match words that share the same Hebrew root |
+| 📚 Interactive Handbook | Reading | Guided storybook experience with Dubi |
+
+---
+
+## The Mascots
+
+<table>
+  <tr>
+    <td align="center" width="25%">
+      <img src="packages/web/public/images/mascot/dubi-hero-wave-rtl.svg" width="100" alt="Dubi waving" /><br />
+      <sub>Dubi waves hello</sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="packages/web/public/images/mascot/dubi-success-cheer.svg" width="100" alt="Dubi cheering" /><br />
+      <sub>Great job!</sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="packages/web/public/images/mascot/dubi-hint-point-rtl.svg" width="100" alt="Dubi giving a hint" /><br />
+      <sub>Need a hint?</sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="packages/web/public/images/mascot/dubi-loading-breathe.svg" width="100" alt="Dubi breathing while loading" /><br />
+      <sub>Loading...</sub>
+    </td>
+  </tr>
+</table>
 
 ---
 
@@ -28,14 +115,15 @@ The entire product — from game design documents to React components to Hebrew 
 | Layer | Technology |
 |---|---|
 | Frontend | React 19 · TypeScript · Vite |
-| Styling | CSS with design tokens (storybook theme) |
+| Styling | CSS with design tokens (theme system) |
 | Routing | React Router |
 | i18n | i18next + react-i18next |
 | Backend | Supabase (Auth · Postgres · Storage · RLS) |
 | Video | Remotion (build-time generation) |
-| TTS | Edge TTS — `he-IL-HilaNeural` |
+| TTS | gTTS (Google Translate TTS) |
 | Monorepo | Yarn 4 workspaces |
 | AI Orchestration | Paperclip |
+| Deployment | GitHub Pages via GitHub Actions |
 
 ---
 
@@ -70,38 +158,48 @@ dubiland/
 
 ## The AI Team
 
-Dubiland is built by **13 specialized AI agents**, each with their own role, heartbeat schedule, personality, and accumulated knowledge. They coordinate through Paperclip — checking out tasks, posting updates, delegating work, and learning from feedback.
+Dubiland is built by **20+ specialized AI agents**, each with their own role, heartbeat schedule, personality, and accumulated knowledge. They coordinate through Paperclip — checking out tasks, posting updates, delegating work, and learning from feedback.
 
 ```
 You (Board of Directors)
-  └── PM
-       ├── Children Learning PM
-       ├── Architect
-       │     ├── FED Engineer
-       │     ├── FED Engineer 2
-       │     ├── QA Engineer
-       │     ├── QA Engineer 2
-       │     └── Performance Expert
-       ├── UX Designer
-       ├── Gaming Expert
-       ├── Content Writer
-       ├── Media Expert
-       └── CMO
+  ├── PM (CEO)
+  │     ├── Children Learning PM
+  │     ├── Reading PM
+  │     ├── CMO
+  │     │     └── SEO Expert
+  │     ├── Architect
+  │     │     ├── FED Engineer (×3)
+  │     │     ├── Backend Engineer
+  │     │     ├── QA Engineer (×2)
+  │     │     └── Performance Expert
+  │     ├── UX Designer
+  │     ├── Gaming Expert
+  │     ├── Content Writer
+  │     ├── Media Expert
+  │     └── UX QA Reviewer
+  └── Co-Founder
+        └── Ops Watchdog
 ```
 
 | Agent | Heartbeat | What they do |
 |---|---|---|
-| **PM** | 20 min | Product roadmap, feature specs, game ideas, prioritization |
-| **Children Learning PM** | 20 min | Edtech expertise — learning objectives, platform benchmarks |
-| **Architect** | 30 min | System design, data models, schema, game engine API |
-| **FED Engineer** (×2) | 20 min | Build UI, games, components, pages |
-| **UX Designer** | 45 min | Design system, child-friendly layouts, RTL, design tokens |
-| **Gaming Expert** | 45 min | Game mechanics, difficulty balancing, engagement for ages 3–7 |
-| **Content Writer** | 30 min | Hebrew text, audio scripts, TTS generation |
-| **Media Expert** | 60 min | Remotion video compositions, song animations |
-| **QA Engineer** (×2) | 20 min | Code review, testing, accessibility, RTL validation |
-| **Performance Expert** | 60 min | Bundle size, animations, Lighthouse scores |
-| **CMO** | — | Marketing, growth, messaging |
+| **PM** | 10 min | Product roadmap, feature specs, game ideas, prioritization |
+| **Co-Founder** | 10 min | Shares CEO duties, splits tasks by expertise or load |
+| **Children Learning PM** | 10 min | Edtech expertise — learning objectives, platform benchmarks |
+| **Reading PM** | 10 min | Hebrew reading & literacy curriculum, decodable stories |
+| **Architect** | 10 min | System design, data models, schema, game engine API |
+| **FED Engineer** (×3) | 10 min | Build UI, games, components, pages |
+| **Backend Engineer** | 10 min | Database modeling, Supabase config, Edge Functions |
+| **UX Designer** | 10 min | Design system, child-friendly layouts, RTL, design tokens |
+| **Gaming Expert** | 10 min | Game mechanics, difficulty balancing, engagement for ages 3–7 |
+| **Content Writer** | 10 min | Hebrew text, audio scripts, TTS generation |
+| **Media Expert** | 10 min | Remotion video compositions, song animations |
+| **QA Engineer** (×2) | 10 min | Code review, testing, accessibility, RTL validation |
+| **Performance Expert** | 10 min | Bundle size, animations, Lighthouse scores |
+| **SEO Expert** | 10 min | Technical SEO, structured data, keyword research |
+| **CMO** | 10 min | Marketing strategy, growth, coordinates SEO |
+| **UX QA Reviewer** | 30 min | Visual inspection, layout bugs, responsive quality |
+| **Ops Watchdog** | 35 min | Agent health monitoring, stuck/crash detection |
 
 ### How agents learn
 
@@ -116,8 +214,7 @@ docs/agents/{name}/
 docs/knowledge/        # Shared across all agents
   ├── patterns.md
   ├── conventions.md
-  ├── corrections.md
-  └── ...domain files
+  └── corrections.md
 ```
 
 High-confidence patterns get promoted to project rules. The system is self-evolving.
@@ -141,16 +238,6 @@ High-confidence patterns get promoted to project rules. The system is self-evolv
 - **Checkout** — an agent locks a task before working on it (prevents conflicts)
 - **Delegation** — agents create subtasks and assign them to the right specialist
 - **External instructions** — all agent prompts live in the repo under `docs/agents/`, version-controlled alongside the code they produce
-
----
-
-## Content Areas
-
-| Topic | What kids learn | Example activities |
-|---|---|---|
-| **מספרים** (Math) | Counting, number recognition, bigger/smaller, basic arithmetic | Count animals, pop number balloons, sort sequences |
-| **אותיות** (Letters) | Hebrew alphabet, letter shapes, letter sounds | Trace letters, match letter to sound, letter bingo |
-| **קריאה** (Reading) | Word building, syllables, early reading | Drag letters to build words, match words to pictures |
 
 ---
 
@@ -179,30 +266,41 @@ The `GameShell` wrapper provides audio controls, star display, exit button, and 
 
 ---
 
+## Themes
+
+Kids choose a visual theme that reskins the entire experience while game logic stays identical:
+
+| Theme | Mascot | Feel |
+|---|---|---|
+| 🧸 דובי (Bear) | Teddy bear | Warm storybook — **default** |
+| ⚽ כדורגל (Football) | Footballer | Sporty, energetic, green |
+| 🦄 קסם (Magic) | Unicorn | Sparkly, fantasy, purple |
+| 🚀 חלל (Space) | Astronaut | Stars, rockets, dark blue |
+| 🌊 ים (Ocean) | Fish / mermaid | Underwater, waves, teal |
+
+---
+
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 20+
 - Yarn 4 (corepack)
-- A Supabase project (for auth and data)
+- A Supabase project (optional — app runs in demo mode without it)
 
 ### Setup
 
 ```bash
-# Clone
 git clone https://github.com/IsraelZablianov/Dubiland.git
 cd Dubiland
 
-# Install
 corepack enable
 yarn install
 
-# Environment
-cp packages/web/.env.example packages/web/.env.local
+# Environment (optional — for Supabase backend)
+cp .env.example .env
 # Fill in your Supabase URL and anon key
 
-# Run
 yarn dev
 ```
 
@@ -217,29 +315,14 @@ yarn dev
 
 ---
 
-## Themes
-
-Kids choose a visual theme that reskins the entire experience while game logic stays identical:
-
-| Theme | Mascot | Feel |
-|---|---|---|
-| 🧸 דובי (Bear) | Teddy bear | Warm storybook — **default** |
-| ⚽ כדורגל (Football) | Footballer | Sporty, energetic, green |
-| 🦄 קסם (Magic) | Unicorn | Sparkly, fantasy, purple |
-| 🚀 חלל (Space) | Astronaut | Stars, rockets, dark blue |
-| 🌊 ים (Ocean) | Fish / mermaid | Underwater, waves, teal |
-
-A theme is a config object — colors, mascot, asset paths, i18n overrides — stored on the child profile. Components read the current theme from context.
-
----
-
 ## Design Decisions
 
-- **Audio-first UX** — every piece of text has a corresponding `.mp3` generated by Edge TTS. Audio auto-plays on screen entry.
+- **Audio-first UX** — every piece of text has a corresponding `.mp3` generated by gTTS. Audio auto-plays on screen entry.
 - **Optimistic updates** — all writes update UI instantly, sync to Supabase in background. A child's experience is never interrupted by network latency.
 - **RLS everywhere** — each family can only read/write their own children's progress. Games and videos are public read.
 - **i18n from day one** — all strings in locale JSON files, never hardcoded. Adding a language = new folder + new audio.
 - **44px minimum tap targets** — designed for small fingers on tablets.
+- **Mobile-friendly RTL** — all layouts tested in right-to-left on tablet viewports.
 
 ---
 
@@ -250,5 +333,7 @@ This project is open source. See [LICENSE](LICENSE) for details.
 ---
 
 <p align="center">
-  <em>Built with ❤️ by a human director and 13 AI agents</em>
+  <img src="packages/web/public/images/mascot/dubi-success-cheer.svg" width="80" alt="Dubi cheering" />
+  <br />
+  <em>Built with ❤️ by a human director and 20+ AI agents</em>
 </p>
