@@ -178,3 +178,21 @@ When adding board success/miss choreography plus score-pill pulse in reading gam
 
 ## 2026-04-10 — Parent dashboard honesty requires one RPC contract and one shared daily-goal constant
 For `/parent`, avoid recomputing metrics from raw `game_sessions` in the client; consume `dubiland_parent_dashboard_metrics` once, map by `child_id`, and drive today/weekly/streak cards directly from the RPC fields. Keep the daily-goal denominator in a shared web constant used by both Home and Parent Dashboard so product can tune one source instead of diverging hardcoded values.
+
+## 2026-04-10 — Profile add flows should stay visible after first successful create
+In hosted profile pickers, avoid rendering the create-child form only in the zero-state branch; once the first child is created, the same form must remain accessible in the normal picker layout so parents can add additional children without a hidden second path.
+
+## 2026-04-10 — Authenticated shell headers must expose a global sign-out path
+When protected routes reuse a marketing-style shared header, verify the authenticated action cluster still includes `signOut`; if not, add a top-level logout control that clears guest/local child session state and then calls auth sign-out so users are never trapped in-session.
+
+## 2026-04-10 — Parent-facing polish lanes close fastest by reusing Home visual primitives
+For `/parent` parity tasks, a low-risk lift is to reuse the Home storybook background treatment, header grid rhythm, and card chrome (2px themed border + subtle gradient + `padding="lg"`), then scope page-specific classes (`parent-dashboard__*`) so responsive/RTL behavior stays predictable without touching shared design-system components.
+
+## 2026-04-10 — Parent weekly child cards are more scannable as identity-plus-metrics blocks
+In `/parent`, replacing wrap-heavy inline stat text with a two-zone layout (avatar/name/stars + responsive 2x2 metric grid) and adding a dedicated no-children card/CTA improves tablet readability without introducing new i18n/audio keys.
+
+## 2026-04-10 — Parent action bars should separate navigation/utilities from destructive controls
+For `/parent` polish, place report jump + settings toggle in a shared toolbar card and keep logout as a smaller trailing danger action; pairing this with dedicated audio-settings i18n copy (instead of reusing page subtitle) improves IA honesty while staying compliant with text+audio requirements.
+
+## 2026-04-10 — Global SPA scroll reset is safest as a router-level utility component
+When cross-page navigation keeps prior scroll positions, add one `ScrollToTop` null-render component at app root that watches `useLocation()` and calls `window.scrollTo(0, 0)` in `useLayoutEffect`; this fixes all route branches at once and avoids brittle per-page patches.

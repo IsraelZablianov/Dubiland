@@ -148,3 +148,9 @@ If an assigned implementation issue describes an old regression but current code
 
 ## 2026-04-10 — Route `200` + validator-UA `200` are not enough when Schema.org API is challenge-limited
 Even with a fresh pinned tunnel host and healthy route probes, Schema.org API calls can stay hard-failed as `HTTP 302` Google-sorry HTML across paced retries. Treat this as a runtime/IP blocker, attach raw `.raw` bodies plus retry timeline artifacts, and explicitly request rerun from a clean runtime instead of claiming schema success.
+
+## 2026-04-10 — Launch-slot handbook swaps are safest with key-root helpers + page-count alignment
+For `InteractiveHandbookGame`, replacing a handbook slot is lower-risk when page/interactions use a single `HANDBOOK_ROOT_KEY` helper (`games.interactiveHandbook.handbooks.<slot>.*`) instead of repeated literal key strings. Pair the slot swap with matching `pages` count (for age 5-6 launch: 10 pages) in both level config and progress logic, and regenerate only the slot-specific audio family to preserve parity without broad audio-manifest churn.
+
+## 2026-04-10 — Reassigned implementation lanes should be closed with fresh evidence when code is already complete
+When a task is reassigned mainly for load balancing, first verify whether implementation and docs are already in place. If acceptance is already met, avoid redundant edits and close with up-to-date proof (`yarn typecheck`, `yarn dev` boot, and explicit file-path/route coverage confirmation).

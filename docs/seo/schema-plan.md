@@ -138,7 +138,7 @@ Rules:
 | Crawl assets + baseline `llms.txt` publication | FED Engineer 2 | In progress | [DUB-15](/DUB/issues/DUB-15) |
 | Public route/indexation architecture | Architect | In progress | [DUB-16](/DUB/issues/DUB-16) |
 | Canonical/hreflang metadata framework | FED Engineer | In progress | [DUB-17](/DUB/issues/DUB-17) |
-| JSON-LD foundation implementation | FED Engineer | In progress | [DUB-24](/DUB/issues/DUB-24) |
+| JSON-LD foundation implementation | FED Engineer 2 | Done | [DUB-24](/DUB/issues/DUB-24) |
 
 ### 2026-04-09 Execution Notes ([DUB-45](/DUB/issues/DUB-45))
 
@@ -190,6 +190,22 @@ Rules:
   - `totalNumWarnings: 0`
 - Google Rich Results test run remains blocked until source URL is resolver-visible and crawlable.
 - Follow-up implementation task created for FED: [DUB-169](/DUB/issues/DUB-169) to provide a stable public preview URL (DNS-resolvable + route checks + uptime window for SEO validation).
+
+### 2026-04-10 FED2 Revalidation + Closure ([DUB-24](/DUB/issues/DUB-24))
+
+- Revalidated JSON-LD implementation and route gating in:
+  - `packages/web/src/seo/jsonLd.ts`
+  - `packages/web/src/seo/RouteMetadataManager.tsx`
+  - `packages/web/src/seo/routeMetadata.ts`
+- Reconfirmed required route coverage remains intact:
+  - `Organization`: `/`, `/about`, `/parents`, `/parents/faq`, `/letters`, `/numbers`, `/reading`
+  - `WebApplication`: `/`, `/letters`, `/numbers`, `/reading`
+  - `BreadcrumbList`: `/parents`, `/parents/faq`, `/letters`, `/numbers`, `/reading`
+  - `FAQPage`: `/parents/faq` (Q/A sourced from i18n `public` namespace keys)
+- Verification in current workspace:
+  - `yarn typecheck` passed (`2026-04-10`).
+  - `yarn dev --host 127.0.0.1 --port 4173` booted successfully and served Vite.
+- Remaining external live-validator runtime/accessibility work continues under [DUB-50](/DUB/issues/DUB-50) and [DUB-375](/DUB/issues/DUB-375).
 
 ## Completion Criteria for DUB-12
 

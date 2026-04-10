@@ -70,3 +70,16 @@ Runtime rollout is delivered in [DUB-371](/DUB/issues/DUB-371), including restar
 - `stale_non_terminal=0`
 
 Final acceptance for [DUB-304](/DUB/issues/DUB-304) now depends on the post-deploy QA rerun in [DUB-315](/DUB/issues/DUB-315).
+
+## Additional Finding (Same Day)
+
+Post-deploy QA rerun removed active mismatch classes but surfaced a separate rebound class:
+
+- `active_unrelated_exec=0`
+- `active_unrelated_checkout=0`
+- `stale_non_terminal=6` (non-terminal issues with `checkout_run_id` pointing to terminal runs)
+
+Tracking lanes:
+
+- Backend stale-checkout remediation: [DUB-391](/DUB/issues/DUB-391)
+- QA rerun gate (blocked until [DUB-391](/DUB/issues/DUB-391) clears): [DUB-315](/DUB/issues/DUB-315)

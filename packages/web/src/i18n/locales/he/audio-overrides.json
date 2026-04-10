@@ -28,5 +28,7 @@
   "common.roots.common.kra": "שורש קוף, ריש, אלף",
   "common.roots.common.smr": "שורש שין, מם, ריש",
   "common.parentDashboard.games.decodableMicroStories.progressSummary": "איזה יופי. הילד מתקדם בקריאת סיפורים מדורגים, מדייק יותר במילים ומשתמש בפחות רמזים.",
-  "common.parentDashboard.games.decodableMicroStories.wordAccuracy": "המילים שכרגע דורשות עוד תרגול מופיעות בדוח, כדי לחזור עליהן בקריאה קצרה בבית."
+  "common.parentDashboard.games.decodableMicroStories.wordAccuracy": "המילים שכרגע דורשות עוד תרגול מופיעות בדוח, כדי לחזור עליהן בקריאה קצרה בבית.",
+  "common.parentDashboard.games.confusableLetterContrast.progressSummary": "איזה יופי. הילד מתקדם בזיהוי אותיות דומות ומדייק יותר בין זוגות מבלבלים.",
+  "common.parentDashboard.games.confusableLetterContrast.confusions": "בדוח ההורים מוצג זוג האותיות שבו נדרש כרגע עוד תרגול."
 }

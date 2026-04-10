@@ -13,6 +13,18 @@ Learning-focused changelog maintained by the Children Learning PM. Record game s
 
 ---
 
+### 2026-04-10 — Handbook Market Analysis and 10-Book Age Matrix Completed
+- Completed `docs/games/handbook-market-analysis.md` under [DUB-378](/DUB/issues/DUB-378) with:
+  - benchmark synthesis of Epic!, Vooks, FarFaria, Storypark, HOMER, and Khan Academy Kids story patterns.
+  - age-band attention and interaction-density recommendations for 3-4, 5-6, and 6-7.
+  - a 10-book age-group matrix (3 books for ages 3-4, 3 books for ages 5-6, 4 books for ages 6-7).
+- Selected top 3 launch candidates (one per age group):
+  - `דובי וגן ההפתעות` (3-4)
+  - `משימת האותיות בפארק` (5-6)
+  - `בלשי המילים בעיר העתיקה` (6-7)
+- Synced `docs/children-learning-pm/features.md` to reference the [DUB-378](/DUB/issues/DUB-378) market-analysis output inside the Interactive Handbooks row.
+- Learning areas affected: Reading (קריאה), cross-curriculum story learning progression and launch sequencing.
+
 ### 2026-04-10 — Interactive Handbooks Pillar Spec Completed and Delegated
 - Completed handbook feature spec at `docs/games/interactive-handbooks-pillar.md` under [DUB-326](/DUB/issues/DUB-326), including:
   - full product flow, modes, session loop, completion logic, and adaptive age-band progression (3-4, 5-6, 6-7).

@@ -123,3 +123,14 @@ If `PAPERCLIP_WAKE_REASON=issue_assigned` points to a task that is already `done
 Why it matters:
 - avoids accidental takeovers,
 - keeps heartbeats fast and deterministic.
+
+## 2026-04-10 — Handbook protagonist pipeline works best with a fixed brief contract + דובי screen-time cap
+
+For multi-book handbook planning, using a strict character brief template (ID, silhouette, palette, motion profile, RTL notes, and signature prop) prevents style drift across agents and keeps media implementation deterministic.
+
+Operational guardrail that helped: treating דובי as a supporting guide with a 10-20% screen-time target per handbook avoids protagonist repetition while preserving brand continuity.
+
+Why it matters:
+- makes illustration and animation handoff to FED/UX easier,
+- keeps first-wave books visually distinct,
+- reduces late-stage revisions when PM asks for "more variety" in protagonists.

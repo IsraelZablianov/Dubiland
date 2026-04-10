@@ -241,6 +241,46 @@ This sharply reduces false positives and prevents accidental cleanup of healthy 
 
 **Mitigation:** Escalation should include: contaminated issue ID/identifier, mismatched run ID, and the run's true context issue ID/identifier so backend can reproduce lock write-path corruption.
 
+## 2026-04-10 — Phantom blockers are the #1 productivity killer
+
+**Incident:** Board review found 10 blocked tasks. ALL of them had empty `blockedByIssueIds` arrays — agents had set themselves to `blocked` status via comments (soft blockers) but never set the formal dependency. This meant Paperclip could never auto-unblock them, and agents would re-check each heartbeat, find them still "blocked", and move on.
+
+**Impact:** 10 tasks with no real dependency were stuck indefinitely. Agents wasted heartbeats checking blocked tasks that could have been worked on.
+
+**Root cause:** When agents encounter a perceived dependency (e.g. "waiting for FED implementation"), they PATCH status to `blocked` and write a comment — but don't set `blockedByIssueIds`. Without the formal link, Paperclip cannot auto-wake the assignee when the dependency completes.
+
+**Recovery:** For each phantom-blocked task:
+1. Check if a real dependency exists (read the task description and comments)
+2. If yes → set `blockedByIssueIds` to the real dependency task IDs
+3. If no → PATCH status to `todo`
+
+**Prevention:** Every heartbeat, scan all blocked tasks and check `blockedBy` array from `GET /api/issues/{id}`. Empty array + blocked status = phantom blocker. Fix immediately.
+
+## 2026-04-10 — Workload imbalance causes cascading slowdowns
+
+**Incident:** FED Engineer 1 had 8 tasks in `in_review` plus 4 more in todo/in_progress (12 total active tasks). FED Engineer 2 and FED Engineer 3 had near zero. QA Agents had no review work despite 8 tasks waiting for review.
+
+**Impact:** FED 1 was spending heartbeats context-switching across 12 tasks instead of making progress. QA agents were idle with nothing to review. FED 2 and 3 were also idle.
+
+**Root cause:** Tasks naturally accumulate on the first agent that picks them up. No automatic rebalancing exists in Paperclip.
+
+**Recovery:**
+1. Moved 4 of FED 1's `in_review` tasks to QA 1 and QA 2 (they're the actual reviewers)
+2. Moved 2 of FED 1's `todo` tasks to FED 2 and FED 3
+3. Invoked heartbeats for all reassigned agents
+
+**Prevention:** Every heartbeat, count tasks per agent within each role group. If gap >= 3, move `todo` tasks from overloaded to underloaded. Move `in_review` to QA agents. Never move `in_progress` (agent has context).
+
+## 2026-04-10 — Meta-task spirals: detection and cleanup pattern
+
+**Incident:** 7 of 23 open tasks were about "lock contamination" — a recursive pattern where agents created tasks about tasks about lock issues. None were making progress; all were blocking each other or the agents assigned to them.
+
+**Detection pattern:** Search for title clusters. If 3+ tasks contain the same root-cause keywords (e.g. "lock contamination", "execution-lock", "checkout conflict", "stale checkout"), and they're all stuck in `blocked`/`in_progress` without recent comments showing actual progress, it's a spiral.
+
+**Recovery:** Cancel all but the most recent canonical task. Comment on each cancelled task explaining the spiral was detected. If the underlying issue (e.g. actual lock contamination) still exists, handle it directly via DB procedures — don't create new tasks.
+
+**Key lesson:** The spiral happens because agents follow the protocol (detect problem → create task → assign) but the tasks themselves become the problem. The Ops Watchdog must break this cycle by fixing directly and cancelling the meta-work.
+
 ## 2026-04-10 — Recursive meta-issue spiral caused 65-issue blocked backlog
 
 **Incident:** 65 issues accumulated in `blocked` status. The root cause was NOT agent crashes or execution locks — it was a **recursive bureaucratic spiral** in the task system. The pattern:

@@ -3,6 +3,45 @@
 Accumulated knowledge specific to the Reading PM role.
 Append new entries after each completed task.
 
+## 2026-04-10 — Backlog-to-todo prioritization rule
+- When multiple delegated specs are waiting in backlog, move one foundational reading cluster to `todo` end-to-end (implementation + content/audio + mechanics) instead of partially activating many clusters.
+- For early Hebrew literacy, confusable-letter discrimination is a high-leverage activation candidate because it reduces downstream decoding errors across syllables and words.
+
+## 2026-04-10 — Video-to-game transfer pattern
+- Final-form pedagogy performs better when short direct-instruction video checkpoints are explicitly linked to a follow-up gameplay lane (video learn -> interactive apply) in the same curriculum band.
+- For pre-literate readers, video checkpoints should remain icon-first and action-triggered, with no text-only instruction overlays.
+- Educational video delegation should be split at minimum into Media Expert (composition/timing) and Content Writer (script/audio) to avoid pacing-content drift.
+
+## 2026-04-10 — Shva bridge design rule
+- For age ~6 readers, introduce shva through tightly controlled listen-and-blend contrasts before open phrase exposure; abrupt rule-heavy instruction reduces usable decoding transfer.
+- A practical session arc is listen/choose -> blend rail -> transfer phrase, with segmented audio hints and minimal visual crutches.
+- Shva gameplay should be tracked as both Nikud and Syllable Decoding coverage because it functions as a bridge milestone, not a single-skill endpoint.
+
+## 2026-04-10 — Final-forms (sofit) sequencing rule
+- Hebrew final forms should be taught as positional variants of known base letters, not as isolated new letters, then immediately transferred into pointed word/phrase decoding.
+- A productive game loop for sofit at age ~6 is: complete ending -> sort positional use -> read transfer phrase, with minimal image reliance.
+- Delegation balancing is improved by routing new implementation to the least-loaded FED lane while still pairing Content Writer and Gaming Expert from day one.
+
+## 2026-04-10 — Same-heartbeat status flip safeguard
+- After creating new delegated lanes, re-check previously in-progress reading lanes before closing the heartbeat; execution status can flip to `done` within minutes and requires immediate tracker promotion.
+- For multi-skill features, ship transition should update all mapped curriculum rows in the same edit to avoid partial coverage drift.
+
+## 2026-04-10 — Confusable-letter lane design rule
+- For age ~6 Hebrew readers, confusable-letter training should move from isolated pair contrast to pointed syllable/word transfer in the same game to prevent non-transfer drill loops.
+- Image support should be restricted to brief onboarding only; stable mastery data should come from letter-only rounds with audio prompts.
+- Delegating confusable-letter work as FED + Content Writer + Gaming Expert from day one prevents mismatch between mechanic thresholds and Hebrew audio content sequence.
+
+## 2026-04-10 — Partial lane completion tracking
+- For multi-lane specs, keep the feature `In Progress` when one lane is done and another is still in execution; annotate each linked issue status explicitly to prevent premature shipped calls.
+
+## 2026-04-10 — Final QA closure sync pattern
+- Once the last QA lane for a skill turns `done`, update both feature status text and curriculum coverage counts in the same heartbeat so coverage math stays coherent.
+
+## 2026-04-10 — Handbook ladder delegation pattern
+- A cross-age reading ladder spec is more actionable when it names one launch book per age band and attaches explicit nikud policy + sentence-complexity targets, not just generic "difficulty levels."
+- For handbook literacy expansion work, a paired handoff (FED runtime gates + Content Writer decodable/audio package) prevents stalled execution between pedagogy and implementation.
+- In this workspace, FED load balancing currently favors FED Engineer 3 for new reading implementation lanes when FED Engineer 1 carries heavy open-task load.
+
 ## 2026-04-10 — Unblock pings as execution catalyst
 - For ready QA lanes, a concise PM unblock comment with current dependency closure can help reactivate execution quickly and improve visibility of final closure-critical work.
 

@@ -1,14 +1,17 @@
 # HEARTBEAT — Ops Watchdog
 
-Execute this checklist on every heartbeat. Do not skip steps.
+Execute this checklist on every heartbeat. Do not skip steps. Your job is twofold: **keep agents running** and **keep work flowing**.
 
 ## Checklist
 
 ### 1. Load context
 
-Read your `AGENTS.md`, `SOUL.md`, and the `agent-watchdog` skill (`skills/agent-watchdog/SKILL.md`). Check `docs/agents/ops-watchdog/learnings.md` for past incidents and patterns. **Also read `docs/agents/ops-watchdog/instincts.md`** for critical behavioral rules (anti-spiral, Architect=CTO, fix-directly-don't-delegate).
+Read your `AGENTS.md`, `SOUL.md`, and the `agent-watchdog` skill (`skills/agent-watchdog/SKILL.md`). Check `docs/agents/ops-watchdog/learnings.md` for past incidents and patterns. **Also read `docs/agents/ops-watchdog/instincts.md`** for critical behavioral rules.
 
-**Critical reminder:** Do NOT create `[CTO]` or `[Ops Alert]` meta-tasks for problems you can fix directly. This caused a 65-issue blocked spiral on 2026-04-10. Fix locks in the DB, invoke heartbeats directly, and only escalate truly unrecoverable issues.
+**Critical reminders:**
+- Do NOT create `[CTO]` or `[Ops Alert]` meta-tasks for problems you can fix directly. This caused a 65-issue blocked spiral on 2026-04-10.
+- Fix locks in the DB, invoke heartbeats directly, unblock tasks, rebalance workloads.
+- Only escalate what you truly cannot fix yourself.
 
 ### 2. Collect health snapshot
 
@@ -207,6 +210,168 @@ Run Phase 2d from the `agent-watchdog` skill. For each idle, non-paused agent wh
 3. Verify the agent picks up work
 4. If it goes silent again, note for escalation (may need Paperclip server restart)
 
+### 3e. Task health scan — blocked tasks
+
+Query all blocked issues and check their real dependencies:
+
+```bash
+COMPANY_ID="$PAPERCLIP_COMPANY_ID"
+
+# Fetch all blocked tasks
+curl -s "http://127.0.0.1:3100/api/companies/$COMPANY_ID/issues?status=blocked" > /tmp/watchdog-blocked.json
+
+# For each blocked task, check if it has real blockedByIssueIds
+python3 -c "
+import json
+with open('/tmp/watchdog-blocked.json') as f:
+    data = json.load(f)
+items = data if isinstance(data, list) else data.get('items', [])
+print(f'Total blocked: {len(items)}')
+phantom = []
+for i in items:
+    # Need to fetch full issue to get blockedBy
+    pass
+print('Fetching individual issues to check blockedBy...')
+for i in items:
+    print(f'  [{i.get(\"identifier\",\"?\")}] {i.get(\"title\",\"?\")[:60]} | assignee: {i.get(\"assigneeAgentId\",\"none\")[:12]}')
+"
+```
+
+For each blocked task, fetch `GET /api/issues/{id}` and inspect `blockedBy`:
+- **Empty `blockedBy` array** → phantom blocker. PATCH to `todo` with comment "Unblocking: no real dependency exists."
+- **All blockers are `done`/`cancelled`** → resolved blocker. PATCH to `todo`, set `blockedByIssueIds: []`.
+- **Blockers are still active** → legitimate. Leave as is but verify the blocker task is assigned and progressing.
+
+### 3f. Task health scan — meta-task spirals
+
+Check for clusters of tasks about the same root cause:
+
+```bash
+# Look for spiral patterns in task titles
+python3 -c "
+import json
+with open('/tmp/watchdog-blocked.json') as f:
+    data = json.load(f)
+items = data if isinstance(data, list) else data.get('items', [])
+
+# Also load in_progress and todo
+import subprocess
+for status in ['in_progress', 'todo']:
+    r = subprocess.run(['curl', '-s', f'http://127.0.0.1:3100/api/companies/$COMPANY_ID/issues?status={status}'],
+                      capture_output=True, text=True)
+    more = json.loads(r.stdout)
+    items.extend(more if isinstance(more, list) else more.get('items', []))
+
+# Detect spiral keywords
+spiral_keywords = ['lock contamination', 'execution-lock', 'checkout conflict', 'stale checkout', 'lock reattachment']
+spiral_tasks = []
+for i in items:
+    title = (i.get('title','') + ' ' + i.get('description','')).lower()
+    if any(kw in title for kw in spiral_keywords):
+        spiral_tasks.append(i)
+
+if len(spiral_tasks) >= 3:
+    print(f'SPIRAL DETECTED: {len(spiral_tasks)} tasks about lock/checkout issues')
+    for t in spiral_tasks:
+        print(f'  [{t.get(\"identifier\")}] {t.get(\"title\",\"\")[:70]}')
+    print('ACTION: Cancel all but 1 canonical task')
+else:
+    print(f'No spiral detected ({len(spiral_tasks)} lock-related tasks)')
+"
+```
+
+If a spiral is detected (3+ tasks about the same root cause): cancel all but the most recent one. Use `PATCH /api/issues/{id}` with `{"status": "cancelled", "comment": "Cancelled by Ops Watchdog: meta-task spiral cleanup. Keeping [DUB-XXX] as canonical task."}`.
+
+### 3g. Workload rebalancing
+
+Check task distribution across role groups:
+
+```bash
+COMPANY_ID="$PAPERCLIP_COMPANY_ID"
+
+# Get all active tasks with assignees
+curl -s "http://127.0.0.1:3100/api/companies/$COMPANY_ID/issues?status=todo,in_progress,in_review" > /tmp/watchdog-active.json
+
+python3 -c "
+import json
+from collections import defaultdict
+
+with open('/tmp/watchdog-active.json') as f:
+    data = json.load(f)
+items = data if isinstance(data, list) else data.get('items', [])
+
+# Count tasks per agent
+agent_tasks = defaultdict(lambda: {'todo': 0, 'in_progress': 0, 'in_review': 0, 'total': 0})
+for i in items:
+    aid = i.get('assigneeAgentId', 'unassigned')
+    status = i.get('status', '?')
+    if status in agent_tasks[aid]:
+        agent_tasks[aid][status] += 1
+    agent_tasks[aid]['total'] += 1
+
+# FED Engineer IDs
+fed_ids = {
+    'afb1aaf8-04b5-45f7-80d1-fd401ae14510': 'FED 1',
+    '0dad1b67-3702-4a03-b08b-3342247d371b': 'FED 2',
+    'aa97a097-c8e5-47e6-9075-e7f8fb5d3709': 'FED 3',
+}
+qa_ids = {
+    'e11728f3-bb90-417d-842a-9a1bb633eed4': 'QA 1',
+    'bef56e46-8b5a-48fc-bbce-acb9ea364c8a': 'QA 2',
+}
+
+for group_name, group_ids in [('FED Engineers', fed_ids), ('QA Engineers', qa_ids)]:
+    print(f'\n{group_name}:')
+    counts = {}
+    for aid, name in group_ids.items():
+        t = agent_tasks.get(aid, {'todo':0,'in_progress':0,'in_review':0,'total':0})
+        counts[name] = t
+        print(f'  {name}: {t[\"total\"]} total (todo:{t[\"todo\"]} ip:{t[\"in_progress\"]} ir:{t[\"in_review\"]})')
+    
+    totals = [c['total'] for c in counts.values()]
+    if totals and max(totals) - min(totals) >= 3:
+        print(f'  ⚠ IMBALANCE: gap of {max(totals) - min(totals)} tasks. Rebalance needed!')
+    else:
+        print(f'  ✓ Balanced')
+"
+```
+
+If imbalance is detected (gap >= 3 tasks within a role group):
+1. Identify `todo` tasks on the overloaded agent
+2. PATCH `assigneeAgentId` to move them to the underloaded peer
+3. Add a comment: "Reassigned by Ops Watchdog for workload balance."
+4. After reassigning, invoke a heartbeat for the receiving agent
+
+### 3h. Review bottleneck check
+
+If any engineer has 3+ tasks in `in_review`, reassign them to QA agents for review:
+
+```bash
+# From the active tasks data, find review bottlenecks
+python3 -c "
+import json
+with open('/tmp/watchdog-active.json') as f:
+    data = json.load(f)
+items = data if isinstance(data, list) else data.get('items', [])
+
+from collections import defaultdict
+review_by_agent = defaultdict(list)
+for i in items:
+    if i.get('status') == 'in_review':
+        review_by_agent[i.get('assigneeAgentId','')].append(i)
+
+qa_agents = ['e11728f3-bb90-417d-842a-9a1bb633eed4', 'bef56e46-8b5a-48fc-bbce-acb9ea364c8a']
+for aid, tasks in review_by_agent.items():
+    if aid not in qa_agents and len(tasks) >= 3:
+        print(f'BOTTLENECK: agent {aid[:12]} has {len(tasks)} in_review tasks')
+        for t in tasks:
+            print(f'  [{t.get(\"identifier\")}] {t.get(\"title\",\"\")[:60]}')
+        print('ACTION: Reassign to QA agents')
+"
+```
+
+For bottlenecked `in_review` tasks: distribute evenly to QA 1 and QA 2 by PATCH `assigneeAgentId`. The tasks stay in `in_review` status — QA agents will pick them up and perform the review.
+
 ### 4. Recover
 
 For each problem detected, execute the matching recovery procedure from Phase 3 of the skill:
@@ -253,9 +418,11 @@ Expected: status is `idle` or `running` (freshly started heartbeat).
 Post a comment on your current task with:
 
 - Timestamp
-- Table of agents scanned, problems found, actions taken, results
+- **Agent health:** Table of agents scanned, problems found, actions taken, results
+- **Task health:** Blockers cleared, spirals cancelled, tasks rebalanced, misassignments fixed
+- **Workload snapshot:** Task counts per FED and QA agent after rebalancing
 - Any escalations needed
-- Summary of overall system health
+- Summary of overall system health and productivity
 
 ### 7. Record learnings
 

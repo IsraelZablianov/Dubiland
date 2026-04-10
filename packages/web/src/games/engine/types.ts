@@ -9,9 +9,20 @@ export interface ParentSummaryMetrics {
   hintTrend: HintTrend;
 }
 
+export interface ReadingGateStatus {
+  activeBookId: string;
+  nextBookId: string | null;
+  passed: boolean;
+  firstAttemptSuccessRate: number;
+  hintRate: number;
+  firstTryAccuracyMin: number;
+  hintRateMax: number;
+}
+
 export interface GameCompletionResult extends GameResult {
   summaryMetrics?: ParentSummaryMetrics;
   roundsCompleted?: number;
+  readingGate?: ReadingGateStatus;
 }
 
 export interface AudioController {

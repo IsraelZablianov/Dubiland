@@ -3,8 +3,14 @@ import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/design-system';
 import { MascotIllustration } from '@/components/illustrations';
+import { useAuth } from '@/hooks/useAuth';
 import { usePublicAuthState } from '@/hooks/usePublicAuthState';
-import { getActiveChildProfile, isGuestModeEnabled } from '@/lib/session';
+import {
+  clearActiveChildProfile,
+  disableGuestMode,
+  getActiveChildProfile,
+  isGuestModeEnabled,
+} from '@/lib/session';
 
 const NAV_LINKS = [
   { key: 'home', path: '/' },
@@ -34,6 +40,7 @@ export function PublicHeader() {
   const location = useLocation();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { signOut } = useAuth();
   const child = getActiveChildProfile();
 
   const guestModeEnabled = isGuestModeEnabled();
@@ -47,6 +54,20 @@ export function PublicHeader() {
   const goToAppRoute = (path: string) => {
     navigate(path);
     setMenuOpen(false);
+  };
+
+  const handleSignOut = async () => {
+    disableGuestMode();
+    clearActiveChildProfile();
+    setMenuOpen(false);
+
+    try {
+      await signOut();
+    } catch {
+      // Keep navigation fallback even if remote sign-out fails.
+    }
+
+    navigate('/');
   };
 
   return (
@@ -113,6 +134,9 @@ export function PublicHeader() {
                     {t('common:nav.parentArea')}
                   </Button>
                 )}
+                <Button variant="ghost" size="sm" onClick={() => void handleSignOut()}>
+                  {t('common:nav.signOut')}
+                </Button>
               </div>
             </div>
           )}

@@ -4,5 +4,6 @@ export type {
   GameProps,
   HintTrend,
   ParentSummaryMetrics,
+  ReadingGateStatus,
   StableRange,
 } from './types';

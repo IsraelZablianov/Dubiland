@@ -127,3 +127,21 @@ When a game spec marks icon inventory as mandatory (for example replay/hint/retr
 
 ## 2026-04-10 — Midpoint/transition cue fixes should prove audio-before-navigation sequencing
 For icon-driven continue flows, QA should verify the button handler triggers narrated cue audio first and advances screen state only after a guarded delay (timeout + re-entry guard). This catches silent or truncated cue regressions that static icon presence checks miss.
+
+## 2026-04-10 — Fallback when `heartbeat-context` returns null issue fields
+For some blocked lanes, `GET /api/issues/{id}/heartbeat-context` can return a valid comment cursor but null issue fields. In that case, use `inbox-lite` or company issue list endpoints plus issue comments for status/assignee evidence before deciding blocked-task dedup or re-checkout actions.
+
+## 2026-04-10 — Launch-slot QA should hard-gate on FED handoff plus slug artifacts
+For handbook launch lanes, treat missing FED handoff as a hard blocker even if QA is auto-assigned: verify dependency issue status/comments and run a quick slug artifact scan across `packages/web`, `packages/shared`, and `supabase`. If no handoff/artifacts exist, set QA issue to `blocked` with explicit unblock criteria and route back to the technical owner.
+
+## 2026-04-10 — In rollout fan-out, validate sibling FED lane state before spending QA matrix time
+When QA lanes are pre-assigned during architect dispatch, immediately verify the paired FED sibling lane status/comments under the same parent issue and confirm slug artifacts exist in code/data paths. If sibling FED is still dispatch-only (`todo` + no handoff), post a blocker with concrete unblock criteria and reassign to the technical coordinator.
+
+## 2026-04-10 — Reassigned blocked QA lanes still need a fresh dependency evidence check
+If a manager reassigns a blocked QA issue back to QA while explicitly stating blockers are unchanged, treat the reassignment as new context: checkout once, re-validate dependency status + artifact presence, then reapply `blocked` with updated evidence while keeping assignee ownership aligned with manager routing.
+
+## 2026-04-10 — Namespace-aware audio checks should validate `common.*` manifest keys against route `t(...)` keys
+For route-level QA closure, script the exact `t(...)` key set from affected files and verify both `common.json` presence and `manifest.json` coverage using the `common.` prefix convention, then confirm mapped audio files exist on disk. This avoids false negatives from direct non-prefixed manifest lookups.
+
+## 2026-04-10 — `PAPERCLIP_TASK_ID` can point to a non-owned completed issue; verify assignee before action
+On some `issue_assigned` wakes, the injected task id may reference a different agent's already-`done` issue. Treat it as non-actionable unless the issue is assigned to QA, then fall back to assigned inbox items and blocked-task dedup rules.

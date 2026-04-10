@@ -871,7 +871,7 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
               onClick={() => playAudioKey('feedback.youDidIt')}
               aria-label={replayButtonAriaLabel}
             >
-              <span aria-hidden="true">🔊</span>
+              <span aria-hidden="true">▶</span>
             </button>
           </div>
           <div className="counting-picnic__text-row counting-picnic__text-row--center">
@@ -882,7 +882,7 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
               onClick={() => playAudioKey('games.countingPicnic.roundComplete.basketReady')}
               aria-label={replayButtonAriaLabel}
             >
-              <span aria-hidden="true">🔊</span>
+              <span aria-hidden="true">▶</span>
             </button>
           </div>
 
@@ -908,7 +908,7 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
                 onClick={() => playAudioKey('parentDashboard.games.countingPicnic.progressSummary')}
                 aria-label={replayButtonAriaLabel}
               >
-                <span aria-hidden="true">🔊</span>
+                <span aria-hidden="true">▶</span>
               </button>
             </div>
             <div className="counting-picnic__text-row">
@@ -919,7 +919,7 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
                 onClick={() => playAudioKey('parentDashboard.games.countingPicnic.nextStep')}
                 aria-label={replayButtonAriaLabel}
               >
-                <span aria-hidden="true">🔊</span>
+                <span aria-hidden="true">▶</span>
               </button>
             </div>
           </Card>
@@ -932,7 +932,7 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
               onClick={() => playAudioKey(summaryHintKey)}
               aria-label={replayButtonAriaLabel}
             >
-              <span aria-hidden="true">🔊</span>
+              <span aria-hidden="true">▶</span>
             </button>
           </div>
         </Card>
@@ -954,7 +954,7 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
               onClick={() => playAudioKey('feedback.greatEffort')}
               aria-label={replayButtonAriaLabel}
             >
-              <span aria-hidden="true">🔊</span>
+              <span aria-hidden="true">▶</span>
             </button>
           </div>
           <div className="counting-picnic__text-row counting-picnic__text-row--center">
@@ -965,7 +965,7 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
               onClick={() => playAudioKey('games.countingPicnic.roundComplete.nextNumber')}
               aria-label={replayButtonAriaLabel}
             >
-              <span aria-hidden="true">🔊</span>
+              <span aria-hidden="true">▶</span>
             </button>
           </div>
           <Button
@@ -997,7 +997,7 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
                 onClick={() => playAudioKey('games.countingPicnic.title')}
                 aria-label={replayButtonAriaLabel}
               >
-                <span aria-hidden="true">🔊</span>
+                <span aria-hidden="true">▶</span>
               </button>
             </div>
             <div className="counting-picnic__text-row">
@@ -1008,7 +1008,7 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
                 onClick={() => playAudioKey('games.countingPicnic.subtitle')}
                 aria-label={replayButtonAriaLabel}
               >
-                <span aria-hidden="true">🔊</span>
+                <span aria-hidden="true">▶</span>
               </button>
             </div>
           </div>
@@ -1086,7 +1086,7 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
             onClick={() => playAudioKey(roundMessage.key)}
             aria-label={replayButtonAriaLabel}
           >
-            <span aria-hidden="true">🔊</span>
+            <span aria-hidden="true">▶</span>
           </button>
         </div>
 
@@ -1113,7 +1113,7 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
                 onClick={() => playAudioKey('games.countingPicnic.instructions.dragOneByOne')}
                 aria-label={replayButtonAriaLabel}
               >
-                <span aria-hidden="true">🔊</span>
+                <span aria-hidden="true">▶</span>
               </button>
             </div>
 
@@ -1229,7 +1229,7 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
                   onClick={() => playAudioKey('games.countingPicnic.instructions.listenAndCount')}
                   aria-label={replayButtonAriaLabel}
                 >
-                  <span aria-hidden="true">🔊</span>
+                  <span aria-hidden="true">▶</span>
                 </button>
               </div>
             )}
@@ -1243,7 +1243,7 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
                   onClick={() => playAudioKey('games.countingPicnic.roundComplete.greatCounting')}
                   aria-label={replayButtonAriaLabel}
                 >
-                  <span aria-hidden="true">🔊</span>
+                  <span aria-hidden="true">▶</span>
                 </button>
               </div>
             )}

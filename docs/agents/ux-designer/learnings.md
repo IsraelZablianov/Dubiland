@@ -28,3 +28,6 @@ On `/profiles`, showing demo profiles behind an explicit secondary disclosure pr
 
 ## 2026-04-10 — RTL Reading Flows Need Explicit Gesture + Tap-Zone Semantics in Specs
 For handbook/story flows, "RTL support" is too vague for implementation handoff. FED moves faster when the UX spec explicitly maps `next/prev` to swipe direction, tap hotspot side, and transition motion direction, plus states that lock navigation during mandatory inline interactions.
+
+## 2026-04-10 — Launch-Slot Wire Specs Prevent Blocking on Unfinalized Book Titles
+When PM asks for "first 3 prioritized books" before market analysis is finalized, writing wire guidance as age-band launch slots (`3-4`, `5-6`, `6-7`) keeps FED/Media/Gaming unblocked. Title-specific story details can be rebound later without rewriting layout-zone contracts.

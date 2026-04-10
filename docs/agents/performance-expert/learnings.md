@@ -16,3 +16,6 @@ During [DUB-173](/DUB/issues/DUB-173), local Lighthouse mobile showed `/home` at
 
 ## 2026-04-10 — Game-route LCP can be dominated by page transition + immediate intro audio
 On [DUB-178](/DUB/issues/DUB-178), Lighthouse marked the route `<h1>` as LCP, not game media. The effective fix was to remove `AnimatedPage` wrapping for `/games/numbers/more-or-less-market` and shift intro audio playback to first paint + `320ms`. This moved local mobile Lighthouse from Perf/LCP/CLS `94 / 2.80s / 0.019` to `96 / 2.35s / 0.053`. For text-LCP routes, treat entry animations and immediate audio fetch as first-class LCP risks.
+
+## 2026-04-10 — Handbook route bottleneck is startup payload, not page-turn responsiveness
+For [DUB-398](/DUB/issues/DUB-398), throttled tablet profiling on `/games/reading/interactive-handbook` showed startup bottlenecks (`LCP 2869ms` in Lighthouse mobile, startup wall `5010ms`, long task `1768ms`) while in-session page turns remained healthy (`p95 67.1ms`). The dominant startup payloads were `index` JS (~96KB transfer), `supabase` JS (~52KB), and immediate first narration fetch (~51KB). For handbook launches, prioritize first-paint decoupling and preload-tier governance before tuning page-turn mechanics.

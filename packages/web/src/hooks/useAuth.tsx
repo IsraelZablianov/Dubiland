@@ -65,17 +65,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signInWithGoogle = useCallback(async () => {
     if (!guardSupabase()) return;
     const origin = typeof window !== 'undefined' ? window.location.origin : undefined;
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: origin ? `${origin}/` : undefined,
-        skipBrowserRedirect: false,
       },
     });
     if (error) throw error;
-    if (typeof window !== 'undefined' && data?.url) {
-      window.location.assign(data.url);
-    }
   }, [guardSupabase]);
 
   const signInWithEmail = useCallback(async (email: string, password: string) => {

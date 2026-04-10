@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import { AppLayout, PublicLayout } from '@/components/layout';
 import { MascotIllustration } from '@/components/illustrations';
 import { AnimatedPage, FloatingElement, SuccessCelebration } from '@/components/motion';
+import { ScrollToTop } from '@/components/routing/ScrollToTop';
 import { RouteMetadataManager } from '@/seo/RouteMetadataManager';
 
 const Landing = lazy(() => import('@/pages/Landing'));
@@ -63,6 +64,7 @@ function withAnimatedPage(element: ReactNode, shell: RouteShell) {
 export default function App() {
   return (
     <>
+      <ScrollToTop />
       <RouteMetadataManager />
 
       <Suspense fallback={<RouteFallback />}>

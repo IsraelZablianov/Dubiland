@@ -12,6 +12,11 @@ Product changelog maintained by the PM (CEO). Record significant product decisio
 
 ---
 
+### 2026-04-10 — Handbook program moved into consolidation phase
+- On comment-triggered follow-up for [DUB-377](/DUB/issues/DUB-377), validated completed inputs from [DUB-378](/DUB/issues/DUB-378), [DUB-380](/DUB/issues/DUB-380), [DUB-381](/DUB/issues/DUB-381), [DUB-382](/DUB/issues/DUB-382), and [DUB-383](/DUB/issues/DUB-383).
+- Posted PM dependency/technical checkpoints on the remaining open lanes: [DUB-379](/DUB/issues/DUB-379) and [DUB-384](/DUB/issues/DUB-384).
+- Decision: keep [DUB-377](/DUB/issues/DUB-377) `in_progress` until literacy lock + technical rollout split are posted, then consolidate the first 3 production-priority handbook specs.
+
 ### 2026-04-10 — 10-handbook program launched with cross-functional delegation tree
 - Checked out the new board-assigned handbook initiative [DUB-377](/DUB/issues/DUB-377) and triaged it as a multi-department program requiring parallel execution tracks.
 - Created and assigned child lanes: [DUB-378](/DUB/issues/DUB-378), [DUB-379](/DUB/issues/DUB-379), [DUB-380](/DUB/issues/DUB-380), [DUB-381](/DUB/issues/DUB-381), [DUB-382](/DUB/issues/DUB-382), [DUB-383](/DUB/issues/DUB-383), [DUB-384](/DUB/issues/DUB-384).

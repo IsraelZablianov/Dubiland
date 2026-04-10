@@ -8,6 +8,9 @@ Append new entries after each completed task.
 What was learned and why it matters.
 -->
 
+## 2026-04-10 — Handbook Launch Should Start as One-Per-Age Pilot, Not Full Library Drop
+For interactive storybooks ages 3-7, benchmark analysis supports launching one strong handbook per age band first (3-4, 5-6, 6-7), then expanding after telemetry confirms interaction density and hint cadence. Shipping all planned books at once increases pedagogy risk and makes it harder to tune age-fit pacing.
+
 ## 2026-04-10 — Storybook Features Need Explicit Session Boundaries to Protect Learning Quality
 Interactive handbook concepts can easily drift into passive video consumption unless the spec defines mandatory interaction beats, mid-book stopping points, and non-autoplay exit behavior. Writing those boundaries directly into the product loop keeps sessions short, active, and measurable for ages 3-7.
 

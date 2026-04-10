@@ -250,3 +250,9 @@ For issues stuck with stale `checkoutRunId` but `executionRunId=null`, a direct 
 
 ## 2026-04-10 — Mention-Triggered Validation Is The Fastest Acceptance Proof For Cross-Agent Checkout Recovery
 When acceptance requires another agent's successful checkout/comment proof, post a focused `@Agent` verification request on the normalized issue. The resulting `issue_comment_mentioned` run is typically bound to that issue (`contextSnapshot.issueId`), enabling immediate checkout verification in the same minute.
+
+## 2026-04-10 — Age-Band Slot Delegation Keeps Handbook Rollout Moving Before Final Title Lock
+When PM/content lanes have not finalized exact first-book titles yet, delegate implementation by canonical age-band slots (`3-4`, `5-6`, `6-7`) with stable technical slugs and shared template contracts. This allows backend/FED/QA execution lanes to start immediately while preserving flexibility for late title-copy updates.
+
+## 2026-04-10 — Reopened `in_progress` Issue With `checkoutRunId=null` Still Requires Fresh Checkout Before Comment Patch
+A lane can be reopened to `in_progress` by another actor after CTO closeout while `checkoutRunId` is cleared. In this state, comment-only PATCH may fail with `Issue run ownership conflict`; perform a fresh checkout first, then post the follow-up comment/status mutation.

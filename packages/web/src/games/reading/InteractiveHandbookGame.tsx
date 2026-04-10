@@ -2,11 +2,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card } from '@/components/design-system';
 import { SuccessCelebration } from '@/components/motion';
-import type { GameProps, ParentSummaryMetrics, StableRange } from '@/games/engine';
+import type { GameProps, ParentSummaryMetrics, ReadingGateStatus, StableRange } from '@/games/engine';
 
 type HandbookMode = 'readToMe' | 'readAndPlay' | 'calmReplay';
 type StatusTone = 'neutral' | 'hint' | 'success' | 'error';
 type HintTrend = ParentSummaryMetrics['hintTrend'];
+type AgeBand = '3-4' | '5-6' | '6-7';
+type LadderBookId = 'book1' | 'book4' | 'book7';
 type PageId =
   | 'p01'
   | 'p02'
@@ -17,9 +19,7 @@ type PageId =
   | 'p07'
   | 'p08'
   | 'p09'
-  | 'p10'
-  | 'p11'
-  | 'p12';
+  | 'p10';
 
 interface ChoiceDefinition {
   id: string;
@@ -48,8 +48,10 @@ interface HandbookPageDefinition {
 interface CompletionSummary {
   metrics: ParentSummaryMetrics;
   firstAttemptRate: number;
+  hintRate: number;
   hints: HintTrend;
   visitedCount: number;
+  readingGate: ReadingGateStatus;
 }
 
 export interface InteractiveHandbookPageProgress {
@@ -68,212 +70,260 @@ interface InteractiveHandbookGameProps extends GameProps {
   onProgressChange?: (snapshot: InteractiveHandbookProgressSnapshot) => void;
 }
 
-const PAGE_DEFINITIONS: HandbookPageDefinition[] = [
-  {
-    id: 'p01',
-    narrationKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.pages.p01.narration',
-    promptKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.pages.p01.prompt',
-  },
-  {
-    id: 'p02',
-    narrationKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.pages.p02.narration',
-    promptKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.pages.p02.prompt',
-    interaction: {
-      id: 'collectSeeds',
-      required: true,
-      promptKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.collectSeeds.prompt',
-      hintKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.collectSeeds.hint',
-      successKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.collectSeeds.success',
-      retryKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.collectSeeds.retry',
-      choices: [
-        { id: 'two', labelKey: 'games.interactiveHandbook.choices.numbers.two', isCorrect: false },
-        { id: 'three', labelKey: 'games.interactiveHandbook.choices.numbers.three', isCorrect: true },
-        { id: 'four', labelKey: 'games.interactiveHandbook.choices.numbers.four', isCorrect: false },
-      ],
-    },
-  },
-  {
-    id: 'p03',
-    narrationKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.pages.p03.narration',
-    promptKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.pages.p03.prompt',
-    interaction: {
-      id: 'chooseYellowFlower',
-      required: true,
-      promptKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.chooseYellowFlower.prompt',
-      hintKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.chooseYellowFlower.hint',
-      successKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.chooseYellowFlower.success',
-      retryKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.chooseYellowFlower.retry',
-      choices: [
-        { id: 'yellow', labelKey: 'games.interactiveHandbook.choices.colors.yellow', isCorrect: true },
-        { id: 'blue', labelKey: 'games.interactiveHandbook.choices.colors.blue', isCorrect: false },
-        { id: 'red', labelKey: 'games.interactiveHandbook.choices.colors.red', isCorrect: false },
-      ],
-    },
-  },
-  {
-    id: 'p04',
-    narrationKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.pages.p04.narration',
-    promptKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.pages.p04.prompt',
-    interaction: {
-      id: 'pickLetterPe',
-      required: true,
-      promptKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.pickLetterPe.prompt',
-      hintKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.pickLetterPe.hint',
-      successKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.pickLetterPe.success',
-      retryKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.pickLetterPe.retry',
-      choices: [
-        { id: 'pe', labelKey: 'games.interactiveHandbook.choices.letters.pe', isCorrect: true },
-        { id: 'bet', labelKey: 'games.interactiveHandbook.choices.letters.bet', isCorrect: false },
-        { id: 'kaf', labelKey: 'games.interactiveHandbook.choices.letters.kaf', isCorrect: false },
-      ],
-    },
-  },
-  {
-    id: 'p05',
-    narrationKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.pages.p05.narration',
-    promptKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.pages.p05.prompt',
-    interaction: {
-      id: 'compareHealthyPlants',
-      required: true,
-      promptKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.compareHealthyPlants.prompt',
-      hintKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.compareHealthyPlants.hint',
-      successKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.compareHealthyPlants.success',
-      retryKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.compareHealthyPlants.retry',
-      choices: [
-        { id: 'left', labelKey: 'games.interactiveHandbook.choices.compare.left', isCorrect: true },
-        { id: 'right', labelKey: 'games.interactiveHandbook.choices.compare.right', isCorrect: false },
-      ],
-    },
-  },
-  {
-    id: 'p06',
-    narrationKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.pages.p06.narration',
-    promptKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.pages.p06.prompt',
-    interaction: {
-      id: 'matchFishCount',
-      required: false,
-      promptKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.matchFishCount.prompt',
-      hintKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.matchFishCount.hint',
-      successKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.matchFishCount.success',
-      retryKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.matchFishCount.retry',
-      choices: [
-        { id: 'three', labelKey: 'games.interactiveHandbook.choices.numbers.three', isCorrect: false },
-        { id: 'four', labelKey: 'games.interactiveHandbook.choices.numbers.four', isCorrect: true },
-        { id: 'six', labelKey: 'games.interactiveHandbook.choices.numbers.six', isCorrect: false },
-      ],
-    },
-  },
-  {
-    id: 'p07',
-    narrationKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.pages.p07.narration',
-    promptKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.pages.p07.prompt',
-    interaction: {
-      id: 'solveAddition',
-      required: true,
-      promptKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.solveAddition.prompt',
-      hintKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.solveAddition.hint',
-      successKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.solveAddition.success',
-      retryKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.solveAddition.retry',
-      choices: [
-        { id: 'four', labelKey: 'games.interactiveHandbook.choices.numbers.four', isCorrect: false },
-        { id: 'six', labelKey: 'games.interactiveHandbook.choices.numbers.six', isCorrect: true },
-        { id: 'eight', labelKey: 'games.interactiveHandbook.choices.numbers.eight', isCorrect: false },
-      ],
-    },
-  },
-  {
-    id: 'p08',
-    narrationKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.pages.p08.narration',
-    promptKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.pages.p08.prompt',
-    interaction: {
-      id: 'matchSoundToLetter',
-      required: true,
-      promptKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.matchSoundToLetter.prompt',
-      hintKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.matchSoundToLetter.hint',
-      successKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.matchSoundToLetter.success',
-      retryKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.matchSoundToLetter.retry',
-      choices: [
-        { id: 'pe', labelKey: 'games.interactiveHandbook.choices.letters.pe', isCorrect: true },
-        { id: 'bet', labelKey: 'games.interactiveHandbook.choices.letters.bet', isCorrect: false },
-        { id: 'kaf', labelKey: 'games.interactiveHandbook.choices.letters.kaf', isCorrect: false },
-      ],
-    },
-  },
-  {
-    id: 'p09',
-    narrationKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.pages.p09.narration',
-    promptKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.pages.p09.prompt',
-    interaction: {
-      id: 'sortFruitToBasket',
-      required: true,
-      promptKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.sortFruitToBasket.prompt',
-      hintKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.sortFruitToBasket.hint',
-      successKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.sortFruitToBasket.success',
-      retryKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.sortFruitToBasket.retry',
-      choices: [
-        { id: 'fruit', labelKey: 'games.interactiveHandbook.choices.baskets.fruit', isCorrect: true },
-        { id: 'fish', labelKey: 'games.interactiveHandbook.choices.baskets.fish', isCorrect: false },
-        { id: 'flowers', labelKey: 'games.interactiveHandbook.choices.baskets.flowers', isCorrect: false },
-      ],
-    },
-  },
-  {
-    id: 'p10',
-    narrationKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.pages.p10.narration',
-    promptKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.pages.p10.prompt',
-    interaction: {
-      id: 'buildWordGan',
-      required: true,
-      promptKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.buildWordGan.prompt',
-      hintKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.buildWordGan.hint',
-      successKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.buildWordGan.success',
-      retryKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.buildWordGan.retry',
-      choices: [
-        { id: 'dag', labelKey: 'games.interactiveHandbook.choices.words.dag', isCorrect: false },
-        { id: 'gan', labelKey: 'games.interactiveHandbook.choices.words.gan', isCorrect: true },
-        { id: 'dubi', labelKey: 'games.interactiveHandbook.choices.words.dubi', isCorrect: false },
-      ],
-    },
-  },
-  {
-    id: 'p11',
-    narrationKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.pages.p11.narration',
-    promptKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.pages.p11.prompt',
-    interaction: {
-      id: 'countCelebration',
-      required: false,
-      promptKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.countCelebration.prompt',
-      hintKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.countCelebration.hint',
-      successKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.countCelebration.success',
-      retryKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.countCelebration.retry',
-      choices: [
-        { id: 'six', labelKey: 'games.interactiveHandbook.choices.numbers.six', isCorrect: false },
-        { id: 'seven', labelKey: 'games.interactiveHandbook.choices.numbers.seven', isCorrect: true },
-        { id: 'eight', labelKey: 'games.interactiveHandbook.choices.numbers.eight', isCorrect: false },
-      ],
-    },
-  },
-  {
-    id: 'p12',
-    narrationKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.pages.p12.narration',
-    promptKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.pages.p12.prompt',
-    interaction: {
-      id: 'pickLearnedConcept',
-      required: true,
-      promptKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.pickLearnedConcept.prompt',
-      hintKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.pickLearnedConcept.hint',
-      successKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.pickLearnedConcept.success',
-      retryKey: 'games.interactiveHandbook.handbooks.gardenOfSurprises.interactions.pickLearnedConcept.retry',
-      choices: [
-        { id: 'counting', labelKey: 'games.interactiveHandbook.choices.recap.counting', isCorrect: true },
-        { id: 'colors', labelKey: 'games.interactiveHandbook.choices.recap.colors', isCorrect: true },
-        { id: 'letters', labelKey: 'games.interactiveHandbook.choices.recap.letters', isCorrect: true },
-      ],
-    },
-  },
-];
+type HandbookSlug = 'mikaSoundGarden' | 'yoavLetterMap' | 'tamarWordTower';
+type InteractionChoicePresetId =
+  | 'letters_bet'
+  | 'letters_pe'
+  | 'words_gan'
+  | 'words_dubi'
+  | 'numbers_four'
+  | 'recap_letters'
+  | 'recap_counting';
 
-const PAGE_ID_SET = new Set<PageId>(PAGE_DEFINITIONS.map((page) => page.id));
+const PAGE_IDS: PageId[] = ['p01', 'p02', 'p03', 'p04', 'p05', 'p06', 'p07', 'p08', 'p09', 'p10'];
+const PAGE_ID_SET = new Set<PageId>(PAGE_IDS);
+const LADDER_BOOK_SEQUENCE: LadderBookId[] = ['book1', 'book4', 'book7'];
+const AGE_BAND_TO_BOOK: Record<AgeBand, LadderBookId> = {
+  '3-4': 'book1',
+  '5-6': 'book4',
+  '6-7': 'book7',
+};
+const BOOK_TO_HANDBOOK_SLUG: Record<LadderBookId, HandbookSlug> = {
+  book1: 'mikaSoundGarden',
+  book4: 'yoavLetterMap',
+  book7: 'tamarWordTower',
+};
+const DEFAULT_QUALITY_GATE_BY_BOOK: Record<LadderBookId, { firstTryAccuracyMin: number; hintRateMax: number }> = {
+  book1: { firstTryAccuracyMin: 60, hintRateMax: 55 },
+  book4: { firstTryAccuracyMin: 80, hintRateMax: 35 },
+  book7: { firstTryAccuracyMin: 75, hintRateMax: 30 },
+};
+const PROMPT_KEY_ORDER_BY_BOOK: Record<LadderBookId, string[]> = {
+  book1: ['firstSound', 'trackLetter', 'findSpeaker', 'choosePicture'],
+  book4: ['decodeWord', 'chooseNikud', 'contrastLetters', 'readThenAnswer'],
+  book7: ['decodePhrase', 'bridgePhrase', 'sequenceCheck', 'evidenceTap'],
+};
+const INTERACTION_FLOW_BY_BOOK: Record<LadderBookId, Array<{ pageId: PageId; interactionId: string; presetId: InteractionChoicePresetId }>> = {
+  book1: [
+    { pageId: 'p02', interactionId: 'firstSoundTap', presetId: 'letters_bet' },
+    { pageId: 'p04', interactionId: 'letterPath', presetId: 'letters_pe' },
+    { pageId: 'p06', interactionId: 'literalChoice', presetId: 'words_dubi' },
+  ],
+  book4: [
+    { pageId: 'p02', interactionId: 'decodePointedWord', presetId: 'words_gan' },
+    { pageId: 'p04', interactionId: 'chooseWordByNikud', presetId: 'numbers_four' },
+    { pageId: 'p06', interactionId: 'confusableContrast', presetId: 'letters_bet' },
+    { pageId: 'p08', interactionId: 'literalAfterDecoding', presetId: 'words_gan' },
+  ],
+  book7: [
+    { pageId: 'p02', interactionId: 'decodePointedPhrase', presetId: 'words_gan' },
+    { pageId: 'p05', interactionId: 'decodeBridgePhrase', presetId: 'numbers_four' },
+    { pageId: 'p07', interactionId: 'sequenceOrder', presetId: 'recap_counting' },
+    { pageId: 'p09', interactionId: 'textEvidenceTap', presetId: 'recap_letters' },
+  ],
+};
+const CHOICE_PRESETS: Record<InteractionChoicePresetId, ChoiceDefinition[]> = {
+  letters_bet: [
+    { id: 'bet', labelKey: 'games.interactiveHandbook.choices.letters.bet', isCorrect: true },
+    { id: 'kaf', labelKey: 'games.interactiveHandbook.choices.letters.kaf', isCorrect: false },
+    { id: 'pe', labelKey: 'games.interactiveHandbook.choices.letters.pe', isCorrect: false },
+  ],
+  letters_pe: [
+    { id: 'pe', labelKey: 'games.interactiveHandbook.choices.letters.pe', isCorrect: true },
+    { id: 'bet', labelKey: 'games.interactiveHandbook.choices.letters.bet', isCorrect: false },
+    { id: 'kaf', labelKey: 'games.interactiveHandbook.choices.letters.kaf', isCorrect: false },
+  ],
+  words_gan: [
+    { id: 'gan', labelKey: 'games.interactiveHandbook.choices.words.gan', isCorrect: true },
+    { id: 'dag', labelKey: 'games.interactiveHandbook.choices.words.dag', isCorrect: false },
+    { id: 'dubi', labelKey: 'games.interactiveHandbook.choices.words.dubi', isCorrect: false },
+  ],
+  words_dubi: [
+    { id: 'dubi', labelKey: 'games.interactiveHandbook.choices.words.dubi', isCorrect: true },
+    { id: 'dag', labelKey: 'games.interactiveHandbook.choices.words.dag', isCorrect: false },
+    { id: 'gan', labelKey: 'games.interactiveHandbook.choices.words.gan', isCorrect: false },
+  ],
+  numbers_four: [
+    { id: 'two', labelKey: 'games.interactiveHandbook.choices.numbers.two', isCorrect: false },
+    { id: 'four', labelKey: 'games.interactiveHandbook.choices.numbers.four', isCorrect: true },
+    { id: 'six', labelKey: 'games.interactiveHandbook.choices.numbers.six', isCorrect: false },
+  ],
+  recap_letters: [
+    { id: 'counting', labelKey: 'games.interactiveHandbook.choices.recap.counting', isCorrect: false },
+    { id: 'colors', labelKey: 'games.interactiveHandbook.choices.recap.colors', isCorrect: false },
+    { id: 'letters', labelKey: 'games.interactiveHandbook.choices.recap.letters', isCorrect: true },
+  ],
+  recap_counting: [
+    { id: 'counting', labelKey: 'games.interactiveHandbook.choices.recap.counting', isCorrect: true },
+    { id: 'colors', labelKey: 'games.interactiveHandbook.choices.recap.colors', isCorrect: false },
+    { id: 'letters', labelKey: 'games.interactiveHandbook.choices.recap.letters', isCorrect: false },
+  ],
+};
+
+function isHandbookSlug(value: unknown): value is HandbookSlug {
+  return value === 'mikaSoundGarden' || value === 'yoavLetterMap' || value === 'tamarWordTower';
+}
+
+function handbookMetaKey(slug: HandbookSlug, field: 'title' | 'subtitle' | 'estimatedDuration'): string {
+  return `handbooks.${slug}.meta.${field}`;
+}
+
+function handbookScriptKey(
+  slug: HandbookSlug,
+  section: 'narration' | 'prompts' | 'hints' | 'retry' | 'praise',
+  key: string,
+): string {
+  return `handbooks.${slug}.scriptPackage.${section}.${key}`;
+}
+
+function handbookSentenceKey(slug: HandbookSlug, group: string, key: string): string {
+  return `handbooks.${slug}.sentenceBank.${group}.${key}`;
+}
+
+function handbookInteractionKey(slug: HandbookSlug, interactionId: string, field: 'prompt' | 'hint' | 'success' | 'retry'): string {
+  return `handbooks.${slug}.interactions.${interactionId}.${field}`;
+}
+
+function parentHandbookKey(slug: HandbookSlug, field: 'progressSummary' | 'nextStep' | 'readingSignal' | 'confusionFocus'): string {
+  return `parentDashboard.handbooks.${slug}.${field}`;
+}
+
+function completionPraiseKey(slug: HandbookSlug, activeBookId: LadderBookId): string {
+  if (activeBookId === 'book1') return handbookScriptKey(slug, 'praise', 'teamwork');
+  if (activeBookId === 'book4') return handbookScriptKey(slug, 'praise', 'greatProgress');
+  return handbookScriptKey(slug, 'praise', 'independent');
+}
+
+function buildNarrationSentenceKeys(activeBookId: LadderBookId, handbookSlug: HandbookSlug): string[] {
+  if (activeBookId === 'book1') {
+    return ['p01', 'p02', 'p03', 'p04', 'p05', 'p06'].map((id) => handbookSentenceKey(handbookSlug, 'modeledPhrases', id));
+  }
+
+  if (activeBookId === 'book4') {
+    return ['p01', 'p02', 'p03', 'p04', 'p05', 'p06', 'p07', 'p08'].map((id) =>
+      handbookSentenceKey(handbookSlug, 'pointedPhrases', id),
+    );
+  }
+
+  return [
+    ...['p01', 'p02', 'p03', 'p04', 'p05'].map((id) => handbookSentenceKey(handbookSlug, 'pointedPhrases', id)),
+    ...['b01', 'b02', 'b03', 'b04', 'b05'].map((id) => handbookSentenceKey(handbookSlug, 'bridgePhrases', id)),
+  ];
+}
+
+function buildInteractionDefinition(
+  handbookSlug: HandbookSlug,
+  interactionId: string,
+  presetId: InteractionChoicePresetId,
+): InteractionDefinition {
+  return {
+    id: interactionId,
+    required: true,
+    promptKey: handbookInteractionKey(handbookSlug, interactionId, 'prompt'),
+    hintKey: handbookInteractionKey(handbookSlug, interactionId, 'hint'),
+    successKey: handbookInteractionKey(handbookSlug, interactionId, 'success'),
+    retryKey: handbookInteractionKey(handbookSlug, interactionId, 'retry'),
+    choices: CHOICE_PRESETS[presetId],
+  };
+}
+
+function buildPageDefinitions(activeBookId: LadderBookId, handbookSlug: HandbookSlug): HandbookPageDefinition[] {
+  const narrationKeys = buildNarrationSentenceKeys(activeBookId, handbookSlug).slice(0, PAGE_IDS.length);
+  const promptTokens = PROMPT_KEY_ORDER_BY_BOOK[activeBookId];
+  const interactionFlow = INTERACTION_FLOW_BY_BOOK[activeBookId];
+  const interactionByPage = new Map(
+    interactionFlow.map((item) => [item.pageId, buildInteractionDefinition(handbookSlug, item.interactionId, item.presetId)]),
+  );
+
+  return narrationKeys.map((narrationKey, index) => {
+    const pageId = PAGE_IDS[index] as PageId;
+    const promptToken = promptTokens[index % promptTokens.length] ?? promptTokens[0];
+
+    return {
+      id: pageId,
+      narrationKey,
+      promptKey: handbookScriptKey(handbookSlug, 'prompts', promptToken),
+      interaction: interactionByPage.get(pageId),
+    };
+  });
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function isLadderBookId(value: unknown): value is LadderBookId {
+  return typeof value === 'string' && LADDER_BOOK_SEQUENCE.includes(value as LadderBookId);
+}
+
+function isAgeBand(value: unknown): value is AgeBand {
+  return typeof value === 'string' && value in AGE_BAND_TO_BOOK;
+}
+
+function clampPercent(value: unknown, fallback: number): number {
+  if (typeof value !== 'number' || !Number.isFinite(value)) {
+    return fallback;
+  }
+
+  return Math.max(0, Math.min(100, Math.round(value)));
+}
+
+function resolveActiveLadderBookId(levelConfig: Record<string, unknown>): LadderBookId {
+  const readingLadderConfig = isRecord(levelConfig.readingLadder) ? levelConfig.readingLadder : null;
+  if (readingLadderConfig && isLadderBookId(readingLadderConfig.activeBook)) {
+    return readingLadderConfig.activeBook;
+  }
+
+  if (isAgeBand(levelConfig.defaultBand)) {
+    return AGE_BAND_TO_BOOK[levelConfig.defaultBand];
+  }
+
+  return 'book4';
+}
+
+function resolveHandbookSlug(levelConfig: Record<string, unknown>, activeBookId: LadderBookId): HandbookSlug {
+  const readingLadderConfig = isRecord(levelConfig.readingLadder) ? levelConfig.readingLadder : null;
+  const booksConfig = readingLadderConfig && isRecord(readingLadderConfig.books) ? readingLadderConfig.books : null;
+  const activeBookConfig = booksConfig && isRecord(booksConfig[activeBookId]) ? booksConfig[activeBookId] : null;
+
+  if (activeBookConfig && isHandbookSlug(activeBookConfig.handbookSlug)) {
+    return activeBookConfig.handbookSlug;
+  }
+
+  if (isHandbookSlug(levelConfig.handbookSlug)) {
+    return levelConfig.handbookSlug;
+  }
+
+  return BOOK_TO_HANDBOOK_SLUG[activeBookId];
+}
+
+function resolveQualityGate(
+  levelConfig: Record<string, unknown>,
+  activeBookId: LadderBookId,
+): { firstTryAccuracyMin: number; hintRateMax: number } {
+  const readingLadderConfig = isRecord(levelConfig.readingLadder) ? levelConfig.readingLadder : null;
+  const qualityGateConfig = readingLadderConfig && isRecord(readingLadderConfig.qualityGate)
+    ? readingLadderConfig.qualityGate
+    : null;
+  const defaultQualityGate = DEFAULT_QUALITY_GATE_BY_BOOK[activeBookId];
+
+  return {
+    firstTryAccuracyMin: clampPercent(
+      qualityGateConfig?.firstTryAccuracyMin,
+      defaultQualityGate.firstTryAccuracyMin,
+    ),
+    hintRateMax: clampPercent(qualityGateConfig?.hintRateMax, defaultQualityGate.hintRateMax),
+  };
+}
+
+function getNextBookId(activeBookId: LadderBookId): LadderBookId | null {
+  const activeIndex = LADDER_BOOK_SEQUENCE.indexOf(activeBookId);
+  if (activeIndex < 0 || activeIndex >= LADDER_BOOK_SEQUENCE.length - 1) {
+    return null;
+  }
+
+  return LADDER_BOOK_SEQUENCE[activeIndex + 1] ?? null;
+}
 
 function toKebabCase(value: string): string {
   return value
@@ -304,12 +354,17 @@ function getHintTrend(pageHintUsage: Record<string, number>, orderedPageIds: Pag
   return 'needs_support';
 }
 
-function buildStableRange(mandatorySolvedCount: number): StableRange {
-  if (mandatorySolvedCount >= 8) {
+function buildStableRange(mandatorySolvedCount: number, mandatoryTotal: number): StableRange {
+  if (mandatoryTotal <= 0) {
+    return '1-3';
+  }
+
+  const completionRatio = mandatorySolvedCount / mandatoryTotal;
+  if (completionRatio >= 0.8) {
     return '1-10';
   }
 
-  if (mandatorySolvedCount >= 5) {
+  if (completionRatio >= 0.5) {
     return '1-5';
   }
 
@@ -335,15 +390,16 @@ function pageIdToPageNumber(pageId: PageId): number {
   return Number.parseInt(pageId.slice(1), 10);
 }
 
-function getInitialPageIndex(progress: InteractiveHandbookProgressSnapshot | null | undefined): number {
+function getInitialPageIndex(progress: InteractiveHandbookProgressSnapshot | null | undefined, totalPages: number): number {
   const rawPage = progress?.furthestPageNumber ?? 1;
-  const clampedPage = Math.min(PAGE_DEFINITIONS.length, Math.max(1, Math.floor(rawPage)));
+  const clampedPage = Math.min(Math.max(1, totalPages), Math.max(1, Math.floor(rawPage)));
   return clampedPage - 1;
 }
 
 function getInitialVisitedPages(
   progress: InteractiveHandbookProgressSnapshot | null | undefined,
   initialPageId: PageId,
+  validPageIds: Set<PageId>,
 ): Set<PageId> {
   const visited = new Set<PageId>([initialPageId]);
   if (!progress?.pageCompletion) {
@@ -351,7 +407,7 @@ function getInitialVisitedPages(
   }
 
   Object.entries(progress.pageCompletion).forEach(([pageId, status]) => {
-    if (!status?.visited || !isPageId(pageId)) {
+    if (!status?.visited || !isPageId(pageId) || !validPageIds.has(pageId)) {
       return;
     }
     visited.add(pageId);
@@ -360,14 +416,17 @@ function getInitialVisitedPages(
   return visited;
 }
 
-function getInitialSolvedPages(progress: InteractiveHandbookProgressSnapshot | null | undefined): Set<PageId> {
+function getInitialSolvedPages(
+  progress: InteractiveHandbookProgressSnapshot | null | undefined,
+  validPageIds: Set<PageId>,
+): Set<PageId> {
   const solved = new Set<PageId>();
   if (!progress?.pageCompletion) {
     return solved;
   }
 
   Object.entries(progress.pageCompletion).forEach(([pageId, status]) => {
-    if (!status?.solved || !isPageId(pageId)) {
+    if (!status?.solved || !isPageId(pageId) || !validPageIds.has(pageId)) {
       return;
     }
     solved.add(pageId);
@@ -377,20 +436,33 @@ function getInitialSolvedPages(progress: InteractiveHandbookProgressSnapshot | n
 }
 
 export function InteractiveHandbookGame({
-  child,
+  level,
   onComplete,
   audio,
   initialProgress = null,
   onProgressChange,
 }: InteractiveHandbookGameProps) {
   const { t } = useTranslation('common');
+  const activeLadderBookId = useMemo(() => resolveActiveLadderBookId(level.configJson), [level.configJson]);
+  const activeHandbookSlug = useMemo(
+    () => resolveHandbookSlug(level.configJson, activeLadderBookId),
+    [activeLadderBookId, level.configJson],
+  );
+  const pageDefinitions = useMemo(
+    () => buildPageDefinitions(activeLadderBookId, activeHandbookSlug),
+    [activeHandbookSlug, activeLadderBookId],
+  );
+  const pageDefinitionIdSet = useMemo(() => new Set(pageDefinitions.map((page) => page.id)), [pageDefinitions]);
+  const totalPages = pageDefinitions.length;
+  const initialPageIndex = getInitialPageIndex(initialProgress, totalPages);
+  const initialPageId = (pageDefinitions[initialPageIndex]?.id ?? pageDefinitions[0]?.id ?? 'p01') as PageId;
 
   const [mode, setMode] = useState<HandbookMode>('readToMe');
-  const initialPageIndex = getInitialPageIndex(initialProgress);
-  const initialPageId = (PAGE_DEFINITIONS[initialPageIndex]?.id ?? 'p01') as PageId;
   const [currentPageIndex, setCurrentPageIndex] = useState(initialPageIndex);
-  const [visitedPages, setVisitedPages] = useState<Set<PageId>>(() => getInitialVisitedPages(initialProgress, initialPageId));
-  const [solvedPages, setSolvedPages] = useState<Set<PageId>>(() => getInitialSolvedPages(initialProgress));
+  const [visitedPages, setVisitedPages] = useState<Set<PageId>>(() =>
+    getInitialVisitedPages(initialProgress, initialPageId, pageDefinitionIdSet),
+  );
+  const [solvedPages, setSolvedPages] = useState<Set<PageId>>(() => getInitialSolvedPages(initialProgress, pageDefinitionIdSet));
   const [firstAttemptSuccessPages, setFirstAttemptSuccessPages] = useState<Set<PageId>>(new Set());
   const [pageAttempts, setPageAttempts] = useState<Record<string, number>>({});
   const [pageHintUsage, setPageHintUsage] = useState<Record<string, number>>({});
@@ -404,8 +476,20 @@ export function InteractiveHandbookGame({
 
   const completionSentRef = useRef(false);
 
-  const currentPage = PAGE_DEFINITIONS[currentPageIndex] as HandbookPageDefinition;
-  const totalPages = PAGE_DEFINITIONS.length;
+  const qualityGate = useMemo(
+    () => resolveQualityGate(level.configJson, activeLadderBookId),
+    [activeLadderBookId, level.configJson],
+  );
+  const handbookCompletionTitleKey = useMemo(
+    () => completionPraiseKey(activeHandbookSlug, activeLadderBookId),
+    [activeHandbookSlug, activeLadderBookId],
+  );
+  const handbookCompletionNextStepKey = useMemo(
+    () => parentHandbookKey(activeHandbookSlug, 'nextStep'),
+    [activeHandbookSlug],
+  );
+
+  const currentPage = (pageDefinitions[currentPageIndex] ?? pageDefinitions[0]) as HandbookPageDefinition;
 
   const activeInteraction = useMemo(() => {
     if (shouldHideOptionalInteraction(mode, currentPage.interaction)) {
@@ -416,8 +500,8 @@ export function InteractiveHandbookGame({
   }, [currentPage.interaction, mode]);
 
   const mandatoryPageIds = useMemo(
-    () => PAGE_DEFINITIONS.filter((page) => page.interaction?.required).map((page) => page.id),
-    [],
+    () => pageDefinitions.filter((page) => page.interaction?.required).map((page) => page.id),
+    [pageDefinitions],
   );
 
   const mandatorySolvedCount = useMemo(
@@ -432,7 +516,7 @@ export function InteractiveHandbookGame({
     const pageCompletion: Record<string, InteractiveHandbookPageProgress> = {};
     let furthestPageNumber = currentPageIndex + 1;
 
-    PAGE_DEFINITIONS.forEach((page) => {
+    pageDefinitions.forEach((page) => {
       const visited = visitedPages.has(page.id);
       const solved = solvedPages.has(page.id);
       if (!visited && !solved) {
@@ -448,7 +532,7 @@ export function InteractiveHandbookGame({
       completed: isCompleted,
       pageCompletion,
     };
-  }, [currentPageIndex, isCompleted, solvedPages, visitedPages]);
+  }, [currentPageIndex, isCompleted, pageDefinitions, solvedPages, visitedPages]);
 
   const playAudioKey = useCallback(
     (key: string, interrupt = false) => {
@@ -562,7 +646,7 @@ export function InteractiveHandbookGame({
       return;
     }
 
-    const allPagesVisited = PAGE_DEFINITIONS.every((page) => visitedPages.has(page.id));
+    const allPagesVisited = pageDefinitions.every((page) => visitedPages.has(page.id));
     const allMandatorySolved = mandatoryPageIds.every((pageId) => solvedPages.has(pageId));
 
     if (!allPagesVisited || !allMandatorySolved) {
@@ -578,19 +662,32 @@ export function InteractiveHandbookGame({
             100,
         )
       : 100;
+    const mandatoryHintCount = mandatoryPageIds.reduce((sum, pageId) => sum + (pageHintUsage[pageId] ?? 0), 0);
+    const hintRate = mandatoryPageIds.length ? Math.round((mandatoryHintCount / mandatoryPageIds.length) * 100) : 0;
 
-    const hintTrend = getHintTrend(pageHintUsage, PAGE_DEFINITIONS.map((page) => page.id));
+    const hintTrend = getHintTrend(pageHintUsage, pageDefinitions.map((page) => page.id));
     const metrics: ParentSummaryMetrics = {
-      highestStableRange: buildStableRange(mandatorySolvedCount),
+      highestStableRange: buildStableRange(mandatorySolvedCount, mandatoryPageIds.length),
       firstAttemptSuccessRate: firstAttemptRate,
       hintTrend,
     };
+    const gatePassed = firstAttemptRate >= qualityGate.firstTryAccuracyMin && hintRate <= qualityGate.hintRateMax;
+    const readingGate: ReadingGateStatus = {
+      activeBookId: activeLadderBookId,
+      nextBookId: gatePassed ? getNextBookId(activeLadderBookId) : null,
+      passed: gatePassed,
+      firstAttemptSuccessRate: firstAttemptRate,
+      hintRate,
+      firstTryAccuracyMin: qualityGate.firstTryAccuracyMin,
+      hintRateMax: qualityGate.hintRateMax,
+    };
 
-    const optionalSolved = PAGE_DEFINITIONS.filter((page) => page.interaction && !page.interaction.required).filter(
+    const optionalSolved = pageDefinitions.filter((page) => page.interaction && !page.interaction.required).filter(
       (page) => solvedPages.has(page.id),
     ).length;
+    const visitedCount = pageDefinitions.filter((page) => visitedPages.has(page.id)).length;
 
-    const score = mandatorySolvedCount * 35 + optionalSolved * 12 + firstAttemptRate;
+    const score = mandatorySolvedCount * 35 + optionalSolved * 12 + firstAttemptRate + (gatePassed ? 45 : 0);
     const stars = firstAttemptRate >= 85 ? 3 : firstAttemptRate >= 65 ? 2 : 1;
 
     completionSentRef.current = true;
@@ -598,30 +695,38 @@ export function InteractiveHandbookGame({
     setCompletionSummary({
       metrics,
       firstAttemptRate,
+      hintRate,
       hints: hintTrend,
-      visitedCount: visitedPages.size,
+      visitedCount,
+      readingGate,
     });
     setIsCompleted(true);
 
-    setStatusKey('games.interactiveHandbook.recap.completed');
+    setStatusKey(handbookCompletionTitleKey);
     setStatusTone('success');
 
-    playAudioKey('games.interactiveHandbook.recap.completed', true);
+    playAudioKey(handbookCompletionTitleKey, true);
 
     onComplete({
       stars,
       score,
       completed: true,
-      roundsCompleted: visitedPages.size,
+      roundsCompleted: visitedCount,
       summaryMetrics: metrics,
+      readingGate,
     });
   }, [
+    activeLadderBookId,
     firstAttemptSuccessPages,
+    handbookCompletionTitleKey,
     mandatoryPageIds,
     mandatorySolvedCount,
     onComplete,
     pageHintUsage,
+    pageDefinitions,
     playAudioKey,
+    qualityGate.firstTryAccuracyMin,
+    qualityGate.hintRateMax,
     solvedPages,
     visitedPages,
   ]);
@@ -707,7 +812,7 @@ export function InteractiveHandbookGame({
     }
 
     const nextIndex = Math.min(currentPageIndex + 1, totalPages - 1);
-    const nextPage = PAGE_DEFINITIONS[nextIndex] as HandbookPageDefinition;
+    const nextPage = pageDefinitions[nextIndex] as HandbookPageDefinition;
 
     markPageVisited(nextPage.id);
     setCurrentPageIndex(nextIndex);
@@ -717,6 +822,7 @@ export function InteractiveHandbookGame({
     currentPageIndex,
     isLastPage,
     markPageVisited,
+    pageDefinitions,
     playAudioKey,
     resolveCompletion,
     solvedPages,
@@ -790,8 +896,8 @@ export function InteractiveHandbookGame({
   }, [onProgressChange, progressSnapshot]);
 
   const progressSegments = useMemo(
-    () => PAGE_DEFINITIONS.map((page, index) => ({ index, id: page.id })),
-    [],
+    () => pageDefinitions.map((page, index) => ({ index, id: page.id })),
+    [pageDefinitions],
   );
 
   const summaryHintKey = completionSummary
@@ -806,8 +912,8 @@ export function InteractiveHandbookGame({
     <Card padding="lg" className="interactive-handbook">
       <div className="interactive-handbook__header">
         <div className="interactive-handbook__title-wrap">
-          <h2 className="interactive-handbook__title">{t('games.interactiveHandbook.title')}</h2>
-          <p className="interactive-handbook__subtitle">{t('games.interactiveHandbook.handbooks.gardenOfSurprises.cover.subtitle')}</p>
+          <h2 className="interactive-handbook__title">{t(handbookMetaKey(activeHandbookSlug, 'title') as any)}</h2>
+          <p className="interactive-handbook__subtitle">{t(handbookMetaKey(activeHandbookSlug, 'subtitle') as any)}</p>
         </div>
 
         <div className="interactive-handbook__mode-switch" role="group" aria-label={t('games.interactiveHandbook.controls.modeGroup')}>
@@ -876,7 +982,12 @@ export function InteractiveHandbookGame({
 
       <div className="interactive-handbook__stage">
         <div className="interactive-handbook__story-card" role="group" aria-label={t(currentPage.narrationKey as any)}>
-          <p className="interactive-handbook__page-chip">{t(`games.interactiveHandbook.handbooks.gardenOfSurprises.pageBadges.${currentPage.id}` as any)}</p>
+          <p className="interactive-handbook__page-chip">
+            {t('games.interactiveHandbook.reader.pageLabel', {
+              current: currentPageIndex + 1,
+              total: totalPages,
+            })}
+          </p>
           <p className="interactive-handbook__narration">{t(currentPage.narrationKey as any)}</p>
           <p className="interactive-handbook__prompt">{t(currentPage.promptKey as any)}</p>
         </div>
@@ -965,15 +1076,40 @@ export function InteractiveHandbookGame({
         {completionSummary && (
           <div className="interactive-handbook__completion">
             <SuccessCelebration dense />
-            <h3 className="interactive-handbook__completion-title">{t('games.interactiveHandbook.recap.completed')}</h3>
+            <h3 className="interactive-handbook__completion-title">{t(handbookCompletionTitleKey as any)}</h3>
             <p className="interactive-handbook__completion-line">
-              {t('parentDashboard.games.interactiveHandbook.progressSummary', {
+              {t(parentHandbookKey(activeHandbookSlug, 'progressSummary') as any, {
                 successRate: completionSummary.firstAttemptRate,
                 pagesVisited: completionSummary.visitedCount,
               })}
             </p>
+            <p className="interactive-handbook__completion-line">
+              {t(
+                completionSummary.readingGate.passed
+                  ? 'games.interactiveHandbook.gates.qualityPassed'
+                  : 'games.interactiveHandbook.gates.qualityNeedsSupport',
+                {
+                  book: t(`games.interactiveHandbook.ladderBooks.${completionSummary.readingGate.activeBookId}` as any),
+                  firstAttemptRate: completionSummary.firstAttemptRate,
+                  hintRate: completionSummary.hintRate,
+                },
+              )}
+            </p>
+            <p className="interactive-handbook__completion-line">
+              {t('games.interactiveHandbook.gates.thresholds', {
+                firstTryThreshold: completionSummary.readingGate.firstTryAccuracyMin,
+                hintRateThreshold: completionSummary.readingGate.hintRateMax,
+              })}
+            </p>
             {summaryHintKey && <p className="interactive-handbook__completion-line">{t(summaryHintKey as any)}</p>}
-            <p className="interactive-handbook__completion-line">{t('parentDashboard.games.interactiveHandbook.nextStep')}</p>
+            <p className="interactive-handbook__completion-line">
+              {completionSummary.readingGate.nextBookId
+                ? t('games.interactiveHandbook.gates.nextBookReady', {
+                    nextBook: t(`games.interactiveHandbook.ladderBooks.${completionSummary.readingGate.nextBookId}` as any),
+                  })
+                : t('games.interactiveHandbook.gates.replayCurrentBook')}
+            </p>
+            <p className="interactive-handbook__completion-line">{t(handbookCompletionNextStepKey as any)}</p>
           </div>
         )}
       </div>

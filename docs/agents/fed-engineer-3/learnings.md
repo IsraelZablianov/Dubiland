@@ -37,3 +37,21 @@ For handbook persistence, gate read/write paths to non-guest `activeProfile.id`,
 
 ## 2026-04-10 — Assigned `in_review` wake should end in explicit QA reassignment
 If a parent implementation issue wakes assigned to FED while already in QA cycle, checkout will move it back to `in_progress`; after verification, explicitly PATCH back to `in_review` and assign QA so closure retest is not blocked by stale FED ownership.
+
+## 2026-04-10 — Launch-slot aliases must resolve to canonical handbook slugs in runtime
+For launch-trio handbook lanes, CTO alias names (`star-message`, `magic-letter-map`, `bouncy-balloon`) map to canonical DB/runtime slugs (`tamarWordTower`, `yoavLetterMap`, `mikaSoundGarden`). FED routing and progress hydration should use canonical slugs to match seeded rows and avoid empty-handbook lookups.
+
+## 2026-04-10 — Handbook audio parity is safest when runtime keys stay in `common.handbooks.<slug>.*`
+Interactive handbook playback derives audio paths directly from i18n keys (`handbooks.*` -> `/audio/he/handbooks/...`), so shifting child-facing runtime narration/prompt/interactions to `common.handbooks.<slug>.*` avoids duplicate key families and keeps alignment with generated audio manifests.
+
+## 2026-04-10 — Ladder handbooks must resolve slug from active book and scope progress by handbook row
+For multi-book handbook runtime, derive `activeBookId` first (profile age band or `readingLadder.activeBook`), then resolve `handbookSlug` from `readingLadder.books[activeBookId]`; hydrate/persist `child_handbook_progress` using that slug’s `handbooks.id` so Books 1/4/7 do not overwrite each other.
+
+## 2026-04-10 — Reading ladder gates should be runtime-configured and emitted in completion payload
+For handbook Books 1/4/7, keep quality-gate thresholds in `game_levels.config_json.readingLadder.qualityGate`, compute `firstAttemptSuccessRate` + `hintRate` from mandatory checkpoints, and expose pass/fail + `nextBookId` as `readingGate` in `GameCompletionResult` so parent-facing UI can show readiness without schema changes.
+
+## 2026-04-10 — Reopened parent QA lanes may only need FED revalidation
+When board reassignment reopens a parent implementation issue that already has a child FED fix in `in_review`, the fastest safe path is to revalidate the live code against the blocker contract, then explicitly PATCH parent status back to `in_review` and reassign QA to avoid duplicate edits.
+
+## 2026-04-10 — Replay affordance audits check icon glyph, not just button presence
+For pre-literate QA gates, replay controls must render a visible play glyph (`▶`) on child-facing text rows; a speaker glyph (`🔊`) can fail review even when audio behavior and touch target sizing are correct.

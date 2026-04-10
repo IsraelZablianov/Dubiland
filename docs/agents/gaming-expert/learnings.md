@@ -64,3 +64,9 @@ For ages 5.5-7 decodable story flows, image support is useful only when checkpoi
 
 ## 2026-04-10 — Sight-Word Fluency Should Separate Orthography Fade from Speed Pressure
 For ages 5.5-7 sight-word games, avoid introducing partial nikud fade and soft-timer pressure in the same progression step. Sequence as fade-first mastery, then optional timer cue unlock, and pair with decoy caps plus rapid-tap recovery gates so fluency rewards remain accuracy-driven instead of guess-driven.
+
+## 2026-04-10 — First-Three Handbook Matrices Make Cross-Team Handoffs Executable
+For multi-book handbook initiatives, translating each priority book into page-level interaction rows (`input type`, `reward pattern`, `correction pattern`) removes ambiguity between PM, FED, UX, and Content lanes. This format also exposes anti-frustration trigger points early (inactivity, rapid taps, repeated confusion) so adaptive logic can be implemented as deterministic state transitions instead of ad-hoc UI behavior.
+
+## 2026-04-10 — Confusable Letter Contrast Needs Final-Form Deferral + Rapid-Tap Guard
+For ages 5.5-6.5 confusable-letter games, keep early progression on non-final-form pairs and move final-form contrasts into dedicated later levels. Pair this with an explicit rapid-tap recovery gate (short input pause + modeled replay) so random tapping cannot accidentally simulate mastery.

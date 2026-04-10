@@ -14,6 +14,10 @@ import { getActiveChildProfile } from '@/lib/session';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 
 type SyncState = 'idle' | 'syncing' | 'synced';
+type LadderBookId = 'book1' | 'book4' | 'book7';
+type HandbookSlug = 'mikaSoundGarden' | 'yoavLetterMap' | 'tamarWordTower';
+type ProfileAgeBand = '3-4' | '4-5' | '5-6' | '6-7';
+type LadderAgeBand = '3-4' | '5-6' | '6-7';
 
 interface HydratedProgressRow {
   furthest_page_number: number;
@@ -21,10 +25,21 @@ interface HydratedProgressRow {
   page_completion_json: unknown;
 }
 
-const HANDBOOK_SLUG = 'gardenOfSurprises';
 const MAX_SYNC_BACKOFF_MS = 4000;
+const DEFAULT_LADDER_BOOK_ID: LadderBookId = 'book4';
+const AGE_BAND_TO_BOOK: Record<ProfileAgeBand, LadderBookId> = {
+  '3-4': 'book1',
+  '4-5': 'book4',
+  '5-6': 'book4',
+  '6-7': 'book7',
+};
+const BOOK_TO_HANDBOOK_SLUG: Record<LadderBookId, HandbookSlug> = {
+  book1: 'mikaSoundGarden',
+  book4: 'yoavLetterMap',
+  book7: 'tamarWordTower',
+};
 
-const INTERACTIVE_HANDBOOK_GAME: Game = {
+const BASE_INTERACTIVE_HANDBOOK_GAME: Game = {
   id: 'local-interactive-handbook',
   topicId: 'reading',
   ageGroupId: '3-7',
@@ -36,23 +51,124 @@ const INTERACTIVE_HANDBOOK_GAME: Game = {
   difficulty: 3,
   sortOrder: 4,
   thumbnailUrl: null,
-  audioUrl: '/audio/he/games/interactive-handbook/handbooks/garden-of-surprises/pages/p01/narration.mp3',
+  audioUrl: null,
   isPublished: true,
   createdAt: '2026-04-10T00:00:00.000Z',
 };
 
-const INTERACTIVE_HANDBOOK_LEVEL: GameLevel = {
+const BASE_INTERACTIVE_HANDBOOK_LEVEL: GameLevel = {
   id: 'local-interactive-handbook-level-1',
-  gameId: INTERACTIVE_HANDBOOK_GAME.id,
+  gameId: BASE_INTERACTIVE_HANDBOOK_GAME.id,
   levelNumber: 1,
   configJson: {
     adaptive: true,
-    pages: 12,
+    pages: 10,
     defaultBand: '5-6',
-    handbookSlug: HANDBOOK_SLUG,
+    handbookSlug: 'yoavLetterMap',
+    readingLadder: {
+      activeBook: 'book4',
+      orderedBookIds: ['book1', 'book4', 'book7'],
+      books: {
+        book1: {
+          ageBand: '3-4',
+          handbookSlug: 'mikaSoundGarden',
+          checkpointFocus: 'print_awareness',
+        },
+        book4: {
+          ageBand: '5-6',
+          handbookSlug: 'yoavLetterMap',
+          checkpointFocus: 'letter_nikud_cv_decoding',
+        },
+        book7: {
+          ageBand: '6-7',
+          handbookSlug: 'tamarWordTower',
+          checkpointFocus: 'phrase_fluency_comprehension',
+        },
+      },
+      qualityGate: {
+        firstTryAccuracyMin: 70,
+        hintRateMax: 35,
+      },
+    },
   },
   sortOrder: 1,
 };
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function isLadderBookId(value: unknown): value is LadderBookId {
+  return value === 'book1' || value === 'book4' || value === 'book7';
+}
+
+function isHandbookSlug(value: unknown): value is HandbookSlug {
+  return value === 'mikaSoundGarden' || value === 'yoavLetterMap' || value === 'tamarWordTower';
+}
+
+function isProfileAgeBand(value: unknown): value is ProfileAgeBand {
+  return value === '3-4' || value === '4-5' || value === '5-6' || value === '6-7';
+}
+
+function toLadderAgeBand(value: unknown): LadderAgeBand | null {
+  if (value === '3-4') return '3-4';
+  if (value === '6-7') return '6-7';
+  if (value === '4-5' || value === '5-6') return '5-6';
+  return null;
+}
+
+function resolveActiveLadderBookId(levelConfig: Record<string, unknown>, profileAgeBand: unknown): LadderBookId {
+  if (isProfileAgeBand(profileAgeBand)) {
+    return AGE_BAND_TO_BOOK[profileAgeBand];
+  }
+
+  const readingLadderConfig = isRecord(levelConfig.readingLadder) ? levelConfig.readingLadder : null;
+  if (readingLadderConfig && isLadderBookId(readingLadderConfig.activeBook)) {
+    return readingLadderConfig.activeBook;
+  }
+
+  if (isProfileAgeBand(levelConfig.defaultBand)) {
+    return AGE_BAND_TO_BOOK[levelConfig.defaultBand];
+  }
+
+  return DEFAULT_LADDER_BOOK_ID;
+}
+
+function resolveHandbookSlug(levelConfig: Record<string, unknown>, activeBookId: LadderBookId): HandbookSlug {
+  const readingLadderConfig = isRecord(levelConfig.readingLadder) ? levelConfig.readingLadder : null;
+  const booksConfig = readingLadderConfig && isRecord(readingLadderConfig.books) ? readingLadderConfig.books : null;
+  const activeBookConfig = booksConfig && isRecord(booksConfig[activeBookId]) ? booksConfig[activeBookId] : null;
+
+  if (activeBookConfig && isHandbookSlug(activeBookConfig.handbookSlug)) {
+    return activeBookConfig.handbookSlug;
+  }
+
+  if (isHandbookSlug(levelConfig.handbookSlug)) {
+    return levelConfig.handbookSlug;
+  }
+
+  return BOOK_TO_HANDBOOK_SLUG[activeBookId];
+}
+
+function handbookMetaKey(slug: HandbookSlug, field: 'title' | 'estimatedDuration'): string {
+  return `handbooks.${slug}.meta.${field}`;
+}
+
+function parentHandbookKey(slug: HandbookSlug, field: 'progressSummary' | 'nextStep'): string {
+  return `parentDashboard.handbooks.${slug}.${field}`;
+}
+
+function toKebabCase(value: string): string {
+  return value
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replace(/[^a-zA-Z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .toLowerCase();
+}
+
+function keyToAudioPath(key: string): string {
+  return `/audio/he/${key.split('.').map(toKebabCase).join('/')}.mp3`;
+}
 
 function normalizePageCompletion(raw: unknown): Record<string, InteractiveHandbookPageProgress> {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
@@ -111,6 +227,7 @@ export default function InteractiveHandbookPage() {
   const audio = useAudioManager();
 
   const activeProfile = getActiveChildProfile();
+  const profileAgeBand = activeProfile?.ageBand;
   const persistableChildId = activeProfile?.id && activeProfile.id !== 'guest' ? activeProfile.id : null;
 
   const child = useMemo<Child>(
@@ -125,6 +242,40 @@ export default function InteractiveHandbookPage() {
     }),
     [activeProfile?.emoji, activeProfile?.id, activeProfile?.name, t],
   );
+
+  const baseLevelConfig = BASE_INTERACTIVE_HANDBOOK_LEVEL.configJson as Record<string, unknown>;
+  const activeLadderBookId = useMemo(
+    () => resolveActiveLadderBookId(baseLevelConfig, profileAgeBand),
+    [baseLevelConfig, profileAgeBand],
+  );
+  const activeHandbookSlug = useMemo(
+    () => resolveHandbookSlug(baseLevelConfig, activeLadderBookId),
+    [activeLadderBookId, baseLevelConfig],
+  );
+  const runtimeGame = useMemo<Game>(
+    () => ({
+      ...BASE_INTERACTIVE_HANDBOOK_GAME,
+      audioUrl: keyToAudioPath(`handbooks.${activeHandbookSlug}.scriptPackage.narration.intro`),
+    }),
+    [activeHandbookSlug],
+  );
+  const runtimeLevel = useMemo<GameLevel>(() => {
+    const baseReadingLadder = isRecord(baseLevelConfig.readingLadder) ? baseLevelConfig.readingLadder : {};
+    const defaultBand = toLadderAgeBand(profileAgeBand) ?? toLadderAgeBand(baseLevelConfig.defaultBand) ?? '5-6';
+
+    return {
+      ...BASE_INTERACTIVE_HANDBOOK_LEVEL,
+      configJson: {
+        ...baseLevelConfig,
+        defaultBand,
+        handbookSlug: activeHandbookSlug,
+        readingLadder: {
+          ...baseReadingLadder,
+          activeBook: activeLadderBookId,
+        },
+      } as Record<string, unknown>,
+    };
+  }, [activeHandbookSlug, activeLadderBookId, baseLevelConfig, profileAgeBand]);
 
   const [completionResult, setCompletionResult] = useState<GameCompletionResult | null>(null);
   const [syncState, setSyncState] = useState<SyncState>('idle');
@@ -211,6 +362,10 @@ export default function InteractiveHandbookPage() {
   }, [clearRetryTimeout]);
 
   useEffect(() => {
+    setCompletionResult(null);
+  }, [activeHandbookSlug, persistableChildId]);
+
+  useEffect(() => {
     let cancelled = false;
 
     clearRetryTimeout();
@@ -233,7 +388,7 @@ export default function InteractiveHandbookPage() {
       const { data: handbook, error: handbookError } = await supabase
         .from('handbooks')
         .select('id')
-        .eq('slug', HANDBOOK_SLUG)
+        .eq('slug', activeHandbookSlug)
         .eq('is_published', true)
         .maybeSingle();
 
@@ -270,7 +425,7 @@ export default function InteractiveHandbookPage() {
     return () => {
       cancelled = true;
     };
-  }, [clearRetryTimeout, persistableChildId]);
+  }, [activeHandbookSlug, clearRetryTimeout, persistableChildId]);
 
   const handleProgressChange = useCallback(
     (snapshot: InteractiveHandbookProgressSnapshot) => {
@@ -326,10 +481,10 @@ export default function InteractiveHandbookPage() {
                 fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
               }}
             >
-              {t('games.interactiveHandbook.handbooks.gardenOfSurprises.cover.title')}
+              {t(handbookMetaKey(activeHandbookSlug, 'title') as any)}
             </h1>
             <p style={{ margin: 0, color: 'var(--color-text-secondary)' }}>
-              {t('games.interactiveHandbook.handbooks.gardenOfSurprises.cover.estimatedDuration')}
+              {t(handbookMetaKey(activeHandbookSlug, 'estimatedDuration') as any)}
             </p>
           </div>
 
@@ -341,13 +496,14 @@ export default function InteractiveHandbookPage() {
         {isHydratingProgress ? (
           <Card padding="md" style={{ minHeight: '180px', display: 'grid', placeItems: 'center' }}>
             <p style={{ margin: 0, color: 'var(--color-text-secondary)' }}>
-              {t('games.interactiveHandbook.status.loading')}
+              {t('handbooks.reader.status.loading')}
             </p>
           </Card>
         ) : (
           <InteractiveHandbookGame
-            game={INTERACTIVE_HANDBOOK_GAME}
-            level={INTERACTIVE_HANDBOOK_LEVEL}
+            key={activeHandbookSlug}
+            game={runtimeGame}
+            level={runtimeLevel}
             child={child}
             onComplete={handleComplete}
             audio={audio}
@@ -359,13 +515,24 @@ export default function InteractiveHandbookPage() {
         {completionResult?.summaryMetrics && (
           <Card padding="md" style={{ display: 'grid', gap: 'var(--space-xs)' }}>
             <p style={{ margin: 0, color: 'var(--color-text-primary)' }}>
-              {t('parentDashboard.games.interactiveHandbook.progressSummary', {
+              {t(parentHandbookKey(activeHandbookSlug, 'progressSummary') as any, {
                 successRate: completionResult.summaryMetrics.firstAttemptSuccessRate,
                 pagesVisited: completionResult.roundsCompleted ?? 0,
               })}
             </p>
+            {completionResult.readingGate && (
+              <p style={{ margin: 0, color: 'var(--color-text-secondary)' }}>
+                {completionResult.readingGate.nextBookId
+                  ? t('games.interactiveHandbook.gates.nextBookReady', {
+                      nextBook: t(`games.interactiveHandbook.ladderBooks.${completionResult.readingGate.nextBookId}` as any),
+                    })
+                  : t('games.interactiveHandbook.gates.replayCurrentBook')}
+              </p>
+            )}
             <p style={{ margin: 0, color: 'var(--color-text-secondary)' }}>
-              {syncState === 'syncing' ? t('feedback.keepGoing') : t('feedback.excellent')}
+              {syncState === 'syncing'
+                ? t('feedback.keepGoing')
+                : t(parentHandbookKey(activeHandbookSlug, 'nextStep') as any)}
             </p>
           </Card>
         )}

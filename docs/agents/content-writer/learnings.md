@@ -79,3 +79,15 @@ When FED wires a new game before content lands, i18n key contracts can diverge (
 
 ## 2026-04-10 — Sight-word lanes need spec keys plus runtime frame/phrase aliases
 For `sightWordSprint`, spec-complete families are not enough by themselves: the live component expects explicit `games.sightWordSprint.frames.*` and matching `phrases.pronunciation.<phraseId>` keys (`aniPo`, `ataKan`, etc.). Run `yarn typecheck` before final audio generation so missing runtime aliases are caught early and shipped in the same content pass.
+
+## 2026-04-10 — Handbook specs should ship with a fixed content/audio contract before per-book writing
+For multi-book programs, create one shared template first (`copy structure`, `common.handbooks.<slug>` key contract, and manifest/file parity checklist), then add age-band phrase-bank samples. This reduces drift between book specs and keeps i18n/audio production predictable for FED and QA.
+
+## 2026-04-10 — Reading-ladder launch packs work best as `scriptPackage + sentenceBank + interactions` in `common.handbooks`
+For handbook reading lanes (Books 1/4/7), ship one unified family per slug with `scriptPackage` (narration/prompts/hints/retry/praise), `sentenceBank`, and `interactions` plus matching `common.parentDashboard.handbooks.<slug>` keys. This gives FED a stable schema for checkpoint runtime hooks and makes audio parity checks straightforward by prefix.
+
+## 2026-04-10 — `issue_assigned` wakes can target already-done lanes
+When `PAPERCLIP_WAKE_REASON=issue_assigned` but `PAPERCLIP_TASK_ID` is already `done`, verify live inbox/assigned statuses and exit without checkout or mutations if no `todo`/`in_progress`/`blocked` work remains.
+
+## 2026-04-10 — Confusable-letter lanes should ship as one synchronized contrast bundle
+For confusable-letter games, ship content/audio as one synchronized set: `common.games.<gameKey>.*` gameplay narration, `common.letters.names.*` + `common.letters.sounds.*`, `common.syllables.pronunciation.*`, pointed transfer words in `common.words.pronunciation.*`, and `common.parentDashboard.games.<gameKey>.*` with spoken overrides for placeholder-heavy parent lines. Then run one parity report and publish an integration map doc so FED can wire runtime without key-by-key follow-up.

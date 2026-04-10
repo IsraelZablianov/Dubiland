@@ -91,3 +91,21 @@ For lock-integrity QA, verify not only that checkout returns 200, but also that 
 
 ## 2026-04-10 — Reopened `todo` QA rerun lanes still require dependency-gate enforcement
 If coordinator lanes are flipped from `blocked` back to `todo` before implementation children are done, re-check dependencies immediately and return the QA lanes to `blocked` with canonical-lane routing. This prevents duplicate reruns and keeps QA execution aligned to the true unblock trigger.
+
+## 2026-04-10 — Lock contamination rerun verdict must track stale residue separately from active mismatches
+In checkout-lock integrity reruns, treat the matrix as failing if `stale_non_terminal` remains above zero even when `active_unrelated_exec` and `active_unrelated_checkout` are both zero. Active-path fixes do not imply historical lock residue is resolved; require an explicit backend cleanup/remediation lane for stale rows.
+
+## 2026-04-10 — RLS QA can stay end-to-end when signup is rate-limited by using a confirmed parent token + synthetic foreign child
+If fresh signup is blocked by rate limits or confirmation gating, validate `child_handbook_progress` policies with one confirmed parent auth context plus a synthetic child in another family: own-child write should succeed, cross-family write should 403, and cross-family read should return empty. This preserves auditable deny/allow proof without skipping runtime RLS checks.
+
+## 2026-04-10 — Launch-trio QA lanes should hard-gate on slot FED handoff and declare slot ownership in kickoff
+For parallel handbook rollouts, avoid duplicate QA by declaring slot ownership in kickoff comments (for example `5-6` vs `3-4`/`6-7`) and immediately blocking the lane if its paired FED slot issue is still kickoff-only without handoff evidence. Require file list + typecheck/build outputs before running QA matrices.
+
+## 2026-04-10 — Launch-trio slot ownership can change after kickoff
+Kickoff dedupe notes are not durable ownership truth. On each assignment wake, re-check current assignee and latest routing comments; if Architect reroutes a slot, update the QA ownership statement and blocker contract immediately to avoid stale duplicate-review assumptions.
+
+## 2026-04-10 — Assignment wake task can outrank inbox-lite ordering when `in_review` is absent
+If `PAPERCLIP_TASK_ID` points to an assigned `in_review` issue that is not returned by `inbox-lite`, treat the wake task as primary and execute checkout/review there first; relying only on inbox-lite can mis-prioritize newer `todo` lanes.
+
+## 2026-04-10 — Launch-slot QA must verify runtime slug map, not just dependency status/handoff notes
+Even when FED dependency issues are `done`, validate the actual runtime slot mapping (`ageBand -> book -> handbookSlug`) and page-count contracts in code. In this heartbeat, `5-6` was still wired to `yoavLetterMap` with 8-page flow while `magicLetterMap` 10-page assets existed but were unreachable, requiring a new FED fix lane.
