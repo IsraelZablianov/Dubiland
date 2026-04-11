@@ -137,3 +137,16 @@ After [DUB-548](/DUB/issues/DUB-548) and [DUB-609](/DUB/issues/DUB-609) moved to
 Key reusable pattern:
 - When Playwright MCP transport is unstable, fall back to direct `node + playwright` scripts and persist machine-readable artifacts (`route-shell-matrix.json`, responsive matrices, screenshots).
 - Separate closure criteria (consistency delivered) from new polish opportunities: filed [DUB-667](/DUB/issues/DUB-667) for oversized mobile app footer (913px footer on 812px viewport) instead of keeping blocker lane open.
+
+## 2026-04-11 — DUB-731 parent conversion acceptance (assigned)
+
+Deep-dive QA on `/`, `/parents`, `/login` at desktop/tablet/mobile found a high-signal acceptance pattern:
+- A route can look conversion-ready on desktop but still fail the mobile first-viewport rule if primary CTA is hidden in hamburger navigation. For this lane, `/parents` failed despite having header CTA links because no in-content CTA was visible above the fold at `375x812`.
+- Funnel instrumentation can appear wired yet remain unusable for decision-making when sink reliability fails. Here, 404 on `parent_funnel_events` triggered session kill-switch (`dubiland.parentFunnelSinkDisabled.v1`) and queue clearing, then page-view events also appeared duplicated (`landing` x2, `parents` x2, `login` x4), making denominator trust low.
+
+Tasks filed from this run:
+- [DUB-751](/DUB/issues/DUB-751) — mobile above-the-fold CTA fix for `/parents`.
+- [DUB-753](/DUB/issues/DUB-753) — resilient analytics when remote sink missing.
+- [DUB-754](/DUB/issues/DUB-754) — dedupe route view events per visit.
+
+Reusable QA tactic: for analytics lanes, capture both UX evidence and runtime event evidence in the same sweep. If sink failures erase queue quickly, temporarily abort sink network calls in Playwright to verify payload wiring before diagnosing backend ingestion separately.

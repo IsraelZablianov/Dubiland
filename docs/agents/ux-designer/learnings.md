@@ -70,3 +70,6 @@ For follow-up quality audits under a shared parent sprint, first lock a clear ex
 
 ## 2026-04-11 — Secondary “Learn More” Paths Need a Guaranteed Return-to-Try CTA
 For parent-conversion funnels, any secondary info path (like `/parents`) must contain an always-visible continuation CTA back into trial/signup. Without that explicit bridge, curiosity clicks become dead-end sessions and materially reduce conversion even when trust content quality is good.
+
+## 2026-04-11 — Treat Storybook v2 as a Delta Contract, Not a Full Rewrite
+When a new narrative route reuses the same learning domain, UX handoff should explicitly separate "shared baseline tokens/patterns" from "v2-only deltas" (route boundary, transition mode, pacing constraints). This reduces FED regression risk on the existing route while still enabling fast implementation of the new experience.

@@ -9,6 +9,7 @@ import {
   type FeatureIllustrationKind,
   type TopicIllustrationSlug,
 } from '@/components/illustrations';
+import { isParentFunnelConversionTuneupEnabled } from '@/lib/featureFlags';
 import { trackParentFunnelEvent } from '@/lib/parentFunnelInstrumentation';
 
 const TOPIC_CARDS: Array<{ key: 'Math' | 'Letters' | 'Reading'; topic: TopicIllustrationSlug }> = [
@@ -30,6 +31,16 @@ const TRUST_ITEMS: Array<{ key: 'Safe' | 'Hebrew' | 'Adaptive' | 'Audio'; icon: 
   { key: 'Audio', icon: 'audio' },
 ];
 
+const TRUST_RAIL_PROOFS: Array<
+  { key: 'trustRailProofSafety' | 'trustRailProofMethod' | 'trustRailProofEase'; icon: FeatureIllustrationKind }
+> = [
+  { key: 'trustRailProofSafety', icon: 'safe' },
+  { key: 'trustRailProofMethod', icon: 'hebrew' },
+  { key: 'trustRailProofEase', icon: 'adaptive' },
+];
+
+const TRUST_RAIL_BADGES = ['trustRailBadgeNoAds', 'trustRailBadgeNoCard', 'trustRailBadgeAgeRange'] as const;
+
 const PROMINENT_MARKETING_CTA_STYLE = {
   minHeight: 'var(--touch-primary-action-prominent)',
   padding: 'var(--space-md) var(--space-xl)',
@@ -45,7 +56,7 @@ export default function Landing() {
     });
   }, []);
 
-  const trackLandingPrimaryCtaClick = (ctaId: 'hero_primary' | 'footer_primary') => {
+  const trackLandingPrimaryCtaClick = (ctaId: 'hero_primary' | 'trust_rail_primary' | 'footer_primary') => {
     trackParentFunnelEvent('landing_primary_cta_click', {
       sourcePath: '/',
       targetPath: '/login',
@@ -79,6 +90,50 @@ export default function Landing() {
           </div>
         </div>
       </section>
+
+      {isParentFunnelConversionTuneupEnabled ? (
+        <section className="landing__trust-rail" aria-labelledby="landing-trust-rail-title">
+          <Card padding="lg" className="landing__trust-rail-card">
+            <div className="landing__trust-rail-grid">
+              <div className="landing__trust-rail-copy">
+                <h2 id="landing-trust-rail-title" className="landing__trust-rail-title">
+                  {t('landing.trustRailTitle')}
+                </h2>
+                <p className="landing__trust-rail-subtitle">{t('landing.trustRailSubtitle')}</p>
+
+                <ul className="landing__trust-rail-proof-list">
+                  {TRUST_RAIL_PROOFS.map(({ key, icon }) => (
+                    <li key={key} className="landing__trust-rail-proof-item">
+                      <FeatureIllustration kind={icon} size={56} tone="success" />
+                      <span>{t(`landing.${key}`)}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <aside className="landing__trust-rail-cta-shell">
+                <div className="landing__trust-rail-mascot" aria-hidden="true">
+                  <MascotIllustration variant="hero" size={124} />
+                </div>
+
+                <ul className="landing__trust-rail-badges">
+                  {TRUST_RAIL_BADGES.map((key) => (
+                    <li key={key} className="landing__trust-rail-badge">
+                      {t(`landing.${key}`)}
+                    </li>
+                  ))}
+                </ul>
+
+                <Link to="/login" onClick={() => trackLandingPrimaryCtaClick('trust_rail_primary')}>
+                  <Button variant="primary" size="lg" style={PROMINENT_MARKETING_CTA_STYLE}>
+                    {t('landing.trustRailCta')}
+                  </Button>
+                </Link>
+              </aside>
+            </div>
+          </Card>
+        </section>
+      ) : null}
 
       <section className="landing__section" id="topics">
         <h2 className="landing__section-title">{t('landing.topicsTitle')}</h2>
@@ -205,6 +260,134 @@ export default function Landing() {
           max-width: 1200px;
           margin: 0 auto;
           padding: var(--space-3xl) var(--space-xl);
+        }
+
+        .landing__trust-rail {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: var(--space-lg) var(--space-xl) var(--space-2xl);
+        }
+
+        .landing__trust-rail-card {
+          border: 1px solid color-mix(in srgb, var(--color-accent-primary) 22%, transparent);
+          background:
+            linear-gradient(
+              140deg,
+              color-mix(in srgb, var(--color-bg-card) 84%, var(--color-theme-secondary) 16%) 0%,
+              var(--color-bg-card) 100%
+            );
+          box-shadow: var(--shadow-card);
+        }
+
+        .landing__trust-rail-grid {
+          display: grid;
+          grid-template-columns: 3fr 2fr;
+          align-items: start;
+          gap: var(--space-xl);
+        }
+
+        .landing__trust-rail-copy {
+          display: grid;
+          gap: var(--space-md);
+        }
+
+        .landing__trust-rail-title {
+          font-family: var(--font-family-display);
+          font-size: var(--font-size-2xl);
+          font-weight: var(--font-weight-extrabold);
+          color: var(--color-text-primary);
+        }
+
+        .landing__trust-rail-subtitle {
+          font-size: var(--font-size-md);
+          color: var(--color-text-secondary);
+          line-height: var(--line-height-relaxed);
+        }
+
+        .landing__trust-rail-proof-list {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          display: grid;
+          gap: var(--space-sm);
+        }
+
+        .landing__trust-rail-proof-item {
+          min-height: 56px;
+          display: grid;
+          grid-template-columns: auto 1fr;
+          align-items: center;
+          gap: var(--space-sm);
+          padding: var(--space-xs) var(--space-sm);
+          border-radius: var(--radius-md);
+          background: color-mix(in srgb, var(--color-bg-secondary) 78%, var(--color-bg-card) 22%);
+          color: var(--color-text-primary);
+          font-size: var(--font-size-sm);
+          font-weight: var(--font-weight-semibold);
+        }
+
+        .landing__trust-rail-cta-shell {
+          display: grid;
+          align-content: start;
+          gap: var(--space-md);
+          padding: var(--space-md);
+          border-radius: var(--radius-lg);
+          background: color-mix(in srgb, var(--color-bg-secondary) 88%, var(--color-bg-card) 12%);
+        }
+
+        .landing__trust-rail-mascot {
+          justify-self: center;
+          display: grid;
+          place-items: center;
+          inline-size: 140px;
+          block-size: 140px;
+          border-radius: var(--radius-full);
+          background:
+            radial-gradient(
+              circle at 50% 35%,
+              color-mix(in srgb, var(--color-bg-card) 62%, var(--color-theme-secondary) 38%) 0%,
+              transparent 74%
+            ),
+            var(--texture-stars-soft);
+        }
+
+        .landing__trust-rail-badges {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          flex-wrap: wrap;
+          gap: var(--space-xs);
+        }
+
+        .landing__trust-rail-badge {
+          min-height: 44px;
+          display: inline-flex;
+          align-items: center;
+          border-radius: var(--radius-pill);
+          border: 1px solid color-mix(in srgb, var(--color-accent-primary) 22%, transparent);
+          padding-inline: var(--space-sm);
+          background: var(--color-bg-card);
+          color: var(--color-text-primary);
+          font-size: var(--font-size-xs);
+          font-weight: var(--font-weight-semibold);
+          transition: var(--transition-fast);
+        }
+
+        .landing__trust-rail-badge:active {
+          transform: scale(0.98);
+          border-color: var(--color-accent-primary);
+          box-shadow: var(--shadow-sm);
+        }
+
+        .landing__trust-rail-cta-shell a {
+          text-decoration: none;
+          inline-size: 100%;
+        }
+
+        .landing__trust-rail-cta-shell button {
+          inline-size: 100%;
+          color: var(--color-text-primary);
         }
 
         .landing__section--deferred {
@@ -403,6 +586,26 @@ export default function Landing() {
           .landing__hero-mascot-shell {
             inline-size: 188px;
             block-size: 188px;
+          }
+
+          .landing__trust-rail {
+            padding-block-start: 0;
+          }
+        }
+
+        @media (max-width: 1024px) {
+          .landing__trust-rail-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .landing__trust-rail-badge {
+            transition: none;
+          }
+
+          .landing__trust-rail-badge:active {
+            transform: none;
           }
         }
       `}</style>

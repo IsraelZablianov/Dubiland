@@ -1,0 +1,285 @@
+{
+  "generated_at": "2026-04-11T14:46:10.066Z",
+  "tool": "scripts/dub-637-protected-route-matrix.mjs",
+  "base_url": "http://127.0.0.1:4196",
+  "cache_mode": "cold",
+  "route_entry_mode": "direct_document_navigation",
+  "profiles": [
+    "guest_shell",
+    "anonymous_redirect",
+    "authenticated"
+  ],
+  "routes": [
+    "/games",
+    "/profiles",
+    "/parent",
+    "/games/reading/interactive-handbook"
+  ],
+  "baseline_source": "/Users/israelz/Documents/dev/AI/Learning/docs/agents/performance-expert/evidence/dub-506/20260411-012316-final-matrix-post-dub-610/lighthouse-summary.json",
+  "results": [
+    {
+      "profile": "guest_shell",
+      "path": "/games",
+      "status": "ok",
+      "performance": 79,
+      "fcp_ms": 4022.919,
+      "lcp_ms": 4022.919,
+      "tbt_ms": 0,
+      "cls": 0,
+      "speed_index_ms": 3279,
+      "max_potential_fid_ms": 49.054,
+      "max_long_task_ms": 430.732,
+      "total_transfer_bytes": 233883,
+      "login_chunk_requested": false,
+      "supabase_chunk_requested": false,
+      "final_url": "http://127.0.0.1:4196/games",
+      "metadata": {
+        "auth_profile": "guest_shell",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "guest_shell profile prepared: guest mode enabled with active child seed"
+      ]
+    },
+    {
+      "profile": "guest_shell",
+      "path": "/profiles",
+      "status": "ok",
+      "performance": 80,
+      "fcp_ms": 3970.972,
+      "lcp_ms": 3970.972,
+      "tbt_ms": 0,
+      "cls": 0,
+      "speed_index_ms": 2776,
+      "max_potential_fid_ms": 16,
+      "max_long_task_ms": 361.839,
+      "total_transfer_bytes": 233883,
+      "login_chunk_requested": false,
+      "supabase_chunk_requested": false,
+      "final_url": "http://127.0.0.1:4196/profiles",
+      "metadata": {
+        "auth_profile": "guest_shell",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "guest_shell profile prepared: guest mode enabled with active child seed"
+      ]
+    },
+    {
+      "profile": "guest_shell",
+      "path": "/parent",
+      "status": "ok",
+      "performance": 78,
+      "fcp_ms": 4093.505,
+      "lcp_ms": 4093.505,
+      "tbt_ms": 0,
+      "cls": 0,
+      "speed_index_ms": 3308,
+      "max_potential_fid_ms": 16,
+      "max_long_task_ms": 359.276,
+      "total_transfer_bytes": 233883,
+      "login_chunk_requested": false,
+      "supabase_chunk_requested": false,
+      "final_url": "http://127.0.0.1:4196/parent",
+      "metadata": {
+        "auth_profile": "guest_shell",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "guest_shell profile prepared: guest mode enabled with active child seed"
+      ]
+    },
+    {
+      "profile": "guest_shell",
+      "path": "/games/reading/interactive-handbook",
+      "status": "ok",
+      "performance": 72,
+      "fcp_ms": 4892.97,
+      "lcp_ms": 4892.97,
+      "tbt_ms": 0,
+      "cls": 0,
+      "speed_index_ms": 3633,
+      "max_potential_fid_ms": 48.085,
+      "max_long_task_ms": 528.163,
+      "total_transfer_bytes": 238617,
+      "login_chunk_requested": false,
+      "supabase_chunk_requested": true,
+      "final_url": "http://127.0.0.1:4196/games/reading/interactive-handbook",
+      "metadata": {
+        "auth_profile": "guest_shell",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "guest_shell profile prepared: guest mode enabled with active child seed"
+      ]
+    },
+    {
+      "profile": "anonymous_redirect",
+      "path": "/games",
+      "status": "ok",
+      "performance": 96,
+      "fcp_ms": 1327.598,
+      "lcp_ms": 1835.932,
+      "tbt_ms": 203.69399999999996,
+      "cls": 0,
+      "speed_index_ms": 1168,
+      "max_potential_fid_ms": 253.694,
+      "max_long_task_ms": 522.19,
+      "total_transfer_bytes": 861,
+      "login_chunk_requested": true,
+      "supabase_chunk_requested": true,
+      "final_url": "http://127.0.0.1:4196/games",
+      "metadata": {
+        "auth_profile": "anonymous_redirect",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "anonymous_redirect profile prepared: guest/session hints removed"
+      ],
+      "anonymous_resolved_href": "http://127.0.0.1:4196/login",
+      "anonymous_resolved_path": "/login"
+    },
+    {
+      "profile": "anonymous_redirect",
+      "path": "/profiles",
+      "status": "ok",
+      "performance": 100,
+      "fcp_ms": 1118.355,
+      "lcp_ms": 1426.686,
+      "tbt_ms": 0,
+      "cls": 0,
+      "speed_index_ms": 983,
+      "max_potential_fid_ms": 47.22,
+      "max_long_task_ms": 391.721,
+      "total_transfer_bytes": 862,
+      "login_chunk_requested": true,
+      "supabase_chunk_requested": true,
+      "final_url": "http://127.0.0.1:4196/profiles",
+      "metadata": {
+        "auth_profile": "anonymous_redirect",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "anonymous_redirect profile prepared: guest/session hints removed"
+      ],
+      "anonymous_resolved_href": "http://127.0.0.1:4196/login",
+      "anonymous_resolved_path": "/login"
+    },
+    {
+      "profile": "anonymous_redirect",
+      "path": "/parent",
+      "status": "ok",
+      "performance": 100,
+      "fcp_ms": 1459.208,
+      "lcp_ms": 1459.208,
+      "tbt_ms": 0,
+      "cls": 0,
+      "speed_index_ms": 1367,
+      "max_potential_fid_ms": 16,
+      "max_long_task_ms": 335.66,
+      "total_transfer_bytes": 859,
+      "login_chunk_requested": true,
+      "supabase_chunk_requested": true,
+      "final_url": "http://127.0.0.1:4196/parent",
+      "metadata": {
+        "auth_profile": "anonymous_redirect",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "anonymous_redirect profile prepared: guest/session hints removed"
+      ],
+      "anonymous_resolved_href": "http://127.0.0.1:4196/login",
+      "anonymous_resolved_path": "/login"
+    },
+    {
+      "profile": "anonymous_redirect",
+      "path": "/games/reading/interactive-handbook",
+      "status": "ok",
+      "performance": 100,
+      "fcp_ms": 1198.615,
+      "lcp_ms": 1198.615,
+      "tbt_ms": 0,
+      "cls": 0,
+      "speed_index_ms": 1025,
+      "max_potential_fid_ms": 40.828,
+      "max_long_task_ms": 452.158,
+      "total_transfer_bytes": 1887,
+      "login_chunk_requested": true,
+      "supabase_chunk_requested": true,
+      "final_url": "http://127.0.0.1:4196/games/reading/interactive-handbook",
+      "metadata": {
+        "auth_profile": "anonymous_redirect",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "anonymous_redirect profile prepared: guest/session hints removed"
+      ],
+      "anonymous_resolved_href": "http://127.0.0.1:4196/login",
+      "anonymous_resolved_path": "/login"
+    },
+    {
+      "profile": "authenticated",
+      "path": "/games",
+      "status": "error",
+      "reason": "email_form_not_found",
+      "metadata": {
+        "auth_profile": "authenticated",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "authenticated profile failed: email form not found on /login"
+      ]
+    },
+    {
+      "profile": "authenticated",
+      "path": "/profiles",
+      "status": "error",
+      "reason": "email_form_not_found",
+      "metadata": {
+        "auth_profile": "authenticated",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "authenticated profile failed: email form not found on /login"
+      ]
+    },
+    {
+      "profile": "authenticated",
+      "path": "/parent",
+      "status": "error",
+      "reason": "email_form_not_found",
+      "metadata": {
+        "auth_profile": "authenticated",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "authenticated profile failed: email form not found on /login"
+      ]
+    },
+    {
+      "profile": "authenticated",
+      "path": "/games/reading/interactive-handbook",
+      "status": "error",
+      "reason": "email_form_not_found",
+      "metadata": {
+        "auth_profile": "authenticated",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "authenticated profile failed: email form not found on /login"
+      ]
+    }
+  ]
+}

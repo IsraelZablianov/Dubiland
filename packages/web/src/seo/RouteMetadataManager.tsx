@@ -1,12 +1,14 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
+import { ensureSeoNamespaceLoaded, hasSeoNamespaceLoaded } from '@/i18n';
 import { assetUrl } from '@/lib/assetUrl';
 import { buildJsonLdScripts, isValidJsonLdPayload, runJsonLdSmokeChecks } from './jsonLd';
 import { getRouteMetadata, type RouteMetadataKey } from './routeMetadata';
 
 const MANAGED_JSON_LD_SELECTOR = 'script[type="application/ld+json"][data-dubiland-json-ld="true"]';
 const DEFAULT_OPEN_GRAPH_IMAGE_PATH = '/images/games/thumbnails/contact-sheet-16x10.webp';
+const SEO_NAMESPACE_IDLE_TIMEOUT_MS = 2800;
 const PARENTS_FAQ_KEYS = [
   { questionKey: 'parents.faq1Q', answerKey: 'parents.faq1A' },
   { questionKey: 'parents.faq2Q', answerKey: 'parents.faq2A' },
@@ -198,11 +200,16 @@ export function RouteMetadataManager() {
   const { t: tSeo } = useTranslation('seo');
   const { t: tPublic } = useTranslation('public');
   const location = useLocation();
+  const [seoNamespaceReady, setSeoNamespaceReady] = useState(() => hasSeoNamespaceLoaded());
   const canonicalBaseUrl = useMemo(() => resolveCanonicalBaseUrl(), []);
   const canonicalOrigin = useMemo(() => canonicalBaseUrl.origin, [canonicalBaseUrl]);
 
   const routeMetadata = useMemo(() => getRouteMetadata(location.pathname), [location.pathname]);
   const metadata = useMemo(() => {
+    if (!seoNamespaceReady) {
+      return null;
+    }
+
     const canonicalUrl = routeMetadata.canonicalPath
       ? buildAbsoluteRouteUrl(routeMetadata.canonicalPath, canonicalBaseUrl)
       : null;
@@ -215,10 +222,10 @@ export function RouteMetadataManager() {
       openGraphImageUrl,
       indexable: routeMetadata.indexable,
     };
-  }, [canonicalBaseUrl, routeMetadata, tSeo]);
+  }, [canonicalBaseUrl, routeMetadata, seoNamespaceReady, tSeo]);
 
   const jsonLdScripts = useMemo(() => {
-    if (!routeMetadata.indexable || !routeMetadata.canonicalPath) {
+    if (!seoNamespaceReady || !metadata || !routeMetadata.indexable || !routeMetadata.canonicalPath) {
       return [];
     }
 
@@ -252,7 +259,59 @@ export function RouteMetadataManager() {
       breadcrumbItems,
       faqItems,
     });
-  }, [canonicalOrigin, metadata.description, metadata.title, routeMetadata, tPublic]);
+  }, [canonicalOrigin, metadata, routeMetadata, seoNamespaceReady, tPublic]);
+
+  useEffect(() => {
+    if (seoNamespaceReady) {
+      return;
+    }
+
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    let active = true;
+    let timeoutId: number | null = null;
+    let idleId: number | null = null;
+
+    const loadSeoNamespace = () => {
+      void ensureSeoNamespaceLoaded().then(() => {
+        if (!active) return;
+        setSeoNamespaceReady(true);
+      });
+    };
+
+    const idleCapableWindow = window as Window & {
+      requestIdleCallback?: (
+        callback: (deadline: { didTimeout: boolean; timeRemaining: () => number }) => void,
+        options?: { timeout?: number },
+      ) => number;
+      cancelIdleCallback?: (handle: number) => void;
+    };
+
+    if (typeof idleCapableWindow.requestIdleCallback === 'function') {
+      idleId = idleCapableWindow.requestIdleCallback(
+        () => {
+          loadSeoNamespace();
+        },
+        { timeout: SEO_NAMESPACE_IDLE_TIMEOUT_MS },
+      );
+    } else {
+      timeoutId = window.setTimeout(loadSeoNamespace, SEO_NAMESPACE_IDLE_TIMEOUT_MS);
+    }
+
+    return () => {
+      active = false;
+
+      if (timeoutId !== null) {
+        window.clearTimeout(timeoutId);
+      }
+
+      if (idleId !== null && typeof idleCapableWindow.cancelIdleCallback === 'function') {
+        idleCapableWindow.cancelIdleCallback(idleId);
+      }
+    };
+  }, [seoNamespaceReady]);
 
   useEffect(() => {
     if (import.meta.env.DEV) {
@@ -261,6 +320,10 @@ export function RouteMetadataManager() {
   }, []);
 
   useEffect(() => {
+    if (!metadata) {
+      return;
+    }
+
     document.title = metadata.title;
 
     const descriptionTag = ensureNamedMetaTag('description');

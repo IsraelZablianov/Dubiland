@@ -1,0 +1,19 @@
+$ npx "lighthouse" "http://127.0.0.1:4196/games" "--quiet" "--disable-storage-reset" "--only-categories=performance" "--preset=perf" "--output=json" "--output-path=/Users/israelz/Documents/dev/AI/Learning/docs/agents/performance-expert/evidence/dub-637/20260411-180437-protected-route-matrix-auth-unblocked-skip-build/lighthouse/guest_shell/games.json" "--chrome-flags=--headless=new --no-sandbox --disable-dev-shm-usage --user-data-dir=/var/folders/6q/4zm3m9t93cn8f418dqj1f_l00000gn/T/dub637-guest_shell-games-ZIScg8"
+npm warn exec The following package was not found and will be installed: lighthouse@12.8.2
+node:fs:449
+    return binding.readFileUtf8(path, stringToFlags(options.flag));
+                   ^
+
+Error: ENOENT: no such file or directory, open '/Users/israelz/.npm/_npx/0f94ee7615faf582/node_modules/lighthouse/package.json'
+    at Object.readFileSync (node:fs:449:20)
+    at file:///Users/israelz/.npm/_npx/0f94ee7615faf582/node_modules/lighthouse/cli/bin.js:34:27
+    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/israelz/.npm/_npx/0f94ee7615faf582/node_modules/lighthouse/package.json'
+}
+
+Node.js v20.19.1

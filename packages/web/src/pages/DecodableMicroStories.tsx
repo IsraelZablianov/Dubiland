@@ -1,16 +1,16 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import type { Child, Game, GameLevel } from '@dubiland/shared';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button, Card } from '@/components/design-system';
 import { ChildRouteHeader, ChildRouteScaffold } from '@/components/layout';
-import type { GameCompletionResult, ParentSummaryMetrics } from '@/games/engine';
+import type { ParentSummaryMetrics } from '@/games/engine';
 import { DecodableStoryReaderGame } from '@/games/reading/DecodableStoryReaderGame';
 import { READING_RUNTIME_MATRIX, toReadingAgeBand, type ReadingAgeBand } from '@/games/reading/readingRuntimeMatrix';
 import { useAudioManager } from '@/hooks/useAudioManager';
 import { getActiveChildProfile } from '@/lib/session';
+import { useGameAttemptSync } from './useGameAttemptSync';
 
-type SyncState = 'idle' | 'syncing' | 'synced';
 type HintTrend = ParentSummaryMetrics['hintTrend'];
 type DecodableAgeBand = ReadingAgeBand;
 
@@ -87,17 +87,12 @@ export default function DecodableMicroStoriesPage() {
   [runtimeAgeBand],
   );
 
-  const [completionResult, setCompletionResult] = useState<GameCompletionResult | null>(null);
-  const [syncState, setSyncState] = useState<SyncState>('idle');
-
-  const handleComplete = useCallback((result: GameCompletionResult) => {
-    setCompletionResult(result);
-    setSyncState('syncing');
-
-    window.setTimeout(() => {
-      setSyncState('synced');
-    }, 500);
-  }, []);
+  const { completionResult, syncState, handleComplete, retryLastSync } = useGameAttemptSync({
+    childId: child.id,
+    childAgeBand: activeProfile?.ageBand,
+    game: DECODABLE_MICRO_STORIES_GAME,
+    level: runtimeLevel,
+  });
 
   const hintTrendSummaryKey = useMemo(() => {
     const trend = completionResult?.summaryMetrics?.hintTrend;
@@ -177,8 +172,19 @@ export default function DecodableMicroStoriesPage() {
               {t(parentNextStepKey as any)}
             </p>
             <p style={{ margin: 0, color: 'var(--color-text-secondary)' }}>
-              {syncState === 'syncing' ? t('feedback.keepGoing') : t('feedback.excellent')}
+              {syncState === 'error'
+                ? t('errors.generic')
+                : syncState === 'syncing'
+                  ? t('feedback.keepGoing')
+                  : t('feedback.excellent')}
             </p>
+            {syncState === 'error' && (
+              <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                <Button variant="secondary" size="md" onClick={retryLastSync} aria-label={t('profile.retry')}>
+                  {t('profile.retry')}
+                </Button>
+              </div>
+            )}
           </Card>
         )}
     </ChildRouteScaffold>

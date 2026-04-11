@@ -378,6 +378,27 @@ function buildSummaryReport(stats: SessionStats): SummaryReport {
   };
 }
 
+function createInitialRoundConfig(): RoundConfig {
+  return {
+    roundNumber: 1,
+    simplifyRound: false,
+    masteryBoost: false,
+  };
+}
+
+function createInitialSessionStats(): SessionStats {
+  return {
+    firstAttemptSuccesses: 0,
+    hintUsageByRound: [],
+    highestValueCompared: 0,
+    comparisonStats: {
+      more: { rounds: 0, firstAttemptHits: 0 },
+      less: { rounds: 0, firstAttemptHits: 0 },
+      equal: { rounds: 0, firstAttemptHits: 0 },
+    },
+  };
+}
+
 export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
   const { t, i18n } = useTranslation('common');
   const isRtl = isRtlDirection(i18n.dir(i18n.language));
@@ -387,18 +408,8 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
     [isRtl],
   );
 
-  const [roundConfig, setRoundConfig] = useState<RoundConfig>({
-    roundNumber: 1,
-    simplifyRound: false,
-    masteryBoost: false,
-  });
-  const [round, setRound] = useState<RoundState>(() =>
-    createRound({
-      roundNumber: 1,
-      simplifyRound: false,
-      masteryBoost: false,
-    }),
-  );
+  const [roundConfig, setRoundConfig] = useState<RoundConfig>(() => createInitialRoundConfig());
+  const [round, setRound] = useState<RoundState>(() => createRound(createInitialRoundConfig()));
 
   const [pendingRoundConfig, setPendingRoundConfig] = useState<RoundConfig | null>(null);
   const [checkpointPaused, setCheckpointPaused] = useState(false);
@@ -413,10 +424,7 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
   const [feedbackSide, setFeedbackSide] = useState<Side | null>(null);
 
   const [showCountScaffold, setShowCountScaffold] = useState(round.showCountScaffold);
-  const [revealedCountBySide, setRevealedCountBySide] = useState<Record<Side, boolean>>({
-    left: false,
-    right: false,
-  });
+  const [revealedCountBySide, setRevealedCountBySide] = useState<Record<Side, boolean>>({ left: false, right: false });
   const [highlightCorrectSide, setHighlightCorrectSide] = useState(false);
 
   const [mistakesThisRound, setMistakesThisRound] = useState(0);
@@ -432,21 +440,9 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
   const [nonCriticalAudioReady, setNonCriticalAudioReady] = useState(false);
   const [audioPlaybackFailed, setAudioPlaybackFailed] = useState(false);
 
-  const [roundMessage, setRoundMessage] = useState<RoundMessage>({
-    key: 'games.moreOrLessMarket.instructions.intro',
-    tone: 'neutral',
-  });
+  const [roundMessage, setRoundMessage] = useState<RoundMessage>({ key: 'games.moreOrLessMarket.instructions.intro', tone: 'neutral' });
 
-  const [sessionStats, setSessionStats] = useState<SessionStats>({
-    firstAttemptSuccesses: 0,
-    hintUsageByRound: [],
-    highestValueCompared: 0,
-    comparisonStats: {
-      more: { rounds: 0, firstAttemptHits: 0 },
-      less: { rounds: 0, firstAttemptHits: 0 },
-      equal: { rounds: 0, firstAttemptHits: 0 },
-    },
-  });
+  const [sessionStats, setSessionStats] = useState<SessionStats>(() => createInitialSessionStats());
 
   const completionReportedRef = useRef(false);
   const boardFeedbackTimeoutRef = useRef<number | null>(null);
@@ -927,6 +923,26 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
     setPendingRoundConfig(null);
   }, [loadRound, pendingRoundConfig]);
 
+  const handlePlayAgain = useCallback(() => {
+    const initialRoundConfig = createInitialRoundConfig();
+    completionReportedRef.current = false;
+
+    if (boardFeedbackTimeoutRef.current !== null) {
+      window.clearTimeout(boardFeedbackTimeoutRef.current);
+      boardFeedbackTimeoutRef.current = null;
+    }
+
+    audio.stop();
+    setSummary(null);
+    setSessionComplete(false);
+    setPendingRoundConfig(null);
+    setCheckpointPaused(false);
+    setConsecutiveSuccesses(0);
+    setConsecutiveStruggles(0);
+    setSessionStats(createInitialSessionStats());
+    loadRound(initialRoundConfig);
+  }, [audio, loadRound]);
+
   const messageText = t(roundMessage.key, {
     comparisonType: '> / < / =',
     accuracy: summary ? `${summary.firstAttemptAccuracy}%` : '0%',
@@ -1057,6 +1073,17 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
           </p>
           <p className="more-less-market__summary-note">{t('parentDashboard.games.moreOrLessMarket.nextStep')}</p>
           <p className="more-less-market__summary-tone">{t(summary.hintToneKey)}</p>
+          <div className="more-less-market__checkpoint-actions">
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={handlePlayAgain}
+              aria-label={t('games.moreOrLessMarket.hints.gentleRetry')}
+              style={{ minWidth: 'var(--touch-min)', paddingInline: 'var(--space-lg)' }}
+            >
+              ↻ {t('games.moreOrLessMarket.hints.gentleRetry')}
+            </Button>
+          </div>
         </Card>
         <style>{moreLessMarketStyles}</style>
       </div>

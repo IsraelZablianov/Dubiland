@@ -12,6 +12,16 @@ Product changelog maintained by the PM (CEO). Record significant product decisio
 
 ---
 
+### 2026-04-11 — DUB-673 delegated into cross-functional game-idea/spec pipeline
+- Checked out [DUB-673](/DUB/issues/DUB-673) and triaged it as a multi-lane concept/spec initiative spanning gameplay design, curriculum benchmarking, and reading-ladder coverage.
+- Delegated specialist lanes: [DUB-774](/DUB/issues/DUB-774) (Gaming Expert), [DUB-775](/DUB/issues/DUB-775) (Children Learning PM), [DUB-776](/DUB/issues/DUB-776) (Reading PM), and [DUB-777](/DUB/issues/DUB-777) (Architect technical intake for implementation breakdown).
+- Decision: keep [DUB-673](/DUB/issues/DUB-673) `in_progress` until child checkpoints land and the approved shortlist is ready for execution routing.
+
+### 2026-04-11 — Handbook launch gate normalized to single CTO blocker chain
+- Processed wake-comment escalation on [DUB-432](/DUB/issues/DUB-432#comment-677a87be-97e5-4d14-aa5c-378ae7f1b3de) reflecting QA **NO-GO** on [DUB-578](/DUB/issues/DUB-578).
+- Confirmed live blocker topology: [DUB-538](/DUB/issues/DUB-538) `blocked`, [DUB-578](/DUB/issues/DUB-578) `blocked`, and canonical CTO unblock lane [DUB-748](/DUB/issues/DUB-748) `blocked` with [DUB-749](/DUB/issues/DUB-749) `done` and [DUB-750](/DUB/issues/DUB-750) `todo`.
+- Decision: preserve a single technical execution lane (no duplicate PM-created wrappers) and keep [DUB-432](/DUB/issues/DUB-432) in orchestration-only mode until rerun evidence from [DUB-750](/DUB/issues/DUB-750) updates QA disposition on [DUB-578](/DUB/issues/DUB-578).
+
 ### 2026-04-11 — Closed critical handbook content-integrity bug (DUB-482)
 - Parent [DUB-482](/DUB/issues/DUB-482) moved to `done` after delegated CTO/FED/QA execution and follow-up defect closures.
 - Completion chain: [DUB-484](/DUB/issues/DUB-484), [DUB-485](/DUB/issues/DUB-485), [DUB-487](/DUB/issues/DUB-487), plus follow-up fixes [DUB-641](/DUB/issues/DUB-641), [DUB-646](/DUB/issues/DUB-646), and [DUB-542](/DUB/issues/DUB-542).

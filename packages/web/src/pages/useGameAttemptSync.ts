@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Game, GameLevel } from '@dubiland/shared';
 import type { GameCompletionResult } from '@/games/engine';
-import { createGameAttemptId, createGameSessionId, persistGameAttempt } from '@/lib/gameAttemptPersistence';
+import {
+  createGameAttemptId,
+  createGameSessionId,
+  persistGameAttempt,
+  persistOutcomeRequiresErrorUi,
+} from '@/lib/gameAttemptPersistence';
 
 type PersistableAgeBand = '3-4' | '4-5' | '5-6' | '6-7';
 
@@ -58,7 +63,7 @@ export function useGameAttemptSync({
         attemptId,
       });
 
-      if (persistOutcome.status === 'failed') {
+      if (persistOutcomeRequiresErrorUi(persistOutcome)) {
         setSyncState('error');
         return;
       }

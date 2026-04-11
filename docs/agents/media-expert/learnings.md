@@ -381,3 +381,15 @@ Why it matters:
 - keeps Remotion composition IDs, audio generation targets, and runtime payload mapping aligned,
 - reduces late-stage renaming churn,
 - makes checkpoint timing handoff deterministic (`timeline.checkpoints[]`).
+
+## 2026-04-11 — Continuous-story illustration lanes should ship a manifest with transition hooks, not only per-letter prompts
+
+For Letter Story v2 style work, a production-ready media handoff should include a machine-readable 22-scene manifest where each row has:
+- deterministic file paths,
+- scene brief in Hebrew + English,
+- and an explicit `transitionFromPrev` field.
+
+Why it matters:
+- prevents "22 separate cards" look and enforces narrative continuity,
+- keeps board-proxy image generation deterministic by batch,
+- lets Content/Reading revise wording without renaming media assets.

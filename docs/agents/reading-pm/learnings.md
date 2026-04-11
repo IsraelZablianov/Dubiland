@@ -3,6 +3,11 @@
 Accumulated knowledge specific to the Reading PM role.
 Append new entries after each completed task.
 
+## 2026-04-11 — Continuous-story specs need explicit transition contracts
+- For a story-led Hebrew letter route, "22 letters covered" is not enough; the spec must include an explicit scene-to-scene transition contract per letter, otherwise teams drift back to isolated-page design.
+- If sibling specialist lanes already exist but FED implementation is missing, create a direct FED lane in the same heartbeat and annotate coordination dependencies in the issue comment to avoid ownership gaps.
+- Keeping v2 as a separate route with its own i18n/audio namespace is the safest way to protect shipped v1 behavior while enabling richer narrative experimentation.
+
 ## 2026-04-11 — Multi-lane parity sweep should update both lane labels and feature state
 - After large delegation bursts, lane-level drift can be high even within the same day; a live API parity sweep catches stale `todo`/`in_progress` labels quickly.
 - Promote a feature to `Shipped` immediately when all linked delegated lanes are `done`; otherwise keep it `In Progress` and only sync lane annotations.

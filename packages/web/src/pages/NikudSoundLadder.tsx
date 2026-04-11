@@ -8,7 +8,12 @@ import type { GameCompletionResult } from '@/games/engine';
 import { NikudSoundLadderGame } from '@/games/reading/NikudSoundLadderGame';
 import { useAudioManager } from '@/hooks/useAudioManager';
 import { toChildAgeBand } from '@/lib/concurrentChoiceLimit';
-import { createGameAttemptId, createGameSessionId, persistGameAttempt } from '@/lib/gameAttemptPersistence';
+import {
+  createGameAttemptId,
+  createGameSessionId,
+  persistGameAttempt,
+  persistOutcomeRequiresErrorUi,
+} from '@/lib/gameAttemptPersistence';
 import { getActiveChildProfile } from '@/lib/session';
 
 type SyncState = 'idle' | 'syncing' | 'synced' | 'error';
@@ -104,7 +109,7 @@ export default function NikudSoundLadderPage() {
         attemptId,
       });
 
-      if (persistOutcome.status === 'failed') {
+      if (persistOutcomeRequiresErrorUi(persistOutcome)) {
         setSyncState('error');
         return;
       }

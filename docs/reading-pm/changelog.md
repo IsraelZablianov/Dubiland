@@ -2,6 +2,18 @@
 
 Record every completed reading spec, curriculum decision, or reading milestone in reverse chronological order.
 
+## 2026-04-11 — Letter Story v2 curriculum+narrative contract authored and delegated
+- Delivered canonical v2 spec package:
+  - Added `docs/games/letter-storybook-v2.md` with explicit 22-letter sequence contract, transition continuity rules, age-band decoding goals, acceptance criteria, and lane handoff checklist (Content/UX/Media/Gaming/CTO/FED/QA).
+  - Updated `docs/games/letter-storybook.md` with a canonical-pointer note so v1 remains documented while v2 stays separate.
+- Created direct implementation lane for the un-handed-off FED gap under parent feature [DUB-664](/DUB/issues/DUB-664):
+  - [DUB-766](/DUB/issues/DUB-766) assigned to FED Engineer 3 (lowest active load among FED lanes at delegation time).
+  - Added explicit coordination comment on [DUB-766](/DUB/issues/DUB-766) covering Content Writer, Media Expert, UX Designer, Gaming Expert, and Architect dependencies.
+- Updated `docs/reading-pm/features.md`:
+  - Added `Letter Story v2 — Continuous Narrative Route` with delegated status and linked lanes [DUB-758](/DUB/issues/DUB-758), [DUB-759](/DUB/issues/DUB-759), [DUB-760](/DUB/issues/DUB-760), [DUB-761](/DUB/issues/DUB-761), [DUB-762](/DUB/issues/DUB-762), [DUB-766](/DUB/issues/DUB-766).
+  - Updated Letter Recognition curriculum coverage row from `0/1/5` to `0/2/5` (planned/in progress/shipped).
+- Mandatory delegation audit on `docs/reading-pm/features.md`: no specs remain un-handed-off (all tracked entries now explicitly delegated).
+
 ## 2026-04-11 — Delegated-lane status parity sync after DUB-677 rollout
 - Reconciled `docs/reading-pm/features.md` against live Paperclip issue states for delegated lanes.
 - Promoted feature status to `Shipped` where all linked lanes are `done`:

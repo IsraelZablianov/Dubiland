@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "updatedAt": "2026-04-11",
+  "ownerIssue": "DUB-746",
+  "sourceEvidence": {
+    "lighthouseSummary": "docs/agents/performance-expert/evidence/dub-686/20260411-145950-node-env-production-check/lighthouse-summary.json",
+    "bundleComparison": "docs/agents/performance-expert/evidence/dub-686/20260411-145950-node-env-production-check/bundle-env-compare.json"
+  },
+  "bundleBudgets": {
+    "index": {
+      "assetPrefix": "index-",
+      "gzipBytesMax": 130000
+    },
+    "react": {
+      "assetPrefix": "react-",
+      "gzipBytesMax": 18000
+    },
+    "i18n": {
+      "assetPrefix": "i18n-",
+      "gzipBytesMax": 16000
+    },
+    "totalJsBytesMax": 1650000
+  },
+  "lighthouseBudgets": {
+    "/": {
+      "performanceMin": 80,
+      "lcpMsMax": 4100,
+      "clsMax": 0.05
+    },
+    "/letters": {
+      "performanceMin": 85,
+      "lcpMsMax": 3350,
+      "clsMax": 0.05
+    },
+    "/parents": {
+      "performanceMin": 86,
+      "lcpMsMax": 3300,
+      "clsMax": 0.05
+    }
+  }
+}

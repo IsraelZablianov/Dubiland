@@ -1109,6 +1109,7 @@ export function NumberLineJumpsGame({ level, child, onComplete, audio }: GamePro
           ].join(' ')}
           dir="ltr"
           aria-label={t('games.numberLineJumps.title')}
+          tabIndex={0}
         >
           <div className="number-line-jumps__line" role="group" aria-label={t('games.numberLineJumps.instructions.listenAndPlanJump')}>
             {NUMBER_LINE_VALUES.map((value) => {
@@ -1379,6 +1380,11 @@ const numberLineJumpsStyles = `
     border: 1px solid color-mix(in srgb, var(--color-theme-primary) 18%, white);
     padding: var(--space-md);
     overflow-x: auto;
+  }
+
+  .number-line-jumps__board:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--color-theme-primary) 72%, white);
+    outline-offset: 2px;
   }
 
   .number-line-jumps__board--success {

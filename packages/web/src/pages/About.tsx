@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Card } from '@/components/design-system';
+import { assetUrl } from '@/lib/assetUrl';
 import {
   FeatureIllustration,
   MascotIllustration,
@@ -47,7 +48,7 @@ export default function About() {
         <div className="about__gallery-stage">
           <div className="about__gallery-frame">
             <img
-              src="/images/about/boys-soccer.webp"
+              src={assetUrl('/images/about/boys-soccer.webp')}
               alt={t('about.sceneSoccer')}
               className="about__gallery-image"
               loading="eager"

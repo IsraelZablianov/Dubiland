@@ -1,0 +1,32 @@
+$ yarn "workspace" "@dubiland/web" "build"
+[images:optimize] source files processed: 12
+[images:optimize] renditions generated this run: 56
+[images:optimize] manifest assets: 77 (1804.9 KiB)
+[images:optimize] wrote public/images-manifest.json
+Rebuilt public/images/games/thumbnails/contact-sheet-16x10.webp with 6 tiles.
+ - public/images/games/thumbnails/countingPicnic/thumb-16x10.webp
+ - public/images/games/thumbnails/colorGarden/thumb-16x10.webp
+ - public/images/games/thumbnails/letterSoundMatch/thumb-16x10.webp
+ - public/images/games/thumbnails/letterTracingTrail/thumb-16x10.webp
+ - public/images/games/thumbnails/pictureToWordBuilder/thumb-16x10.webp
+ - public/images/games/thumbnails/interactiveHandbook/thumb-16x10.webp
+[images:budgets] evaluated 77 assets from public/images-manifest.json
+[images:budgets] background/webp: 1 files, total 85.8 KiB, max 85.8 KiB
+[images:budgets] general/avif: 1 files, total 40.5 KiB, max 40.5 KiB
+[images:budgets] general/png: 1 files, total 101.0 KiB, max 101.0 KiB
+[images:budgets] general/webp: 1 files, total 38.4 KiB, max 38.4 KiB
+[images:budgets] handbookCover/avif: 1 files, total 9.0 KiB, max 9.0 KiB
+[images:budgets] handbookCover/png: 1 files, total 31.7 KiB, max 31.7 KiB
+[images:budgets] handbookCover/webp: 1 files, total 17.7 KiB, max 17.7 KiB
+[images:budgets] handbookPage/avif: 10 files, total 86.1 KiB, max 9.5 KiB
+[images:budgets] handbookPage/png: 10 files, total 367.4 KiB, max 39.0 KiB
+[images:budgets] handbookPage/webp: 10 files, total 172.5 KiB, max 18.7 KiB
+[images:budgets] handbookPageCompact/avif: 10 files, total 70.8 KiB, max 7.9 KiB
+[images:budgets] handbookPageCompact/webp: 10 files, total 89.2 KiB, max 10.0 KiB
+[images:budgets] mascot/svg: 4 files, total 10.8 KiB, max 3.2 KiB
+[images:budgets] thumbnail/webp: 13 files, total 679.2 KiB, max 68.7 KiB
+[images:budgets] topic/svg: 3 files, total 4.7 KiB, max 1.7 KiB
+[images:budgets] handbook preload magic-letter-map: 32.5 KiB / 60.0 KiB
+[images:budgets] PASS — all image budgets within thresholds
+src/games/reading/DecodableStoryMissionsGame.tsx(1247,31): error TS2322: Type '"hint" | "success" | "celebrate"' is not assignable to type 'MascotVariant | undefined'.
+  Type '"celebrate"' is not assignable to type 'MascotVariant | undefined'.

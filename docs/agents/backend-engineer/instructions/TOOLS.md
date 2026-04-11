@@ -164,6 +164,27 @@ yarn perf:check-auth-env
 
 Expected: JSON with `"ok": true` and all three presence flags true. Do not paste passwords into issue comments.
 
+## Handbook QA auth (DUB-578 / DUB-749)
+
+Authenticated handbook persistence reruns ([DUB-578](/DUB/issues/DUB-578)) use a **dedicated** non-production parent account (not the perf Lighthouse user), so QA logins do not contend with automated perf runs:
+
+- `DUBILAND_HANDBOOK_QA_EMAIL` / `DUBILAND_HANDBOOK_QA_PASSWORD`
+- `SUPABASE_PROJECT_REF` — same rule as perf: must match the Supabase project behind `VITE_SUPABASE_URL`.
+
+**Provision / rotate (GoTrue admin API):**
+
+```bash
+yarn handbook:qa:provision-auth-user
+```
+
+Copy the printed `DUBILAND_HANDBOOK_QA_*` lines into the gitignored `.env` consumed by **QA2 / Paperclip** runs that exercise `/games/reading/interactive-handbook` with a real session, then verify:
+
+```bash
+yarn handbook:qa:check-auth-env
+```
+
+Expected: JSON with `"ok": true` and all three presence flags true. Never post passwords or child PII in issue threads.
+
 ## Browser Access (Fallback Only)
 
 Use browser access only when the CLI/API cannot accomplish a task (e.g., enabling specific auth providers via UI toggles). Prefer CLI for everything else.

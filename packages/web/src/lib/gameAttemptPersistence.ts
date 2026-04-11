@@ -35,6 +35,33 @@ export type PersistGameAttemptOutcome =
       errorMessage: string;
     };
 
+/** Use after `persistGameAttempt`: skips that mean nothing reached Supabase should show the error/retry UI. */
+export function persistOutcomeRequiresErrorUi(outcome: PersistGameAttemptOutcome): boolean {
+  if (outcome.status === 'failed') {
+    return true;
+  }
+  return outcome.status === 'skipped' && outcome.reason === 'child_not_persistable';
+}
+
+function devWarnPersistSkipped(reason: PersistSkipReason, context: { childId: string; gameSlug: string }) {
+  if (!import.meta.env.DEV) {
+    return;
+  }
+
+  if (reason === 'supabase_not_configured') {
+    console.warn(
+      '[Dubiland] persistGameAttempt skipped (no HTTP): Supabase env missing for this dev server. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY (repo root .env).',
+      context,
+    );
+    return;
+  }
+
+  console.warn(
+    '[Dubiland] persistGameAttempt skipped (no submit-game-attempt): active child id must be a UUID from the children table. Open /profiles and pick your child, or clear stale dubiland:active-child in localStorage.',
+    context,
+  );
+}
+
 interface SubmitGameAttemptResponse {
   sessionId?: string;
   attemptId?: string;
@@ -162,17 +189,22 @@ function normalizeAttemptIndex(value: number): number {
 }
 
 export async function persistGameAttempt(params: PersistGameAttemptParams): Promise<PersistGameAttemptOutcome> {
+  const devContext = { childId: params.childId, gameSlug: params.game.slug };
+
   if (!isSupabaseConfigured) {
+    devWarnPersistSkipped('supabase_not_configured', devContext);
     return { status: 'skipped', reason: 'supabase_not_configured' };
   }
 
   if (!isUuid(params.childId)) {
+    devWarnPersistSkipped('child_not_persistable', devContext);
     return { status: 'skipped', reason: 'child_not_persistable' };
   }
 
   try {
     const supabase = await loadSupabaseRuntime();
     if (!supabase) {
+      devWarnPersistSkipped('supabase_not_configured', devContext);
       return { status: 'skipped', reason: 'supabase_not_configured' };
     }
 

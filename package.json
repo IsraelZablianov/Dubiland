@@ -23,7 +23,9 @@
     "test:automation-recovery-gateway": "npx --yes deno test supabase/functions/automation-recovery-gateway/handler_test.ts --allow-env",
     "test:guardrail-v2": "node --test scripts/manager-assignee-guardrail-v2.test.mjs",
     "perf:provision-auth-user": "node scripts/provision-dubiland-perf-auth-user.mjs",
-    "perf:check-auth-env": "node scripts/check-dubiland-perf-auth-env.mjs --load-dotenv"
+    "perf:check-auth-env": "node scripts/check-dubiland-perf-auth-env.mjs --load-dotenv",
+    "handbook:qa:provision-auth-user": "node scripts/provision-dubiland-handbook-qa-auth-user.mjs",
+    "handbook:qa:check-auth-env": "node scripts/check-dubiland-handbook-qa-auth-env.mjs --load-dotenv"
   },
   "devDependencies": {
     "@google/genai": "^1.49.0",

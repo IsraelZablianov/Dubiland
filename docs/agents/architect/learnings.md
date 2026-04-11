@@ -341,3 +341,6 @@ When performance reruns are blocked by missing runtime secrets (`DUBILAND_PERF_E
 
 ## 2026-04-11 — Tooling-complete is not runtime-complete for perf credential gates
 When a backend provisioning lane closes with scripts/docs (like [DUB-726](/DUB/issues/DUB-726)) but perf rerun still reports missing runtime env, the Architect should execute the operator step immediately: inject `DUBILAND_PERF_EMAIL`/`DUBILAND_PERF_PASSWORD` into the active workspace env path, run `yarn perf:check-auth-env` until `ok: true`, then move the blocked perf lane back to executable state and post mirrored disposition on parent trackers.
+
+## 2026-04-11 — For multi-owner feature lanes, dispatch executable scaffolds as `todo` and artifact-dependent integrations as `blocked`
+When upstream spec/content/media lanes are in progress without artifact comments, split child execution immediately: keep backend + scaffold + discovery work in `todo`, but mark integration/QA lanes `blocked` with explicit dependency links and a dated coordinator checkpoint. This preserves momentum without creating ambiguous premature QA churn.

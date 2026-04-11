@@ -127,3 +127,6 @@ For Hebrew syllable blending games (CV/CVC progression), implementation quality 
 
 ## 2026-04-11 — Decodable Mission Specs Should Use Independent-Pass vs Supported-Pass Instead of Hard Freeze
 For decodable connected-text games, decode-first quality is easier to implement and fairer for children when specs explicitly split mission outcomes into `independent-pass` (numeric decode-first + hint caps met) and `supported-pass` (mission completes, then one recovery mission). Pair this with Level 3 sequencing that introduces partial-pointing fade before new comprehension formats, so only one new variable changes per cluster.
+
+## 2026-04-11 — Continuous Narrative Stories Need Tight Scene Cadence + Supported Progression
+For continuous letter-story routes, engagement stays stable when every scene keeps a predictable `story -> action -> feedback -> resume` loop with one interaction every `20-35s`, and progression advances on supported success (tracked separately from independent mastery). This keeps ages `3-4` from stalling while preserving measurable literacy signal for `5-7`.

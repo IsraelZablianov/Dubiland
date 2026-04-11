@@ -1,0 +1,70 @@
+{
+  "issue": "DUB-746",
+  "generatedAt": "2026-04-11T14:58:27.000Z",
+  "sourceEvidence": {
+    "lighthouseSummary": "docs/agents/performance-expert/evidence/dub-686/20260411-145950-node-env-production-check/lighthouse-summary.json",
+    "bundleComparison": "docs/agents/performance-expert/evidence/dub-686/20260411-145950-node-env-production-check/bundle-env-compare.json"
+  },
+  "bundle": {
+    "index": {
+      "baselineGzipBytes": 124891,
+      "budgetGzipBytesMax": 130000,
+      "toleranceBytes": 5109,
+      "tolerancePct": 4.09
+    },
+    "react": {
+      "baselineGzipBytes": 17106,
+      "budgetGzipBytesMax": 18000,
+      "toleranceBytes": 894,
+      "tolerancePct": 5.23
+    },
+    "i18n": {
+      "baselineGzipBytes": 15382,
+      "budgetGzipBytesMax": 16000,
+      "toleranceBytes": 618,
+      "tolerancePct": 4.02
+    },
+    "totalJs": {
+      "baselineBytes": 1581928,
+      "budgetBytesMax": 1650000,
+      "toleranceBytes": 68072,
+      "tolerancePct": 4.3
+    }
+  },
+  "lighthouse": {
+    "/": {
+      "baselinePerformance": 82,
+      "budgetPerformanceMin": 80,
+      "baselineLcpMs": 3934,
+      "budgetLcpMsMax": 4100,
+      "lcpToleranceMs": 166,
+      "lcpTolerancePct": 4.22,
+      "baselineCls": 0.033,
+      "budgetClsMax": 0.05
+    },
+    "/letters": {
+      "baselinePerformance": 87,
+      "budgetPerformanceMin": 85,
+      "baselineLcpMs": 3201,
+      "budgetLcpMsMax": 3350,
+      "lcpToleranceMs": 149,
+      "lcpTolerancePct": 4.65,
+      "baselineCls": 0.002,
+      "budgetClsMax": 0.05
+    },
+    "/parents": {
+      "baselinePerformance": 88,
+      "budgetPerformanceMin": 86,
+      "baselineLcpMs": 3135,
+      "budgetLcpMsMax": 3300,
+      "lcpToleranceMs": 165,
+      "lcpTolerancePct": 5.26,
+      "baselineCls": 0.004,
+      "budgetClsMax": 0.05
+    }
+  },
+  "rationale": {
+    "policy": "Set tolerance around ~4-5% above baseline for byte and LCP ceilings, and a 2-point score floor slack for Lighthouse performance.",
+    "stabilityRule": "Budgets should fail on clear regressions while staying green for typical CI variance on equivalent production builds."
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "issue": "DUB-749",
+  "captured_at_utc": "2026-04-11T14:45:00Z",
+  "environment_target": "non_production_supabase_project_aligned_with_VITE_SUPABASE_URL",
+  "yarn_handbook_qa_check_auth_env": {
+    "dubiland_handbook_qa_email_present": false,
+    "dubiland_handbook_qa_password_present": false,
+    "supabase_project_ref_present": true,
+    "ok": false
+  },
+  "operator_notes": [
+    "Repo tooling: `yarn handbook:qa:provision-auth-user` (requires repo-root .env with VITE_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY).",
+    "After provision prints `DUBILAND_HANDBOOK_QA_EMAIL` / `DUBILAND_HANDBOOK_QA_PASSWORD`, copy those lines into the gitignored Paperclip/QA2 workspace `.env` (never commit; never paste secret values into issue threads).",
+    "Verify with `yarn handbook:qa:check-auth-env` until `ok` is true (includes SUPABASE_PROJECT_REF presence).",
+    "This heartbeat workspace lacked SUPABASE_SERVICE_ROLE_KEY, so GoTrue admin provisioning was not executed here; evidence reflects env-check only."
+  ]
+}

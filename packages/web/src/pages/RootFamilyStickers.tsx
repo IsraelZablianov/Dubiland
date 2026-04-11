@@ -1,15 +1,13 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import type { Child, Game, GameLevel } from '@dubiland/shared';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button, Card } from '@/components/design-system';
 import { ChildRouteHeader, ChildRouteScaffold } from '@/components/layout';
-import type { GameCompletionResult } from '@/games/engine';
 import { RootFamilyStickersGame } from '@/games/reading/RootFamilyStickersGame';
 import { useAudioManager } from '@/hooks/useAudioManager';
 import { getActiveChildProfile } from '@/lib/session';
-
-type SyncState = 'idle' | 'syncing' | 'synced';
+import { useGameAttemptSync } from './useGameAttemptSync';
 
 const ROOT_FAMILY_STICKERS_GAME: Game = {
   id: 'local-root-family-stickers',
@@ -70,17 +68,12 @@ export default function RootFamilyStickersPage() {
     [activeProfile?.ageBand],
   );
 
-  const [completionResult, setCompletionResult] = useState<GameCompletionResult | null>(null);
-  const [syncState, setSyncState] = useState<SyncState>('idle');
-
-  const handleComplete = useCallback((result: GameCompletionResult) => {
-    setCompletionResult(result);
-    setSyncState('syncing');
-
-    window.setTimeout(() => {
-      setSyncState('synced');
-    }, 450);
-  }, []);
+  const { completionResult, syncState, handleComplete, retryLastSync } = useGameAttemptSync({
+    childId: child.id,
+    childAgeBand: activeProfile?.ageBand,
+    game: ROOT_FAMILY_STICKERS_GAME,
+    level: runtimeLevel,
+  });
 
   const hintTrendLabel = useMemo(() => {
     if (!completionResult?.summaryMetrics) {
@@ -139,8 +132,19 @@ export default function RootFamilyStickersPage() {
               })}
             </p>
             <p style={{ margin: 0, color: 'var(--color-text-secondary)' }}>
-              {syncState === 'syncing' ? t('feedback.keepGoing') : t('parentDashboard.games.rootFamilyStickers.nextStep')}
+              {syncState === 'error'
+                ? t('errors.generic')
+                : syncState === 'syncing'
+                  ? t('feedback.keepGoing')
+                  : t('parentDashboard.games.rootFamilyStickers.nextStep')}
             </p>
+            {syncState === 'error' && (
+              <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                <Button variant="secondary" size="md" onClick={retryLastSync} aria-label={t('profile.retry')}>
+                  {t('profile.retry')}
+                </Button>
+              </div>
+            )}
           </Card>
         )}
     </ChildRouteScaffold>

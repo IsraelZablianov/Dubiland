@@ -6,6 +6,7 @@ import { Button, Card } from '@/components/design-system';
 import { MascotIllustration } from '@/components/illustrations';
 import { FloatingElement } from '@/components/motion';
 import { useAuth } from '@/hooks/useAuth';
+import { isParentFunnelConversionTuneupEnabled } from '@/lib/featureFlags';
 import { trackParentFunnelEvent, type ParentFunnelAuthMode } from '@/lib/parentFunnelInstrumentation';
 import { isSupabaseConfigured } from '@/lib/supabaseConfig';
 import { enableGuestMode, getActiveChildProfile, isGuestModeEnabled, setActiveChildProfile } from '@/lib/session';
@@ -115,6 +116,60 @@ export default function Login() {
     transition: 'var(--transition-fast)',
   };
 
+  const secondaryAuthControls = (
+    <>
+      <Button variant="secondary" size="lg" type="button" onClick={handleGoogleSignIn} style={{ width: '100%' }}>
+        {t('onboarding:loginWithGoogle')}
+      </Button>
+
+      {!showEmailForm ? (
+        <Button
+          variant="ghost"
+          size="md"
+          type="button"
+          onClick={() => setShowEmailForm(true)}
+          style={{ width: '100%' }}
+        >
+          {t('onboarding:loginWithEmail')}
+        </Button>
+      ) : (
+        <form onSubmit={handleEmailSubmit} style={{ display: 'grid', gap: 'var(--space-sm)' }}>
+          <input
+            type="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            placeholder={t('onboarding:emailPlaceholder')}
+            aria-label={t('onboarding:emailLabel')}
+            autoComplete="email"
+            style={inputStyle}
+          />
+          <input
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder={t('onboarding:passwordPlaceholder')}
+            aria-label={t('onboarding:passwordLabel')}
+            autoComplete={isSignUp ? 'new-password' : 'current-password'}
+            style={inputStyle}
+          />
+
+          <Button variant="secondary" size="lg" type="submit" disabled={!email || !password} style={{ width: '100%' }}>
+            {isSignUp ? t('onboarding:createAccount') : t('onboarding:loginWithEmail')}
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            type="button"
+            onClick={() => setIsSignUp((current) => !current)}
+          >
+            {isSignUp ? t('onboarding:switchToSignIn') : t('onboarding:switchToSignUp')}
+          </Button>
+        </form>
+      )}
+    </>
+  );
+
   return (
     <div className="login-page">
       <div className="login-page__content">
@@ -152,7 +207,11 @@ export default function Login() {
               variant="primary"
               size="lg"
               onClick={handleGuestContinue}
-              style={{ width: '100%', color: 'var(--color-text-primary)' }}
+              style={{
+                width: '100%',
+                minHeight: 'var(--touch-primary-action-prominent)',
+                color: 'var(--color-text-primary)',
+              }}
             >
               {t('onboarding:continueAsGuest')}
             </Button>
@@ -161,61 +220,32 @@ export default function Login() {
             </FloatingElement>
           </div>
 
-          {/* Divider */}
-          <div className="login-page__divider">
-            <span>{t('onboarding:orSignIn')}</span>
-          </div>
+          {isParentFunnelConversionTuneupEnabled ? (
+            <>
+              <p className="login-page__auth-flow-label">{t('onboarding:primaryPathLabel')}</p>
 
-          {/* Google sign in */}
-          <Button variant="secondary" size="lg" type="button" onClick={handleGoogleSignIn} style={{ width: '100%' }}>
-            {t('onboarding:loginWithGoogle')}
-          </Button>
+              <ul className="login-page__reassurance-list">
+                <li className="login-page__reassurance-chip">{t('onboarding:reassuranceNoAds')}</li>
+                <li className="login-page__reassurance-chip">{t('onboarding:reassuranceNoCard')}</li>
+                <li className="login-page__reassurance-chip">{t('onboarding:reassuranceAgeRange')}</li>
+              </ul>
 
-          {/* Email toggle */}
-          {!showEmailForm ? (
-            <Button
-              variant="ghost"
-              size="md"
-              type="button"
-              onClick={() => setShowEmailForm(true)}
-              style={{ width: '100%' }}
-            >
-              {t('onboarding:loginWithEmail')}
-            </Button>
+              <section className="login-page__secondary-auth" aria-labelledby="login-secondary-path-title">
+                <h2 id="login-secondary-path-title" className="login-page__secondary-auth-title">
+                  {t('onboarding:secondaryPathTitle')}
+                </h2>
+                <p className="login-page__secondary-auth-subtitle">{t('onboarding:secondaryPathSubtitle')}</p>
+                {secondaryAuthControls}
+              </section>
+            </>
           ) : (
-            <form onSubmit={handleEmailSubmit} style={{ display: 'grid', gap: 'var(--space-sm)' }}>
-              <input
-                type="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                placeholder={t('onboarding:emailPlaceholder')}
-                aria-label={t('onboarding:emailLabel')}
-                autoComplete="email"
-                style={inputStyle}
-              />
-              <input
-                type="password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                placeholder={t('onboarding:passwordPlaceholder')}
-                aria-label={t('onboarding:passwordLabel')}
-                autoComplete={isSignUp ? 'new-password' : 'current-password'}
-                style={inputStyle}
-              />
-
-              <Button variant="secondary" size="lg" type="submit" disabled={!email || !password} style={{ width: '100%' }}>
-                {isSignUp ? t('onboarding:createAccount') : t('onboarding:loginWithEmail')}
-              </Button>
-
-              <Button
-                variant="ghost"
-                size="sm"
-                type="button"
-                onClick={() => setIsSignUp((current) => !current)}
-              >
-                {isSignUp ? t('onboarding:switchToSignIn') : t('onboarding:switchToSignUp')}
-              </Button>
-            </form>
+            <>
+              {/* Divider */}
+              <div className="login-page__divider">
+                <span>{t('onboarding:orSignIn')}</span>
+              </div>
+              {secondaryAuthControls}
+            </>
           )}
 
           {/* Hint for parents */}
@@ -277,6 +307,61 @@ export default function Login() {
           white-space: nowrap;
         }
 
+        .login-page__auth-flow-label {
+          color: var(--color-text-secondary);
+          font-size: var(--font-size-xs);
+          font-weight: var(--font-weight-semibold);
+          text-align: center;
+        }
+
+        .login-page__reassurance-list {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          flex-wrap: wrap;
+          gap: var(--space-xs);
+          justify-content: center;
+        }
+
+        .login-page__reassurance-chip {
+          min-height: 44px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: var(--radius-pill);
+          padding-inline: var(--space-sm);
+          border: 1px solid color-mix(in srgb, var(--color-accent-primary) 24%, transparent);
+          background: color-mix(in srgb, var(--color-bg-card) 84%, var(--color-theme-secondary) 16%);
+          color: var(--color-text-primary);
+          font-size: var(--font-size-xs);
+          font-weight: var(--font-weight-semibold);
+          text-align: center;
+        }
+
+        .login-page__secondary-auth {
+          display: grid;
+          gap: var(--space-sm);
+          padding: var(--space-md);
+          border-radius: var(--radius-md);
+          border: 1px solid color-mix(in srgb, var(--color-accent-secondary) 35%, transparent);
+          background: color-mix(in srgb, var(--color-bg-secondary) 84%, var(--color-bg-card) 16%);
+        }
+
+        .login-page__secondary-auth-title {
+          font-size: var(--font-size-md);
+          font-weight: var(--font-weight-bold);
+          color: var(--color-text-primary);
+          text-align: start;
+        }
+
+        .login-page__secondary-auth-subtitle {
+          font-size: var(--font-size-xs);
+          color: var(--color-text-secondary);
+          line-height: var(--line-height-relaxed);
+          text-align: start;
+        }
+
         @media (max-width: 560px) {
           .login-page__guest-cta {
             grid-template-columns: minmax(0, 1fr);
@@ -284,6 +369,14 @@ export default function Login() {
 
           .login-page__guest-hint {
             justify-self: end;
+          }
+
+          .login-page__reassurance-list {
+            flex-direction: column;
+          }
+
+          .login-page__reassurance-chip {
+            inline-size: 100%;
           }
         }
       `}</style>

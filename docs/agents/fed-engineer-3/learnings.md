@@ -208,3 +208,9 @@ Sample profile IDs (`maya/noam/liel`) are valid UI/session IDs but not DB UUIDs;
 
 ## 2026-04-11 — HUD wrapper labels should use hidden text, not `aria-label` on generic containers
 For game HUD `div`/`span` wrappers (progress dots, stars/stamps, score/metric pills), `aria-label` can trigger `aria-prohibited-attr`. Keep wrappers non-labeled and inject equivalent `.sr-only` text content while leaving decorative glyphs/dots `aria-hidden`; lock this with a focused regression script (`packages/web/scripts/aria-prohibited-hud-regression.test.mjs`).
+
+## 2026-04-11 — Falling-object games perform better when simulation runs on RAF and paint commits are throttled
+For DOM-based motion games like `LetterSkyCatcherGame`, keeping gameplay simulation in refs on `requestAnimationFrame` while throttling `setObjects` paint commits (about 24fps) reduces React churn versus per-tick interval state updates. Pair this with transform-based absolute positioning (`translate3d` from measured playfield metrics) so falling objects and player movement stay compositor-friendly on low-end tablets.
+
+## 2026-04-11 — Public-shell auth and SEO namespaces should hydrate as sidecars, but route-content LCP can still dominate
+For public bootstrap lanes, splitting `PublicHeader` into a static core plus idle/intent-loaded auth sidecar and deferring `seo` i18n namespace until `RouteMetadataManager` mounts materially reduces entry chunk pressure (`index 239726 raw / 74294 gzip` vs DUB-686 baseline). However, this alone may not close strict route LCP gates when page content regresses; treat shell-side splits as necessary but not sufficient and plan route-specific LCP follow-ups (`/parents` in DUB-744).

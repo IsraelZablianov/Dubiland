@@ -49,6 +49,14 @@ const ROUTE_BUDGETS = {
 const DEFAULT_BASELINE = path.resolve(
   'docs/agents/performance-expert/evidence/dub-506/20260411-012316-final-matrix-post-dub-610/lighthouse-summary.json',
 );
+const ENFORCED_NODE_ENV = 'production';
+
+function withProductionNodeEnv(env = process.env) {
+  return {
+    ...env,
+    NODE_ENV: ENFORCED_NODE_ENV,
+  };
+}
 
 function parseArgs(argv) {
   const args = {
@@ -130,7 +138,7 @@ function sleep(ms) {
 }
 
 async function runLoggedCommand(program, cmdArgs, options) {
-  const { cwd, env = process.env, logPath } = options;
+  const { cwd, env = withProductionNodeEnv(process.env), logPath } = options;
   await fsp.mkdir(path.dirname(logPath), { recursive: true });
   const logStream = fs.createWriteStream(logPath, { flags: 'a' });
 
@@ -176,7 +184,7 @@ async function startPreviewServer({ port, cwd, logPath }) {
 
   const child = spawn('yarn', args, {
     cwd,
-    env: process.env,
+    env: withProductionNodeEnv(process.env),
     stdio: ['ignore', 'pipe', 'pipe'],
   });
 
@@ -311,13 +319,38 @@ async function prepareAuthenticatedSession(page, baseUrl, profileLogs) {
   }
 
   await page.goto(`${baseUrl}/login`, { waitUntil: 'domcontentloaded' });
+  await page.waitForSelector('.login-page__content', { timeout: 8000 }).catch(() => null);
 
   let emailInput = await page.$('form input[type="email"]');
   if (!emailInput) {
-    const candidateButtons = await page.$$('button[type="button"]');
-    if (candidateButtons.length >= 3) {
-      await candidateButtons[2].click();
-      await sleep(200);
+    const toggleIndex = await page.$$eval('.login-page__content button[type="button"]', (buttons) => {
+      const labeledIndex = buttons.findIndex((button) => /email|e-mail|אימייל/i.test(button.textContent ?? ''));
+      if (labeledIndex >= 0) {
+        return labeledIndex;
+      }
+      return buttons.length > 0 ? buttons.length - 1 : -1;
+    }).catch(() => -1);
+
+    if (toggleIndex >= 0) {
+      const candidateButtons = await page.$$('.login-page__content button[type="button"]');
+      const toggleButton = candidateButtons[toggleIndex];
+      if (toggleButton) {
+        await toggleButton.click();
+        await page.waitForSelector('form input[type="email"]', { timeout: 3000 }).catch(() => null);
+      }
+    } else {
+      await sleep(250);
+    }
+
+    emailInput = await page.$('form input[type="email"]');
+    if (emailInput) {
+      profileLogs.push('authenticated profile: email form opened for credential entry');
+    } else {
+      const currentPath = await page.evaluate(() => window.location.pathname).catch(() => 'unknown');
+      profileLogs.push(`authenticated profile: email form still missing on path "${currentPath}"`);
+    }
+
+    if (!emailInput) {
       emailInput = await page.$('form input[type="email"]');
     }
   }
@@ -771,6 +804,11 @@ async function main() {
       logPath: path.join(args.outDir, 'build.log'),
     });
   }
+
+  await runLoggedCommand('node', ['packages/web/scripts/assert-production-react-runtime.mjs'], {
+    cwd: rootDir,
+    logPath: path.join(args.outDir, 'runtime-guard.log'),
+  });
 
   const preview = await startPreviewServer({
     port: args.previewPort,

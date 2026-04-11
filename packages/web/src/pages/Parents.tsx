@@ -1,12 +1,19 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Card } from '@/components/design-system';
+import { Link } from 'react-router-dom';
+import { Button, Card } from '@/components/design-system';
 import { FeatureIllustration } from '@/components/illustrations';
+import { isParentFunnelConversionTuneupEnabled } from '@/lib/featureFlags';
 import { trackParentFunnelEvent } from '@/lib/parentFunnelInstrumentation';
 
 const HOW_IT_WORKS_STEPS = ['1', '2', '3', '4'] as const;
 
 const FAQ_ITEMS = ['1', '2', '3', '4', '5'] as const;
+
+const PROMINENT_MARKETING_CTA_STYLE = {
+  minHeight: 'var(--touch-primary-action-prominent)',
+  padding: 'var(--space-md) var(--space-xl)',
+};
 
 export default function Parents() {
   const { t } = useTranslation('public');
@@ -18,6 +25,14 @@ export default function Parents() {
     });
   }, []);
 
+  const handleParentsLoginClick = () => {
+    trackParentFunnelEvent('parents_to_login_cta_click', {
+      sourcePath: '/parents',
+      targetPath: '/login',
+      ctaId: 'parents_conversion_primary',
+    });
+  };
+
   return (
     <div className="parents">
       {/* Hero */}
@@ -25,6 +40,24 @@ export default function Parents() {
         <h1 className="parents__title">{t('parents.title')}</h1>
         <p className="parents__hero-text">{t('parents.heroText')}</p>
       </section>
+
+      {isParentFunnelConversionTuneupEnabled ? (
+        <section className="parents__conversion-shell" aria-label={t('parents.conversionCtaTitle')}>
+          <div className="parents__conversion-card">
+            <p className="parents__conversion-title">{t('parents.conversionCtaTitle')}</p>
+            <p className="parents__conversion-text">{t('parents.conversionCtaText')}</p>
+            <Link to="/login" onClick={handleParentsLoginClick}>
+              <Button
+                variant="primary"
+                size="lg"
+                style={{ ...PROMINENT_MARKETING_CTA_STYLE, inlineSize: '100%', color: 'var(--color-text-primary)' }}
+              >
+                {t('parents.conversionCtaButton')}
+              </Button>
+            </Link>
+          </div>
+        </section>
+      ) : null}
 
       {/* How It Works */}
       <section className="parents__section">
@@ -106,6 +139,50 @@ export default function Parents() {
           max-width: 800px;
           margin: 0 auto;
           padding: var(--space-2xl) var(--space-xl);
+        }
+
+        .parents__conversion-shell {
+          max-width: 800px;
+          margin: 0 auto;
+          padding-inline: var(--space-xl);
+          padding-block-end: var(--space-lg);
+          position: sticky;
+          inset-block-end: var(--space-sm);
+          z-index: 20;
+        }
+
+        .parents__conversion-card {
+          display: grid;
+          gap: var(--space-xs);
+          padding: var(--space-md);
+          border-radius: var(--radius-lg);
+          border: 1px solid color-mix(in srgb, var(--color-accent-primary) 22%, transparent);
+          background:
+            linear-gradient(
+              145deg,
+              color-mix(in srgb, var(--color-bg-card) 80%, var(--color-theme-secondary) 20%),
+              var(--color-bg-card)
+            );
+          box-shadow: var(--shadow-card);
+        }
+
+        .parents__conversion-title {
+          font-size: var(--font-size-lg);
+          font-weight: var(--font-weight-extrabold);
+          color: var(--color-text-primary);
+          text-align: start;
+        }
+
+        .parents__conversion-text {
+          font-size: var(--font-size-sm);
+          color: var(--color-text-secondary);
+          line-height: var(--line-height-relaxed);
+          margin-bottom: var(--space-xs);
+          text-align: start;
+        }
+
+        .parents__conversion-shell a {
+          text-decoration: none;
         }
 
         .parents__section--alt {
@@ -200,6 +277,10 @@ export default function Parents() {
         }
 
         @media (max-width: 640px) {
+          .parents__conversion-shell {
+            padding-inline: var(--space-md);
+          }
+
           .parents__content-block {
             grid-template-columns: 1fr;
             text-align: center;
@@ -209,6 +290,13 @@ export default function Parents() {
 
           .parents__content-block .parents__section-title {
             text-align: center !important;
+          }
+        }
+
+        @media (min-width: 769px) {
+          .parents__conversion-shell {
+            position: static;
+            padding-block-end: 0;
           }
         }
       `}</style>

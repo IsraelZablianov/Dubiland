@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card } from '@/components/design-system';
 import { MascotIllustration } from '@/components/illustrations';
@@ -143,6 +143,8 @@ const PLAYER_CATCH_END = 0.92;
 const PLAYER_INLINE_SIZE = 88;
 const OBJECT_INLINE_SIZE = 72;
 const DEFAULT_LEVEL_ID: GameLevelId = 2;
+const TARGET_VISUAL_FPS = 24;
+const VISUAL_COMMIT_INTERVAL_MS = 1000 / TARGET_VISUAL_FPS;
 
 const LETTER_POOL_BY_LEVEL: Record<GameLevelId, LetterId[]> = {
   1: ['mem', 'nun', 'lamed', 'shin', 'pe', 'qof'],
@@ -362,6 +364,15 @@ function laneToInlineStartPercent(lane: number): number {
   return (lane / (LANE_COUNT - 1)) * 100;
 }
 
+function laneToInlineOffsetPx(lane: number, fieldInlineSizePx: number, elementInlineSizePx: number): number {
+  if (LANE_COUNT <= 1) {
+    return Math.max(0, fieldInlineSizePx * 0.5 - elementInlineSizePx * 0.5);
+  }
+
+  const laneRatio = lane / (LANE_COUNT - 1);
+  return Math.max(0, fieldInlineSizePx * laneRatio - elementInlineSizePx * 0.5);
+}
+
 function buildSpawnIntervalMs(levelId: GameLevelId, speedScale: number): number {
   if (levelId === 1) {
     return Math.max(520, randomInt(920, 1320) / Math.max(0.8, speedScale));
@@ -480,8 +491,13 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
   const spawnIntervalMsRef = useRef(buildSpawnIntervalMs(levelId, 1));
   const lastSpawnAtRef = useRef(0);
   const lastTickAtRef = useRef(Date.now());
+  const lastVisualCommitAtRef = useRef(Date.now());
+  const animationFrameRef = useRef<number | null>(null);
   const objectSerialRef = useRef(0);
   const pointerStartXRef = useRef<number | null>(null);
+  const playfieldRef = useRef<HTMLDivElement | null>(null);
+  const playfieldMetricsRef = useRef({ inlineSize: 0, blockSize: 360 });
+  const [playfieldLayoutTick, setPlayfieldLayoutTick] = useState(0);
 
   const hintUsageByBlockRef = useRef<number[]>([]);
   const pairMistakesRef = useRef<Record<string, number>>({});
@@ -671,6 +687,8 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
       blockEndsAtRef.current = now + BLOCK_DURATION_MS;
       spawnIntervalMsRef.current = buildSpawnIntervalMs(levelId, 1);
       lastSpawnAtRef.current = 0;
+      lastTickAtRef.current = now;
+      lastVisualCommitAtRef.current = now;
 
       if (announcement === 'retry') {
         setMessageWithAudio('games.letterSkyCatcher.hints.trySameLetter', 'hint', 'interrupt');
@@ -1015,6 +1033,44 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
   }, [movePlayer]);
 
   useEffect(() => {
+    const playfield = playfieldRef.current;
+    if (!playfield) {
+      return;
+    }
+
+    const syncPlayfieldMetrics = () => {
+      const nextInlineSize = Math.max(1, playfield.clientWidth);
+      const nextBlockSize = Math.max(360, playfield.clientHeight);
+      const currentMetrics = playfieldMetricsRef.current;
+
+      if (currentMetrics.inlineSize === nextInlineSize && currentMetrics.blockSize === nextBlockSize) {
+        return;
+      }
+
+      playfieldMetricsRef.current = {
+        inlineSize: nextInlineSize,
+        blockSize: nextBlockSize,
+      };
+      setPlayfieldLayoutTick((current) => current + 1);
+    };
+
+    syncPlayfieldMetrics();
+
+    if (typeof ResizeObserver === 'undefined') {
+      return;
+    }
+
+    const observer = new ResizeObserver(() => {
+      syncPlayfieldMetrics();
+    });
+
+    observer.observe(playfield);
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
     const now = Date.now();
     setBlockStartedAt(now);
     setBlockEndsAt(now + BLOCK_DURATION_MS);
@@ -1036,13 +1092,14 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
       return;
     }
 
-    const interval = window.setInterval(() => {
+    const tick = () => {
       if (sessionCompleteRef.current) {
+        animationFrameRef.current = null;
         return;
       }
 
       const now = Date.now();
-      const elapsedSec = Math.max(0.02, (now - lastTickAtRef.current) / 1000);
+      const elapsedSec = Math.min(0.08, Math.max(0.012, (now - lastTickAtRef.current) / 1000));
       lastTickAtRef.current = now;
 
       if (hintUntilRef.current > 0 && now >= hintUntilRef.current) {
@@ -1058,6 +1115,7 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
 
       if (now >= blockEndsAtRef.current) {
         goToNextBlock('timer');
+        animationFrameRef.current = window.requestAnimationFrame(tick);
         return;
       }
 
@@ -1066,9 +1124,10 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
         (now < slowUntilRef.current ? 0.62 : 1) *
         (now < remediationUntilRef.current ? 0.84 : 1);
 
+      const previousObjects = objectsRef.current;
       const nextObjects: FallingObject[] = [];
 
-      for (const object of objectsRef.current) {
+      for (const object of previousObjects) {
         const nextProgress = object.progress + elapsedSec * object.speed * effectiveSpeedScale;
 
         const collidesWithPlayer =
@@ -1109,11 +1168,29 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
       }
 
       objectsRef.current = nextObjects;
-      setObjects(nextObjects);
-    }, 40);
+      const hasStructuralObjectChange = nextObjects.length !== previousObjects.length;
+      const hasMotionToPaint = nextObjects.length > 0;
+      const shouldCommitVisualFrame =
+        hasStructuralObjectChange ||
+        (hasMotionToPaint && now - lastVisualCommitAtRef.current >= VISUAL_COMMIT_INTERVAL_MS);
+
+      if (shouldCommitVisualFrame) {
+        setObjects(nextObjects);
+        lastVisualCommitAtRef.current = now;
+      }
+
+      animationFrameRef.current = window.requestAnimationFrame(tick);
+    };
+
+    lastTickAtRef.current = Date.now();
+    lastVisualCommitAtRef.current = lastTickAtRef.current;
+    animationFrameRef.current = window.requestAnimationFrame(tick);
 
     return () => {
-      window.clearInterval(interval);
+      if (animationFrameRef.current !== null) {
+        window.cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = null;
+      }
     };
   }, [buildFallingObject, goToNextBlock, handleMissedTarget, handleTargetCatch, handleWrongCatch, levelConfig.targetRatio, levelId, sessionComplete]);
 
@@ -1170,6 +1247,10 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
           : t('games.letterSkyCatcher.rewards.celebration');
 
   const activeLetterSymbol = t(`letters.symbols.${currentLetter}` as const);
+  const playfieldMetrics = useMemo(() => playfieldMetricsRef.current, [playfieldLayoutTick]);
+  const playfieldInlineSize = Math.max(1, playfieldMetrics.inlineSize);
+  const playfieldBlockSize = Math.max(360, playfieldMetrics.blockSize);
+  const playerInlineOffset = laneToInlineOffsetPx(playerLane, playfieldInlineSize, PLAYER_INLINE_SIZE);
 
   return (
     <Card padding="lg" className="letter-sky-catcher">
@@ -1270,6 +1351,7 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
               fieldFeedback === 'success' ? 'letter-sky-catcher__playfield--success' : '',
               fieldFeedback === 'miss' ? 'letter-sky-catcher__playfield--miss' : '',
             ].join(' ')}
+            ref={playfieldRef}
             onPointerDown={(event) => {
               pointerStartXRef.current = event.clientX;
             }}
@@ -1302,6 +1384,12 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
             {objects.map((object) => {
               const meta = OBJECT_META_BY_ID[object.objectId];
               const isHintGlow = hintObjectId === object.id;
+              const objectInlineOffset = laneToInlineOffsetPx(object.lane, playfieldInlineSize, OBJECT_INLINE_SIZE);
+              const objectBlockOffset = Math.max(-OBJECT_INLINE_SIZE, object.progress * playfieldBlockSize - OBJECT_INLINE_SIZE / 2);
+              const objectStyle: CSSProperties = {
+                '--letter-sky-catcher-object-inline-offset': `${objectInlineOffset}px`,
+                '--letter-sky-catcher-object-block-offset': `${objectBlockOffset}px`,
+              } as CSSProperties;
 
               return (
                 <button
@@ -1312,10 +1400,7 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
                     object.isTarget ? 'letter-sky-catcher__falling-object--target' : 'letter-sky-catcher__falling-object--distractor',
                     isHintGlow ? 'letter-sky-catcher__falling-object--hint' : '',
                   ].join(' ')}
-                  style={{
-                    insetInlineStart: `calc(${laneToInlineStartPercent(object.lane)}% - ${OBJECT_INLINE_SIZE / 2}px)`,
-                    insetBlockStart: `calc(${Math.max(-0.18, object.progress) * 100}% - ${OBJECT_INLINE_SIZE / 2}px)`,
-                  }}
+                  style={objectStyle}
                   onClick={() => {
                     if (object.lane === playerLaneRef.current) {
                       return;
@@ -1337,7 +1422,11 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
 
             <div
               className="letter-sky-catcher__player"
-              style={{ insetInlineStart: `calc(${laneToInlineStartPercent(playerLane)}% - ${PLAYER_INLINE_SIZE / 2}px)` }}
+              style={
+                {
+                  '--letter-sky-catcher-player-inline-offset': `${playerInlineOffset}px`,
+                } as CSSProperties
+              }
               aria-live="polite"
             >
               <MascotIllustration variant="hero" size={74} />
@@ -1629,6 +1718,8 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
 
         .letter-sky-catcher__falling-object {
           position: absolute;
+          inset-inline-start: 0;
+          inset-block-start: 0;
           inline-size: ${OBJECT_INLINE_SIZE}px;
           min-block-size: ${OBJECT_INLINE_SIZE}px;
           border-radius: var(--radius-md);
@@ -1640,11 +1731,18 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
           gap: 2px;
           padding: var(--space-2xs);
           cursor: pointer;
-          transition: transform 120ms ease;
+          --letter-sky-catcher-object-hover-y: 0px;
+          transform: translate3d(
+            var(--letter-sky-catcher-object-inline-offset, 0px),
+            calc(var(--letter-sky-catcher-object-block-offset, -120px) + var(--letter-sky-catcher-object-hover-y)),
+            0
+          );
+          transition: box-shadow 120ms ease, border-color 120ms ease;
+          will-change: transform;
         }
 
         .letter-sky-catcher__falling-object:hover {
-          transform: translateY(-2px);
+          --letter-sky-catcher-object-hover-y: -2px;
         }
 
         .letter-sky-catcher__falling-object--target {
@@ -1683,11 +1781,14 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
 
         .letter-sky-catcher__player {
           position: absolute;
+          inset-inline-start: 0;
           inset-block-end: 10px;
           inline-size: ${PLAYER_INLINE_SIZE}px;
           display: grid;
           justify-items: center;
-          transition: inset-inline-start 170ms ease-out;
+          transform: translate3d(var(--letter-sky-catcher-player-inline-offset, 0px), 0, 0);
+          transition: transform 170ms ease-out;
+          will-change: transform;
           pointer-events: none;
         }
 

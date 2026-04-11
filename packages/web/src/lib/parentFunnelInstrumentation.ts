@@ -41,10 +41,57 @@ interface QueuedParentFunnelEvent {
 
 const QUEUE_SESSION_STORAGE_KEY = 'dubiland.parentFunnelEventQueue.v1';
 const SESSION_ID_STORAGE_KEY = 'dubiland.parentFunnelSessionId.v1';
+const SINK_DISABLED_SESSION_STORAGE_KEY = 'dubiland.parentFunnelSinkDisabled.v1';
 const MAX_QUEUE_SIZE = 64;
 const FLUSH_BATCH_SIZE = 25;
 
 let activeFlushPromise: Promise<void> | null = null;
+
+function isParentFunnelRemoteSinkDisabled(): boolean {
+  if (!canUseSessionStorage()) {
+    return false;
+  }
+  try {
+    return window.sessionStorage.getItem(SINK_DISABLED_SESSION_STORAGE_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
+function disableParentFunnelRemoteSinkForSession() {
+  if (!canUseSessionStorage()) {
+    return;
+  }
+  try {
+    window.sessionStorage.setItem(SINK_DISABLED_SESSION_STORAGE_KEY, '1');
+  } catch {
+    // Ignore storage quota / private-mode failures.
+  }
+}
+
+function isMissingParentFunnelEventsSink(
+  error: { code?: string; message?: string } | null,
+  status: number,
+): boolean {
+  if (status === 404) {
+    return true;
+  }
+  if (!error) {
+    return false;
+  }
+  const code = error.code ?? '';
+  if (code === 'PGRST205' || code === '42P01') {
+    return true;
+  }
+  const message = typeof error.message === 'string' ? error.message : '';
+  if (!message) {
+    return false;
+  }
+  if (message.includes('parent_funnel_events')) {
+    return true;
+  }
+  return /could not find the table/i.test(message) && /parent_funnel/i.test(message);
+}
 
 function canUseSessionStorage(): boolean {
   return typeof window !== 'undefined' && typeof window.sessionStorage !== 'undefined';
@@ -163,6 +210,11 @@ async function flushQueueOnce() {
     return;
   }
 
+  if (isParentFunnelRemoteSinkDisabled()) {
+    persistQueue([]);
+    return;
+  }
+
   const queue = resolveQueue();
   if (queue.length === 0) {
     return;
@@ -188,11 +240,15 @@ async function flushQueueOnce() {
   }));
 
   const rawClient = supabase as unknown as SupabaseClient;
-  const { error } = await rawClient
+  const { error, status } = await rawClient
     .from('parent_funnel_events')
     .upsert(rows, { onConflict: 'client_event_id', ignoreDuplicates: true });
 
   if (error) {
+    if (isMissingParentFunnelEventsSink(error, status)) {
+      disableParentFunnelRemoteSinkForSession();
+      persistQueue([]);
+    }
     return;
   }
 
@@ -206,6 +262,10 @@ async function flushQueueOnce() {
 }
 
 export function trackParentFunnelEvent(eventName: ParentFunnelEventName, payload: ParentFunnelEventPayload) {
+  if (isSupabaseConfigured && isParentFunnelRemoteSinkDisabled()) {
+    return;
+  }
+
   const queuedEvent: QueuedParentFunnelEvent = {
     clientEventId: generateUuidV4(),
     sessionId: getOrCreateSessionId(),

@@ -497,6 +497,17 @@ function toSampleWordAudioKey(letter: LetterId): SampleWordAudioKey {
   return `letters.sampleWords.${letter}`;
 }
 
+function createInitialSessionStats(): SessionStats {
+  return {
+    firstAttemptSuccesses: 0,
+    hintUsageByRound: [],
+    highestLevelReached: 1,
+    pairMistakes: {},
+    pairMistakeEvents: [],
+    roundsCompleted: 0,
+  };
+}
+
 export function LetterSoundMatchGame({ level: runtimeLevel, onComplete, audio }: GameProps) {
   const { t, i18n } = useTranslation('common');
   const isRtl = isRtlDirection(i18n.dir(i18n.language));
@@ -544,14 +555,7 @@ export function LetterSoundMatchGame({ level: runtimeLevel, onComplete, audio }:
   const [sessionComplete, setSessionComplete] = useState(false);
   const [pendingRoundState, setPendingRoundState] = useState<RoundState | null>(null);
 
-  const [sessionStats, setSessionStats] = useState<SessionStats>({
-    firstAttemptSuccesses: 0,
-    hintUsageByRound: [],
-    highestLevelReached: 1,
-    pairMistakes: {},
-    pairMistakeEvents: [],
-    roundsCompleted: 0,
-  });
+  const [sessionStats, setSessionStats] = useState<SessionStats>(() => createInitialSessionStats());
 
   const [round, setRound] = useState<RoundState>(() =>
     buildRound({
@@ -1187,6 +1191,59 @@ export function LetterSoundMatchGame({ level: runtimeLevel, onComplete, audio }:
     }, MIDPOINT_CONTINUE_CUE_DELAY_MS);
   }, [pendingRoundState, playAudioKey, resetRoundInteraction]);
 
+  const handlePlayAgain = useCallback(() => {
+    const initialRound = buildRound({
+      roundNumber: 1,
+      level: routingContext.initialLevelId,
+      ageBand: routingContext.ageBand,
+      optionCount: initialOptionCount,
+      repeatTarget: null,
+      previousTarget: null,
+      remediation: null,
+      forceTwoChoice: false,
+      slowedReplay: false,
+      forceReplayBeforeTap: false,
+    });
+
+    completionReportedRef.current = false;
+    if (choiceGridFeedbackTimeoutRef.current) {
+      window.clearTimeout(choiceGridFeedbackTimeoutRef.current);
+      choiceGridFeedbackTimeoutRef.current = null;
+    }
+    if (scorePulseTimeoutRef.current) {
+      window.clearTimeout(scorePulseTimeoutRef.current);
+      scorePulseTimeoutRef.current = null;
+    }
+    if (midpointContinueTimeoutRef.current) {
+      window.clearTimeout(midpointContinueTimeoutRef.current);
+      midpointContinueTimeoutRef.current = null;
+    }
+
+    audio.stop();
+    setRoundNumber(1);
+    setLevel(routingContext.initialLevelId);
+    setOptionCount(initialOptionCount);
+    setPreviousTarget(null);
+    setRepeatTarget(null);
+    setRemediation(null);
+    setSlowReplayRoundsRemaining(0);
+    setForceTwoChoiceRoundsRemaining(0);
+    setForceReplayGateRoundsRemaining(0);
+    setConsecutiveSuccesses(0);
+    setConsecutiveMisses(0);
+    setMidpointPaused(false);
+    setSessionComplete(false);
+    setPendingRoundState(null);
+    setSessionStats(createInitialSessionStats());
+    setRound(initialRound);
+    resetRoundInteraction(initialRound);
+    setRoundMessage({ key: 'games.letterSoundMatch.instructions.intro', tone: 'neutral' });
+    setStampCount(0);
+    setShowStampBurst(false);
+    setScorePulse(false);
+    setChoiceGridFeedback('idle');
+  }, [audio, initialOptionCount, resetRoundInteraction, routingContext.ageBand, routingContext.initialLevelId]);
+
   useEffect(() => {
     if (sessionComplete || midpointPaused) {
       return;
@@ -1352,6 +1409,17 @@ export function LetterSoundMatchGame({ level: runtimeLevel, onComplete, audio }:
             >
               <span aria-hidden="true">{replayIcon}</span>
             </button>
+          </div>
+          <div className="letter-sound-match__completion-actions">
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={handlePlayAgain}
+              aria-label={t('games.letterSoundMatch.hints.gentleRetry')}
+              style={{ minWidth: 'var(--touch-min)', paddingInline: 'var(--space-lg)' }}
+            >
+              ↻ {t('games.letterSoundMatch.hints.gentleRetry')}
+            </Button>
           </div>
         </Card>
 
@@ -2101,6 +2169,11 @@ const letterSoundMatchStyles = `
     margin: 0;
     text-align: center;
     color: var(--color-text-secondary);
+  }
+
+  .letter-sound-match__completion-actions {
+    display: flex;
+    justify-content: center;
   }
 
   .letter-sound-match--complete,

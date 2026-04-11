@@ -1,0 +1,60 @@
+- generic [ref=e147]:
+  - banner [ref=e148]:
+    - generic [ref=e149]:
+      - link "דובילנד — לומדים עברית בכיף" [ref=e150] [cursor=pointer]:
+        - /url: /
+        - img
+        - generic [ref=e151]: דובילנד
+      - button "פתח תפריט" [ref=e152] [cursor=pointer]
+  - main [ref=e154]:
+    - generic [ref=e157]:
+      - generic [ref=e158]:
+        - generic [ref=e159]:
+          - img
+        - heading "ברוכים הבאים לדובילנד!" [level=1] [ref=e160]
+        - paragraph [ref=e161]: לומדים עברית דרך משחק, שיר וסיפור
+      - generic [ref=e162]:
+        - button "התחילו לשחק בחינם" [ref=e163] [cursor=pointer]
+        - generic [ref=e164]:
+          - img
+      - generic [ref=e166]: או התחברו עם חשבון
+      - button "התחברות עם גוגל" [ref=e167] [cursor=pointer]
+      - button "התחברות עם אימייל" [ref=e168] [cursor=pointer]
+      - paragraph [ref=e169]: ההרשמה מיועדת להורים — הילד משחק דרך פרופיל הילדים
+  - contentinfo [ref=e170]:
+    - generic [ref=e171]:
+      - generic [ref=e172]:
+        - link "דובילנד" [ref=e173] [cursor=pointer]:
+          - /url: /
+          - img
+          - generic [ref=e174]: דובילנד
+        - paragraph [ref=e175]: לומדים עברית בכיף עם דובי 🧸
+      - generic [ref=e176]:
+        - generic [ref=e177]:
+          - heading "נושאי לימוד" [level=3] [ref=e178]
+          - navigation [ref=e179]:
+            - link "מספרים וחשבון" [ref=e180] [cursor=pointer]:
+              - /url: /#topics
+            - link "אותיות וצלילים" [ref=e181] [cursor=pointer]:
+              - /url: /#topics
+            - link "קריאה ראשונה" [ref=e182] [cursor=pointer]:
+              - /url: /#topics
+        - generic [ref=e183]:
+          - heading "דובילנד" [level=3] [ref=e184]
+          - navigation [ref=e185]:
+            - link "אודות" [ref=e186] [cursor=pointer]:
+              - /url: /about
+            - link "להורים" [ref=e187] [cursor=pointer]:
+              - /url: /parents
+            - link "שאלות נפוצות" [ref=e188] [cursor=pointer]:
+              - /url: /parents#faq
+        - generic [ref=e189]:
+          - heading "משפטי" [level=3] [ref=e190]
+          - navigation [ref=e191]:
+            - link "תנאי שימוש" [ref=e192] [cursor=pointer]:
+              - /url: /terms
+            - link "מדיניות פרטיות" [ref=e193] [cursor=pointer]:
+              - /url: /privacy
+    - generic [ref=e194]:
+      - paragraph [ref=e195]: © 2026 דובילנד. כל הזכויות שמורות.
+      - paragraph [ref=e196]: נבנה באהבה לילדים ישראלים

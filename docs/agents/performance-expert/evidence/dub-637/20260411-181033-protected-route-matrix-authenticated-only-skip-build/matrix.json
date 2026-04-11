@@ -1,0 +1,123 @@
+{
+  "generated_at": "2026-04-11T15:12:30.165Z",
+  "tool": "scripts/dub-637-protected-route-matrix.mjs",
+  "base_url": "http://127.0.0.1:4196",
+  "cache_mode": "cold",
+  "route_entry_mode": "direct_document_navigation",
+  "profiles": [
+    "authenticated"
+  ],
+  "routes": [
+    "/games",
+    "/profiles",
+    "/parent",
+    "/games/reading/interactive-handbook"
+  ],
+  "baseline_source": "/Users/israelz/Documents/dev/AI/Learning/docs/agents/performance-expert/evidence/dub-506/20260411-012316-final-matrix-post-dub-610/lighthouse-summary.json",
+  "results": [
+    {
+      "profile": "authenticated",
+      "path": "/games",
+      "status": "ok",
+      "performance": 100,
+      "fcp_ms": 1298.842,
+      "lcp_ms": 1298.842,
+      "tbt_ms": 0,
+      "cls": 0,
+      "speed_index_ms": 991,
+      "max_potential_fid_ms": 23.862,
+      "max_long_task_ms": 590.898,
+      "total_transfer_bytes": 0,
+      "login_chunk_requested": false,
+      "supabase_chunk_requested": true,
+      "final_url": "http://127.0.0.1:4196/games",
+      "metadata": {
+        "auth_profile": "authenticated",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "authenticated profile: email form opened for credential entry",
+        "authenticated profile prepared: persisted Supabase session detected"
+      ]
+    },
+    {
+      "profile": "authenticated",
+      "path": "/profiles",
+      "status": "ok",
+      "performance": 99,
+      "fcp_ms": 913.548,
+      "lcp_ms": 1971.885,
+      "tbt_ms": 23.985000000000127,
+      "cls": 0.01353,
+      "speed_index_ms": 756,
+      "max_potential_fid_ms": 73.985,
+      "max_long_task_ms": 278.622,
+      "total_transfer_bytes": 764,
+      "login_chunk_requested": false,
+      "supabase_chunk_requested": true,
+      "final_url": "http://127.0.0.1:4196/profiles",
+      "metadata": {
+        "auth_profile": "authenticated",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "authenticated profile: email form opened for credential entry",
+        "authenticated profile prepared: persisted Supabase session detected"
+      ]
+    },
+    {
+      "profile": "authenticated",
+      "path": "/parent",
+      "status": "ok",
+      "performance": 77,
+      "fcp_ms": 956.474,
+      "lcp_ms": 2048.145,
+      "tbt_ms": 25.25299999999993,
+      "cls": 0.596023,
+      "speed_index_ms": 1270,
+      "max_potential_fid_ms": 75.253,
+      "max_long_task_ms": 310.438,
+      "total_transfer_bytes": 2168,
+      "login_chunk_requested": false,
+      "supabase_chunk_requested": true,
+      "final_url": "http://127.0.0.1:4196/parent",
+      "metadata": {
+        "auth_profile": "authenticated",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "authenticated profile: email form opened for credential entry",
+        "authenticated profile prepared: persisted Supabase session detected"
+      ]
+    },
+    {
+      "profile": "authenticated",
+      "path": "/games/reading/interactive-handbook",
+      "status": "ok",
+      "performance": 100,
+      "fcp_ms": 1103.295,
+      "lcp_ms": 1103.295,
+      "tbt_ms": 0,
+      "cls": 0,
+      "speed_index_ms": 670,
+      "max_potential_fid_ms": 27.351,
+      "max_long_task_ms": 454.875,
+      "total_transfer_bytes": 4729,
+      "login_chunk_requested": false,
+      "supabase_chunk_requested": true,
+      "final_url": "http://127.0.0.1:4196/games/reading/interactive-handbook",
+      "metadata": {
+        "auth_profile": "authenticated",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "authenticated profile: email form opened for credential entry",
+        "authenticated profile prepared: persisted Supabase session detected"
+      ]
+    }
+  ]
+}

@@ -1,18 +1,14 @@
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/design-system';
 import { MascotIllustration } from '@/components/illustrations';
-import { useAuth } from '@/hooks/useAuth';
-import { ensureCommonNamespaceLoaded, hasCommonNamespaceLoaded } from '@/i18n';
-import { usePublicAuthState } from '@/hooks/usePublicAuthState';
 import { trackParentFunnelEvent } from '@/lib/parentFunnelInstrumentation';
 import {
   clearActiveChildProfile,
   disableGuestMode,
-  getActiveChildProfile,
-  isGuestModeEnabled,
 } from '@/lib/session';
+import type { PublicHeaderAuthSnapshot } from './PublicHeaderAuthSidecar';
 
 const PUBLIC_NAV_LINKS = [
   { key: 'home', path: '/' },
@@ -39,6 +35,21 @@ const APP_HEADER_ACTION_STYLE = {
   border: '2px solid #B89B78',
 };
 
+const AUTH_SIDECAR_IDLE_TIMEOUT_MS = 3200;
+const loadPublicHeaderAuthSidecarModule = () => import('./PublicHeaderAuthSidecar');
+const PublicHeaderAuthSidecar = lazy(async () => {
+  const module = await loadPublicHeaderAuthSidecarModule();
+  return { default: module.PublicHeaderAuthSidecar };
+});
+
+const INITIAL_AUTH_SNAPSHOT: PublicHeaderAuthSnapshot = {
+  isAuthenticated: false,
+  loading: false,
+  commonNamespaceReady: false,
+  child: null,
+  signOut: null,
+};
+
 function isMainNavActive(currentPath: string, navPath: string): boolean {
   if (navPath === '/games') {
     return currentPath === '/games' || currentPath.startsWith('/games/');
@@ -60,38 +71,71 @@ export function PublicHeader() {
   const location = useLocation();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [commonNamespaceReady, setCommonNamespaceReady] = useState(() => hasCommonNamespaceLoaded());
-  const { signOut } = useAuth();
-  const child = getActiveChildProfile();
+  const [authSnapshot, setAuthSnapshot] = useState<PublicHeaderAuthSnapshot>(INITIAL_AUTH_SNAPSHOT);
+  const [showAuthSidecar, setShowAuthSidecar] = useState(false);
 
-  const guestModeEnabled = isGuestModeEnabled();
-  const { hasAuthenticatedUser, loading } = usePublicAuthState(!guestModeEnabled);
-  const isAuthenticated = guestModeEnabled || hasAuthenticatedUser;
-  const showPublicActions = !isAuthenticated && !loading;
-  const showAppActions = isAuthenticated;
+  const showPublicActions = !authSnapshot.isAuthenticated && !authSnapshot.loading;
+  const showAppActions = authSnapshot.isAuthenticated;
   const homeDestination = '/';
   const navLinks = showAppActions ? APP_NAV_LINKS : PUBLIC_NAV_LINKS;
   const isProfiles = location.pathname === '/profiles';
   const isParentArea = location.pathname === '/parent';
   const headerClassName = `public-header ${showAppActions ? 'public-header--app' : 'public-header--public'}`;
   const isParentsRoute = location.pathname === '/parents' || location.pathname === '/parents/faq';
+  const child = authSnapshot.child;
 
-  useEffect(() => {
-    if (!showAppActions || commonNamespaceReady) {
+  const hydrateAuthSidecar = useCallback(() => {
+    if (showAuthSidecar) {
       return;
     }
 
-    let active = true;
+    setShowAuthSidecar(true);
+    void loadPublicHeaderAuthSidecarModule();
+  }, [showAuthSidecar]);
 
-    void ensureCommonNamespaceLoaded().then(() => {
-      if (!active) return;
-      setCommonNamespaceReady(true);
-    });
+  useEffect(() => {
+    if (showAuthSidecar) {
+      return;
+    }
+
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    let timeoutId: number | null = null;
+    let idleId: number | null = null;
+
+    const idleCapableWindow = window as Window & {
+      requestIdleCallback?: (
+        callback: (deadline: { didTimeout: boolean; timeRemaining: () => number }) => void,
+        options?: { timeout?: number },
+      ) => number;
+      cancelIdleCallback?: (handle: number) => void;
+    };
+
+    if (typeof idleCapableWindow.requestIdleCallback === 'function') {
+      idleId = idleCapableWindow.requestIdleCallback(
+        () => {
+          hydrateAuthSidecar();
+        },
+        { timeout: AUTH_SIDECAR_IDLE_TIMEOUT_MS },
+      );
+    } else {
+      timeoutId = window.setTimeout(() => {
+        hydrateAuthSidecar();
+      }, AUTH_SIDECAR_IDLE_TIMEOUT_MS);
+    }
 
     return () => {
-      active = false;
+      if (timeoutId !== null) {
+        window.clearTimeout(timeoutId);
+      }
+
+      if (idleId !== null && typeof idleCapableWindow.cancelIdleCallback === 'function') {
+        idleCapableWindow.cancelIdleCallback(idleId);
+      }
     };
-  }, [commonNamespaceReady, showAppActions]);
+  }, [hydrateAuthSidecar, showAuthSidecar]);
 
   const goToAppRoute = (path: string) => {
     navigate(path);
@@ -104,7 +148,7 @@ export function PublicHeader() {
     setMenuOpen(false);
 
     try {
-      await signOut();
+      await authSnapshot.signOut?.();
     } catch {
       // Keep navigation fallback even if remote sign-out fails.
     }
@@ -121,6 +165,7 @@ export function PublicHeader() {
       });
     }
 
+    hydrateAuthSidecar();
     setMenuOpen(false);
   };
 
@@ -157,10 +202,20 @@ export function PublicHeader() {
         <div className={`public-header__actions ${menuOpen ? 'public-header__actions--open' : ''}`}>
           {showPublicActions && (
             <div className="public-header__public-actions">
-              <Link to="/login" onClick={() => handlePublicLoginCtaClick('header_login')}>
+              <Link
+                to="/login"
+                onClick={() => handlePublicLoginCtaClick('header_login')}
+                onFocus={hydrateAuthSidecar}
+                onMouseEnter={hydrateAuthSidecar}
+              >
                 <Button variant="ghost" size="sm">{t('header.login')}</Button>
               </Link>
-              <Link to="/login" onClick={() => handlePublicLoginCtaClick('header_try_free')}>
+              <Link
+                to="/login"
+                onClick={() => handlePublicLoginCtaClick('header_try_free')}
+                onFocus={hydrateAuthSidecar}
+                onMouseEnter={hydrateAuthSidecar}
+              >
                 <Button variant="primary" size="sm" style={MARKETING_HEADER_CTA_STYLE}>
                   {t('header.tryFree')}
                 </Button>
@@ -168,7 +223,7 @@ export function PublicHeader() {
             </div>
           )}
 
-          {showAppActions && commonNamespaceReady && (
+          {showAppActions && authSnapshot.commonNamespaceReady && (
             <div className="public-header__app-actions">
               {child && (
                 <div className="public-header__child">
@@ -198,6 +253,11 @@ export function PublicHeader() {
           )}
         </div>
       </div>
+      {showAuthSidecar && (
+        <Suspense fallback={null}>
+          <PublicHeaderAuthSidecar onSnapshotChange={setAuthSnapshot} />
+        </Suspense>
+      )}
 
       <style>{`
         .public-header {

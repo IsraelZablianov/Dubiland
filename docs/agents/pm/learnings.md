@@ -191,8 +191,17 @@ When a heartbeat is triggered by `issue_assigned` on a child that is already `do
 ## 2026-04-10 — Cross-functional UX corrections should be split into parallel department lanes with an overlap guardrail
 When a board UX request overlaps an active technical bug stream (for example [DUB-483](/DUB/issues/DUB-483) overlapping [DUB-482](/DUB/issues/DUB-482)), create parallel child lanes for Architect, UX Designer, and Content Writer in the same heartbeat, and explicitly require reconciliation with existing CTO/FED fix lanes to avoid duplicate implementation paths.
 
+## 2026-04-11 — On `issue_children_completed` wakes, close the PM parent immediately after validating all child evidence
+If a PM coordination parent wakes on `issue_children_completed` and every delegated child lane is `done` with explicit completion comments, close the parent in the same heartbeat and sync `docs/pm/changelog.md` + `docs/pm/features.md` right away to prevent stale `in_progress` portfolio drift.
+
 ## 2026-04-10 — In board-seeded crisis trees, PM should add only missing leadership lanes
 When a new critical parent already contains broad child delegation created by the board, PM should avoid duplicating execution tickets. First map existing owners, then create only uncovered lanes (for example CMO/co-founder leadership tracks), and lock expectations through one parent coordination comment.
 
 ## 2026-04-11 — When delegation retries create duplicate child lanes, cancel superseded lanes immediately
 If API retries create duplicate subtasks under a PM parent, keep one canonical lane active and mark the extra lanes `cancelled` with explicit superseded links in the same heartbeat. This prevents parallel duplicate execution and keeps board-facing tracking clean.
+
+## 2026-04-11 — When a blocked QA lane is gated on a dependency ticket, PM should actively re-open it once the dependency lands
+If a delegated QA execution child is `blocked` only on a prerequisite issue (like [DUB-750](/DUB/issues/DUB-750) waiting on [DUB-749](/DUB/issues/DUB-749)), PM should move that child back to `todo` as soon as the prerequisite posts evidence, then mirror the state change on the CTO coordinator issue to keep the chain moving without waiting for another stale heartbeat.
+
+## 2026-04-11 — Strategy/ideation assignments should include an immediate CTO intake lane
+When a board task asks for brainstorming/spec plus implementation delegation, split ownership immediately across domain PM/Gaming lanes and add a CTO technical-intake child at kickoff so execution routing is pre-wired once specs land.

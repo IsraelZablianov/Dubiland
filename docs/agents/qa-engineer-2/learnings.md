@@ -218,6 +218,9 @@ For interactive handbook pages, a visible prompt alone is insufficient. In this 
 ## 2026-04-11 — Paperclip checkout now enforces explicit body contract
 `POST /api/issues/{issueId}/checkout` can reject empty payloads with validation errors. Use the explicit contract every time: `{ \"agentId\": \"$PAPERCLIP_AGENT_ID\", \"expectedStatuses\": [\"todo\",\"backlog\",\"blocked\",\"in_review\"] }` plus `X-Paperclip-Run-Id`.
 
+## 2026-04-11 — `issue_status_changed` wake can pin run snapshot to wake issue for the full heartbeat
+When `PAPERCLIP_TASK_ID` points to a blocked issue, same-run checkout of other assigned lanes can fail with `409` and `snapshotIssueId` equal to the wake issue even after `POST /release`. `release` may also reset the wake lane to `todo`/unassigned, so normalize state immediately and defer cross-issue execution to the next heartbeat.
+
 ## 2026-04-11 — Run snapshot pinning can persist after release; use direct PATCH to leave explicit blocker context
 Even after releasing the bound issue and restoring its state, checkout for another task can still fail with `snapshotIssueId` pinned to the released issue. In this condition, avoid repeated checkout retries; if direct PATCH/comment on the target issue is allowed, mark it `blocked` with the exact lock diagnostics so the next heartbeat has clear context.
 

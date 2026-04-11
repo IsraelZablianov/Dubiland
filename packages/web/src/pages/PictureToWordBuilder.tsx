@@ -1,15 +1,13 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import type { Child, Game, GameLevel } from '@dubiland/shared';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Card } from '@/components/design-system';
+import { Button, Card } from '@/components/design-system';
 import { ChildRouteHeader, ChildRouteScaffold } from '@/components/layout';
-import type { GameCompletionResult } from '@/games/engine';
 import { PictureToWordBuilderGame } from '@/games/reading/PictureToWordBuilderGame';
 import { useAudioManager } from '@/hooks/useAudioManager';
 import { getActiveChildProfile } from '@/lib/session';
-
-type SyncState = 'idle' | 'syncing' | 'synced';
+import { useGameAttemptSync } from './useGameAttemptSync';
 
 const PICTURE_TO_WORD_BUILDER_GAME: Game = {
   id: 'local-picture-to-word-builder',
@@ -68,17 +66,12 @@ export default function PictureToWordBuilderPage() {
     [activeProfile?.ageBand],
   );
 
-  const [completionResult, setCompletionResult] = useState<GameCompletionResult | null>(null);
-  const [syncState, setSyncState] = useState<SyncState>('idle');
-
-  const handleComplete = useCallback((result: GameCompletionResult) => {
-    setCompletionResult(result);
-    setSyncState('syncing');
-
-    window.setTimeout(() => {
-      setSyncState('synced');
-    }, 450);
-  }, []);
+  const { completionResult, syncState, handleComplete, retryLastSync } = useGameAttemptSync({
+    childId: child.id,
+    childAgeBand: activeProfile?.ageBand,
+    game: PICTURE_TO_WORD_BUILDER_GAME,
+    level: runtimeLevel,
+  });
 
   const handleBackToGames = useCallback(() => {
     void audio.playNow('/audio/he/nav/back.mp3');
@@ -105,11 +98,20 @@ export default function PictureToWordBuilderPage() {
           <Card padding="md" style={{ display: 'grid', gap: 'var(--space-xs)' }}>
             <p style={{ color: 'var(--color-text-primary)' }}>
               {t(
-                syncState === 'syncing'
-                  ? 'feedback.keepGoing'
-                  : 'games.pictureToWordBuilder.roundComplete.wordBuilt',
+                syncState === 'error'
+                  ? 'errors.generic'
+                  : syncState === 'syncing'
+                    ? 'feedback.keepGoing'
+                    : 'games.pictureToWordBuilder.roundComplete.wordBuilt',
               )}
             </p>
+            {syncState === 'error' && (
+              <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                <Button variant="secondary" size="md" onClick={retryLastSync} aria-label={t('profile.retry')}>
+                  {t('profile.retry')}
+                </Button>
+              </div>
+            )}
           </Card>
         )}
     </ChildRouteScaffold>

@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { DevClientDiagnosticsStrip } from '@/components/DevClientDiagnosticsStrip';
 import { PublicFooter } from './PublicFooter';
 import { PublicHeader } from './PublicHeader';
 
@@ -7,11 +8,16 @@ interface AppShellProps {
 }
 
 export function AppShell({ children }: AppShellProps) {
+  const devPad = import.meta.env.DEV ? 'min(30vh, 140px)' : undefined;
+
   return (
     <div className="app-shell">
       <PublicHeader />
-      <main className="app-shell__content">{children}</main>
+      <main className="app-shell__content" style={{ paddingBlockEnd: devPad }}>
+        {children}
+      </main>
       <PublicFooter />
+      <DevClientDiagnosticsStrip />
 
       <style>{`
         .app-shell {

@@ -1,5 +1,8 @@
 # Learn the Letters Storybook (Hebrew: הסיפור של האותיות)
 
+> Canonical spec for the separate continuous-narrative route (Letter Story v2) is in [docs/games/letter-storybook-v2.md](./letter-storybook-v2.md), tracked under [DUB-664](/DUB/issues/DUB-664).
+> This document remains the shipped v1 storybook reference.
+
 ## Learning Objective
 - Curriculum stage: Letter Recognition with early bridge to pointed word and phrase reading.
 - Core reading skill: Build stable grapheme-sound mapping for all 22 Hebrew letters, then transfer recognition to high-frequency association words and short decodable story lines.

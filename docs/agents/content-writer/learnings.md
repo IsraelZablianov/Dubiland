@@ -166,3 +166,9 @@ For episode-structured videos like Blend-to-Read ([DUB-710](/DUB/issues/DUB-710)
 
 ## 2026-04-11 — D689 game-topic SEO drafts should follow one reusable implementation contract
 For game-topic keyword expansions (colors, shapes, grade-1 reading comprehension), ship each page as one handoff-ready unit: primary+secondary keyword map, Title/H1/meta proposal, 40-60 word answer-first block, schema-ready FAQ answers, Trust/E-E-A-T blocks, and explicit internal-link anchors that cover `/letters`, `/numbers`, `/reading`, and `/parents`. This keeps FED + SEO implementation deterministic and reduces follow-up churn.
+
+## 2026-04-11 — Storybook text revisions require clip invalidation before audio regen
+`yarn generate-audio` skips existing files by default, so changing Hebrew copy under existing keys (for example `common.games.letterStorybook.letters.*.story`) can leave stale mp3s. For copy-update lanes, delete the exact target clip files first (or use force mode) and then regenerate, followed by `yarn audio:validate-manifest` plus a targeted key/file parity check.
+
+## 2026-04-11 — Parent-funnel audio follow-ups should verify both namespace keys and parent-lane evidence
+For conversion-copy follow-ups (landing + parents + onboarding), closure should include three checks together: locale key presence in `public.json/onboarding.json`, manifest mappings for every requested key, and on-disk mp3 existence under matching folders. After validation (`yarn audio:validate-manifest`), always post a completion comment on the parent implementation issue so FED/PM can track integration without reopening the content lane.

@@ -1,0 +1,123 @@
+{
+  "generated_at": "2026-04-11T15:06:15.639Z",
+  "baseline_source": {
+    "bundle": "docs/agents/performance-expert/evidence/dub-686/20260411-145950-node-env-production-check/bundle-env-compare.json",
+    "lighthouse": "docs/agents/performance-expert/evidence/dub-686/20260411-145950-node-env-production-check/lighthouse-summary.json"
+  },
+  "bundle": {
+    "baseline": {
+      "index_bytes": 461042,
+      "index_gzip_bytes": 124891,
+      "react_bytes": 49001,
+      "react_gzip_bytes": 17106,
+      "i18n_bytes": 49391,
+      "i18n_gzip_bytes": 15382
+    },
+    "current": {
+      "index": {
+        "file": "index-CsRrQFLN.js",
+        "bytes": 249374,
+        "gzipBytes": 76609
+      },
+      "react": {
+        "file": "react-dz6IX6RK.js",
+        "bytes": 49001,
+        "gzipBytes": 17100
+      },
+      "i18n": {
+        "file": "i18n-CQO0ZaI5.js",
+        "bytes": 49391,
+        "gzipBytes": 15381
+      },
+      "seo": null,
+      "common": {
+        "file": "common-DUsihW2B.js",
+        "bytes": 242293,
+        "gzipBytes": 57678
+      }
+    }
+  },
+  "lighthouse": {
+    "baseline": {
+      "/": {
+        "route": "root",
+        "performance": 82,
+        "fcp_ms": 3226,
+        "lcp_ms": 3934,
+        "tbt_ms": 0,
+        "cls": 0.033,
+        "max_potential_fid_ms": 24
+      },
+      "/letters": {
+        "route": "letters",
+        "performance": 87,
+        "fcp_ms": 3201,
+        "lcp_ms": 3201,
+        "tbt_ms": 0,
+        "cls": 0.002,
+        "max_potential_fid_ms": 22
+      },
+      "/parents": {
+        "route": "parents",
+        "performance": 88,
+        "fcp_ms": 3135,
+        "lcp_ms": 3135,
+        "tbt_ms": 0,
+        "cls": 0.004,
+        "max_potential_fid_ms": 22
+      }
+    },
+    "primaryRun": {
+      "/": {
+        "route": "/",
+        "performance": 93,
+        "fcp_ms": 1839,
+        "lcp_ms": 2790,
+        "cls": 0,
+        "tbt_ms": 0
+      },
+      "/letters": {
+        "route": "/letters",
+        "performance": 96,
+        "fcp_ms": 1832,
+        "lcp_ms": 2159,
+        "cls": 0,
+        "tbt_ms": 52
+      },
+      "/parents": {
+        "route": "/parents",
+        "performance": 92,
+        "fcp_ms": 1912,
+        "lcp_ms": 2827,
+        "cls": 0,
+        "tbt_ms": 0
+      }
+    }
+  },
+  "thresholds": {
+    "step3": {
+      "/": 2750,
+      "/letters": 2580,
+      "/parents": 2550
+    },
+    "step4": {
+      "/": 2500,
+      "/letters": 2500,
+      "/parents": 2500
+    }
+  },
+  "verdict": {
+    "bundle_step3_pass": true,
+    "bundle_step4_pass": true,
+    "lcp_step3": {
+      "/": false,
+      "/letters": true,
+      "/parents": false
+    },
+    "lcp_step4": {
+      "/": false,
+      "/letters": true,
+      "/parents": false
+    }
+  }
+}

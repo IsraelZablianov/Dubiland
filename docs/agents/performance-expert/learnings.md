@@ -71,6 +71,9 @@ On [DUB-637](/DUB/issues/DUB-637), Co-Founder clarified that secret provisioning
 ## 2026-04-11 — A provisioning lane can be done while runtime credentials are still absent
 On [DUB-637](/DUB/issues/DUB-637), [DUB-726](/DUB/issues/DUB-726) closed with tooling and operator instructions, but `DUBILAND_PERF_*` stayed absent in the active heartbeat runtime (`yarn perf:check-auth-env` => `ok: false`). Durable rule: treat `issue done` as necessary but not sufficient for perf rerun readiness; verify runtime env directly and report the remaining operator/runtime-secret unblock owner with a concrete next checkpoint.
 
+## 2026-04-11 — Clear credential gates first, then prioritize authenticated profile evidence if full matrix flakes
+On [DUB-637](/DUB/issues/DUB-637), after runtime env injection (`yarn perf:check-auth-env` => `ok: true`), full-profile rerun attempts were interrupted by unrelated failures (fresh-build TS error and Lighthouse `NO_FCP` on anonymous handbook). Durable fallback: keep the lane measured by running a targeted authenticated-profile matrix immediately so previously missing auth coverage is captured, then report flake details and keep blocked if contamination/long-task gates still fail.
+
 ## 2026-04-11 — When a continuation heartbeat has no `PAPERCLIP_TASK_ID`, anchor on inbox critical lane before mutating
 In this local adapter, a manual/continuation wake can omit `PAPERCLIP_TASK_ID` and wake-comment vars. Reliable flow: read `GET /api/agents/me/inbox-lite`, pick the highest-priority assigned lane, re-check dependency statuses/comments, then checkout and post status updates with run-id headers as usual.
 
@@ -88,3 +91,9 @@ On [DUB-728](/DUB/issues/DUB-728), the largest deterministic gains came from thr
 
 ## 2026-04-11 — Queue-first funnel instrumentation prevents CTA navigation loss with low bundle overhead
 On [DUB-732](/DUB/issues/DUB-732), parent-funnel analytics events were made durable by queueing in `sessionStorage` with idempotent `client_event_id` upsert flush to Supabase, then flushing again on route transitions. This avoids losing click events during immediate navigation (`/` or `/parents*` -> `/login`) while keeping runtime overhead small: local production `vite build` moved entry bundle from `443.14kB / 128.13kB gzip` to `445.66kB / 129.25kB gzip` (+`2.52kB` raw, +`1.12kB` gzip).
+
+## 2026-04-11 — Authenticated perf profiles need resilient login-form discovery in scripted audits
+On [DUB-637](/DUB/issues/DUB-637), the protected-route matrix initially reported authenticated profile errors (`email_form_not_found`) even with valid perf credentials because the script assumed a fixed button index on `/login`. Durable fix: wait for `.login-page__content`, discover/click the email toggle within that container (text-aware with last-button fallback), then wait explicitly for `form input[type=\"email\"]` before auth actions. After this change, authenticated profile metrics executed on all four routes and exposed the real remaining blockers (`supabase_chunk_requested=true` and long-task budget misses), not a harness false negative.
+
+## 2026-04-11 — CI perf budgets stay actionable when calibrated from production baseline with fixed tolerance bands
+On [DUB-746](/DUB/issues/DUB-746), converting the architecture contract into `packages/web/perf/ci-budgets.json` worked best with a simple tolerance policy derived from measured production baselines: keep bundle/LCP ceilings at roughly `+4-5%` headroom and Lighthouse performance floors at `-2` points. This was tight enough to catch real regressions (especially `NODE_ENV`/bundle drift from [DUB-686](/DUB/issues/DUB-686)) while preserving CI stability. Durable pattern: store budgets in one committed config file, and pair every threshold set with an evidence JSON that includes baseline values plus exact tolerance math.

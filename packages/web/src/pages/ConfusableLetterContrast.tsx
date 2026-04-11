@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import type { Child, Game, GameLevel } from '@dubiland/shared';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -8,8 +8,7 @@ import type { GameCompletionResult } from '@/games/engine';
 import { ConfusableLetterContrastGame } from '@/games/reading/ConfusableLetterContrastGame';
 import { useAudioManager } from '@/hooks/useAudioManager';
 import { getActiveChildProfile } from '@/lib/session';
-
-type SyncState = 'idle' | 'syncing' | 'synced';
+import { useGameAttemptSync } from './useGameAttemptSync';
 
 type ConfusableCompletionResult = GameCompletionResult & {
   topConfusionPair?: string;
@@ -86,8 +85,13 @@ export default function ConfusableLetterContrastPage() {
     [activeProfile?.ageBand],
   );
 
-  const [completionResult, setCompletionResult] = useState<ConfusableCompletionResult | null>(null);
-  const [syncState, setSyncState] = useState<SyncState>('idle');
+  const { completionResult: syncedCompletionResult, syncState, handleComplete, retryLastSync } = useGameAttemptSync({
+    childId: child.id,
+    childAgeBand: activeProfile?.ageBand,
+    game: CONFUSABLE_LETTER_CONTRAST_GAME,
+    level: runtimeLevel,
+  });
+  const completionResult = syncedCompletionResult as ConfusableCompletionResult | null;
 
   const hintTrendLabel = useMemo(() => {
     if (!completionResult?.summaryMetrics) {
@@ -104,15 +108,6 @@ export default function ConfusableLetterContrastPage() {
 
     return t('feedback.greatEffort');
   }, [completionResult?.summaryMetrics, t]);
-
-  const handleComplete = useCallback((result: GameCompletionResult) => {
-    setCompletionResult(result as ConfusableCompletionResult);
-    setSyncState('syncing');
-
-    window.setTimeout(() => {
-      setSyncState('synced');
-    }, 450);
-  }, []);
 
   return (
     <ChildRouteScaffold
@@ -154,8 +149,19 @@ export default function ConfusableLetterContrastPage() {
               })}
             </p>
             <p style={{ margin: 0, color: 'var(--color-text-secondary)' }}>
-              {syncState === 'syncing' ? t('feedback.keepGoing') : t('parentDashboard.games.confusableLetterContrast.nextStep')}
+              {syncState === 'error'
+                ? t('errors.generic')
+                : syncState === 'syncing'
+                  ? t('feedback.keepGoing')
+                  : t('parentDashboard.games.confusableLetterContrast.nextStep')}
             </p>
+            {syncState === 'error' && (
+              <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                <Button variant="secondary" size="md" onClick={retryLastSync} aria-label={t('profile.retry')}>
+                  {t('profile.retry')}
+                </Button>
+              </div>
+            )}
           </Card>
         )}
     </ChildRouteScaffold>

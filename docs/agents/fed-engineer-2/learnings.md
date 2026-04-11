@@ -265,3 +265,15 @@ For new `GameProps` pages that render parent-summary trend strings from dynamic 
 
 ## 2026-04-11 — Nikud near-foil safety is easiest to enforce by prompt-mode + unlock-gate split
 For `NikudSoundLadder`, keep same-sound guardrails deterministic by tagging rounds with prompt mode (`sound` vs `name/anchor/transfer`) and filtering out any sound-only round that includes `ַ/ָ` or `ֶ/ֵ`. Model `D1` as separate near-foil round pools and unlock them only when last-10 family accuracy reaches 80%, so level composition rules stay testable and do not leak ambiguous prompts.
+
+## 2026-04-11 — Shared route persistence migration pattern for letters/reading pages
+For letters/reading route wrappers that still use `setTimeout`-based `syncState` simulation, replace per-page local sync state with `useGameAttemptSync` and pass the existing runtime `game` + `level` objects (including age-band adjusted levels). Keep completion summary copy unchanged, but always map sync feedback to `error/syncing/synced` and expose localized retry (`profile.retry`) in-card so persistence failures can recover without route-specific boilerplate.
+
+## 2026-04-11 — Completion-summary ownership should live in the game when the game already renders a final report
+For games with an explicit `sessionComplete` summary branch (for example `MoreOrLessMarketGame`), the page wrapper should avoid rendering its own metric summary block after `onComplete`; keep only sync-error recovery UI in the page layer. This prevents contradictory parent metrics on the same completion screen.
+
+## 2026-04-11 — Node test regressions that import `.tsx` should be exposed via package scripts with pinned `tsx` loader
+When Node test files pull symbols from `.tsx` modules, plain `node --test` can fail with `ERR_UNKNOWN_FILE_EXTENSION` even if `.ts` imports pass on newer Node versions. Add explicit workspace scripts that pin `TSX_TSCONFIG_PATH` and `node --import tsx --test ...` so QA/heartbeat runs stay reproducible without ad-hoc CLI flags.
+
+## 2026-04-11 — Non-JS SEO parity needs route-specific head synthesis plus managed JSON-LD ids
+For static crawler parity, `generate-seo-route-html.mjs` must not clone one `dist/index.html` into all routes. Instead, synthesize each public route head from i18n (`seo.json` + `public.json`) with route-specific `title`, `description`, canonical, `hreflang=he`, and robots tags, then emit JSON-LD scripts with `data-dubiland-json-ld="true"` + stable `data-schema-id` values so `RouteMetadataManager` reuses the same schema nodes at runtime instead of creating duplicate `@type` entries.

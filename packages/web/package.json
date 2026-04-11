@@ -4,10 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "yarn images:pipeline && tsc -b && vite build && yarn generate:crawl-assets:dist && node ./scripts/generate-seo-route-html.mjs",
+    "dev": "node ../../scripts/check-web-vite-supabase-env.mjs && vite",
+    "build": "node ./scripts/build-production.mjs",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
+    "check:prod-runtime": "node ./scripts/assert-production-react-runtime.mjs",
+    "test:audio-playback-queue": "TSX_TSCONFIG_PATH=./tsconfig.json node --import tsx --test ./scripts/audio-playback-queue.test.mjs",
+    "test:interactive-handbook-runtime": "TSX_TSCONFIG_PATH=./tsconfig.json node --import tsx --test ./scripts/interactive-handbook-runtime-regression.test.mjs",
+    "test:handbook-runtime": "yarn test:interactive-handbook-runtime",
     "test:nikud-sound-ladder-prototype": "node --import tsx --test ./scripts/nikud-sound-ladder-prototype.test.mjs",
     "test:aria-prohibited-hud": "node --test ./scripts/aria-prohibited-hud-regression.test.mjs",
     "test:touch-shell": "node --test ./scripts/touch-shell-regression.test.mjs",
@@ -17,7 +21,10 @@
     "images:budgets": "node ./scripts/check-image-budgets.mjs",
     "images:pipeline": "yarn images:optimize && yarn images:contact-sheet && yarn images:budgets",
     "generate:crawl-assets": "node ./scripts/generate-crawl-assets.mjs",
-    "generate:crawl-assets:dist": "node ./scripts/generate-crawl-assets.mjs --dist"
+    "generate:crawl-assets:dist": "node ./scripts/generate-crawl-assets.mjs --dist",
+    "perf:ci:bundle": "node ./scripts/check-ci-bundle-budgets.mjs",
+    "perf:ci:lighthouse": "node ./scripts/run-ci-lighthouse-gate.mjs",
+    "perf:ci:summary": "node ./scripts/generate-ci-perf-summary.mjs"
   },
   "dependencies": {
     "@dubiland/shared": "workspace:*",

@@ -6,7 +6,7 @@ Track all reading games and features across their lifecycle.
 
 | Reading Skill Area | Games Planned | Games In Progress | Games Shipped |
 |---|---|---|---|
-| Letter Recognition | 0 | 1 | 5 |
+| Letter Recognition | 0 | 2 | 5 |
 | Nikud (Vowel Diacritics) | 0 | 1 | 3 |
 | Syllable Decoding | 0 | 1 | 3 |
 | Word Reading | 0 | 2 | 2 |
@@ -89,6 +89,13 @@ Track all reading games and features across their lifecycle.
 - **Reading Skill:** Letter Recognition (full 22-letter coverage + final-forms bridge)
 - **Curriculum Position:** After `letter-tracing-trail` + `letter-sound-match`, before confusable-transfer drills and broader decodable story tracks.
 - **Delegated Issue:** [DUB-657](/DUB/issues/DUB-657) (implementation, done), [DUB-658](/DUB/issues/DUB-658) (Hebrew i18n/audio, done)
+
+### Letter Story v2 — Continuous Narrative Route
+- **Status:** Delegated to FED Engineer 3 + Content Writer + Media Expert + UX Designer + Gaming Expert + Architect (In Progress)
+- **Spec:** `docs/games/letter-storybook-v2.md`
+- **Reading Skill:** Letter Recognition (continuous 22-letter sequence + confusable bridge transfer)
+- **Curriculum Position:** After foundational letter-form/sound readiness, before confusable-heavy remediation and broader syllable/word decoding tracks.
+- **Delegated Issue:** [DUB-766](/DUB/issues/DUB-766) (implementation, backlog), [DUB-758](/DUB/issues/DUB-758) (Hebrew narrative + i18n/audio, in_progress), [DUB-759](/DUB/issues/DUB-759) (illustration pipeline, in_progress), [DUB-760](/DUB/issues/DUB-760) (UX layout, in_progress), [DUB-761](/DUB/issues/DUB-761) (mechanics review, in_progress), [DUB-762](/DUB/issues/DUB-762) (technical owner, todo)
 
 ### Sofit Word-End Detective
 - **Status:** Delegated to FED Engineer 3 + Content Writer + Gaming Expert (In Progress)

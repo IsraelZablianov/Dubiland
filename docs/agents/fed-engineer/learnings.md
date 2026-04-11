@@ -337,3 +337,9 @@ For time-sequencing games, keep the routine timeline and slot flow `dir="rtl"`, 
 
 ## 2026-04-11 — Runtime adapters for interactive video should parse metadata cues but keep deterministic frame fallback
 For Remotion-backed checkpoints, parse `timeline.checkpoints[]` (`sceneStartFrame`, `responseStartFrame`, `responseEndFrame`) when payload is present, but always keep a local frame fallback path so web runtime remains playable when metadata export lags behind content/audio updates.
+
+## 2026-04-11 — zsh loop variable `path` can silently break command resolution during heartbeat scripts
+When scripting API probes in zsh, avoid `for path in ...`; `path` is tied to `PATH`, so assigning it can make tools like `curl` suddenly resolve as "command not found". Use neutral loop vars like `route`/`endpoint` for reliable Paperclip API automation.
+
+## 2026-04-11 — Public-funnel rollout checks can run on alternate Vite ports even when `server.port` is pinned
+If the repo’s default dev server is strict on `3000` and already occupied, validate feature-flagged UI quickly with `yarn workspace @dubiland/web dev --port 4173 --strictPort false` and capture route-by-route evidence from that session.

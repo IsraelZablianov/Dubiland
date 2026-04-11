@@ -1,0 +1,93 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link "דובילנד — לומדים עברית בכיף" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - img
+        - generic [ref=e7]: דובילנד
+      - button "פתח תפריט" [ref=e8] [cursor=pointer]
+  - main [ref=e10]:
+    - generic [ref=e11]:
+      - generic [ref=e12]:
+        - heading "מדריך להורים" [level=1] [ref=e13]
+        - paragraph [ref=e14]: כל מה שצריך לדעת כדי להתחיל עם דובילנד
+      - generic [ref=e15]:
+        - heading "איך דובילנד עובד?" [level=2] [ref=e16]
+        - list [ref=e17]:
+          - listitem [ref=e18]:
+            - generic [ref=e19]: "1"
+            - paragraph [ref=e20]: אתם יוצרים חשבון משפחתי ומוסיפים פרופיל לכל ילד
+          - listitem [ref=e21]:
+            - generic [ref=e22]: "2"
+            - paragraph [ref=e23]: הילד בוחר נושא (אותיות, מספרים, קריאה) ומתחיל לשחק
+          - listitem [ref=e24]:
+            - generic [ref=e25]: "3"
+            - paragraph [ref=e26]: דובי — הדובון שלנו — מלווה ומעודד לאורך כל הדרך
+          - listitem [ref=e27]:
+            - generic [ref=e28]: "4"
+            - paragraph [ref=e29]: אתם עוקבים אחרי ההתקדמות דרך אזור ההורים
+      - generic [ref=e31]:
+        - img [ref=e33]
+        - generic [ref=e36]:
+          - heading "בטיחות וסביבה מוגנת" [level=2] [ref=e37]
+          - paragraph [ref=e38]: דובילנד נבנתה עם בטיחות כעיקרון מוביל. אין פרסומות, אין רכישות מתוך האפליקציה, אין קישורים חיצוניים, ואין אינטראקציה עם משתמשים אחרים. כל התוכן נוצר על ידנו ועובר בדיקה.
+      - generic [ref=e40]:
+        - img [ref=e42]
+        - generic [ref=e45]:
+          - heading "הגישה החינוכית" [level=2] [ref=e46]
+          - paragraph [ref=e47]: המשחקים מבוססים על עקרונות למידה מותאמת גיל עם דגש על חוויה חיובית. אנחנו לא מענישים על טעויות — במקום זה, דובי מעודד לנסות שוב. רמת הקושי מותאמת אוטומטית.
+      - generic [ref=e48]:
+        - heading "שאלות נפוצות" [level=2] [ref=e49]
+        - generic [ref=e50]:
+          - generic [ref=e51]:
+            - heading "לאיזה גילאים דובילנד מתאימה?" [level=3] [ref=e52]
+            - paragraph [ref=e53]: דובילנד מיועדת לילדים בגילאי 3 עד 7, מגן חובה ועד כיתה א׳.
+          - generic [ref=e54]:
+            - heading "האם דובילנד בחינם?" [level=3] [ref=e55]
+            - paragraph [ref=e56]: כן, כרגע דובילנד זמינה בחינם לכל המשפחות.
+          - generic [ref=e57]:
+            - heading "האם הילד שלי צריך לדעת לקרוא?" [level=3] [ref=e58]
+            - paragraph [ref=e59]: לא! כל ההוראות והטקסטים מושמעים. דובילנד מתאימה גם לילדים שעדיין לא קוראים.
+          - generic [ref=e60]:
+            - heading "האם אפשר ליצור כמה פרופילים לילדים?" [level=3] [ref=e61]
+            - paragraph [ref=e62]: כן, כל חשבון משפחתי תומך בריבוי פרופילים — כך כל ילד מקבל חוויה מותאמת.
+          - generic [ref=e63]:
+            - heading "על אילו מכשירים דובילנד עובד?" [level=3] [ref=e64]
+            - paragraph [ref=e65]: דובילנד עובדת בדפדפן על כל מכשיר — מחשב, טאבלט או טלפון. אופטימיזציה מיוחדת לטאבלטים.
+  - contentinfo [ref=e66]:
+    - generic [ref=e67]:
+      - generic [ref=e68]:
+        - link "דובילנד" [ref=e69] [cursor=pointer]:
+          - /url: /
+          - img
+          - generic [ref=e70]: דובילנד
+        - paragraph [ref=e71]: לומדים עברית בכיף עם דובי 🧸
+      - generic [ref=e72]:
+        - generic [ref=e73]:
+          - heading "נושאי לימוד" [level=3] [ref=e74]
+          - navigation [ref=e75]:
+            - link "מספרים וחשבון" [ref=e76] [cursor=pointer]:
+              - /url: /#topics
+            - link "אותיות וצלילים" [ref=e77] [cursor=pointer]:
+              - /url: /#topics
+            - link "קריאה ראשונה" [ref=e78] [cursor=pointer]:
+              - /url: /#topics
+        - generic [ref=e79]:
+          - heading "דובילנד" [level=3] [ref=e80]
+          - navigation [ref=e81]:
+            - link "אודות" [ref=e82] [cursor=pointer]:
+              - /url: /about
+            - link "להורים" [ref=e83] [cursor=pointer]:
+              - /url: /parents
+            - link "שאלות נפוצות" [ref=e84] [cursor=pointer]:
+              - /url: /parents#faq
+        - generic [ref=e85]:
+          - heading "משפטי" [level=3] [ref=e86]
+          - navigation [ref=e87]:
+            - link "תנאי שימוש" [ref=e88] [cursor=pointer]:
+              - /url: /terms
+            - link "מדיניות פרטיות" [ref=e89] [cursor=pointer]:
+              - /url: /privacy
+    - generic [ref=e90]:
+      - paragraph [ref=e91]: © 2026 דובילנד. כל הזכויות שמורות.
+      - paragraph [ref=e92]: נבנה באהבה לילדים ישראלים

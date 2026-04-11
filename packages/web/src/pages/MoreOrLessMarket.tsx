@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button, Card } from '@/components/design-system';
 import { ChildRouteHeader, ChildRouteScaffold } from '@/components/layout';
-import type { GameCompletionResult } from '@/games/engine';
 import { MoreOrLessMarketGame } from '@/games/numbers/MoreOrLessMarketGame';
 import { useAudioManager } from '@/hooks/useAudioManager';
 import { getActiveChildProfile } from '@/lib/session';
@@ -37,22 +36,6 @@ const MORE_OR_LESS_MARKET_LEVEL: GameLevel = {
   },
   sortOrder: 1,
 };
-
-function getHintLevelValue(hintTrend: GameCompletionResult['summaryMetrics'] extends infer T
-  ? T extends { hintTrend: infer H }
-    ? H
-    : never
-  : never): string {
-  if (hintTrend === 'improving') {
-    return '1.0';
-  }
-
-  if (hintTrend === 'steady') {
-    return '1.5';
-  }
-
-  return '2.2';
-}
 
 export default function MoreOrLessMarketPage() {
   const { t } = useTranslation('common');
@@ -92,39 +75,24 @@ export default function MoreOrLessMarketPage() {
         }
       />
 
-        <MoreOrLessMarketGame
-          game={MORE_OR_LESS_MARKET_GAME}
-          level={MORE_OR_LESS_MARKET_LEVEL}
-          child={child}
-          onComplete={handleComplete}
-          audio={audio}
-        />
+      <MoreOrLessMarketGame
+        game={MORE_OR_LESS_MARKET_GAME}
+        level={MORE_OR_LESS_MARKET_LEVEL}
+        child={child}
+        onComplete={handleComplete}
+        audio={audio}
+      />
 
-        {completionResult?.summaryMetrics && (
-          <Card padding="md" style={{ display: 'grid', gap: 'var(--space-xs)' }}>
-            <p style={{ color: 'var(--color-text-primary)' }}>
-              {t('parentDashboard.games.moreOrLessMarket.progressSummary', {
-                comparisonType: '> / < / =',
-                accuracy: `${completionResult.summaryMetrics.firstAttemptSuccessRate}%`,
-                hintLevel: getHintLevelValue(completionResult.summaryMetrics.hintTrend),
-              })}
-            </p>
-            <p style={{ color: 'var(--color-text-secondary)' }}>
-              {syncState === 'error'
-                ? t('errors.generic')
-                : syncState === 'syncing'
-                  ? t('feedback.keepGoing')
-                  : t('feedback.excellent')}
-            </p>
-            {syncState === 'error' && (
-              <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
-                <Button variant="secondary" size="md" onClick={retryLastSync} aria-label={t('profile.retry')}>
-                  {t('profile.retry')}
-                </Button>
-              </div>
-            )}
-          </Card>
-        )}
+      {completionResult && syncState === 'error' && (
+        <Card padding="md" style={{ display: 'grid', gap: 'var(--space-xs)' }}>
+          <p style={{ color: 'var(--color-text-secondary)' }}>{t('errors.generic')}</p>
+          <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+            <Button variant="secondary" size="md" onClick={retryLastSync} aria-label={t('profile.retry')}>
+              {t('profile.retry')}
+            </Button>
+          </div>
+        </Card>
+      )}
     </ChildRouteScaffold>
   );
 }
