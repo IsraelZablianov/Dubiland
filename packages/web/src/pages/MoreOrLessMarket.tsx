@@ -20,7 +20,7 @@ const MORE_OR_LESS_MARKET_GAME: Game = {
   componentKey: 'MoreOrLessMarketGame',
   difficulty: 3,
   sortOrder: 2,
-  thumbnailUrl: null,
+  thumbnailUrl: '/images/games/thumbnails/moreOrLessMarket/thumb-16x10.webp',
   audioUrl: '/audio/he/games/more-or-less-market/instructions/intro.mp3',
   isPublished: true,
   createdAt: '2026-04-10T00:00:00.000Z',

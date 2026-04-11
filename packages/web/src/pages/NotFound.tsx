@@ -20,7 +20,7 @@ export default function NotFound() {
     <div className="not-found">
       <div className="not-found__panel">
         <FloatingElement className="not-found__mascot">
-          <MascotIllustration variant="loading" size={160} />
+          <MascotIllustration variant="errorGuide" size={168} />
         </FloatingElement>
         <h1 className="not-found__code">404</h1>
         <h2 className="not-found__title">{t('notFound.title')}</h2>
@@ -100,6 +100,12 @@ export default function NotFound() {
 
         .not-found__actions a {
           display: inline-flex;
+        }
+
+        .not-found__mascot img {
+          border-radius: var(--radius-lg);
+          border: 1px solid color-mix(in srgb, var(--color-theme-primary) 18%, transparent);
+          box-shadow: var(--shadow-card);
         }
 
         @media (max-width: 640px) {

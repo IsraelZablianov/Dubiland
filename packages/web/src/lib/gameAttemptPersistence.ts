@@ -1,7 +1,8 @@
-import { FunctionsHttpError, type Session } from '@supabase/supabase-js';
+import type { Session } from '@supabase/supabase-js';
 import type { Game, GameLevel } from '@dubiland/shared';
 import type { GameCompletionResult } from '@/games/engine';
 import { loadSupabaseRuntime } from '@/lib/loadSupabaseRuntime';
+import { persistGameAttemptViaPostgrest } from '@/lib/gameAttemptPersistencePostgrest';
 import { buildParentMetricsV1 } from '@/lib/parentMetricsAdapter';
 import { isSupabaseConfigured, supabaseConfig } from '@/lib/supabaseConfig';
 
@@ -61,12 +62,6 @@ function devWarnPersistSkipped(reason: PersistSkipReason, context: { childId: st
     '[Dubiland] persistGameAttempt skipped (no submit-game-attempt): active child id must be a UUID from the children table. Open /profiles and pick your child, or clear stale dubiland:active-child in localStorage.',
     context,
   );
-}
-
-interface SubmitGameAttemptResponse {
-  sessionId?: string;
-  attemptId?: string;
-  error?: string;
 }
 
 type SupabaseRuntime = NonNullable<Awaited<ReturnType<typeof loadSupabaseRuntime>>>;
@@ -223,32 +218,6 @@ function projectRefFromJwtIssuer(iss: string): string | null {
   return m?.[1] ?? null;
 }
 
-async function edgeFunctionFailureMessage(error: unknown): Promise<string> {
-  if (error instanceof FunctionsHttpError && error.context instanceof Response) {
-    try {
-      const json = (await error.context.clone().json()) as { message?: string };
-      if (typeof json.message === 'string' && json.message.trim()) {
-        return json.message.trim();
-      }
-    } catch {
-      // ignore parse errors
-    }
-    return `Edge function HTTP ${error.context.status}`;
-  }
-  if (error instanceof Error) {
-    return error.message;
-  }
-  return 'Unknown error';
-}
-
-function isFunctionsHttp401(error: unknown): boolean {
-  return (
-    error instanceof FunctionsHttpError &&
-    error.context instanceof Response &&
-    error.context.status === 401
-  );
-}
-
 export async function persistGameAttempt(params: PersistGameAttemptParams): Promise<PersistGameAttemptOutcome> {
   const devContext = { childId: params.childId, gameSlug: params.game.slug };
 
@@ -285,8 +254,8 @@ export async function persistGameAttempt(params: PersistGameAttemptParams): Prom
       childAgeBand: params.childAgeBand,
     });
 
-    // Edge function uses verify_jwt=true: gateway validates Authorization Bearer (user access_token).
-    // Do not override apikey here — let the Supabase client merge defaults; overriding broke some prod setups.
+    // Persist via PostgREST + RLS (same JWT as the rest of the app). Edge submit-game-attempt can 401 on
+    // auth.getUser() in some setups even when REST accepts the session.
     const { error: userError } = await supabase.auth.getUser();
     let session: Session | null = null;
     if (userError) {
@@ -319,6 +288,12 @@ export async function persistGameAttempt(params: PersistGameAttemptParams): Prom
       }
     }
 
+    // Long play sessions: refresh before checks + invoke so JWT decode and fetchWithAuth agree.
+    const { data: rotated, error: rotateErr } = await supabase.auth.refreshSession();
+    if (!rotateErr && rotated.session?.access_token) {
+      session = rotated.session;
+    }
+
     const accessToken = session?.access_token?.trim() ?? '';
     if (!accessToken) {
       return {
@@ -341,80 +316,25 @@ export async function persistGameAttempt(params: PersistGameAttemptParams): Prom
       };
     }
 
-    // Long play sessions: access token can expire before onComplete; refresh immediately before invoke.
-    const { data: rotated, error: rotateErr } = await supabase.auth.refreshSession();
-    if (!rotateErr && rotated.session?.access_token) {
-      session = rotated.session;
-    }
-    const tokenForInvoke = session?.access_token?.trim() ?? '';
-    if (!tokenForInvoke) {
-      return {
-        status: 'failed',
-        errorMessage: 'Could not obtain a valid access token after refresh. Sign out and sign in again.',
-      };
-    }
-
-    const invokeBody = {
+    return persistGameAttemptViaPostgrest(supabase, {
       childId: params.childId,
       gameId,
       clientSessionId: params.clientSessionId,
       levelId,
       startedAt: params.startedAt,
       ageBand: params.childAgeBand ?? null,
-      attempt: {
-        attemptId,
-        attemptIndex: normalizeAttemptIndex(params.attemptIndex),
-        score: params.completion.score,
-        stars: params.completion.stars,
-        durationMs: params.durationMs ?? null,
-        payload: {
-          source: 'web-game-route',
-          gameSlug: params.game.slug,
-          levelNumber: params.level?.levelNumber ?? null,
-          completed: params.completion.completed,
-          roundsCompleted: params.completion.roundsCompleted ?? null,
-          summaryMetrics: params.completion.summaryMetrics ?? null,
-          parentMetricsV1,
-        },
-      },
-    };
-
-    const invokeSubmit = (bearer: string) =>
-      supabase.functions.invoke<SubmitGameAttemptResponse>('submit-game-attempt', {
-        headers: { Authorization: `Bearer ${bearer}` },
-        body: invokeBody,
-      });
-
-    let { data, error } = await invokeSubmit(tokenForInvoke);
-
-    if (error && isFunctionsHttp401(error)) {
-      const { data: retrySession, error: retryErr } = await supabase.auth.refreshSession();
-      const retryToken = retrySession.session?.access_token?.trim();
-      if (!retryErr && retryToken) {
-        ({ data, error } = await invokeSubmit(retryToken));
-      }
-    }
-
-    if (error) {
-      return { status: 'failed', errorMessage: await edgeFunctionFailureMessage(error) };
-    }
-
-    if (typeof data?.error === 'string') {
-      return { status: 'failed', errorMessage: data.error };
-    }
-
-    if (!data?.sessionId || !data?.attemptId) {
-      return {
-        status: 'failed',
-        errorMessage: 'Attempt persistence response was missing identifiers.',
-      };
-    }
-
-    return {
-      status: 'persisted',
-      sessionId: data.sessionId,
-      attemptId: data.attemptId,
-    };
+      attemptId,
+      attemptIndex: normalizeAttemptIndex(params.attemptIndex),
+      score: params.completion.score,
+      stars: params.completion.stars,
+      durationMs: params.durationMs ?? null,
+      gameSlug: params.game.slug,
+      levelNumber: params.level?.levelNumber ?? null,
+      completed: Boolean(params.completion.completed),
+      roundsCompleted: params.completion.roundsCompleted ?? null,
+      summaryMetrics: params.completion.summaryMetrics ?? null,
+      parentMetricsV1,
+    });
   } catch (error) {
     return {
       status: 'failed',

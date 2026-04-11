@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-11T21:22:41.190Z",
+  "generatedAt": "2026-04-11T21:49:07.630Z",
   "sourceRoot": "assets-src/images",
   "outputRoot": "public/images",
   "settings": {
@@ -8,22 +8,22 @@
     "compactWidth": 960
   },
   "summary": {
-    "totalAssets": 85,
-    "totalBytes": 2243549,
+    "totalAssets": 90,
+    "totalBytes": 2381723,
     "byFormat": {
       "avif": 320393,
-      "webp": 1395044,
+      "webp": 1533218,
       "png": 512179,
       "svg": 15933
     },
     "byClass": {
       "general": 397050,
-      "background": 270382,
-      "thumbnail": 695490,
+      "background": 269328,
+      "thumbnail": 806194,
       "handbookCover": 59794,
       "handbookPageCompact": 163797,
       "handbookPage": 641103,
-      "mascot": 11102,
+      "mascot": 39626,
       "topic": 4831
     }
   },
@@ -144,10 +144,10 @@
       "generated": false,
       "assetClass": "background",
       "format": "webp",
-      "bytes": 91078,
-      "sha256": "36ed64a2274ae71a92d0d0115883ecf64a6e537303bcba01d1cbbb8e238fe5a1",
-      "width": 1120,
-      "height": 611
+      "bytes": 91214,
+      "sha256": "61729c71e199f76e1aacdbc65564fcc8835db690f9052e23dc405971b5364699",
+      "width": 1600,
+      "height": 1000
     },
     {
       "path": "images/backgrounds/parents/parents-hero-storybook.webp",
@@ -155,10 +155,10 @@
       "generated": false,
       "assetClass": "background",
       "format": "webp",
-      "bytes": 91448,
-      "sha256": "84d37c5d42676e3cf405ff54abbd12300deb0601940e7f242102ba4a1f3e54b8",
+      "bytes": 90258,
+      "sha256": "6f769a7d06d8b033646ae333c27740a21dca64fa37d07f085bfd41a2fa02d08d",
       "width": 1600,
-      "height": 995
+      "height": 1000
     },
     {
       "path": "images/games/thumbnails/colorGarden/thumb-16x10.webp",
@@ -188,10 +188,10 @@
       "generated": false,
       "assetClass": "thumbnail",
       "format": "webp",
-      "bytes": 70322,
-      "sha256": "724a33cd1fddccaac476ef06fd785608bd81f31586a92ddcf968d3544a8de110",
+      "bytes": 70368,
+      "sha256": "f23c956f110cb6866122b4ae09c8955b8d67a9fe692768f91940094c456470a7",
       "width": 1076,
-      "height": 470
+      "height": 692
     },
     {
       "path": "images/games/thumbnails/countingPicnic/thumb-16x10.webp",
@@ -282,6 +282,28 @@
       "height": 600
     },
     {
+      "path": "images/games/thumbnails/moreOrLessMarket/thumb-16x10.webp",
+      "sourcePath": null,
+      "generated": false,
+      "assetClass": "thumbnail",
+      "format": "webp",
+      "bytes": 4806,
+      "sha256": "c7e59df477e0d7d7a2eaa4b69b2e01086698bc44cff33555391fe7ab2c6cdac8",
+      "width": 512,
+      "height": 320
+    },
+    {
+      "path": "images/games/thumbnails/moreOrLessMarket/thumb-16x10@2x.webp",
+      "sourcePath": null,
+      "generated": false,
+      "assetClass": "thumbnail",
+      "format": "webp",
+      "bytes": 23306,
+      "sha256": "66328b2fadfd85b02eabc3032aecef1424e6d267db219f09aab22fd1fbb9acf4",
+      "width": 960,
+      "height": 600
+    },
+    {
       "path": "images/games/thumbnails/pictureToWordBuilder/thumb-16x10.webp",
       "sourcePath": null,
       "generated": false,
@@ -300,6 +322,28 @@
       "format": "webp",
       "bytes": 63320,
       "sha256": "9462db09e4b426597235f4a899524d64d2f08393698736cd3d6969b658b7d3bb",
+      "width": 960,
+      "height": 600
+    },
+    {
+      "path": "images/games/thumbnails/shapeSafari/thumb-16x10.webp",
+      "sourcePath": null,
+      "generated": false,
+      "assetClass": "thumbnail",
+      "format": "webp",
+      "bytes": 14224,
+      "sha256": "2a3e05e3edbf98027207cb1f2db28d6cc57b3a7d194e1505eb7ba683780236e7",
+      "width": 512,
+      "height": 320
+    },
+    {
+      "path": "images/games/thumbnails/shapeSafari/thumb-16x10@2x.webp",
+      "sourcePath": null,
+      "generated": false,
+      "assetClass": "thumbnail",
+      "format": "webp",
+      "bytes": 68322,
+      "sha256": "e0336018ae03b108358c7e0a3cad0ef960b8bd29dafc1680fd6ab47ef2265a6d",
       "width": 960,
       "height": 600
     },
@@ -885,6 +929,17 @@
       "sha256": "6101631f8553ed84d14925ae4bc64cad453ff3471580a0559f0bca216d463398",
       "width": 1600,
       "height": 1000
+    },
+    {
+      "path": "images/mascot/dubi-error-guide-rtl.webp",
+      "sourcePath": null,
+      "generated": false,
+      "assetClass": "mascot",
+      "format": "webp",
+      "bytes": 28524,
+      "sha256": "fe24447554f6d3f88a8ea4ece4b38f70243a879d13e2f222c2f15a0d2fbbe9f8",
+      "width": 640,
+      "height": 400
     },
     {
       "path": "images/mascot/dubi-hero-wave-rtl.svg",

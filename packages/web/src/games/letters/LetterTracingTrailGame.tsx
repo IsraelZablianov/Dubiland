@@ -72,6 +72,7 @@ type StatusKey =
 
 type AudioKey = StatusKey;
 type HintTrend = ParentSummaryMetrics['hintTrend'];
+type SelectionFeedbackTone = 'success' | 'miss';
 
 interface Point {
   x: number;
@@ -81,6 +82,11 @@ interface Point {
 interface RoundMessage {
   key: StatusKey;
   tone: HintTone;
+}
+
+interface SelectionFeedback {
+  letterId: LetterId;
+  tone: SelectionFeedbackTone;
 }
 
 interface RoundState {
@@ -672,6 +678,7 @@ export function LetterTracingTrailGame({ level: runtimeLevel, onComplete, audio 
   const [traceCelebrate, setTraceCelebrate] = useState(false);
   const [traceMiss, setTraceMiss] = useState(false);
   const [scorePulse, setScorePulse] = useState(false);
+  const [selectionFeedback, setSelectionFeedback] = useState<SelectionFeedback | null>(null);
 
   const [roundMessage, setRoundMessage] = useState<RoundMessage>({
     key: 'games.letterTracingTrail.instructions.intro',
@@ -688,6 +695,7 @@ export function LetterTracingTrailGame({ level: runtimeLevel, onComplete, audio 
   const traceCelebrateTimerRef = useRef<number | null>(null);
   const traceMissTimerRef = useRef<number | null>(null);
   const scorePulseTimerRef = useRef<number | null>(null);
+  const selectionFeedbackTimerRef = useRef<number | null>(null);
 
   const tracingEnabled =
     !sessionComplete &&
@@ -821,6 +829,10 @@ export function LetterTracingTrailGame({ level: runtimeLevel, onComplete, audio 
       window.clearTimeout(scorePulseTimerRef.current);
       scorePulseTimerRef.current = null;
     }
+    if (selectionFeedbackTimerRef.current !== null) {
+      window.clearTimeout(selectionFeedbackTimerRef.current);
+      selectionFeedbackTimerRef.current = null;
+    }
   }, []);
 
   const triggerTraceCelebrate = useCallback(() => {
@@ -864,6 +876,19 @@ export function LetterTracingTrailGame({ level: runtimeLevel, onComplete, audio 
       setScorePulse(false);
       scorePulseTimerRef.current = null;
     }, 480);
+  }, []);
+
+  const markSelectionFeedback = useCallback((letterId: LetterId, tone: SelectionFeedbackTone) => {
+    if (selectionFeedbackTimerRef.current !== null) {
+      window.clearTimeout(selectionFeedbackTimerRef.current);
+      selectionFeedbackTimerRef.current = null;
+    }
+
+    setSelectionFeedback({ letterId, tone });
+    selectionFeedbackTimerRef.current = window.setTimeout(() => {
+      setSelectionFeedback(null);
+      selectionFeedbackTimerRef.current = null;
+    }, tone === 'success' ? 520 : 420);
   }, []);
 
   const queueAdvanceAction = useCallback(
@@ -917,6 +942,7 @@ export function LetterTracingTrailGame({ level: runtimeLevel, onComplete, audio 
       setTraceCelebrate(false);
       setTraceMiss(false);
       setScorePulse(false);
+      setSelectionFeedback(null);
       setSelectedLetterId(nextRound.requiresSelection ? ('' as LetterId) : nextRound.targetLetter);
     },
     [clearTrace, setMistakeState],
@@ -1236,6 +1262,7 @@ export function LetterTracingTrailGame({ level: runtimeLevel, onComplete, audio 
 
       if (optionLetter === round.targetLetter) {
         setSelectedLetterId(optionLetter);
+        markSelectionFeedback(optionLetter, 'success');
         setMessageWithAudio('games.letterTracingTrail.letterPrompt.nowTrace', 'neutral');
 
         window.setTimeout(() => {
@@ -1245,10 +1272,19 @@ export function LetterTracingTrailGame({ level: runtimeLevel, onComplete, audio 
         return;
       }
 
+      markSelectionFeedback(optionLetter, 'miss');
       setContrastPair(sortPair(round.targetLetter, optionLetter));
       registerTraceMistake('selection');
     },
-    [midpointPaused, playAudioKey, registerTraceMistake, round, sessionComplete, setMessageWithAudio],
+    [
+      markSelectionFeedback,
+      midpointPaused,
+      playAudioKey,
+      registerTraceMistake,
+      round,
+      sessionComplete,
+      setMessageWithAudio,
+    ],
   );
 
   const handleReplayInstruction = useCallback(() => {
@@ -1416,7 +1452,12 @@ export function LetterTracingTrailGame({ level: runtimeLevel, onComplete, audio 
     };
   }, [audio, clearQueuedAdvance, clearTransientFeedbackTimers]);
 
-  const coachVariant = sessionComplete || roundMessage.tone === 'success' ? 'success' : 'hint';
+  const coachVariant =
+    sessionComplete || traceCelebrate || roundMessage.tone === 'success'
+      ? 'success'
+      : traceMiss || roundMessage.tone === 'hint' || showGhostHand || highlightGuide
+        ? 'hint'
+        : 'hero';
 
   if (sessionComplete) {
     return (
@@ -1576,7 +1617,14 @@ export function LetterTracingTrailGame({ level: runtimeLevel, onComplete, audio 
             </div>
           </div>
 
-          <div className="letter-tracing-trail__coach" aria-hidden="true">
+          <div
+            className={[
+              'letter-tracing-trail__coach',
+              coachVariant === 'success' ? 'letter-tracing-trail__coach--success' : '',
+              coachVariant === 'hint' ? 'letter-tracing-trail__coach--hint' : '',
+            ].join(' ')}
+            aria-hidden="true"
+          >
             <MascotIllustration variant={coachVariant} size={52} />
           </div>
 
@@ -1644,7 +1692,14 @@ export function LetterTracingTrailGame({ level: runtimeLevel, onComplete, audio 
           })}
         </div>
 
-        <div className={`letter-tracing-trail__message letter-tracing-trail__message--${roundMessage.tone}`}>
+        <div
+          className={[
+            'letter-tracing-trail__message',
+            `letter-tracing-trail__message--${roundMessage.tone}`,
+            traceCelebrate ? 'letter-tracing-trail__message--pulse' : '',
+            traceMiss ? 'letter-tracing-trail__message--miss' : '',
+          ].join(' ')}
+        >
           <p className="letter-tracing-trail__message-text" aria-live="polite">
             {t(roundMessage.key)}
           </p>
@@ -1666,7 +1721,17 @@ export function LetterTracingTrailGame({ level: runtimeLevel, onComplete, audio 
         ) : null}
 
         <section className="letter-tracing-trail__board">
-          <Card padding="md" className="letter-tracing-trail__trace-card">
+          <Card
+            padding="md"
+            className={[
+              'letter-tracing-trail__trace-card',
+              traceCelebrate ? 'letter-tracing-trail__trace-card--success' : '',
+              traceMiss ? 'letter-tracing-trail__trace-card--miss' : '',
+              roundMessage.tone === 'hint' || highlightGuide || showGhostHand
+                ? 'letter-tracing-trail__trace-card--hint'
+                : '',
+            ].join(' ')}
+          >
             <div className="letter-tracing-trail__trace-head">
               <span className="letter-tracing-trail__target-glyph" aria-hidden="true">
                 {currentLetterGlyph}
@@ -1747,7 +1812,11 @@ export function LetterTracingTrailGame({ level: runtimeLevel, onComplete, audio 
               />
 
               <circle
-                className="letter-tracing-trail__start-dot"
+                className={[
+                  'letter-tracing-trail__start-dot',
+                  traceCelebrate ? 'letter-tracing-trail__start-dot--success' : '',
+                  traceMiss ? 'letter-tracing-trail__start-dot--miss' : '',
+                ].join(' ')}
                 cx={round.startPoint.x}
                 cy={round.startPoint.y}
                 r={12}
@@ -1755,7 +1824,16 @@ export function LetterTracingTrailGame({ level: runtimeLevel, onComplete, audio 
             </svg>
           </Card>
 
-          <Card padding="md" className="letter-tracing-trail__choice-card">
+          <Card
+            padding="md"
+            className={[
+              'letter-tracing-trail__choice-card',
+              selectionFeedback?.tone === 'success'
+                ? 'letter-tracing-trail__choice-card--selection-success'
+                : '',
+              selectionFeedback?.tone === 'miss' ? 'letter-tracing-trail__choice-card--selection-miss' : '',
+            ].join(' ')}
+          >
             <div className="letter-tracing-trail__text-row">
               <p className="letter-tracing-trail__choice-instruction">{t(choiceInstructionKey)}</p>
               <button
@@ -1775,6 +1853,7 @@ export function LetterTracingTrailGame({ level: runtimeLevel, onComplete, audio 
                   const optionGlyph = t(LETTER_SYMBOL_KEY_BY_ID[optionLetter]);
                   const isSelected = selectedLetterId === optionLetter;
                   const optionAudioKey = LETTER_AUDIO_KEY_BY_ID[optionLetter];
+                  const hasSelectionFeedback = selectionFeedback?.letterId === optionLetter;
 
                   return (
                     <div key={`${round.id}-option-${optionLetter}`} className="letter-tracing-trail__option-item">
@@ -1783,6 +1862,12 @@ export function LetterTracingTrailGame({ level: runtimeLevel, onComplete, audio 
                         className={[
                           'letter-tracing-trail__option',
                           isSelected ? 'letter-tracing-trail__option--selected' : '',
+                          hasSelectionFeedback && selectionFeedback?.tone === 'success'
+                            ? 'letter-tracing-trail__option--success'
+                            : '',
+                          hasSelectionFeedback && selectionFeedback?.tone === 'miss'
+                            ? 'letter-tracing-trail__option--miss'
+                            : '',
                         ].join(' ')}
                         onClick={() => handleLetterSelection(optionLetter)}
                         aria-label={optionLabel}
@@ -1883,7 +1968,22 @@ const letterTracingTrailStyles = `
     background: color-mix(in srgb, var(--color-bg-card) 90%, white);
     border: 2px solid color-mix(in srgb, var(--color-accent-primary) 28%, transparent);
     box-shadow: var(--shadow-sm);
+    transition:
+      border-color 180ms ease,
+      background-color 180ms ease,
+      box-shadow 180ms ease;
     animation: letter-tracing-coach-float 1500ms ease-in-out infinite;
+  }
+
+  .letter-tracing-trail__coach--success {
+    border-color: color-mix(in srgb, var(--color-accent-success) 64%, transparent);
+    background: color-mix(in srgb, var(--color-accent-success) 16%, var(--color-bg-card));
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent-success) 20%, transparent);
+  }
+
+  .letter-tracing-trail__coach--hint {
+    border-color: color-mix(in srgb, var(--color-accent-warning) 58%, transparent);
+    background: color-mix(in srgb, var(--color-accent-warning) 14%, var(--color-bg-card));
   }
 
   .letter-tracing-trail__coach,
@@ -1967,6 +2067,14 @@ const letterTracingTrailStyles = `
     border-color: color-mix(in srgb, var(--color-accent-success) 55%, transparent);
   }
 
+  .letter-tracing-trail__message--pulse {
+    animation: letter-tracing-message-pulse 360ms ease-out;
+  }
+
+  .letter-tracing-trail__message--miss {
+    animation: letter-tracing-message-shake 260ms ease-out;
+  }
+
   .letter-tracing-trail__board {
     display: grid;
     grid-template-columns: 1.3fr 1fr;
@@ -2042,6 +2150,34 @@ const letterTracingTrailStyles = `
     display: grid;
     gap: var(--space-md);
     align-content: start;
+    transition:
+      border-color 180ms ease,
+      background-color 180ms ease;
+  }
+
+  .letter-tracing-trail__trace-card--hint {
+    border-color: color-mix(in srgb, var(--color-accent-warning) 42%, transparent);
+    background: color-mix(in srgb, var(--color-accent-warning) 10%, var(--color-bg-card));
+  }
+
+  .letter-tracing-trail__trace-card--success {
+    border-color: color-mix(in srgb, var(--color-accent-success) 52%, transparent);
+    background: color-mix(in srgb, var(--color-accent-success) 10%, var(--color-bg-card));
+  }
+
+  .letter-tracing-trail__trace-card--miss {
+    border-color: color-mix(in srgb, var(--color-accent-danger) 46%, transparent);
+    background: color-mix(in srgb, var(--color-accent-danger) 9%, var(--color-bg-card));
+  }
+
+  .letter-tracing-trail__choice-card--selection-success {
+    border-color: color-mix(in srgb, var(--color-accent-success) 52%, transparent);
+    background: color-mix(in srgb, var(--color-accent-success) 9%, var(--color-bg-card));
+  }
+
+  .letter-tracing-trail__choice-card--selection-miss {
+    border-color: color-mix(in srgb, var(--color-accent-danger) 50%, transparent);
+    background: color-mix(in srgb, var(--color-accent-danger) 10%, var(--color-bg-card));
   }
 
   .letter-tracing-trail__trace-head {
@@ -2153,6 +2289,18 @@ const letterTracingTrailStyles = `
     fill: color-mix(in srgb, var(--color-accent-primary) 72%, white);
     stroke: white;
     stroke-width: 4;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .letter-tracing-trail__start-dot--success {
+    fill: color-mix(in srgb, var(--color-accent-success) 74%, white);
+    animation: letter-tracing-start-dot-pop 360ms ease-out;
+  }
+
+  .letter-tracing-trail__start-dot--miss {
+    fill: color-mix(in srgb, var(--color-accent-danger) 72%, white);
+    animation: letter-tracing-message-shake 260ms ease-out;
   }
 
   .letter-tracing-trail__choice-instruction {
@@ -2188,6 +2336,18 @@ const letterTracingTrailStyles = `
   .letter-tracing-trail__option--selected {
     border-color: var(--color-accent-success);
     background: color-mix(in srgb, var(--color-accent-success) 15%, white);
+  }
+
+  .letter-tracing-trail__option--success {
+    border-color: color-mix(in srgb, var(--color-accent-success) 76%, transparent);
+    background: color-mix(in srgb, var(--color-accent-success) 20%, white);
+    animation: letter-tracing-option-pop 360ms ease-out;
+  }
+
+  .letter-tracing-trail__option--miss {
+    border-color: color-mix(in srgb, var(--color-accent-danger) 72%, transparent);
+    background: color-mix(in srgb, var(--color-accent-danger) 16%, white);
+    animation: letter-tracing-option-shake 280ms ease-out;
   }
 
   .letter-tracing-trail__option-glyph {
@@ -2297,6 +2457,72 @@ const letterTracingTrailStyles = `
     }
     50% {
       transform: scale(1.2);
+    }
+  }
+
+  @keyframes letter-tracing-message-pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.015);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes letter-tracing-message-shake {
+    0% {
+      transform: translateX(0);
+    }
+    32% {
+      transform: translateX(-4px);
+    }
+    64% {
+      transform: translateX(4px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes letter-tracing-option-pop {
+    0% {
+      transform: scale(1);
+    }
+    45% {
+      transform: scale(1.06);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes letter-tracing-option-shake {
+    0% {
+      transform: translateX(0);
+    }
+    35% {
+      transform: translateX(-6px);
+    }
+    70% {
+      transform: translateX(6px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes letter-tracing-start-dot-pop {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.14);
+    }
+    100% {
+      transform: scale(1);
     }
   }
 

@@ -309,3 +309,12 @@ For multi-step sorting/build games (`RootFamilyStickers`), keep board-level feed
 
 ## 2026-04-11 — Decodable story polish is safest with tone-driven panel/coach classes layered on existing checkpoints
 For `DecodableStoryReaderGame`, visual uplift can stay regression-safe by reusing existing `messageTone` + `checkpointFeedback` state to drive panel and mascot variants (`hero|hint|success`) and by adding transient micro-feedback classes (`--target`, `--success`, `--error`) on existing word/option controls. This preserves progression/audio logic while making wrong/right outcomes clearer for young learners.
+
+## 2026-04-12 — Lane-scoped feedback for moving-object games should target stable surfaces, not transient sprites
+In moving-object games like `LetterSkyCatcher`, per-object feedback classes can be invisible because hit/miss objects are removed in the same tick. A safer polish pattern is to bind feedback to stable elements (`status row`, `player mascot`, `lane guides`) using transient lane/tone state, which keeps feedback visible without touching physics or spawn flow.
+
+## 2026-04-12 — Tracing+selection games benefit from dual-surface feedback (option state + trace state) with timed cleanup
+For mixed interaction games like `LetterTracingTrail`, keep option feedback and trace feedback separate: per-option `success/miss` classes for letter choice and board/message/start-dot tone classes for trace outcome. Drive coach variant from neutral/hint/success runtime signals (not only round message) and clear transient feedback via shared timer teardown so state does not leak between rounds.
+
+## 2026-04-12 — Mobile persistent CTA requires fixed+spacer pattern, not top-of-page sticky
+For long scrolling marketing pages, placing a conversion block near the top with `position: sticky; inset-block-end` is not truly persistent; it scrolls away once its section leaves the viewport. A reliable mobile pattern is `position: fixed` anchored to viewport bottom with safe-area padding plus an in-flow spacer to prevent content occlusion, while switching back to inline/static behavior on desktop breakpoints.

@@ -350,3 +350,6 @@ When a coordinator issue is fed by design/curriculum ideation lanes (like [DUB-7
 
 ## 2026-04-11 — `inbox-lite` May Omit Assignee On Assigned Rows
 `GET /api/agents/me/inbox-lite` can return issues that are clearly in the Architect inbox while each row has `assigneeAgentId: null`. For ownership-critical actions, re-validate with direct `GET /api/issues/{id}` before deciding whether to process or skip a wake-scoped task.
+
+## 2026-04-12 — If QA shows only slug lookup and no attempt-write, split recovery into Backend DB-readiness + FED wiring in parallel
+For new game slugs, a persistence failure can come from runtime DB state drift (migration file exists but target Supabase project not updated) or client wiring regressions. Fastest CTO pattern is to open two child lanes immediately: Backend verifies/applies runtime DB preconditions, FED validates completion->persist call chain, then QA reruns on a single canonical gate.

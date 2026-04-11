@@ -15,7 +15,8 @@ const COLUMNS = 3;
 const GAP = 10;
 const PADDING_INLINE = 18;
 const PADDING_BLOCK = 18;
-const CONTACT_SHEET_QUALITY = 52;
+/** Keep under thumbnail WebP per-asset budget (70 KiB) as tile count grows. */
+const CONTACT_SHEET_QUALITY = 46;
 const CANVAS_BACKGROUND = '#f6efe2';
 
 const canonicalOrder = [

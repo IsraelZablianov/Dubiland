@@ -21,7 +21,7 @@ const SHAPE_SAFARI_GAME: Game = {
   componentKey: 'ShapeSafariGame',
   difficulty: 2,
   sortOrder: 3,
-  thumbnailUrl: null,
+  thumbnailUrl: '/images/games/thumbnails/shapeSafari/thumb-16x10.webp',
   audioUrl: '/audio/he/games/shape-safari/instructions/intro.mp3',
   isPublished: true,
   createdAt: '2026-04-10T00:00:00.000Z',

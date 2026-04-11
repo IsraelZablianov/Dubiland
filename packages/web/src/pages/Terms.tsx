@@ -40,8 +40,14 @@ export default function Terms() {
           min-height: 100%;
           padding-bottom: var(--space-2xl);
           background:
+            linear-gradient(
+              180deg,
+              color-mix(in srgb, var(--color-theme-bg) 86%, transparent) 0%,
+              color-mix(in srgb, var(--color-theme-bg) 94%, transparent) 100%
+            ),
             radial-gradient(circle at 88% 12%, color-mix(in srgb, var(--color-theme-secondary) 28%, transparent), transparent 42%),
             radial-gradient(circle at 10% 6%, color-mix(in srgb, var(--color-theme-primary) 16%, transparent), transparent 38%),
+            url('/images/backgrounds/legal/legal-storybook.webp') center top / cover no-repeat,
             var(--color-theme-bg);
         }
 

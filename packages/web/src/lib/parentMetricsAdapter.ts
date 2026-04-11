@@ -120,6 +120,23 @@ function toSkillKey(slug: string): string | null {
   return trimmed.slice(0, 96);
 }
 
+/**
+ * Maps catalog slug → parent-metrics domain + skillKey without querying `games.curriculum_domain`
+ * (column may be absent on older DBs). Aligns with `resolveDomain` when only slug is known.
+ */
+export function resolveParentMetricsDomainAndSkillKeyFromSlug(slug: string): {
+  domain: ParentMetricsDomain;
+  skillKey: string;
+} | null {
+  const gameKey = toLookupKey(slug);
+  const domain = DOMAIN_BY_GAME_KEY[gameKey] ?? null;
+  const skillKey = toSkillKey(slug);
+  if (!domain || !skillKey) {
+    return null;
+  }
+  return { domain, skillKey };
+}
+
 export function buildParentMetricsV1(params: BuildParentMetricsV1Params): ParentMetricsV1 | null {
   const summary = params.completion.summaryMetrics;
   if (!summary) {

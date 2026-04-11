@@ -3,7 +3,7 @@
 ## Event Sink
 
 - Table: `public.parent_funnel_events`
-- Migration: `supabase/migrations/00034_parent_funnel_events.sql`
+- Migration: `supabase/migrations/00036_parent_funnel_events.sql`
 - Client tracker: `packages/web/src/lib/parentFunnelInstrumentation.ts`
 - Flush trigger on route changes: `packages/web/src/App.tsx`
 

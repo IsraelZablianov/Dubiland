@@ -116,7 +116,7 @@ const HOME_GAME_OPTIONS: TopicGameOption[] = [
   {
     slug: 'moreOrLessMarket',
     route: '/games/numbers/more-or-less-market',
-    thumbnailUrl: DEFAULT_GAME_THUMBNAIL,
+    thumbnailUrl: '/images/games/thumbnails/moreOrLessMarket/thumb-16x10.webp',
     difficulty: 2,
     primaryAgeBand: '4-5',
     supportAgeBands: ['5-6'],
@@ -186,7 +186,7 @@ const HOME_GAME_OPTIONS: TopicGameOption[] = [
   {
     slug: 'shapeSafari',
     route: '/games/numbers/shape-safari',
-    thumbnailUrl: DEFAULT_GAME_THUMBNAIL,
+    thumbnailUrl: '/images/games/thumbnails/shapeSafari/thumb-16x10.webp',
     difficulty: 2,
     primaryAgeBand: '3-4',
     supportAgeBands: ['4-5'],

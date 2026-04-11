@@ -1,0 +1,35 @@
+{
+  "audioEndpointHead": {
+    "url": "http://127.0.0.1:4316/audio/he/games/measure-and-match/instructions/intro.mp3",
+    "status": 200,
+    "contentType": "audio/mpeg"
+  },
+  "networkRequests": [
+    "GET /audio/he/games/measure-and-match/instructions/intro.mp3 -> 206",
+    "GET /audio/he/games/measure-and-match/prompts/length/longer.mp3 -> 206",
+    "GET /audio/he/games/measure-and-match/feedback/encouragement/almost-there.mp3 -> 206",
+    "GET /audio/he/games/measure-and-match/feedback/encouragement/keep-trying.mp3 -> 206"
+  ],
+  "viewportChecks": {
+    "mobile390x844": {
+      "dir": "rtl",
+      "hasCheckSubmit": false,
+      "replayButtons": 2,
+      "failedTouchTargets": []
+    },
+    "tablet768x1024": {
+      "dir": "rtl",
+      "hasCheckSubmit": false,
+      "replayButtons": 2,
+      "failedTouchTargets": []
+    }
+  },
+  "touchTargetSamples": [
+    { "label": "השמעה חוזרת", "width": 67.9, "height": 60 },
+    { "label": "השמעה חוזרת", "width": 94.7, "height": 60 },
+    { "label": "רמז", "width": 94.7, "height": 60 },
+    { "label": "ניסיון חוזר", "width": 94.7, "height": 60 },
+    { "label": "סולם", "width": 142, "height": 120 },
+    { "label": "עיפרון", "width": 142, "height": 120 }
+  ]
+}

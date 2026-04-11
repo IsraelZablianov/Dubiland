@@ -313,3 +313,12 @@ When validating scoped i18n/audio coverage from `common.json`, manifest lookups 
 
 ## 2026-04-12 — `process_lost_retry` wakes can be blocked-only; verify and exit without noise
 On retry wakes with no `PAPERCLIP_TASK_ID`, first re-check assigned statuses via inbox + company filter. If all lanes remain blocked and unchanged, apply blocked-dedupe (no checkout, no repeat blocker comments) and exit after recording memory.
+
+## 2026-04-12 — Audio coverage QA must allow static key-to-path maps as valid fallback evidence
+For completion-surface reruns, manifest lookup alone can produce false blockers when a game introduces a derived i18n key and resolves audio via in-file static maps (for example `STATIC_AUDIO_PATH_BY_KEY`). Validate three layers before failing audio coverage: locale key exists, runtime static map entry exists (if used), and target audio file path is present on disk.
+
+## 2026-04-12 — Persistence QA for game completion must require invoke-level evidence, not only summary UI
+For `useGameAttemptSync` lanes, completion summary rendering is only optimistic proof. Always run with an authenticated parent session and a real child selected from `/profiles` (UUID), then capture network/resource evidence that `submit-game-attempt` (or equivalent edge invoke) actually fires. In this run, summary rendered and i18n/audio parity was green, but no invoke call was observed and sync settled to error — this is a blocking persistence failure.
+
+## 2026-04-12 — Game audio-first reruns should verify in-session request flow, not only static file presence
+For audio blocker reruns like [DUB-781](/DUB/issues/DUB-781), pass criteria should include live in-session requests after load and after child action (`instructions/*`, then `prompts/*` or `feedback/*`) in addition to keyset parity and `audio/*` content-type checks. Static file existence alone can miss autoplay wiring regressions.

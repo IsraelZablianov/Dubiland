@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Button, Card } from '@/components/design-system';
+import { Card } from '@/components/design-system';
 import { FeatureIllustration } from '@/components/illustrations';
 import { isParentFunnelConversionTuneupEnabled } from '@/lib/featureFlags';
 import { trackParentFunnelEvent } from '@/lib/parentFunnelInstrumentation';
@@ -10,11 +10,6 @@ const HOW_IT_WORKS_STEPS = ['1', '2', '3', '4'] as const;
 
 const FAQ_ITEMS = ['1', '2', '3', '4', '5'] as const;
 const PARENTS_PAGE_VIEW_IDLE_TIMEOUT_MS = 3200;
-
-const PROMINENT_MARKETING_CTA_STYLE = {
-  minHeight: 'var(--touch-primary-action-prominent)',
-  padding: 'var(--space-md) var(--space-xl)',
-};
 
 export default function Parents() {
   const { t } = useTranslation('public');
@@ -81,21 +76,23 @@ export default function Parents() {
       </section>
 
       {isParentFunnelConversionTuneupEnabled ? (
-        <section className="parents__conversion-shell" aria-label={t('parents.conversionCtaTitle')}>
-          <div className="parents__conversion-card">
-            <p className="parents__conversion-title">{t('parents.conversionCtaTitle')}</p>
-            <p className="parents__conversion-text">{t('parents.conversionCtaText')}</p>
-            <Link to="/login" onClick={handleParentsLoginClick}>
-              <Button
-                variant="primary"
-                size="lg"
-                style={{ ...PROMINENT_MARKETING_CTA_STYLE, inlineSize: '100%' }}
+        <>
+          <section className="parents__conversion-shell" aria-label={t('parents.conversionCtaTitle')}>
+            <div className="parents__conversion-card">
+              <p className="parents__conversion-title">{t('parents.conversionCtaTitle')}</p>
+              <p className="parents__conversion-text">{t('parents.conversionCtaText')}</p>
+              <Link
+                to="/login"
+                onClick={handleParentsLoginClick}
+                className="parents__conversion-link"
+                aria-label={t('parents.conversionCtaButton')}
               >
                 {t('parents.conversionCtaButton')}
-              </Button>
-            </Link>
-          </div>
-        </section>
+              </Link>
+            </div>
+          </section>
+          <div className="parents__conversion-spacer" aria-hidden="true" />
+        </>
       ) : null}
 
       {/* How It Works */}
@@ -152,7 +149,14 @@ export default function Parents() {
 
       <style>{`
         .parents__hero {
-          background: var(--color-bg-primary);
+          background:
+            linear-gradient(
+              160deg,
+              color-mix(in srgb, var(--color-bg-primary) 86%, transparent) 0%,
+              color-mix(in srgb, var(--color-bg-primary) 94%, transparent) 100%
+            ),
+            url('/images/backgrounds/parents/parents-hero-storybook.webp') center / cover no-repeat,
+            var(--color-bg-primary);
           padding: var(--space-3xl) var(--space-xl);
           text-align: center;
           display: flex;
@@ -185,8 +189,6 @@ export default function Parents() {
           margin: 0 auto;
           padding-inline: var(--space-xl);
           padding-block-end: var(--space-lg);
-          position: sticky;
-          inset-block-end: var(--space-sm);
           z-index: 20;
         }
 
@@ -220,8 +222,36 @@ export default function Parents() {
           text-align: start;
         }
 
-        .parents__conversion-shell a {
+        .parents__conversion-link {
+          min-height: var(--touch-primary-action-prominent);
+          padding: var(--space-md) var(--space-xl);
+          border-radius: var(--radius-lg);
+          background: var(--color-accent-primary);
+          color: var(--color-text-inverse);
+          font-size: var(--font-size-lg);
+          font-weight: var(--font-weight-bold);
+          line-height: var(--line-height-tight);
           text-decoration: none;
+          box-shadow: var(--shadow-sm);
+          transition: var(--transition-fast);
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          inline-size: 100%;
+          text-align: center;
+        }
+
+        .parents__conversion-link:hover {
+          filter: brightness(1.03);
+        }
+
+        .parents__conversion-link:focus-visible {
+          outline: 3px solid color-mix(in srgb, var(--color-accent-primary) 45%, white);
+          outline-offset: 2px;
+        }
+
+        .parents__conversion-spacer {
+          display: none;
         }
 
         .parents__section--alt {
@@ -336,6 +366,36 @@ export default function Parents() {
           .parents__conversion-shell {
             position: static;
             padding-block-end: 0;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .parents__conversion-shell {
+            position: fixed;
+            inset-inline: 0;
+            inset-block-end: 0;
+            max-width: none;
+            padding-inline: var(--space-md);
+            padding-block-start: var(--space-xs);
+            padding-block-end: calc(var(--space-sm) + env(safe-area-inset-bottom));
+            z-index: 60;
+            background: linear-gradient(
+              to top,
+              color-mix(in srgb, var(--color-bg-primary) 92%, transparent) 0%,
+              color-mix(in srgb, var(--color-bg-primary) 68%, transparent) 64%,
+              transparent 100%
+            );
+          }
+
+          .parents__conversion-card {
+            max-width: 800px;
+            margin-inline: auto;
+            gap: var(--space-sm);
+          }
+
+          .parents__conversion-spacer {
+            display: block;
+            block-size: calc(var(--touch-primary-action-prominent) + var(--space-3xl));
           }
         }
       `}</style>

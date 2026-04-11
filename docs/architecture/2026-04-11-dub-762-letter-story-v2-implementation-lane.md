@@ -57,7 +57,7 @@ Audio contract:
 
 Create a new seed migration:
 
-- `supabase/migrations/00035_seed_letter_storybook_v2.sql`
+- `supabase/migrations/00038_seed_letter_storybook_v2.sql`
 
 Game row requirements:
 

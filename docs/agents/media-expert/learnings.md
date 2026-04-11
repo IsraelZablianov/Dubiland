@@ -420,3 +420,15 @@ Why it matters:
 - prevents accidental API calls to undefined issue routes,
 - avoids duplicate blocked comments,
 - keeps retries idempotent and low-noise.
+
+## 2026-04-12 — Board-delivered WebP assets often need mandatory normalization before wiring
+
+Even when board saves to the exact target paths, generated files can be oversized in both resolution and bytes. Treat post-delivery normalization as required:
+- resize to runtime contract (`background 1600x1000`, `thumb@2x 960x600`, `thumb 512x320`),
+- re-encode to pass class budgets,
+- only then wire paths and run `images:contact-sheet` + `images:budgets`.
+
+Why it matters:
+- prevents immediate performance-budget regressions,
+- keeps manifest/reporting accurate,
+- avoids repeated review loops caused by technically correct but non-compliant assets.

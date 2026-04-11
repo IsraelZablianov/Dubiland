@@ -198,6 +198,9 @@ In completion states, a replay control can pass superficially while narrating on
 Handbook pa11y failures can originate in shared chrome (`GameTopBar`) rather than handbook-only classes. During handbook QA, run route-level pa11y and map failing selectors back to shared components before signoff; otherwise contrast regressions in subtitle/progress text can slip through even when handbook-specific styles were previously fixed.
 
 ## 2026-04-10 — DB-first acceptance requires structure-level proof, not just DB hydration calls
+
+## 2026-04-12 — Missing `window.__DUBILAND_DEBUG__` is a QA infrastructure defect
+When game routes do not expose the dev-only debug hook, QA loses deterministic E2E synchronization (`waitForFunction` on level/state flags) and must rely on brittle UI timing. Treat hook absence as a trackable defect with both runtime proof (`window.__DUBILAND_DEBUG__ === undefined`) and code search evidence (`rg "__DUBILAND_DEBUG__"` returns no matches).
 Seeing `handbooks`/`handbook_pages` queries in route code is insufficient for DB-first signoff. Validate runtime merge semantics too: if render still returns hardcoded `basePages` when runtime payload is empty and only overlays via `basePages.map(...)`, keep QA blocked until the DB-first implementation lane is complete.
 
 ## 2026-04-10 — Completion-state QA must validate control gating plus replay semantics together

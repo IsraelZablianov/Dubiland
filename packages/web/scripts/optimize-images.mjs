@@ -323,8 +323,44 @@ async function writeManifestFile(manifest) {
   await fs.writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
 }
 
+async function rebuildManifestOnly() {
+  const priorRaw = await fs.readFile(manifestPath, 'utf8');
+  const prior = JSON.parse(priorRaw);
+  const generatedBy = new Map();
+
+  if (Array.isArray(prior.assets)) {
+    for (const asset of prior.assets) {
+      if (typeof asset.path !== 'string' || !asset.path.startsWith('images/')) {
+        continue;
+      }
+
+      const relativeFromImages = asset.path.slice('images/'.length);
+      if (asset.generated && asset.sourcePath) {
+        generatedBy.set(relativeFromImages, asset.sourcePath);
+      }
+    }
+  }
+
+  const manifest = await buildManifest(generatedBy);
+  await writeManifestFile(manifest);
+
+  const totalKiB = (manifest.summary.totalBytes / 1024).toFixed(1);
+  process.stdout.write(
+    [
+      `[images:optimize] manifest refresh only: ${manifest.summary.totalAssets} assets (${totalKiB} KiB)`,
+      `[images:optimize] wrote ${toPosixPath(path.relative(projectRoot, manifestPath))}`,
+      '',
+    ].join('\n'),
+  );
+}
+
 async function main() {
   await fs.mkdir(outputRoot, { recursive: true });
+
+  if (process.argv.includes('--manifest-only')) {
+    await rebuildManifestOnly();
+    return;
+  }
 
   const { sourceFiles, generatedBy } = await optimizeSourceAssets();
   const manifest = await buildManifest(generatedBy);

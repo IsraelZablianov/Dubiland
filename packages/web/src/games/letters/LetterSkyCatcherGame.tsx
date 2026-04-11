@@ -1787,6 +1787,16 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
           transform: translateX(-50%);
         }
 
+        .letter-sky-catcher__lane-guide--success {
+          background: linear-gradient(180deg, color-mix(in srgb, var(--color-accent-success) 0%, transparent), color-mix(in srgb, var(--color-accent-success) 74%, transparent), color-mix(in srgb, var(--color-accent-success) 0%, transparent));
+          animation: letter-sky-catcher-lane-success 260ms ease-out;
+        }
+
+        .letter-sky-catcher__lane-guide--miss {
+          background: linear-gradient(180deg, color-mix(in srgb, var(--color-accent-danger) 0%, transparent), color-mix(in srgb, var(--color-accent-danger) 72%, transparent), color-mix(in srgb, var(--color-accent-danger) 0%, transparent));
+          animation: letter-sky-catcher-lane-miss 240ms ease-in-out;
+        }
+
         .letter-sky-catcher__falling-object {
           position: absolute;
           inset-inline-start: 0;
@@ -1826,14 +1836,6 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
 
         .letter-sky-catcher__falling-object--hint {
           animation: letter-sky-catcher-hint 800ms ease-in-out infinite;
-        }
-
-        .letter-sky-catcher__falling-object--caught-success {
-          animation: letter-sky-catcher-object-success-glow 280ms ease-out;
-        }
-
-        .letter-sky-catcher__falling-object--caught-miss {
-          animation: letter-sky-catcher-object-miss-glow 240ms ease-in-out;
         }
 
         .letter-sky-catcher__object-icon {
@@ -1979,16 +1981,17 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
           100% { transform: scale(1); }
         }
 
-        @keyframes letter-sky-catcher-object-success-glow {
-          0% { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--color-accent-success) 36%, transparent); }
-          60% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--color-accent-success) 0%, transparent), inset 0 0 0 2px color-mix(in srgb, var(--color-accent-success) 68%, transparent); }
-          100% { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--color-accent-success) 36%, transparent); }
+        @keyframes letter-sky-catcher-lane-success {
+          0% { opacity: 0.6; transform: translateX(-50%) scaleY(1); }
+          50% { opacity: 1; transform: translateX(-50%) scaleY(1.08); }
+          100% { opacity: 0.9; transform: translateX(-50%) scaleY(1); }
         }
 
-        @keyframes letter-sky-catcher-object-miss-glow {
-          0% { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--color-accent-warning) 34%, transparent); }
-          45% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--color-accent-danger) 0%, transparent), inset 0 0 0 2px color-mix(in srgb, var(--color-accent-danger) 64%, transparent); }
-          100% { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--color-accent-warning) 34%, transparent); }
+        @keyframes letter-sky-catcher-lane-miss {
+          0% { opacity: 0.6; transform: translateX(-50%) scaleY(1); }
+          33% { opacity: 1; transform: translateX(-50%) translateX(1px); }
+          66% { opacity: 0.9; transform: translateX(-50%) translateX(-1px); }
+          100% { opacity: 0.8; transform: translateX(-50%) scaleY(1); }
         }
 
         @keyframes letter-sky-catcher-progress-breathe {
@@ -2017,8 +2020,8 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
           .letter-sky-catcher__progress-dot--active-live,
           .letter-sky-catcher__falling-object,
           .letter-sky-catcher__falling-object--hint,
-          .letter-sky-catcher__falling-object--caught-success,
-          .letter-sky-catcher__falling-object--caught-miss,
+          .letter-sky-catcher__lane-guide--success,
+          .letter-sky-catcher__lane-guide--miss,
           .letter-sky-catcher__playfield--success,
           .letter-sky-catcher__playfield--miss,
           .letter-sky-catcher__player,

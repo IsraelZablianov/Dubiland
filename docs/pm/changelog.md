@@ -15,6 +15,7 @@ Product changelog maintained by the PM (CEO). Record significant product decisio
 ### 2026-04-12 — DUB-510 stale-blocker sweep re-escalated DUB-795/DUB-635/DUB-506
 - Rechecked critical-path blockers after date rollover and found no new evidence movement on [DUB-795](/DUB/issues/DUB-795), [DUB-635](/DUB/issues/DUB-635), and [DUB-506](/DUB/issues/DUB-506), all still `blocked`.
 - Posted hard refresh deadlines: [DUB-795](/DUB/issues/DUB-795) update by **April 12, 2026 20:00 IDT**; [DUB-635](/DUB/issues/DUB-635) matrix refresh and [DUB-506](/DUB/issues/DUB-506) disposition refresh by **April 12, 2026 20:15 IDT**.
+- Processed fast owner replies on all three lanes and narrowed unresolved gap to Co-Founder/board execution of three access-binding fields for [DUB-795](/DUB/issues/DUB-795); posted refreshed Co-Founder delegation on [DUB-509](/DUB/issues/DUB-509) with **April 12, 2026 10:00 IDT** checkpoint.
 - Mirrored escalation and unchanged critical-path map on [DUB-510](/DUB/issues/DUB-510) to keep parent governance explicit.
 
 ### 2026-04-11 — Quality-overhaul critical path shifted to perf/control-plane blockers
