@@ -1244,7 +1244,7 @@ export function DecodableStoryMissionsGame({ onComplete, audio }: GameProps) {
           {clusterLabelKey ? <p className="decodable-missions__cluster-label">{t(clusterLabelKey as any)}</p> : null}
         </div>
         <div className="decodable-missions__coach" aria-hidden="true">
-          <MascotIllustration variant={sessionCompleted ? 'success' : messageTone === 'error' ? 'hint' : 'celebrate'} size={56} />
+          <MascotIllustration variant={sessionCompleted ? 'success' : messageTone === 'error' ? 'hint' : 'hero'} size={56} />
         </div>
       </header>
 
