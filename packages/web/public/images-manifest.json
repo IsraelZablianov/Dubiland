@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-11T19:37:18.506Z",
+  "generatedAt": "2026-04-11T21:22:41.190Z",
   "sourceRoot": "assets-src/images",
   "outputRoot": "public/images",
   "settings": {
@@ -8,17 +8,17 @@
     "compactWidth": 960
   },
   "summary": {
-    "totalAssets": 83,
-    "totalBytes": 2061023,
+    "totalAssets": 85,
+    "totalBytes": 2243549,
     "byFormat": {
       "avif": 320393,
-      "webp": 1212518,
+      "webp": 1395044,
       "png": 512179,
       "svg": 15933
     },
     "byClass": {
       "general": 397050,
-      "background": 87856,
+      "background": 270382,
       "thumbnail": 695490,
       "handbookCover": 59794,
       "handbookPageCompact": 163797,
@@ -137,6 +137,28 @@
       "sha256": "c753e806a40f9bae54a6b2593a0faf5452416829541462ec0b67b360559fabd8",
       "width": 1600,
       "height": 1000
+    },
+    {
+      "path": "images/backgrounds/legal/legal-storybook.webp",
+      "sourcePath": null,
+      "generated": false,
+      "assetClass": "background",
+      "format": "webp",
+      "bytes": 91078,
+      "sha256": "36ed64a2274ae71a92d0d0115883ecf64a6e537303bcba01d1cbbb8e238fe5a1",
+      "width": 1120,
+      "height": 611
+    },
+    {
+      "path": "images/backgrounds/parents/parents-hero-storybook.webp",
+      "sourcePath": null,
+      "generated": false,
+      "assetClass": "background",
+      "format": "webp",
+      "bytes": 91448,
+      "sha256": "84d37c5d42676e3cf405ff54abbd12300deb0601940e7f242102ba4a1f3e54b8",
+      "width": 1600,
+      "height": 995
     },
     {
       "path": "images/games/thumbnails/colorGarden/thumb-16x10.webp",
