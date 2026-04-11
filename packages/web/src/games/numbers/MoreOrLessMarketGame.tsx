@@ -1239,40 +1239,37 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
                 ? 'more-less-market__basket--miss'
                 : '',
             ].join(' ')}
-            onClick={() => handleSideChoice('right')}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                handleSideChoice('right');
-              }
-            }}
-            role="button"
-            tabIndex={0}
-            aria-label={t('games.moreOrLessMarket.instructions.tapChoiceRight')}
           >
-            {round.rightIsNumberCard ? (
-              <span className="more-less-market__number">{round.rightValue}</span>
-            ) : (
-              <div className="more-less-market__token-grid" aria-hidden="true">
-                {chunkTokens(round.rightTokens).map((tokenRow, rowIndex) => (
-                  <div key={`right-row-${rowIndex}`} className="more-less-market__token-row">
-                    {tokenRow.map((token, tokenIndex) => (
-                      <span
-                        key={`right-token-${rowIndex}-${tokenIndex}`}
-                        className={[
-                          'more-less-market__token',
-                          boardFeedback === 'success' && feedbackSide === 'right'
-                            ? 'more-less-market__token--celebrate'
-                            : '',
-                        ].join(' ')}
-                      >
-                        {token}
-                      </span>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            )}
+            <button
+              type="button"
+              className="more-less-market__basket-choice"
+              onClick={() => handleSideChoice('right')}
+              aria-label={t('games.moreOrLessMarket.instructions.tapChoiceRight')}
+            >
+              {round.rightIsNumberCard ? (
+                <span className="more-less-market__number">{round.rightValue}</span>
+              ) : (
+                <div className="more-less-market__token-grid" aria-hidden="true">
+                  {chunkTokens(round.rightTokens).map((tokenRow, rowIndex) => (
+                    <div key={`right-row-${rowIndex}`} className="more-less-market__token-row">
+                      {tokenRow.map((token, tokenIndex) => (
+                        <span
+                          key={`right-token-${rowIndex}-${tokenIndex}`}
+                          className={[
+                            'more-less-market__token',
+                            boardFeedback === 'success' && feedbackSide === 'right'
+                              ? 'more-less-market__token--celebrate'
+                              : '',
+                          ].join(' ')}
+                        >
+                          {token}
+                        </span>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </button>
 
             {(showCountScaffold || revealedCountBySide.right) && (
               <span className="more-less-market__count-chip" aria-hidden="true">
@@ -1375,40 +1372,37 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
                 ? 'more-less-market__basket--miss'
                 : '',
             ].join(' ')}
-            onClick={() => handleSideChoice('left')}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                handleSideChoice('left');
-              }
-            }}
-            role="button"
-            tabIndex={0}
-            aria-label={t('games.moreOrLessMarket.instructions.tapChoiceLeft')}
           >
-            {round.leftIsNumberCard ? (
-              <span className="more-less-market__number">{round.leftValue}</span>
-            ) : (
-              <div className="more-less-market__token-grid" aria-hidden="true">
-                {chunkTokens(round.leftTokens).map((tokenRow, rowIndex) => (
-                  <div key={`left-row-${rowIndex}`} className="more-less-market__token-row">
-                    {tokenRow.map((token, tokenIndex) => (
-                      <span
-                        key={`left-token-${rowIndex}-${tokenIndex}`}
-                        className={[
-                          'more-less-market__token',
-                          boardFeedback === 'success' && feedbackSide === 'left'
-                            ? 'more-less-market__token--celebrate'
-                            : '',
-                        ].join(' ')}
-                      >
-                        {token}
-                      </span>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            )}
+            <button
+              type="button"
+              className="more-less-market__basket-choice"
+              onClick={() => handleSideChoice('left')}
+              aria-label={t('games.moreOrLessMarket.instructions.tapChoiceLeft')}
+            >
+              {round.leftIsNumberCard ? (
+                <span className="more-less-market__number">{round.leftValue}</span>
+              ) : (
+                <div className="more-less-market__token-grid" aria-hidden="true">
+                  {chunkTokens(round.leftTokens).map((tokenRow, rowIndex) => (
+                    <div key={`left-row-${rowIndex}`} className="more-less-market__token-row">
+                      {tokenRow.map((token, tokenIndex) => (
+                        <span
+                          key={`left-token-${rowIndex}-${tokenIndex}`}
+                          className={[
+                            'more-less-market__token',
+                            boardFeedback === 'success' && feedbackSide === 'left'
+                              ? 'more-less-market__token--celebrate'
+                              : '',
+                          ].join(' ')}
+                        >
+                          {token}
+                        </span>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </button>
 
             {(showCountScaffold || revealedCountBySide.left) && (
               <span className="more-less-market__count-chip" aria-hidden="true">
@@ -1621,15 +1615,31 @@ const moreLessMarketStyles = `
       color-mix(in srgb, var(--color-bg-primary) 90%, var(--color-theme-primary) 10%)
     );
     min-height: 230px;
-    padding: var(--space-sm);
-    display: grid;
-    align-content: start;
-    gap: var(--space-xs);
-    cursor: pointer;
     transition:
       transform 180ms ease,
       border-color var(--transition-fast),
       box-shadow var(--transition-fast);
+  }
+
+  .more-less-market__basket-choice {
+    position: absolute;
+    inset: 0;
+    border: none;
+    border-radius: inherit;
+    background: transparent;
+    color: inherit;
+    padding: var(--space-sm);
+    display: grid;
+    align-content: start;
+    gap: var(--space-xs);
+    text-align: start;
+    cursor: pointer;
+    z-index: 1;
+  }
+
+  .more-less-market__basket-choice:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--color-accent-info) 75%, transparent);
+    outline-offset: 2px;
   }
 
   .more-less-market__basket--selected {
@@ -1704,6 +1714,8 @@ const moreLessMarketStyles = `
     align-items: center;
     justify-content: center;
     font-weight: var(--font-weight-bold);
+    pointer-events: none;
+    z-index: 2;
   }
 
   .more-less-market__count-button {
@@ -1716,6 +1728,7 @@ const moreLessMarketStyles = `
     border: 2px solid color-mix(in srgb, var(--color-theme-primary) 30%, transparent);
     background: var(--color-bg-primary);
     cursor: pointer;
+    z-index: 3;
   }
 
   .more-less-market__badge-zone {

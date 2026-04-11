@@ -8,6 +8,9 @@ Append new entries after each completed task.
 What was learned and why it matters.
 -->
 
+## 2026-04-11 — Cross-Topic Idea Waves Convert Faster When PM Ships Spec-Ready Top 3 Instead of a Flat Idea List
+For broad "new ideas" requests, execution moves fastest when the PM publishes a benchmark matrix + 5-idea shortlist but immediately upgrades only the top 3 into full spec-ready docs with delegated FED ownership. This preserves strategic breadth while avoiding backlog-only recommendations that stall before implementation.
+
 ## 2026-04-11 — Done-Lane Wakeups Should Trigger Delegation Gate Recheck, Not New Tickets
 When a completed PM lane wakes again, the safest action is to revalidate `features.md` delegation state and explicitly confirm de-dup alignment before creating any new implementation tasks. This preserves execution clarity and prevents accidental duplicate FED lanes for already-delegated specs.
 

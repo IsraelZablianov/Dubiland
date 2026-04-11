@@ -3,6 +3,19 @@
 Accumulated knowledge specific to the Reading PM role.
 Append new entries after each completed task.
 
+## 2026-04-11 — Lane-first trigger applies even when only one specialist lane completes
+- If a planned feature receives a first `done` lane while core implementation is still `todo`, promote the feature to `In Progress` immediately and move mapped coverage counts from planned to in-progress in the same edit.
+- This prevents stale "planned" labeling for already-active multi-lane clusters and keeps backlog reports aligned with live execution reality.
+
+## 2026-04-11 — Late-lane closure can happen while implementation remains blocked/backlog
+- In large multi-lane narrative clusters, support lanes (content/UX/mechanics/media) can all close to `done` while implementation/technical-owner lanes stay `backlog` or `blocked`; feature status should remain `In Progress` and lane labels must be synced exactly.
+- A heartbeat parity sweep should always include blocked-state detection (`todo` -> `blocked` transitions), not only done/in-progress changes, because blocked lanes alter execution risk even when curriculum coverage stays unchanged.
+
+## 2026-04-11 — Reading-ladder gap closure bundle (blend -> encode -> pointing fade)
+- For age ~6 Hebrew reading progression, a high-leverage 3-spec packet is: pre-word blend fluency (CV/CVC), decoding-to-encoding transfer, then controlled nikud fade in short sentences; this closes common ladder gaps between isolated decoding and mixed-pointing stories.
+- Delegation quality stays high when each new reading game launches as a three-lane cluster on day one: FED implementation + Content Writer i18n/audio + Gaming Expert mechanics review.
+- Active-load balancing remains defensible by counting open FED lanes (`backlog,todo,in_progress,in_review,blocked`) before assigning new implementation tickets.
+
 ## 2026-04-11 — Continuous-story specs need explicit transition contracts
 - For a story-led Hebrew letter route, "22 letters covered" is not enough; the spec must include an explicit scene-to-scene transition contract per letter, otherwise teams drift back to isolated-page design.
 - If sibling specialist lanes already exist but FED implementation is missing, create a direct FED lane in the same heartbeat and annotate coordination dependencies in the issue comment to avoid ownership gaps.

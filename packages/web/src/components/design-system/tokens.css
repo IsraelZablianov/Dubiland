@@ -125,6 +125,14 @@
   --touch-primary-action-prominent: 80px;
   --touch-filter-chip: 52px;
 
+  /* === Home Hub Sticky Controls === */
+  --home-sticky-offset: clamp(10px, 2vh, 20px);
+  --home-rail-inline-size: clamp(132px, 17vw, 188px);
+  --home-rail-gap: var(--space-sm);
+  --home-rail-z-index: 20;
+  --home-rail-toggle-size: max(52px, var(--touch-filter-chip));
+  --home-section-jump-target-min: max(44px, var(--touch-min-secondary));
+
   /* === Handbook Reader Shell === */
   --handbook-frame-radius: 1.75rem; /* 28px */
   --handbook-frame-border: 2px solid color-mix(in srgb, var(--color-theme-primary) 22%, transparent);

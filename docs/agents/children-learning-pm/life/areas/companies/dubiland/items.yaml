@@ -171,12 +171,12 @@
   category: milestone
   timestamp: "2026-04-10"
   source: "docs/children-learning-pm/features.md"
-  status: active
-  superseded_by: null
+  status: superseded
+  superseded_by: clpm-dubiland-020
   related_entities:
     - companies/dubiland
-  last_accessed: "2026-04-10"
-  access_count: 1
+  last_accessed: "2026-04-11"
+  access_count: 2
 
 - id: clpm-dubiland-016
   fact: "Children Learning PM validated pedagogy for the Learn the Letters storybook (DUB-652) and locked required gates: staged letter sequencing, confusable-pair remediation order, age-banded sentence complexity caps, and contextual final-form handling."
@@ -195,6 +195,54 @@
   category: relationship
   timestamp: "2026-04-11"
   source: "DUB-652 comment 4be923a2-9b2a-4a6b-a3e3-799a0a6e51f7"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-11"
+  access_count: 1
+
+- id: clpm-dubiland-018
+  fact: "Children Learning PM published cross-topic benchmark synthesis for ages 3-7 at docs/children-learning-pm/curriculum-benchmark-cross-topic-shortlist-2026-04-11.md under DUB-775."
+  category: milestone
+  timestamp: "2026-04-11"
+  source: "docs/children-learning-pm/curriculum-benchmark-cross-topic-shortlist-2026-04-11.md"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-11"
+  access_count: 1
+
+- id: clpm-dubiland-019
+  fact: "Children Learning PM authored three new spec-ready game docs: pattern-train.md, spell-and-send.md, and measure-and-match.md."
+  category: milestone
+  timestamp: "2026-04-11"
+  source: "docs/games/pattern-train.md, docs/games/spell-and-send.md, docs/games/measure-and-match.md"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-11"
+  access_count: 1
+
+- id: clpm-dubiland-020
+  fact: "Implementation of Pattern Train, Spell-and-Send, and Measure and Match was directly delegated with FED load balancing via DUB-779, DUB-780, and DUB-781, and features.md was updated from Planned to Delegated In Progress."
+  category: milestone
+  timestamp: "2026-04-11"
+  source: "docs/children-learning-pm/features.md"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-11"
+  access_count: 1
+
+- id: clpm-dubiland-021
+  fact: "DUB-775 synthesis integrated Gaming Expert checkpoint output from DUB-774 and marked Reading PM lane DUB-776 as pending follow-up alignment before content lock."
+  category: relationship
+  timestamp: "2026-04-11"
+  source: "docs/children-learning-pm/curriculum-benchmark-cross-topic-shortlist-2026-04-11.md"
   status: active
   superseded_by: null
   related_entities:

@@ -214,3 +214,6 @@ For DOM-based motion games like `LetterSkyCatcherGame`, keeping gameplay simulat
 
 ## 2026-04-11 — Public-shell auth and SEO namespaces should hydrate as sidecars, but route-content LCP can still dominate
 For public bootstrap lanes, splitting `PublicHeader` into a static core plus idle/intent-loaded auth sidecar and deferring `seo` i18n namespace until `RouteMetadataManager` mounts materially reduces entry chunk pressure (`index 239726 raw / 74294 gzip` vs DUB-686 baseline). However, this alone may not close strict route LCP gates when page content regresses; treat shell-side splits as necessary but not sufficient and plan route-specific LCP follow-ups (`/parents` in DUB-744).
+
+## 2026-04-11 — PR perf-gate workflows should publish summary artifacts even on gate failures
+For CI budget/lighthouse lanes, add a dedicated summary script and run it with `if: always()` so failures still produce one markdown/json report for triage instead of forcing readers to piece data from scattered logs.

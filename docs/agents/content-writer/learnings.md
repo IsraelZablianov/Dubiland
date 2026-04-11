@@ -172,3 +172,6 @@ For game-topic keyword expansions (colors, shapes, grade-1 reading comprehension
 
 ## 2026-04-11 — Parent-funnel audio follow-ups should verify both namespace keys and parent-lane evidence
 For conversion-copy follow-ups (landing + parents + onboarding), closure should include three checks together: locale key presence in `public.json/onboarding.json`, manifest mappings for every requested key, and on-disk mp3 existence under matching folders. After validation (`yarn audio:validate-manifest`), always post a completion comment on the parent implementation issue so FED/PM can track integration without reopening the content lane.
+
+## 2026-04-11 — Sound-slide packs should ship with event mapping + placeholder-safe parent audio
+For `soundSlideBlending` lanes, ship one synchronized bundle: `common.games.soundSlideBlending.*`, `common.parentDashboard.games.soundSlideBlending.*`, and any new linked pronunciation keys. Always add an i18n/audio map doc with a runtime event -> key table (especially `rail_swipe_blend` segmented->blended sequence) and add `audio-overrides.json` entries for placeholder-heavy parent metrics to avoid spoken template variables.

@@ -369,6 +369,9 @@ yarn dev
 | `yarn build` | Production build |
 | `yarn typecheck` | TypeScript checking across all packages |
 | `yarn generate-audio` | Generate Hebrew TTS audio from i18n files |
+| `yarn workspace @dubiland/web perf:ci:bundle` | Run CI bundle budget gate against `packages/web/perf/ci-budgets.json` |
+| `yarn workspace @dubiland/web perf:ci:lighthouse -- --base-url http://127.0.0.1:4173` | Run CI Lighthouse route gate (`/`, `/letters`, `/parents`) |
+| `yarn workspace @dubiland/web perf:ci:summary` | Build consolidated perf gate artifacts (`artifacts/perf/summary.{json,md}`) |
 
 ---
 

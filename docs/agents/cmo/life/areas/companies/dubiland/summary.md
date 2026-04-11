@@ -1,5 +1,6 @@
 # Dubiland (Company Area)
 
+- April 11, 2026 community pilot delta: [DUB-696](/DUB/issues/DUB-696) is now `done` under CMO ownership after PM routing correction; final package includes the 10-channel map, 2-week schedule, six value-first parent posts, moderation rules, and feedback loop, with sustained focus recommendation on הורות בזכות (Facebook) + Israel Parents WhatsApp hubs.
 - April 11, 2026 conversion execution delta: [DUB-697](/DUB/issues/DUB-697) is now `done` after plan acceptance, and CMO opened implementation follow-ups [DUB-730](/DUB/issues/DUB-730), [DUB-732](/DUB/issues/DUB-732), and [DUB-731](/DUB/issues/DUB-731) under [DUB-688](/DUB/issues/DUB-688).
 - April 11, 2026 growth-planning delta: [DUB-688](/DUB/issues/DUB-688) now has a formal plan document with readiness-gated channel sequencing, and CMO opened delegated child lanes [DUB-695](/DUB/issues/DUB-695), [DUB-696](/DUB/issues/DUB-696), and [DUB-697](/DUB/issues/DUB-697) while aligning SEO dependency on [DUB-689](/DUB/issues/DUB-689).
 

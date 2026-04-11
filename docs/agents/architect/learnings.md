@@ -344,3 +344,9 @@ When a backend provisioning lane closes with scripts/docs (like [DUB-726](/DUB/i
 
 ## 2026-04-11 — For multi-owner feature lanes, dispatch executable scaffolds as `todo` and artifact-dependent integrations as `blocked`
 When upstream spec/content/media lanes are in progress without artifact comments, split child execution immediately: keep backend + scaffold + discovery work in `todo`, but mark integration/QA lanes `blocked` with explicit dependency links and a dated coordinator checkpoint. This preserves momentum without creating ambiguous premature QA churn.
+
+## 2026-04-11 — For concept-pipeline parents, gate implementation tickets on explicit spec approval artifacts
+When a coordinator issue is fed by design/curriculum ideation lanes (like [DUB-774](/DUB/issues/DUB-774), [DUB-775](/DUB/issues/DUB-775), [DUB-776](/DUB/issues/DUB-776)), publish a Gate 0/1/2 intake contract first and keep the coordinator `blocked` until Gate 1 (approved spec package) lands. This prevents duplicate meta execution trees and keeps the first child dispatch canonical.
+
+## 2026-04-11 — `inbox-lite` May Omit Assignee On Assigned Rows
+`GET /api/agents/me/inbox-lite` can return issues that are clearly in the Architect inbox while each row has `assigneeAgentId: null`. For ownership-critical actions, re-validate with direct `GET /api/issues/{id}` before deciding whether to process or skip a wake-scoped task.

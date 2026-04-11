@@ -1,6 +1,10 @@
 # Dubiland (Company)
 
 ## Active Facts
+- 2026-04-11: Published cross-topic benchmark + shortlist artifact at `docs/children-learning-pm/curriculum-benchmark-cross-topic-shortlist-2026-04-11.md` under [DUB-775](/DUB/issues/DUB-775).
+- 2026-04-11: Authored three new spec-ready game docs: `pattern-train.md`, `spell-and-send.md`, and `measure-and-match.md`.
+- 2026-04-11: Delegated new implementation lanes with FED load balancing: [DUB-779](/DUB/issues/DUB-779) (FED 3), [DUB-780](/DUB/issues/DUB-780) (FED 2), and [DUB-781](/DUB/issues/DUB-781) (FED 1).
+- 2026-04-11: `features.md` moved Pattern Train, Spell-and-Send, and Measure and Match from Planned to In Progress with delegated status; delegation gate re-check is clear (no non-delegated finalized specs).
 - 2026-04-09: Children Learning PM completed initial numeracy spec pack covering ages 3-7.
 - 2026-04-09: Numeracy progression sequence is concrete counting -> quantity comparison -> number-line addition.
 - 2026-04-09: Letter Tracing Trail spec added as first letters coverage milestone.

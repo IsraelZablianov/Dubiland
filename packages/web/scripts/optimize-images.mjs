@@ -46,6 +46,7 @@ function isHandbookPageSource(sourceRelativePath) {
 
 /** Max width for About-page photos (gallery CSS max-width ~560px; tuned so palette PNG stays under general budget). */
 const ABOUT_IMAGE_MAX_WIDTH = 560;
+const ABOUT_RESPONSIVE_VARIANT_WIDTHS = [320, 400, ABOUT_IMAGE_MAX_WIDTH, 800];
 
 function getRasterResizeWidth(sourceRelativePath, extension) {
   if (extension === '.png') {
@@ -55,6 +56,14 @@ function getRasterResizeWidth(sourceRelativePath, extension) {
     return ABOUT_IMAGE_MAX_WIDTH;
   }
   return undefined;
+}
+
+function getResponsiveVariantWidths(sourceRelativePath) {
+  if (!sourceRelativePath.startsWith('about/')) {
+    return [];
+  }
+
+  return ABOUT_RESPONSIVE_VARIANT_WIDTHS.filter((width) => width !== ABOUT_IMAGE_MAX_WIDTH);
 }
 
 async function pathExists(targetPath) {
@@ -206,6 +215,24 @@ async function optimizeSourceAssets() {
 
     for (const outputPath of defaultOutputs) {
       generatedBy.set(toPosixPath(path.relative(outputRoot, outputPath)), sourceRelativePath);
+    }
+
+    const responsiveVariantWidths = getResponsiveVariantWidths(sourceRelativePath);
+    for (const responsiveWidth of responsiveVariantWidths) {
+      const responsiveWebpPath = `${outputBasePath}-${responsiveWidth}.webp`;
+      const responsiveAvifPath = `${outputBasePath}-${responsiveWidth}.avif`;
+
+      await writeRendition(sourcePath, responsiveWebpPath, 'webp', responsiveWidth);
+      await writeRendition(sourcePath, responsiveAvifPath, 'avif', responsiveWidth);
+
+      generatedBy.set(
+        toPosixPath(path.relative(outputRoot, responsiveWebpPath)),
+        sourceRelativePath,
+      );
+      generatedBy.set(
+        toPosixPath(path.relative(outputRoot, responsiveAvifPath)),
+        sourceRelativePath,
+      );
     }
 
     if (isHandbookPageSource(sourceRelativePath)) {

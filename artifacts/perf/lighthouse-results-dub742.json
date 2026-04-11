@@ -1,0 +1,73 @@
+{
+  "generatedAt": "2026-04-11T15:29:08.529Z",
+  "budgetsPath": "packages/web/perf/ci-budgets.json",
+  "baseUrl": "http://127.0.0.1:4173",
+  "reportsDirectory": "artifacts/perf/lighthouse/raw-dub742",
+  "pass": true,
+  "routes": {
+    "/": {
+      "route": "/",
+      "targetUrl": "http://127.0.0.1:4173/",
+      "reportPath": "artifacts/perf/lighthouse/raw-dub742/root.json",
+      "budgets": {
+        "performanceMin": 80,
+        "lcpMsMax": 4100,
+        "clsMax": 0.05
+      },
+      "metrics": {
+        "performanceScore": 94,
+        "lcpMs": 2689.88,
+        "cls": 0
+      },
+      "checks": {
+        "performance": true,
+        "lcp": true,
+        "cls": true
+      },
+      "pass": true
+    },
+    "/letters": {
+      "route": "/letters",
+      "targetUrl": "http://127.0.0.1:4173/letters",
+      "reportPath": "artifacts/perf/lighthouse/raw-dub742/letters.json",
+      "budgets": {
+        "performanceMin": 85,
+        "lcpMsMax": 3350,
+        "clsMax": 0.05
+      },
+      "metrics": {
+        "performanceScore": 96,
+        "lcpMs": 2594.9614,
+        "cls": 0
+      },
+      "checks": {
+        "performance": true,
+        "lcp": true,
+        "cls": true
+      },
+      "pass": true
+    },
+    "/parents": {
+      "route": "/parents",
+      "targetUrl": "http://127.0.0.1:4173/parents",
+      "reportPath": "artifacts/perf/lighthouse/raw-dub742/parents.json",
+      "budgets": {
+        "performanceMin": 86,
+        "lcpMsMax": 3300,
+        "clsMax": 0.05
+      },
+      "metrics": {
+        "performanceScore": 94,
+        "lcpMs": 2610.736,
+        "cls": 0
+      },
+      "checks": {
+        "performance": true,
+        "lcp": true,
+        "cls": true
+      },
+      "pass": true
+    }
+  },
+  "violations": []
+}

@@ -12,6 +12,16 @@ Product changelog maintained by the PM (CEO). Record significant product decisio
 
 ---
 
+### 2026-04-11 — DUB-673 closed after spec delivery; CTO coordination lane reactivated
+- Confirmed delegated discovery/spec lanes are complete: [DUB-774](/DUB/issues/DUB-774), [DUB-775](/DUB/issues/DUB-775), and [DUB-776](/DUB/issues/DUB-776) are all `done` with published artifacts.
+- Cleared stale dependency blocker on [DUB-777](/DUB/issues/DUB-777) and moved it to `in_progress` with explicit CTO direction to publish canonical keep/merge/supersede routing across overlapping implementation lanes.
+- Closed parent [DUB-673](/DUB/issues/DUB-673) as `done` since assigned scope (gaps, concepts, specs, and implementation delegation) is complete and delegated implementation execution is active.
+
+### 2026-04-11 — DUB-495 media verification gate cleared; illustration replacement lane closed
+- Confirmed [DUB-623](/DUB/issues/DUB-623) moved to `done` after SHA-verified Batch D re-delivery evidence ([DUB-623#comment-8cf58fa8](/DUB/issues/DUB-623#comment-8cf58fa8-79e9-40c6-9821-f6f765e7bda4)).
+- Confirmed parent quality lane [DUB-495](/DUB/issues/DUB-495) moved from `blocked` to `done` once the external board dependency cleared.
+- Coordination decision on [DUB-510](/DUB/issues/DUB-510): media/integration closeout subtree is complete ([DUB-623](/DUB/issues/DUB-623), [DUB-624](/DUB/issues/DUB-624), [DUB-625](/DUB/issues/DUB-625), [DUB-628](/DUB/issues/DUB-628), [DUB-629](/DUB/issues/DUB-629)); remaining quality-overhaul pressure shifts to other open execution/perf lanes.
+
 ### 2026-04-11 — DUB-673 delegated into cross-functional game-idea/spec pipeline
 - Checked out [DUB-673](/DUB/issues/DUB-673) and triaged it as a multi-lane concept/spec initiative spanning gameplay design, curriculum benchmarking, and reading-ladder coverage.
 - Delegated specialist lanes: [DUB-774](/DUB/issues/DUB-774) (Gaming Expert), [DUB-775](/DUB/issues/DUB-775) (Children Learning PM), [DUB-776](/DUB/issues/DUB-776) (Reading PM), and [DUB-777](/DUB/issues/DUB-777) (Architect technical intake for implementation breakdown).

@@ -32,6 +32,7 @@ type LetterId =
   | 'tav';
 
 type LetterAudioKey = `letters.pronunciation.${LetterId}`;
+type LetterSymbolKey = `letters.symbols.${LetterId}`;
 type GameLevelId = 1 | 2 | 3;
 type HintTone = 'neutral' | 'hint' | 'success';
 
@@ -71,8 +72,6 @@ type StatusKey =
 
 type AudioKey = StatusKey;
 type HintTrend = ParentSummaryMetrics['hintTrend'];
-
-type PatternId = 'hook' | 'arch' | 'zig' | 'loop' | 'stairs' | 'swoop' | 'split' | 'bridge';
 
 interface Point {
   x: number;
@@ -135,6 +134,31 @@ const LETTER_AUDIO_KEY_BY_ID: Record<LetterId, LetterAudioKey> = {
   tav: 'letters.pronunciation.tav',
 };
 
+const LETTER_SYMBOL_KEY_BY_ID: Record<LetterId, LetterSymbolKey> = {
+  alef: 'letters.symbols.alef',
+  bet: 'letters.symbols.bet',
+  gimel: 'letters.symbols.gimel',
+  dalet: 'letters.symbols.dalet',
+  he: 'letters.symbols.he',
+  vav: 'letters.symbols.vav',
+  zayin: 'letters.symbols.zayin',
+  het: 'letters.symbols.het',
+  tet: 'letters.symbols.tet',
+  yod: 'letters.symbols.yod',
+  kaf: 'letters.symbols.kaf',
+  lamed: 'letters.symbols.lamed',
+  mem: 'letters.symbols.mem',
+  nun: 'letters.symbols.nun',
+  samekh: 'letters.symbols.samekh',
+  ayin: 'letters.symbols.ayin',
+  pe: 'letters.symbols.pe',
+  tsadi: 'letters.symbols.tsadi',
+  qof: 'letters.symbols.qof',
+  resh: 'letters.symbols.resh',
+  shin: 'letters.symbols.shin',
+  tav: 'letters.symbols.tav',
+};
+
 const LETTER_POOL_BY_LEVEL: Record<GameLevelId, LetterId[]> = {
   1: ['alef', 'bet', 'gimel', 'dalet', 'he', 'vav'],
   2: ['alef', 'bet', 'gimel', 'dalet', 'he', 'vav', 'zayin', 'het', 'tet', 'yod', 'kaf', 'lamed'],
@@ -189,93 +213,178 @@ const SIMILAR_LETTERS: Record<LetterId, LetterId[]> = {
   tav: ['het', 'shin'],
 };
 
-const TRACE_PATTERN_POINTS: Record<PatternId, Point[]> = {
-  hook: [
-    { x: 286, y: 28 },
-    { x: 214, y: 28 },
-    { x: 214, y: 176 },
-    { x: 124, y: 192 },
-  ],
-  arch: [
-    { x: 68, y: 184 },
-    { x: 120, y: 84 },
-    { x: 176, y: 42 },
-    { x: 232, y: 84 },
-    { x: 286, y: 184 },
-  ],
-  zig: [
-    { x: 60, y: 182 },
-    { x: 128, y: 80 },
-    { x: 190, y: 182 },
-    { x: 254, y: 80 },
-    { x: 308, y: 182 },
-  ],
-  loop: [
-    { x: 142, y: 36 },
-    { x: 224, y: 36 },
-    { x: 266, y: 98 },
-    { x: 224, y: 162 },
-    { x: 142, y: 162 },
-    { x: 96, y: 98 },
-    { x: 142, y: 36 },
-    { x: 252, y: 186 },
-  ],
-  stairs: [
-    { x: 80, y: 46 },
-    { x: 212, y: 46 },
-    { x: 212, y: 92 },
-    { x: 124, y: 92 },
-    { x: 124, y: 132 },
-    { x: 242, y: 132 },
-    { x: 242, y: 178 },
-    { x: 90, y: 178 },
-  ],
-  swoop: [
-    { x: 286, y: 40 },
-    { x: 224, y: 98 },
-    { x: 176, y: 124 },
-    { x: 126, y: 154 },
-    { x: 82, y: 196 },
-  ],
-  split: [
-    { x: 94, y: 38 },
-    { x: 94, y: 178 },
-    { x: 178, y: 104 },
-    { x: 266, y: 178 },
-    { x: 266, y: 40 },
-  ],
-  bridge: [
-    { x: 66, y: 162 },
-    { x: 122, y: 82 },
-    { x: 178, y: 82 },
-    { x: 236, y: 162 },
-    { x: 302, y: 162 },
-  ],
-};
+/** Sampled ellipse for ס (closed-ish loop in one stroke). */
+function ellipsePolyline(cx: number, cy: number, rx: number, ry: number, segments: number): Point[] {
+  const pts: Point[] = [];
+  for (let i = 0; i <= segments; i += 1) {
+    const angle = -Math.PI / 2 + (i / segments) * Math.PI * 2;
+    pts.push({
+      x: Math.round(cx + rx * Math.cos(angle)),
+      y: Math.round(cy + ry * Math.sin(angle)),
+    });
+  }
+  return pts;
+}
 
-const PATTERN_BY_LETTER: Record<LetterId, PatternId> = {
-  alef: 'hook',
-  bet: 'loop',
-  gimel: 'swoop',
-  dalet: 'stairs',
-  he: 'bridge',
-  vav: 'hook',
-  zayin: 'split',
-  het: 'arch',
-  tet: 'loop',
-  yod: 'swoop',
-  kaf: 'hook',
-  lamed: 'zig',
-  mem: 'bridge',
-  nun: 'split',
-  samekh: 'loop',
-  ayin: 'arch',
-  pe: 'stairs',
-  tsadi: 'zig',
-  qof: 'bridge',
-  resh: 'swoop',
-  shin: 'split',
-  tav: 'stairs',
+/**
+ * One-stroke polylines in TRACE_VIEW space that approximate block Hebrew shapes
+ * (simplified for tracing coverage, not typographic outlines).
+ */
+const TRACE_PATH_BY_LETTER: Record<LetterId, Point[]> = {
+  alef: [
+    { x: 98, y: 48 },
+    { x: 232, y: 138 },
+    { x: 254, y: 138 },
+    { x: 254, y: 188 },
+  ],
+  bet: [
+    { x: 72, y: 44 },
+    { x: 248, y: 44 },
+    { x: 266, y: 90 },
+    { x: 246, y: 168 },
+    { x: 118, y: 168 },
+    { x: 96, y: 88 },
+  ],
+  gimel: [
+    { x: 268, y: 44 },
+    { x: 112, y: 44 },
+    { x: 86, y: 92 },
+    { x: 118, y: 172 },
+    { x: 226, y: 172 },
+  ],
+  dalet: [
+    { x: 78, y: 48 },
+    { x: 238, y: 48 },
+    { x: 264, y: 96 },
+    { x: 228, y: 176 },
+    { x: 118, y: 176 },
+  ],
+  he: [
+    { x: 272, y: 46 },
+    { x: 76, y: 46 },
+    { x: 58, y: 102 },
+    { x: 58, y: 184 },
+    { x: 234, y: 184 },
+  ],
+  vav: [
+    { x: 172, y: 32 },
+    { x: 172, y: 196 },
+  ],
+  zayin: [
+    { x: 90, y: 48 },
+    { x: 250, y: 48 },
+    { x: 140, y: 184 },
+  ],
+  het: [
+    { x: 68, y: 44 },
+    { x: 272, y: 44 },
+    { x: 252, y: 96 },
+    { x: 252, y: 184 },
+    { x: 88, y: 184 },
+    { x: 88, y: 96 },
+  ],
+  tet: [
+    { x: 200, y: 42 },
+    { x: 120, y: 42 },
+    { x: 88, y: 88 },
+    { x: 88, y: 150 },
+    { x: 130, y: 182 },
+    { x: 210, y: 182 },
+    { x: 248, y: 150 },
+    { x: 248, y: 88 },
+    { x: 220, y: 50 },
+    { x: 200, y: 42 },
+  ],
+  yod: [
+    { x: 170, y: 96 },
+    { x: 170, y: 182 },
+  ],
+  kaf: [
+    { x: 82, y: 46 },
+    { x: 248, y: 46 },
+    { x: 270, y: 96 },
+    { x: 242, y: 180 },
+    { x: 124, y: 180 },
+    { x: 100, y: 96 },
+  ],
+  lamed: [
+    { x: 228, y: 192 },
+    { x: 210, y: 90 },
+    { x: 140, y: 48 },
+    { x: 98, y: 70 },
+    { x: 92, y: 140 },
+  ],
+  mem: [
+    { x: 52, y: 48 },
+    { x: 288, y: 48 },
+    { x: 288, y: 178 },
+    { x: 190, y: 178 },
+    { x: 190, y: 88 },
+    { x: 150, y: 88 },
+    { x: 150, y: 178 },
+    { x: 52, y: 178 },
+  ],
+  nun: [
+    { x: 268, y: 46 },
+    { x: 98, y: 46 },
+    { x: 98, y: 180 },
+  ],
+  samekh: ellipsePolyline(170, 112, 108, 72, 28),
+  ayin: [
+    { x: 172, y: 40 },
+    { x: 172, y: 95 },
+    { x: 235, y: 130 },
+    { x: 172, y: 175 },
+    { x: 109, y: 130 },
+    { x: 172, y: 95 },
+  ],
+  pe: [
+    { x: 74, y: 46 },
+    { x: 242, y: 46 },
+    { x: 260, y: 92 },
+    { x: 238, y: 168 },
+    { x: 122, y: 168 },
+    { x: 102, y: 100 },
+    { x: 92, y: 198 },
+    { x: 168, y: 198 },
+  ],
+  tsadi: [
+    { x: 186, y: 36 },
+    { x: 186, y: 118 },
+    { x: 58, y: 205 },
+    { x: 232, y: 205 },
+  ],
+  qof: [
+    { x: 178, y: 36 },
+    { x: 178, y: 92 },
+    { x: 250, y: 130 },
+    { x: 178, y: 172 },
+    { x: 106, y: 130 },
+    { x: 178, y: 92 },
+    { x: 178, y: 200 },
+  ],
+  resh: [
+    { x: 80, y: 46 },
+    { x: 250, y: 46 },
+    { x: 268, y: 98 },
+    { x: 246, y: 176 },
+    { x: 126, y: 176 },
+  ],
+  shin: [
+    { x: 52, y: 188 },
+    { x: 96, y: 42 },
+    { x: 168, y: 132 },
+    { x: 244, y: 42 },
+    { x: 288, y: 188 },
+  ],
+  tav: [
+    { x: 58, y: 48 },
+    { x: 280, y: 48 },
+    { x: 280, y: 184 },
+    { x: 58, y: 184 },
+    { x: 58, y: 112 },
+    { x: 280, y: 112 },
+  ],
 };
 
 const ROUND_PRAISE_ROTATION: Array<
@@ -470,7 +579,7 @@ function buildRound(options: {
     optionLetters = shuffle(optionLetters).slice(0, 3);
   }
 
-  const pathPoints = TRACE_PATTERN_POINTS[PATTERN_BY_LETTER[targetLetter]];
+  const pathPoints = TRACE_PATH_BY_LETTER[targetLetter];
   const guidePoints = expandPolyline(pathPoints, 8);
 
   return {
@@ -635,10 +744,10 @@ export function LetterTracingTrailGame({ level: runtimeLevel, onComplete, audio 
 
   const currentLetterAudioKey = LETTER_AUDIO_KEY_BY_ID[round.targetLetter];
 
-  const currentLetterGlyph = useMemo(() => {
-    const pronunciation = t(currentLetterAudioKey);
-    return Array.from(pronunciation)[0] ?? pronunciation;
-  }, [currentLetterAudioKey, t]);
+  const currentLetterGlyph = useMemo(
+    () => t(LETTER_SYMBOL_KEY_BY_ID[round.targetLetter]),
+    [round.targetLetter, t],
+  );
 
   const handleAudioPlaybackFailure = useCallback(() => {
     setAudioDegraded((current) => {
@@ -1663,7 +1772,7 @@ export function LetterTracingTrailGame({ level: runtimeLevel, onComplete, audio 
               <div className="letter-tracing-trail__options-grid">
                 {round.optionLetters.map((optionLetter) => {
                   const optionLabel = t(LETTER_AUDIO_KEY_BY_ID[optionLetter]);
-                  const optionGlyph = Array.from(optionLabel)[0] ?? optionLabel;
+                  const optionGlyph = t(LETTER_SYMBOL_KEY_BY_ID[optionLetter]);
                   const isSelected = selectedLetterId === optionLetter;
                   const optionAudioKey = LETTER_AUDIO_KEY_BY_ID[optionLetter];
 

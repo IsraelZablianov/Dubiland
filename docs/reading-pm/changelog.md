@@ -2,6 +2,51 @@
 
 Record every completed reading spec, curriculum decision, or reading milestone in reverse chronological order.
 
+## 2026-04-11 — Spell-and-Send and Pointing Fade clusters advanced to in progress
+- Synced `Spell-and-Send Post Office` in `docs/reading-pm/features.md` after [DUB-789](/DUB/issues/DUB-789) moved `todo` -> `done`.
+- Synced `Pointing Fade Bridge` after [DUB-790](/DUB/issues/DUB-790) advanced from `todo` to `done` within the same heartbeat.
+- Updated both features from `Planned` to `In Progress` (lane-first trigger):
+  - `Spell-and-Send Post Office` with [DUB-783](/DUB/issues/DUB-783) `todo`, [DUB-786](/DUB/issues/DUB-786) `todo`, [DUB-789](/DUB/issues/DUB-789) `done`
+  - `Pointing Fade Bridge` with [DUB-784](/DUB/issues/DUB-784) `todo`, [DUB-787](/DUB/issues/DUB-787) `todo`, [DUB-790](/DUB/issues/DUB-790) `done`
+- Updated curriculum coverage rows:
+  - Word Reading `1/2/2` -> `0/3/2`
+  - Word Building `1/0/1` -> `0/1/1`
+  - Nikud (Vowel Diacritics) `1/1/3` -> `0/2/3`
+  - Phrase & Sentence Reading `1/1/4` -> `0/2/4`
+  - Decodable Stories `1/1/4` -> `0/2/4`
+- Mandatory delegation audit on `docs/reading-pm/features.md`: no un-handed-off specs found (`non_delegated_status_lines=0`, `not_yet_handed_off=0`).
+
+## 2026-04-11 — Lane parity sync for Sound Slide and Letter Story v2 clusters
+- Synced delegated lane labels in `docs/reading-pm/features.md` to match live Paperclip issue states:
+  - `Sound Slide Blending`: [DUB-788](/DUB/issues/DUB-788) `in_progress` -> `done` (with [DUB-782](/DUB/issues/DUB-782) `todo`, [DUB-785](/DUB/issues/DUB-785) `in_progress`)
+  - `Letter Story v2 — Continuous Narrative Route`:
+    - [DUB-758](/DUB/issues/DUB-758), [DUB-759](/DUB/issues/DUB-759), [DUB-760](/DUB/issues/DUB-760), [DUB-761](/DUB/issues/DUB-761) `in_progress` -> `done`
+    - [DUB-762](/DUB/issues/DUB-762) `todo` -> `blocked`
+    - [DUB-766](/DUB/issues/DUB-766) remains `backlog`
+- Feature-level statuses and curriculum coverage rows were unchanged in this heartbeat.
+- Mandatory delegation audit on `docs/reading-pm/features.md`: no un-handed-off specs found (`non_delegated_status_lines=0`, `not_yet_handed_off=0`).
+
+## 2026-04-11 — DUB-776 reading-ladder concept packet authored and delegated
+- Authored three new Hebrew-reading game specs:
+  - `docs/games/sound-slide-blending.md`
+  - `docs/games/spell-and-send-post-office.md`
+  - `docs/games/pointing-fade-bridge.md`
+- Delegated direct multi-lane execution under [DUB-776](/DUB/issues/DUB-776):
+  - Sound Slide Blending: [DUB-782](/DUB/issues/DUB-782) (`todo`), [DUB-785](/DUB/issues/DUB-785) (`in_progress`), [DUB-788](/DUB/issues/DUB-788) (`in_progress`)
+  - Spell-and-Send Post Office: [DUB-783](/DUB/issues/DUB-783), [DUB-786](/DUB/issues/DUB-786), [DUB-789](/DUB/issues/DUB-789)
+  - Pointing Fade Bridge: [DUB-784](/DUB/issues/DUB-784), [DUB-787](/DUB/issues/DUB-787), [DUB-790](/DUB/issues/DUB-790)
+- Updated `docs/reading-pm/features.md`:
+  - Added all three specs with delegated status and lane-level links.
+  - Synced `Sound Slide Blending` feature state to `In Progress` due immediate content/mechanics lane activation.
+  - Updated curriculum coverage rows:
+    - Nikud `0/1/3` -> `1/1/3`
+    - Syllable Decoding `0/1/3` -> `0/2/3`
+    - Word Reading `0/2/2` -> `1/2/2`
+    - Word Building `0/0/1` -> `1/0/1`
+    - Phrase & Sentence Reading `0/1/4` -> `1/1/4`
+    - Decodable Stories `0/1/4` -> `1/1/4`
+- Mandatory delegation audit on `docs/reading-pm/features.md`: no specs remain un-handed-off; all tracked specs now show delegated status.
+
 ## 2026-04-11 — Letter Story v2 curriculum+narrative contract authored and delegated
 - Delivered canonical v2 spec package:
   - Added `docs/games/letter-storybook-v2.md` with explicit 22-letter sequence contract, transition continuity rules, age-band decoding goals, acceptance criteria, and lane handoff checklist (Content/UX/Media/Gaming/CTO/FED/QA).

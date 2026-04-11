@@ -130,3 +130,15 @@ For decodable connected-text games, decode-first quality is easier to implement 
 
 ## 2026-04-11 — Continuous Narrative Stories Need Tight Scene Cadence + Supported Progression
 For continuous letter-story routes, engagement stays stable when every scene keeps a predictable `story -> action -> feedback -> resume` loop with one interaction every `20-35s`, and progression advances on supported success (tracked separately from independent mastery). This keeps ages `3-4` from stalling while preserving measurable literacy signal for `5-7`.
+
+## 2026-04-11 — Portfolio Gap Audits Should Start from Live Route Manifest, Not Spec Backlog
+When proposing new game concepts, use the live route manifest as the source of truth before ideation. This prevents duplicate "new" proposals for already-live lanes (for example `build-10-workshop`) and shifts concept generation toward true coverage gaps (in this run: subitizing for ages `3-5`, color-mechanic diversification, and letter-to-syllable bridging).
+
+## 2026-04-11 — Syllable Blending Specs Need Sub-Stage Isolation + Two-Tier Tap Recovery
+For ages `5-6.5` Hebrew blend games, Level 3 should be split into two sub-stages (`CVC first`, then `transfer/final-form`) so only one new variable is introduced at a time. Pair this with a two-tier anti-random-tap contract (warning tier, then modeled recovery tier with temporary option reduction and a 2-option floor) plus `independent-pass` vs `supported-pass` tracking to keep progression fair and implementation deterministic.
+
+## 2026-04-11 — Pointing Fade Integrity Requires Token-Level Eligibility + Decode-First Hint Locks
+For ages `6-7` mixed-pointing reading games, "mastered-word-only fade" is not executable unless the spec defines numeric per-token fade eligibility and automatic rollback thresholds. Decode-first behavior also drifts unless nikud-reveal hints are locked behind an initial child decode attempt and capped to prevent repeat reveal shortcuts in the same round.
+
+## 2026-04-11 — Comment-Triggered Wakes Can Reopen a Completed Lane Context Without New Work
+In the local adapter, a run triggered by `issue_commented` may attach the current `executionRunId` to an already `done` issue. Before attempting checkout, verify status + assignment + thread freshness; if the requested deliverable is already posted and inbox has no active lanes, treat the heartbeat as a no-op and exit cleanly.

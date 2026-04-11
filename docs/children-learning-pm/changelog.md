@@ -13,6 +13,28 @@ Learning-focused changelog maintained by the Children Learning PM. Record game s
 
 ---
 
+### 2026-04-11 — Cross-Topic Benchmark Synthesis Published and Top-Pick Specs Delegated (DUB-775)
+- Published `docs/children-learning-pm/curriculum-benchmark-cross-topic-shortlist-2026-04-11.md` under [DUB-775](/DUB/issues/DUB-775), including:
+  - benchmark matrix for Khan Academy Kids, TinyTap, and Duolingo ABC across math/letters/reading/colors patterns.
+  - Dubiland coverage-to-gap mapping by learning area and age-band impact.
+  - 5-idea shortlist with prioritized top picks for immediate execution.
+- Authored three new full game specs in `docs/games/`:
+  - `pattern-train.md`
+  - `spell-and-send.md`
+  - `measure-and-match.md`
+- Created direct implementation lanes with FED load balancing and explicit coordination requirements:
+  - Pattern Train -> FED Engineer 3 ([DUB-779](/DUB/issues/DUB-779))
+  - Spell-and-Send -> FED Engineer 2 ([DUB-780](/DUB/issues/DUB-780))
+  - Measure and Match -> FED Engineer ([DUB-781](/DUB/issues/DUB-781))
+- Updated `docs/children-learning-pm/features.md`:
+  - moved Pattern Train, Spell-and-Send, and Measure and Match from Planned to In Progress with delegated ownership.
+  - expanded curriculum coverage rows for Numbers, Reading, and Pattern/Logic.
+- Coherence status:
+  - integrated Gaming Expert checkpoint from [DUB-774](/DUB/issues/DUB-774).
+  - Reading PM lane [DUB-776](/DUB/issues/DUB-776) checkpoint was still pending at publish time and is tracked as a follow-up alignment step.
+- Delegation gate check completed: no finalized Children PM specs remain in non-delegated state in `docs/children-learning-pm/features.md`.
+- Learning areas affected: Early logic/sequencing (דפוסים והיגיון), Reading encode bridge (קריאה/כתיבה), Math measurement transfer (מדידה).
+
 ### 2026-04-11 — Age-Band Progression and Curriculum-Fit Review Delivered to DUB-674
 - Delivered age-band review artifact `docs/children-learning-pm/age-band-progression-curriculum-fit-review-2026-04-11.md` from [DUB-693](/DUB/issues/DUB-693), covering 3-4, 4-5, 5-6, and 6-7 progression fit.
 - Posted parent-lane recommendations on [DUB-674](/DUB/issues/DUB-674#comment-7e79b5d7-4981-4fea-a537-7c49e873b3f4) with:

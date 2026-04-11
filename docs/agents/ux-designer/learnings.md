@@ -73,3 +73,6 @@ For parent-conversion funnels, any secondary info path (like `/parents`) must co
 
 ## 2026-04-11 — Treat Storybook v2 as a Delta Contract, Not a Full Rewrite
 When a new narrative route reuses the same learning domain, UX handoff should explicitly separate "shared baseline tokens/patterns" from "v2-only deltas" (route boundary, transition mode, pacing constraints). This reduces FED regression risk on the existing route while still enabling fast implementation of the new experience.
+
+## 2026-04-11 — Sticky Reachability Works Best as Breakpoint-Specific Utility Surfaces
+For long child hubs, one sticky pattern does not fit every viewport: mobile needs a compact sticky top shelf, tablet benefits from a collapsible inline-end rail, and desktop can sustain an always-on rail. Writing this as a single breakpoint matrix with explicit RTL logical placement and touch minima removes implementation ambiguity and closes QA acceptance faster.

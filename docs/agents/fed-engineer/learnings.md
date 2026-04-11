@@ -343,3 +343,12 @@ When scripting API probes in zsh, avoid `for path in ...`; `path` is tied to `PA
 
 ## 2026-04-11 — Public-funnel rollout checks can run on alternate Vite ports even when `server.port` is pinned
 If the repo’s default dev server is strict on `3000` and already occupied, validate feature-flagged UI quickly with `yarn workspace @dubiland/web dev --port 4173 --strictPort false` and capture route-by-route evidence from that session.
+
+## 2026-04-11 — Axe `scrollable-region-focusable` closes with keyboard focus + visible ring on overflow containers
+For horizontally scrollable game boards (`overflow-x: auto`), add `tabIndex={0}` on the scroll container and a clear `:focus-visible` outline so keyboard users can discover and operate the region; this resolves the common pa11y/axe focusability finding without changing game logic.
+
+## 2026-04-11 — Fix nested-interactive in game cards by splitting actions into sibling buttons
+When a selectable game surface also needs a secondary action (for example count assist), keep the visual card as a non-interactive container and render separate sibling buttons (`primary choice` + `secondary helper`) with z-index layering; this preserves keyboard parity and removes axe `nested-interactive` violations.
+
+## 2026-04-11 — Route-family lazy bootstraps reduce public startup cost without changing URL contracts
+For perf-critical route trees, keep `main.tsx` free of unconditional auth providers and split app startup into lazy `public`/`protected` bootstrap modules selected by pathname; moving protected shell + game manifest imports behind that boundary cuts anonymous `index` bootstrap bytes while preserving existing protected/public URL behavior.

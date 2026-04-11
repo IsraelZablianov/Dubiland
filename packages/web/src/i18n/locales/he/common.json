@@ -4678,6 +4678,116 @@
           "distractorReady": "אפשר להמשיך עם מסיחים דומים בלי למהר."
         }
       }
+    },
+    "soundSlideBlending": {
+      "title": "מגלשת הצלילים עם דובי",
+      "subtitle": "נוגעים באות ובניקוד, מחליקים, ושומעים הברה שלמה",
+      "instructions": {
+        "intro": "מקשיבים, נוגעים, ומחליקים יחד.",
+        "tapConsonant": "קודם בוחרים אות.",
+        "tapNikud": "עכשיו בוחרים ניקוד מתאים.",
+        "swipeSlide": "מחליקים למטה ושומעים את החיבור.",
+        "chooseSyllable": "בוחרים את ההברה המנוקדת ששמענו.",
+        "tapReplay": "לחצו על השמעה חוזרת כדי לשמוע שוב.",
+        "tapRetry": "לחצו על נסו שוב כדי לנסות מחדש.",
+        "tapHint": "לחצו על רמז כדי לקבל עזרה בשלבים.",
+        "tapNext": "לחצו על הבא כדי לעבור לתחנה הבאה.",
+        "iconsOnlyReminder": "בוחרים לפי מה ששומעים, לא לפי תמונה."
+      },
+      "controls": {
+        "replay": "השמעה חוזרת",
+        "retry": "נסו שוב",
+        "hint": "רמז",
+        "next": "הבא",
+        "replayCue": "נשמע שוב את הצליל.",
+        "retryCue": "ננסה שוב ברוגע.",
+        "hintCue": "נקבל רמז אחד בכל פעם.",
+        "nextCue": "מעולה, ממשיכים לתחנה הבאה."
+      },
+      "prompts": {
+        "listen": {
+          "segmentedModel": "נשמע בקטעים קצרים.",
+          "blendedModel": "ועכשיו נשמע חיבור שלם.",
+          "segmentedToBlendedCue": "צליל, צליל, וחיבור."
+        },
+        "build": {
+          "chooseConsonant": "בחרו את האות הנכונה.",
+          "chooseNikud": "בחרו את הניקוד שמתאים לצליל.",
+          "swipeToBlend": "מחליקים ושומעים את ההברה."
+        },
+        "choose": {
+          "findPointedSyllable": "איזו הברה מנוקדת מתאימה בדיוק?",
+          "watchNikudContrast": "שימו לב להבדל הקטן בניקוד.",
+          "cvcBridge": "עכשיו נוסיף גם עיצור בסוף."
+        },
+        "transfer": {
+          "readPointedWord": "נקרא מילה קצרה שמתחילה בהברה שלנו.",
+          "startsWithTarget": "איזו מילה מתחילה בדיוק בהברה ששמענו?",
+          "chooseByReading": "קוראים קודם ואז בוחרים."
+        }
+      },
+      "hints": {
+        "stage1ReplayBlend": "רמז ראשון: נשמע שוב את החיבור.",
+        "stage2HighlightPair": "רמז שני: דובי מסמן את האות והניקוד הנכונים.",
+        "stage3ReduceAndModel": "רמז שלישי: נשארות שתי אפשרויות ודובי מדגים אחת.",
+        "stage3NowYouTry": "עכשיו תורכם.",
+        "useHintStep": "כל לחיצה על רמז מקדמת שלב אחד."
+      },
+      "feedback": {
+        "success": {
+          "blendedCorrect": "כל הכבוד! חיברתם ושמעתם נכון.",
+          "heardAndMatched": "יופי! התאמתם בדיוק להברה ששמעתם.",
+          "independentWin": "מצוין! הצלחתם לבד.",
+          "transition": {
+            "nextStation": "נהדר, מגלישים לתחנה הבאה.",
+            "nextLevel": "יש! עולים שלב במגלשה.",
+            "transferBridge": "מעולה, עוברים עכשיו למילת גשר קצרה."
+          }
+        },
+        "retry": {
+          "gentle": "כמעט. ננסה שוב יחד.",
+          "replaySlow": "נשמע לאט ונבחר שוב.",
+          "focusNikud": "נתמקד רק בסימן הניקוד.",
+          "antiRandomTapPauseReplay": "עוצרים רגע קטן, שומעים שוב, ובוחרים בנחת.",
+          "guidedModelThenTry": "דובי מדגים פעם אחת, ואז אתם מנסים."
+        }
+      },
+      "progression": {
+        "itemBank": {
+          "cvPatterns": {
+            "baPatah": "בַּ",
+            "baQamats": "בָּ",
+            "beSegol": "בֶּ",
+            "biHirik": "בִּ",
+            "boHolam": "בּוֹ"
+          },
+          "cvcBridge": {
+            "gan": "גַּן",
+            "dag": "דָּג",
+            "or": "אוֹר"
+          },
+          "nearFoils": {
+            "baPatahVsBaQamats": "בַּ מול בָּ",
+            "beSegolVsBeTsere": "בֶּ מול בֵּ",
+            "ganVsGam": "גַּן מול גַּם"
+          }
+        },
+        "gates": {
+          "level1To2": "עוברים לשלב 2 אחרי הצלחה יציבה בלי הרבה רמזים.",
+          "level2To3": "עוברים לשלב 3 אחרי דיוק גבוה גם מול מסיחים דומים.",
+          "level3Mastery": "מצוינות בשלב 3: דיוק גבוה ורמזים מעטים."
+        },
+        "recovery": {
+          "twoMissesModelRound": "אחרי שתי טעויות רצופות דובי מדגים סבב אחד.",
+          "rapidTapPause": "ריבוי לחיצות מהירות מפעיל עצירה קצרה של 800 מילישניות.",
+          "reducedOptions": "בסבב חיזוק מצמצמים אפשרויות כדי לדייק."
+        }
+      },
+      "completion": {
+        "title": "סיימתם את מגלשת הצלילים!",
+        "summary": "חיברתם אות וניקוד וקראתם הברות מצוין.",
+        "nextStep": "בפעם הבאה נוסיף עוד הברות ונקרא עוד מילים קצרות."
+      }
     }
   },
   "numbers": {
@@ -5241,6 +5351,12 @@
         "progressSummary": "אחוז הדיוק במעבר מהברה למילה הוא {{accuracy}}. מגמת השימוש ברמזים היא {{hintTrend}}.",
         "patternBreakdown": "כיסוי תבניות CV הוא {{cvCoverage}}, וכיסוי סיומות CVC הוא {{cvcCoverage}} עם דיוק מסיחים של {{distractorAccuracy}}.",
         "nextStep": "הצעד הבא: תרגלו בבית מיזוג הברה למילה קצרה, ושמרו על קריאה רגועה לפני בחירה."
+      },
+      "soundSlideBlending": {
+        "progressSummary": "אחוז הדיוק בחיבור צלילים הוא {{accuracy}}. מגמת השימוש ברמזים היא {{hintTrend}}.",
+        "confusions": "זוג הניקודים שהכי מבלבל כרגע הוא {{nikudPair}}.",
+        "independenceSplit": "שיעור ההצלחות העצמאיות הוא {{independentRate}}, ושיעור ההצלחות עם רמז הוא {{assistedRate}}.",
+        "nextStep": "הצעד הבא: תרגלו בבית חיבור אות וניקוד בקול, ואז קראו מילה קצרה שמתחילה באותה הברה."
       }
     },
     "videos": {
@@ -5389,9 +5505,13 @@
       "gaQamats": "גָּ",
       "geSegol": "גֶּ",
       "geTsere": "גֵּ",
+      "daPatah": "דַּ",
       "ba": "בָּ",
       "ka": "כָּ",
       "da": "דָּ",
+      "deSegol": "דֶּ",
+      "diHirik": "דִּ",
+      "doHolam": "דּוֹ",
       "ra": "רָ",
       "va": "וָ",
       "za": "זָ",

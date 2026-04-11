@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-11T15:12:29.765Z",
+  "generatedAt": "2026-04-11T15:26:57.062Z",
   "sourceRoot": "assets-src/images",
   "outputRoot": "public/images",
   "settings": {
@@ -8,16 +8,16 @@
     "compactWidth": 960
   },
   "summary": {
-    "totalAssets": 77,
-    "totalBytes": 1848247,
+    "totalAssets": 83,
+    "totalBytes": 2061023,
     "byFormat": {
-      "avif": 211315,
+      "avif": 320393,
+      "webp": 1212518,
       "png": 512179,
-      "webp": 1108820,
       "svg": 15933
     },
     "byClass": {
-      "general": 184274,
+      "general": 397050,
       "background": 87856,
       "thumbnail": 695490,
       "handbookCover": 59794,
@@ -28,6 +28,72 @@
     }
   },
   "assets": [
+    {
+      "path": "images/about/boys-soccer-320.avif",
+      "sourcePath": "about/boys-soccer.jpg",
+      "generated": true,
+      "assetClass": "general",
+      "format": "avif",
+      "bytes": 18816,
+      "sha256": "931ea2ee5fb731b507626bdf6adef3238bea97e6ed98f0758312c1cc97861726",
+      "width": 320,
+      "height": 171
+    },
+    {
+      "path": "images/about/boys-soccer-320.webp",
+      "sourcePath": "about/boys-soccer.jpg",
+      "generated": true,
+      "assetClass": "general",
+      "format": "webp",
+      "bytes": 16072,
+      "sha256": "a90f4d45a6f60b6629432c3573f13b4a189d077df575b0e735feadc4e7390707",
+      "width": 320,
+      "height": 171
+    },
+    {
+      "path": "images/about/boys-soccer-400.avif",
+      "sourcePath": "about/boys-soccer.jpg",
+      "generated": true,
+      "assetClass": "general",
+      "format": "avif",
+      "bytes": 25967,
+      "sha256": "b4c4e5628de010b36e5cfce054922b0fa2ea017161c2f17363399e4aba849ed8",
+      "width": 400,
+      "height": 214
+    },
+    {
+      "path": "images/about/boys-soccer-400.webp",
+      "sourcePath": "about/boys-soccer.jpg",
+      "generated": true,
+      "assetClass": "general",
+      "format": "webp",
+      "bytes": 23402,
+      "sha256": "37970f39dbe795faa66e19af34ff482829ead13c377337d85cc0cb8cce187ffe",
+      "width": 400,
+      "height": 214
+    },
+    {
+      "path": "images/about/boys-soccer-800.avif",
+      "sourcePath": "about/boys-soccer.jpg",
+      "generated": true,
+      "assetClass": "general",
+      "format": "avif",
+      "bytes": 64295,
+      "sha256": "862782497335fc34142759e7e126df8736354c94a1b809be8bbeb4e637fd1288",
+      "width": 800,
+      "height": 429
+    },
+    {
+      "path": "images/about/boys-soccer-800.webp",
+      "sourcePath": "about/boys-soccer.jpg",
+      "generated": true,
+      "assetClass": "general",
+      "format": "webp",
+      "bytes": 64224,
+      "sha256": "4f309bf3f9308274837dc92d518422a4beade1b4c603473f90c4e1ccc44ccf6b",
+      "width": 800,
+      "height": 429
+    },
     {
       "path": "images/about/boys-soccer.avif",
       "sourcePath": "about/boys-soccer.jpg",

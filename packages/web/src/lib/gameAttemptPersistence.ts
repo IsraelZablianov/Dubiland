@@ -1,8 +1,9 @@
+import type { Session } from '@supabase/supabase-js';
 import type { Game, GameLevel } from '@dubiland/shared';
 import type { GameCompletionResult } from '@/games/engine';
 import { loadSupabaseRuntime } from '@/lib/loadSupabaseRuntime';
 import { buildParentMetricsV1 } from '@/lib/parentMetricsAdapter';
-import { isSupabaseConfigured } from '@/lib/supabaseConfig';
+import { isSupabaseConfigured, supabaseConfig } from '@/lib/supabaseConfig';
 
 type PersistableAgeBand = '3-4' | '4-5' | '5-6' | '6-7';
 type PersistSkipReason = 'supabase_not_configured' | 'child_not_persistable';
@@ -188,6 +189,40 @@ function normalizeAttemptIndex(value: number): number {
   return Math.max(0, Math.floor(value));
 }
 
+/** Decode JWT payload (no signature verify) — browser only. */
+function decodeJwtPayload(token: string): Record<string, unknown> | null {
+  const parts = token.split('.');
+  if (parts.length < 2) {
+    return null;
+  }
+  try {
+    let base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    const pad = base64.length % 4;
+    if (pad) {
+      base64 += '='.repeat(4 - pad);
+    }
+    const json = atob(base64);
+    return JSON.parse(json) as Record<string, unknown>;
+  } catch {
+    return null;
+  }
+}
+
+function projectRefFromSupabaseUrl(rawUrl: string): string | null {
+  try {
+    const host = new URL(rawUrl).hostname.toLowerCase();
+    const m = /^([a-z0-9-]+)\.supabase\.co$/.exec(host);
+    return m?.[1] ?? null;
+  } catch {
+    return null;
+  }
+}
+
+function projectRefFromJwtIssuer(iss: string): string | null {
+  const m = /^https:\/\/([a-z0-9-]+)\.supabase\.co\/auth\/v1\/?$/i.exec(iss.trim());
+  return m?.[1] ?? null;
+}
+
 export async function persistGameAttempt(params: PersistGameAttemptParams): Promise<PersistGameAttemptOutcome> {
   const devContext = { childId: params.childId, gameSlug: params.game.slug };
 
@@ -224,7 +259,70 @@ export async function persistGameAttempt(params: PersistGameAttemptParams): Prom
       childAgeBand: params.childAgeBand,
     });
 
+    // Edge function uses verify_jwt=true: gateway + function need a valid user access_token for THIS project,
+    // plus the anon apikey. Stale/mismatched-project sessions surface as "Invalid JWT".
+    const { error: userError } = await supabase.auth.getUser();
+    let session: Session | null = null;
+    if (userError) {
+      const { data: refreshed, error: refreshError } = await supabase.auth.refreshSession();
+      if (refreshError || !refreshed.session) {
+        return {
+          status: 'failed',
+          errorMessage:
+            'Sign-in session is invalid or expired (Invalid JWT). Sign out, sign in with Google again, then open /profiles. If it persists, your browser session may be for a different Supabase project than VITE_SUPABASE_URL in .env.',
+        };
+      }
+      session = refreshed.session;
+    } else {
+      const { data: sessionData, error: sessionReadError } = await supabase.auth.getSession();
+      if (sessionReadError) {
+        return {
+          status: 'failed',
+          errorMessage: `Could not read auth session (${sessionReadError.message}). Try signing out and in again.`,
+        };
+      }
+      session = sessionData.session;
+    }
+    if (session?.expires_at) {
+      const expiresAtMs = session.expires_at * 1000;
+      if (expiresAtMs < Date.now() + 120_000) {
+        const { data: refreshed, error: refreshError } = await supabase.auth.refreshSession();
+        if (!refreshError && refreshed.session) {
+          session = refreshed.session;
+        }
+      }
+    }
+
+    const accessToken = session?.access_token?.trim() ?? '';
+    if (!accessToken) {
+      return {
+        status: 'failed',
+        errorMessage:
+          'Progress sync needs a signed-in parent. Open /login, sign in with Google, then continue from /profiles.',
+      };
+    }
+
+    const configuredRef = projectRefFromSupabaseUrl(supabaseConfig.url ?? '');
+    const payload = decodeJwtPayload(accessToken);
+    const iss = typeof payload?.iss === 'string' ? payload.iss : '';
+    const jwtRef = projectRefFromJwtIssuer(iss);
+    if (configuredRef && jwtRef && configuredRef !== jwtRef) {
+      return {
+        status: 'failed',
+        errorMessage: `Supabase project mismatch: this build uses "${configuredRef}" but your session is for "${jwtRef}". Sign out, update VITE_SUPABASE_URL / anon key to that project (or sign into the matching account), then sign in again.`,
+      };
+    }
+
+    const anonKey = supabaseConfig.anonKey;
+    if (!anonKey) {
+      return { status: 'failed', errorMessage: 'VITE_SUPABASE_ANON_KEY is missing.' };
+    }
+
     const { data, error } = await supabase.functions.invoke<SubmitGameAttemptResponse>('submit-game-attempt', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        apikey: anonKey,
+      },
       body: {
         childId: params.childId,
         gameId,

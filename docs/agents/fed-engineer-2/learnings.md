@@ -277,3 +277,6 @@ When Node test files pull symbols from `.tsx` modules, plain `node --test` can f
 
 ## 2026-04-11 — Non-JS SEO parity needs route-specific head synthesis plus managed JSON-LD ids
 For static crawler parity, `generate-seo-route-html.mjs` must not clone one `dist/index.html` into all routes. Instead, synthesize each public route head from i18n (`seo.json` + `public.json`) with route-specific `title`, `description`, canonical, `hreflang=he`, and robots tags, then emit JSON-LD scripts with `data-dubiland-json-ld="true"` + stable `data-schema-id` values so `RouteMetadataManager` reuses the same schema nodes at runtime instead of creating duplicate `@type` entries.
+
+## 2026-04-11 — About hero responsive-image fixes should pair srcset widths with per-format budget checks
+When adding responsive variants for `/about` hero photos, update both generator + page `picture/srcset` together and immediately run `images:optimize` then `images:budgets` sequentially (not in parallel) so budget checks read the new manifest. For this asset class, an 840px AVIF variant exceeded the `general/avif` 65 KiB cap; dropping the largest variant to 800px (and adding a 400px step) preserved responsive coverage while keeping all budgets green.

@@ -205,3 +205,6 @@ If a delegated QA execution child is `blocked` only on a prerequisite issue (lik
 
 ## 2026-04-11 — Strategy/ideation assignments should include an immediate CTO intake lane
 When a board task asks for brainstorming/spec plus implementation delegation, split ownership immediately across domain PM/Gaming lanes and add a CTO technical-intake child at kickoff so execution routing is pre-wired once specs land.
+
+## 2026-04-11 — Treat "reference implementation done" as non-closure until live merge lane exists
+When a backend lane closes with a reference artifact but explicitly states server merge is still pending (as in [DUB-639](/DUB/issues/DUB-639)), PM should immediately escalate the parent blocker to require a canonical live-merge issue link + corrected blocker chain (for example [DUB-640](/DUB/issues/DUB-640) dependency target) with a concrete same-day checkpoint. This prevents QA deadlocks on wrapper tickets.

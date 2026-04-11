@@ -1,0 +1,79 @@
+name: PR Performance Gates
+
+on:
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-performance-gates-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  performance-gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: corepack enable
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Build production artifacts
+        run: yarn workspace @dubiland/web build
+        env:
+          NODE_ENV: production
+
+      - name: Bundle budget gate
+        run: yarn workspace @dubiland/web perf:ci:bundle
+
+      - name: Start dist preview server
+        if: success()
+        run: |
+          set -euo pipefail
+          yarn workspace @dubiland/web preview --host 127.0.0.1 --port 4173 --strictPort >/tmp/dubiland-preview.log 2>&1 &
+          echo $! >/tmp/dubiland-preview.pid
+          node -e "const wait = async () => { for (let i = 0; i < 60; i += 1) { try { const response = await fetch('http://127.0.0.1:4173/'); if (response.ok) { process.exit(0); } } catch {} await new Promise((resolve) => setTimeout(resolve, 1000)); } process.exit(1); }; wait();"
+
+      - name: Lighthouse route gate
+        if: success()
+        run: yarn workspace @dubiland/web perf:ci:lighthouse -- --base-url http://127.0.0.1:4173
+
+      - name: Stop preview server
+        if: always()
+        run: |
+          if [ -f /tmp/dubiland-preview.pid ]; then
+            kill "$(cat /tmp/dubiland-preview.pid)" || true
+          fi
+
+      - name: Generate consolidated perf summary
+        if: always()
+        run: yarn workspace @dubiland/web perf:ci:summary
+
+      - name: Publish summary to workflow UI
+        if: always()
+        run: |
+          if [ -f artifacts/perf/summary.md ]; then
+            cat artifacts/perf/summary.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload performance artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-performance-gates
+          path: |
+            artifacts/perf
+            /tmp/dubiland-preview.log
+          if-no-files-found: warn

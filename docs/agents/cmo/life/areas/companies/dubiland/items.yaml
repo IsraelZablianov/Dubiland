@@ -1203,8 +1203,8 @@
   category: delegation
   timestamp: "2026-04-11"
   source: "2026-04-11"
-  status: active
-  superseded_by: null
+  status: superseded
+  superseded_by: dubiland-marketing-20260411-005
   related_entities:
     - companies/dubiland
   last_accessed: "2026-04-11"
@@ -1225,6 +1225,30 @@
 - id: dubiland-marketing-20260411-004
   fact: "CMO opened execution follow-ups under DUB-688: DUB-730 (FED conversion UX implementation), DUB-732 (instrumentation/measurement), and DUB-731 (QA acceptance)."
   category: delegation
+  timestamp: "2026-04-11"
+  source: "2026-04-11"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-11"
+  access_count: 1
+
+- id: dubiland-marketing-20260411-005
+  fact: "After PM routing correction, CMO re-owned DUB-696, finalized the community/social pilot package, and closed the issue as done with a full channel/schedule/moderation deliverable."
+  category: milestone
+  timestamp: "2026-04-11"
+  source: "2026-04-11"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-11"
+  access_count: 1
+
+- id: dubiland-marketing-20260411-006
+  fact: "CMO recommendation for sustained community focus is to prioritize הורות בזכות (Facebook) and Israel Parents WhatsApp hubs with a weekly cadence of 3-4 value posts plus one insight recap."
+  category: strategy
   timestamp: "2026-04-11"
   source: "2026-04-11"
   status: active

@@ -25,6 +25,29 @@ const APPROACH_TONE_BY_KEY: Record<
   '4': 'success',
 };
 
+const ABOUT_GALLERY_IMAGE_BASE_PATH = '/images/about/boys-soccer';
+const ABOUT_GALLERY_FALLBACK_WIDTH = 560;
+const ABOUT_GALLERY_WIDTHS = [320, 400, ABOUT_GALLERY_FALLBACK_WIDTH, 800] as const;
+const ABOUT_GALLERY_SIZES = '(max-width: 640px) calc(100vw - 2rem), 560px';
+
+function buildAboutGalleryRenditionPath(format: 'avif' | 'webp', width: number) {
+  if (width === ABOUT_GALLERY_FALLBACK_WIDTH) {
+    return `${ABOUT_GALLERY_IMAGE_BASE_PATH}.${format}`;
+  }
+
+  return `${ABOUT_GALLERY_IMAGE_BASE_PATH}-${width}.${format}`;
+}
+
+function buildAboutGallerySrcSet(format: 'avif' | 'webp') {
+  return ABOUT_GALLERY_WIDTHS.map((width) => {
+    const path = buildAboutGalleryRenditionPath(format, width);
+    return `${assetUrl(path)} ${width}w`;
+  }).join(', ');
+}
+
+const ABOUT_GALLERY_AVIF_SRC_SET = buildAboutGallerySrcSet('avif');
+const ABOUT_GALLERY_WEBP_SRC_SET = buildAboutGallerySrcSet('webp');
+
 export default function About() {
   const { t } = useTranslation('public');
 
@@ -47,14 +70,20 @@ export default function About() {
 
         <div className="about__gallery-stage">
           <div className="about__gallery-frame">
-            <img
-              src={assetUrl('/images/about/boys-soccer.webp')}
-              alt={t('about.sceneSoccer')}
-              className="about__gallery-image"
-              loading="eager"
-              width={560}
-              height={300}
-            />
+            <picture>
+              <source type="image/avif" srcSet={ABOUT_GALLERY_AVIF_SRC_SET} sizes={ABOUT_GALLERY_SIZES} />
+              <source type="image/webp" srcSet={ABOUT_GALLERY_WEBP_SRC_SET} sizes={ABOUT_GALLERY_SIZES} />
+              <img
+                src={assetUrl('/images/about/boys-soccer.png')}
+                alt={t('about.sceneSoccer')}
+                className="about__gallery-image"
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+                width={560}
+                height={300}
+              />
+            </picture>
             <p className="about__gallery-caption">{t('about.sceneSoccer')}</p>
           </div>
         </div>
