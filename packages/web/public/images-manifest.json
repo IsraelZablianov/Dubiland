@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-11T12:56:31.288Z",
+  "generatedAt": "2026-04-11T14:50:09.484Z",
   "sourceRoot": "assets-src/images",
   "outputRoot": "public/images",
   "settings": {
@@ -8,17 +8,16 @@
     "compactWidth": 960
   },
   "summary": {
-    "totalAssets": 76,
-    "totalBytes": 3440358,
+    "totalAssets": 77,
+    "totalBytes": 1848247,
     "byFormat": {
-      "png": 1936292,
-      "jpg": 248816,
-      "webp": 1069486,
-      "avif": 169831,
+      "avif": 211315,
+      "png": 512179,
+      "webp": 1108820,
       "svg": 15933
     },
     "byClass": {
-      "general": 1776385,
+      "general": 184274,
       "background": 87856,
       "thumbnail": 695490,
       "handbookCover": 59794,
@@ -30,26 +29,37 @@
   },
   "assets": [
     {
-      "path": "images/about/boys-soccer-raw.png",
-      "sourcePath": null,
-      "generated": false,
+      "path": "images/about/boys-soccer.avif",
+      "sourcePath": "about/boys-soccer.jpg",
+      "generated": true,
       "assetClass": "general",
-      "format": "png",
-      "bytes": 1527569,
-      "sha256": "c81b24ba43644ddf48d017bcfbbf25840cd46d1a02924634c694d4e83d8e532f",
-      "width": 1296,
-      "height": 782
+      "format": "avif",
+      "bytes": 41484,
+      "sha256": "1a4b29271b52f79d5e47fe98260665db1551744fc9717a0139aee48271326492",
+      "width": 560,
+      "height": 300
     },
     {
-      "path": "images/about/boys-soccer.jpg",
-      "sourcePath": null,
-      "generated": false,
+      "path": "images/about/boys-soccer.png",
+      "sourcePath": "about/boys-soccer.jpg",
+      "generated": true,
       "assetClass": "general",
-      "format": "jpg",
-      "bytes": 248816,
-      "sha256": "e1bc2040a7522dae7b2ddd15698baf41459fafe13cd6d874e34c5a9ee2d6198e",
-      "width": 892,
-      "height": 478
+      "format": "png",
+      "bytes": 103456,
+      "sha256": "d23651251ca447e8d7f3942e4d63add82af792968abee3748a259e8ee76d1489",
+      "width": 560,
+      "height": 300
+    },
+    {
+      "path": "images/about/boys-soccer.webp",
+      "sourcePath": "about/boys-soccer.jpg",
+      "generated": true,
+      "assetClass": "general",
+      "format": "webp",
+      "bytes": 39334,
+      "sha256": "ad631e6f00fbb758599496957dfd705c9e85b2a0fb0e6e5c2cb460458ffe2b08",
+      "width": 560,
+      "height": 300
     },
     {
       "path": "images/backgrounds/home/home-storybook.webp",

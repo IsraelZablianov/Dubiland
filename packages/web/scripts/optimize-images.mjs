@@ -44,6 +44,19 @@ function isHandbookPageSource(sourceRelativePath) {
   return /^handbooks\/[^/]+\/page-\d+\.(png|jpe?g)$/i.test(sourceRelativePath);
 }
 
+/** Max width for About-page photos (gallery CSS max-width ~560px; tuned so palette PNG stays under general budget). */
+const ABOUT_IMAGE_MAX_WIDTH = 560;
+
+function getRasterResizeWidth(sourceRelativePath, extension) {
+  if (extension === '.png') {
+    return undefined;
+  }
+  if (sourceRelativePath.startsWith('about/')) {
+    return ABOUT_IMAGE_MAX_WIDTH;
+  }
+  return undefined;
+}
+
 async function pathExists(targetPath) {
   try {
     await fs.access(targetPath);
@@ -179,15 +192,17 @@ async function optimizeSourceAssets() {
       `${outputBasePath}.avif`,
     ];
 
+    const rasterResize = getRasterResizeWidth(sourceRelativePath, extension);
+
     const pngOutputPath = `${outputBasePath}.png`;
     if (extension === '.png') {
       await ensureParentDirectory(pngOutputPath);
       await fs.copyFile(sourcePath, pngOutputPath);
     } else {
-      await writeRendition(sourcePath, pngOutputPath, 'png');
+      await writeRendition(sourcePath, pngOutputPath, 'png', rasterResize);
     }
-    await writeRendition(sourcePath, `${outputBasePath}.webp`, 'webp');
-    await writeRendition(sourcePath, `${outputBasePath}.avif`, 'avif');
+    await writeRendition(sourcePath, `${outputBasePath}.webp`, 'webp', rasterResize);
+    await writeRendition(sourcePath, `${outputBasePath}.avif`, 'avif', rasterResize);
 
     for (const outputPath of defaultOutputs) {
       generatedBy.set(toPosixPath(path.relative(outputRoot, outputPath)), sourceRelativePath);

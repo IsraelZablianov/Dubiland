@@ -47,12 +47,12 @@ export default function About() {
         <div className="about__gallery-stage">
           <div className="about__gallery-frame">
             <img
-              src="/images/about/boys-soccer.jpg"
+              src="/images/about/boys-soccer.webp"
               alt={t('about.sceneSoccer')}
               className="about__gallery-image"
               loading="eager"
-              width={892}
-              height={478}
+              width={560}
+              height={300}
             />
             <p className="about__gallery-caption">{t('about.sceneSoccer')}</p>
           </div>
