@@ -1,0 +1,50 @@
+{
+  "out_dir": "docs/agents/performance-expert/evidence/dub-686/20260411-145950-node-env-production-check",
+  "generated_at": "2026-04-11T12:02:11.573Z",
+  "routes": [
+    {
+      "route": "about",
+      "performance": 86,
+      "fcp_ms": 3269,
+      "lcp_ms": 3269,
+      "tbt_ms": 0,
+      "cls": 0.002,
+      "max_potential_fid_ms": 29
+    },
+    {
+      "route": "letters",
+      "performance": 87,
+      "fcp_ms": 3201,
+      "lcp_ms": 3201,
+      "tbt_ms": 0,
+      "cls": 0.002,
+      "max_potential_fid_ms": 22
+    },
+    {
+      "route": "parents",
+      "performance": 88,
+      "fcp_ms": 3135,
+      "lcp_ms": 3135,
+      "tbt_ms": 0,
+      "cls": 0.004,
+      "max_potential_fid_ms": 22
+    },
+    {
+      "route": "root",
+      "performance": 82,
+      "fcp_ms": 3226,
+      "lcp_ms": 3934,
+      "tbt_ms": 0,
+      "cls": 0.033,
+      "max_potential_fid_ms": 24
+    }
+  ],
+  "medians": {
+    "performance": 87,
+    "fcp_ms": 3214,
+    "lcp_ms": 3235,
+    "tbt_ms": 0,
+    "cls": 0.003,
+    "max_potential_fid_ms": 23
+  }
+}

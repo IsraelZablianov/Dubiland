@@ -1,0 +1,5 @@
+$ npx --yes pa11y-ci --config /Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-685-qa2-20260411-144822/configs/games__numbers__number__line__jumps.pa11y-ci.config.json
+Running Pa11y on 1 URLs:
+ > http://127.0.0.1:4187/games/numbers/number-line-jumps - 0 errors
+
+✔ 1/1 URLs passed

@@ -1,0 +1,134 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link "דובילנד — לומדים עברית בכיף" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - img
+        - generic [ref=e7]: דובילנד
+      - navigation [ref=e8]:
+        - link "נושאי לימוד" [ref=e9] [cursor=pointer]:
+          - /url: /games
+        - link "אודות" [ref=e10] [cursor=pointer]:
+          - /url: /about
+        - link "להורים" [ref=e11] [cursor=pointer]:
+          - /url: /parents
+      - generic [ref=e13]:
+        - generic [ref=e14]:
+          - generic [ref=e15]: 🧒
+          - generic [ref=e16]: אורח קטן
+        - generic [ref=e17]:
+          - button "בחירת ילד" [ref=e18] [cursor=pointer]
+          - button "אזור הורים" [ref=e19] [cursor=pointer]
+          - button "התנתקות" [ref=e20] [cursor=pointer]
+  - main [ref=e21]:
+    - generic [ref=e22]:
+      - generic [ref=e24]:
+        - generic [ref=e25]:
+          - heading "לומדים עברית בכיף" [level=1] [ref=e26]
+          - paragraph [ref=e27]: דובילנד — פלטפורמת הלמידה שהילדים שלכם יאהבו. משחקי אותיות, מספרים וקריאה לגילאי 3-7.
+          - generic [ref=e28]:
+            - link "התחילו ללמוד בחינם" [ref=e29] [cursor=pointer]:
+              - /url: /login
+              - button "התחילו ללמוד בחינם" [ref=e30]
+            - link "למידע להורים" [ref=e31] [cursor=pointer]:
+              - /url: /parents
+              - button "למידע להורים" [ref=e32]
+        - generic [ref=e34]:
+          - img
+      - generic [ref=e35]:
+        - heading "מה לומדים בדובילנד?" [level=2] [ref=e36]
+        - paragraph [ref=e37]: שלושה נושאי לימוד מרכזיים שמכסים את הבסיס ללימודי בית ספר
+        - generic [ref=e38]:
+          - generic [ref=e39]:
+            - img [ref=e41]
+            - heading "מספרים וחשבון" [level=3] [ref=e42]
+            - paragraph [ref=e43]: ספירה, זיהוי מספרים, השוואה וחשבון ראשוני דרך משחקים צבעוניים
+          - generic [ref=e44]:
+            - img [ref=e46]
+            - heading "אותיות וצלילים" [level=3] [ref=e47]
+            - paragraph [ref=e48]: הכרת האלף-בית, צלילי אותיות, כתיבה ומילים ראשונות
+          - generic [ref=e49]:
+            - img [ref=e51]
+            - heading "קריאה ראשונה" [level=3] [ref=e52]
+            - paragraph [ref=e53]: חיבור הברות, בניית מילים וקריאת משפטים קצרים
+      - generic [ref=e54]:
+        - heading "איך זה עובד?" [level=2] [ref=e55]
+        - paragraph [ref=e56]: שלושה צעדים פשוטים להתחלה
+        - generic [ref=e57]:
+          - generic [ref=e58]:
+            - generic [ref=e59]: "1"
+            - img [ref=e61]
+            - heading "הירשמו בחינם" [level=3] [ref=e65]
+            - paragraph [ref=e66]: צרו חשבון משפחתי תוך דקה והוסיפו פרופילים לכל ילד
+          - generic [ref=e67]:
+            - generic [ref=e68]: "2"
+            - img [ref=e70]
+            - heading "בחרו נושא" [level=3] [ref=e75]
+            - paragraph [ref=e76]: הילדים בוחרים מה ללמוד — אותיות, מספרים או קריאה
+          - generic [ref=e77]:
+            - generic [ref=e78]: "3"
+            - img [ref=e80]
+            - heading "שחקו ולמדו" [level=3] [ref=e84]
+            - paragraph [ref=e85]: דובי מלווה את הילדים במשחקים שמותאמים לגיל ולרמה שלהם
+      - generic [ref=e86]:
+        - heading "למה הורים בוחרים בדובילנד?" [level=2] [ref=e87]
+        - generic [ref=e88]:
+          - generic [ref=e89]:
+            - img [ref=e91]
+            - heading "סביבה בטוחה" [level=3] [ref=e94]
+            - paragraph [ref=e95]: ללא פרסומות, ללא רכישות מתוך האפליקציה, ללא תוכן חיצוני
+          - generic [ref=e96]:
+            - img [ref=e98]
+            - heading "עברית מהיום הראשון" [level=3] [ref=e101]
+            - paragraph [ref=e102]: נבנה מהיסוד בעברית — לא תרגום מאנגלית
+          - generic [ref=e103]:
+            - img [ref=e105]
+            - heading "מותאם לכל ילד" [level=3] [ref=e111]
+            - paragraph [ref=e112]: רמת קושי מותאמת, מעקב התקדמות ופרופיל אישי
+          - generic [ref=e113]:
+            - img [ref=e115]
+            - heading "הכל נשמע" [level=3] [ref=e119]
+            - paragraph [ref=e120]: כל הוראה וטקסט מושמעים — ילדים לא צריכים לקרוא
+      - generic [ref=e121]:
+        - heading "מוכנים להתחיל?" [level=2] [ref=e122]
+        - paragraph [ref=e123]: הצטרפו למשפחות שכבר לומדות עברית בכיף עם דובי
+        - link "התחילו בחינם — בלי כרטיס אשראי" [ref=e124] [cursor=pointer]:
+          - /url: /login
+          - button "התחילו בחינם — בלי כרטיס אשראי" [ref=e125]
+  - contentinfo [ref=e126]:
+    - generic [ref=e127]:
+      - generic [ref=e128]:
+        - link "דובילנד" [ref=e129] [cursor=pointer]:
+          - /url: /
+          - img
+          - generic [ref=e130]: דובילנד
+        - paragraph [ref=e131]: לומדים עברית בכיף עם דובי 🧸
+      - generic [ref=e132]:
+        - generic [ref=e133]:
+          - heading "נושאי לימוד" [level=3] [ref=e134]
+          - navigation [ref=e135]:
+            - link "מספרים וחשבון" [ref=e136] [cursor=pointer]:
+              - /url: /#topics
+            - link "אותיות וצלילים" [ref=e137] [cursor=pointer]:
+              - /url: /#topics
+            - link "קריאה ראשונה" [ref=e138] [cursor=pointer]:
+              - /url: /#topics
+        - generic [ref=e139]:
+          - heading "דובילנד" [level=3] [ref=e140]
+          - navigation [ref=e141]:
+            - link "אודות" [ref=e142] [cursor=pointer]:
+              - /url: /about
+            - link "להורים" [ref=e143] [cursor=pointer]:
+              - /url: /parents
+            - link "שאלות נפוצות" [ref=e144] [cursor=pointer]:
+              - /url: /parents#faq
+        - generic [ref=e145]:
+          - heading "משפטי" [level=3] [ref=e146]
+          - navigation [ref=e147]:
+            - link "תנאי שימוש" [ref=e148] [cursor=pointer]:
+              - /url: /terms
+            - link "מדיניות פרטיות" [ref=e149] [cursor=pointer]:
+              - /url: /privacy
+    - generic [ref=e150]:
+      - paragraph [ref=e151]: © 2026 דובילנד. כל הזכויות שמורות.
+      - paragraph [ref=e152]: נבנה באהבה לילדים ישראלים

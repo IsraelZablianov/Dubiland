@@ -268,3 +268,21 @@ When creating Paperclip issues from shell, unescaped backticks in inline `--arg`
 
 ## 2026-04-11 — Include 820px tablet breakpoint in shell QA, not only <=768 mobile and desktop widths
 Header/footer unification can pass desktop + strict mobile checks but still regress on tablet widths where mobile menu collapse is not yet active. During [DUB-665](/DUB/issues/DUB-665), authenticated routes had `scrollWidth` inflation at 820px RTL (`.public-header__actions` shifted inline-start), while desktop and touch-floor tests stayed green. Add an explicit 820px RTL checkpoint to shell consistency sweeps before signoff.
+
+## 2026-04-11 — Game completion QA should explicitly assert an in-content exit/restart CTA
+Several game routes can reach a terminal completion state where gameplay controls disappear and no child-facing CTA is rendered inside the game body. QA completion scripts should assert one of: replay session, next game, or return-to-catalog CTA in the completion card itself (not just shell header back).
+
+## 2026-04-11 — Page-level completion cards can conflict with game-owned completion summaries
+When pages render an extra `completionResult` card after `onComplete` while the game component already renders a full `sessionComplete` summary, users can see duplicate and contradictory metrics. QA should treat duplicate completion summaries as a consistency bug, not a cosmetic issue.
+
+## 2026-04-11 — Demo profile IDs must be validated against backend query contracts
+Guest/demo child ids like `maya/noam/liel` can leak into Supabase `.eq('child_id', ...)` queries and produce repeated 400s. QA should include a demo-profile network sanity check before signoff so local sample identities do not break progress/session telemetry paths.
+
+## 2026-04-11 — Completion-branch code scan is a fast way to detect systemic flow dead-ends
+For large game catalogs, scanning `if (sessionComplete...)` branches across `packages/web/src/games` quickly surfaces missing continue/restart CTAs and helps classify whether a bug is route-specific or systemic before running full manual playthroughs on every game.
+
+## 2026-04-11 — Newly assigned blocked QA lanes with empty threads still require one explicit dependency checkpoint
+If a blocked QA issue is assigned with no prior comments, do one checkout cycle, verify sibling dependency states from the parent issue fan-out, and post a linked blocker checkpoint before returning to `blocked`. This establishes the first audit trail entry and prevents silent idle waits.
+
+## 2026-04-11 — For blocked QA reruns, include dependency status + deep-link to latest upstream progress comment
+When a QA matrix lane depends on active FED polish issues, the blocker note should include both current status (`in_review`/`in_progress`) and a direct link to the newest upstream comment proving scope is still partial. This gives Ops/Architect enough evidence to avoid premature re-wakes and preserves clear resume criteria.

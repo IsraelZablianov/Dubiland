@@ -145,3 +145,24 @@ For early storybook planning tasks like [DUB-654](/DUB/issues/DUB-654), deliver 
 
 ## 2026-04-11 — Storybook runtime lanes should lock canonical letter keys before FED wiring
 For 22-letter storybook packs, publish runtime-facing keys under `common.games.<slug>` and explicitly lock the letter-key set to existing cross-game canon (`qof` instead of `kuf`) in the handoff map. This prevents FED wiring drift and keeps reuse of `common.letters.anchorWords.*` consistent across games/videos.
+
+## 2026-04-11 — Illustration accessibility labels must be scene-keyed i18n with audio parity
+When an illustration component renders `role="img"` (for example `FamilyIllustration`), keep `aria-label` text in `common.illustrations.<component>.sceneLabels.*` rather than hardcoded Hebrew in TSX. Then run `yarn generate-audio` and `yarn audio:validate-manifest` to ensure each new accessibility key is mapped and has a physical `.mp3` file, alongside any newly discovered missing clips for existing locale keys.
+
+## 2026-04-11 — Parent-trust packages should ship as one publish-ready artifact with ranking recommendation
+For growth tasks like [DUB-695](/DUB/issues/DUB-695), deliver one consolidated Hebrew package under `docs/seo/` that includes a 4-week calendar, 3 cornerstone drafts, a feature-to-outcome message map, and CTA variants in one file. Always close with an explicit `Top 2` publish priority for CMO so execution order is clear without an additional planning pass.
+
+## 2026-04-11 — Nikud same-sound rounds need two parallel audio tracks (name cues + anchored words)
+For nikud ladders with near-foil same-sound pairs (`ַ/ָ`, `ֶ/ֵ`), ship both `common.nikud.pronunciation.*` (explicit nikud-name cues) and short anchored-word prompts under `common.games.nikudSoundLadder.prompts.*`, plus three distinct hint-stage audios (`stage1ReplayCue`, `stage2NarrowingCue`, `stage3ModeledExampleCue`). This keeps prompts unambiguous for children and gives FED deterministic hooks for the escalation ladder.
+
+## 2026-04-11 — Icon-first reading controls need explicit cue keys plus a 3-tier hint ladder contract
+For icon-only child gameplay loops like [DUB-704](/DUB/issues/DUB-704), ship dedicated `controls.*` cue keys (`replay/retry/hint/next`) alongside `hints.tier1/2/3` and a separate rapid-tap calm-assist retry cue. Pair this with a concrete `progression.itemBank` coverage set (>=4 CV nikud patterns and >=3 CVC closing consonants + near-miss pairs) so FED can implement behavior gates without ambiguous wording handoffs.
+
+## 2026-04-11 — Decode-first mission lanes need a runtime event-to-key contract artifact
+For mission-map reading games like [DUB-707](/DUB/issues/DUB-707), ship the locale/audio pack together with an explicit `runtime event -> i18n key` map (for example pre-unlock taps, anti-random-tap recovery, control taps, and transition events). This prevents DUB-706 integration drift and makes mechanics feedback from DUB-708 testable against concrete keys (`hints.stage1/2/3`, `feedback.retry.preUnlockNudge`, `feedback.retry.antiRandomTapPauseReplay`, `feedback.success.transition.*`).
+
+## 2026-04-11 — Episode-based video lanes may need explicit generator path contracts
+For episode-structured videos like Blend-to-Read ([DUB-710](/DUB/issues/DUB-710)), generic key-to-path kebab mapping can drift from Media runtime contracts (`/videos/blend-to-read/<episodeId>/<clip>.mp3`). Add a generator-level path mapper for scene keys (`intro/model/checkpoint-one/two/three/recap/celebration`) so manifest links, on-disk files, and Remotion duration measurement all resolve to the same stable episode clip paths.
+
+## 2026-04-11 — D689 game-topic SEO drafts should follow one reusable implementation contract
+For game-topic keyword expansions (colors, shapes, grade-1 reading comprehension), ship each page as one handoff-ready unit: primary+secondary keyword map, Title/H1/meta proposal, 40-60 word answer-first block, schema-ready FAQ answers, Trust/E-E-A-T blocks, and explicit internal-link anchors that cover `/letters`, `/numbers`, `/reading`, and `/parents`. This keeps FED + SEO implementation deterministic and reduces follow-up churn.

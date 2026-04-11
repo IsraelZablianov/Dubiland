@@ -24,6 +24,7 @@ import {
 } from '@/games/reading/readingRuntimeMatrix';
 import { useAudioManager } from '@/hooks/useAudioManager';
 import { resolveAudioPathFromKey } from '@/lib/audioPathResolver';
+import { isPersistableChildId } from '@/lib/persistableChildId';
 import { getActiveChildProfile } from '@/lib/session';
 import { isSupabaseConfigured } from '@/lib/supabaseConfig';
 
@@ -486,7 +487,7 @@ export default function InteractiveHandbookPage() {
 
   const activeProfile = getActiveChildProfile();
   const profileAgeBand = activeProfile?.ageBand;
-  const persistableChildId = activeProfile?.id && activeProfile.id !== 'guest' ? activeProfile.id : null;
+  const persistableChildId = isPersistableChildId(activeProfile?.id) ? activeProfile?.id : null;
 
   const child = useMemo<Child>(
     () => ({

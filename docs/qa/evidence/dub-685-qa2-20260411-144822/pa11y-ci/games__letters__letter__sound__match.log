@@ -1,0 +1,119 @@
+$ npx --yes pa11y-ci --config /Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-685-qa2-20260411-144822/configs/games__letters__letter__sound__match.pa11y-ci.config.json
+Running Pa11y on 1 URLs:
+ > http://127.0.0.1:4187/games/letters/letter-sound-match - 12 errors
+
+Errors in http://127.0.0.1:4187/games/letters/letter-sound-match:
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div > div > header >
+   div:nth-child(1) > div:nth-child(2) > p)
+
+   <p class="letter-sound-match__subtitle">מקשיבים לצליל ובוחרים את האות
+   ה...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div > div > section >
+   div:nth-child(3) > div:nth-child(2) > p)
+
+   <p class="letter-sound-match__instruction">הקשיבו לצליל שדובי משמיע.</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div > div > section >
+   div:nth-child(4) > div:nth-child(1) > button:nth-child(1) >
+   span:nth-child(2))
+
+   <span class="letter-sound-match__choice-label">דלת</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div > div > section >
+   div:nth-child(4) > div:nth-child(2) > button:nth-child(1) >
+   span:nth-child(2))
+
+   <span class="letter-sound-match__choice-label">ריש</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div > div > section >
+   div:nth-child(4) > div:nth-child(3) > button:nth-child(1) >
+   span:nth-child(2))
+
+   <span class="letter-sound-match__choice-label">למד</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 3.36:1. Recommendation:  change text colour to #ad6424.
+
+   (#root > div > main > div > div > section > div > div > div:nth-child(4) >
+   button > span)
+
+   <span aria-hidden="true">◀</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 3.36:1. Recommendation:  change text colour to #ad6424.
+
+   (#root > div > main > div > div > section > div > div > header >
+   div:nth-child(1) > div:nth-child(1) > button > span)
+
+   <span aria-hidden="true">◀</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 3.36:1. Recommendation:  change text colour to #ad6424.
+
+   (#root > div > main > div > div > section > div > div > header >
+   div:nth-child(1) > div:nth-child(2) > button > span)
+
+   <span aria-hidden="true">◀</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 3.36:1. Recommendation:  change text colour to #ad6424.
+
+   (#root > div > main > div > div > section > div > div > section >
+   div:nth-child(3) > div:nth-child(2) > button > span)
+
+   <span aria-hidden="true">◀</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 3.36:1. Recommendation:  change text colour to #ad6424.
+
+   (#root > div > main > div > div > section > div > div > section >
+   div:nth-child(4) > div:nth-child(1) > button:nth-child(2) > span)
+
+   <span aria-hidden="true">◀</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 3.36:1. Recommendation:  change text colour to #ad6424.
+
+   (#root > div > main > div > div > section > div > div > section >
+   div:nth-child(4) > div:nth-child(2) > button:nth-child(2) > span)
+
+   <span aria-hidden="true">◀</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 3.36:1. Recommendation:  change text colour to #ad6424.
+
+   (#root > div > main > div > div > section > div > div > section >
+   div:nth-child(4) > div:nth-child(3) > button:nth-child(2) > span)
+
+   <span aria-hidden="true">◀</span>
+
+✘ 0/1 URLs passed

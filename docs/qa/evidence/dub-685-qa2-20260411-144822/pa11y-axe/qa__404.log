@@ -1,0 +1,1 @@
+$ npx --yes pa11y http://127.0.0.1:4187/__qa-404__ --config /Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-685-qa2-20260411-144822/configs/qa__404.pa11y.config.json --runner axe --reporter json

@@ -1,0 +1,957 @@
+$ npx --yes pa11y-ci --config /Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-685-qa2-20260411-144822/configs/games.pa11y-ci.config.json
+Running Pa11y on 1 URLs:
+ > http://127.0.0.1:4187/games - 87 errors
+
+Errors in http://127.0.0.1:4187/games:
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 2.31:1. Recommendation:  change background to #e7742a.
+
+   (#root > div > main > div > div > section > div:nth-child(1) >
+   div:nth-child(2) > button)
+
+   <button aria-label="התחל ללמוד" style="display: inline-flex; align-items:
+   center; justify-content: center; gap: var(--space-sm); font-family:
+   var(--font-family-primary); font-weight: var(--font-weight-bold);
+   line-height: var(--line-height-tight); tra...
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div:nth-child(2) >
+   div:nth-child(2) > button:nth-child(1) > div:nth-child(2) > div:nth-child(3)
+   > div:nth-child(1) > span:nth-child(1))
+
+   <span style="font-size: var(--font-size-sm); color:
+   var(--color-text-secondary);">התקדמות</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(2) >
+   div:nth-child(2) > button:nth-child(1) > div:nth-child(2) > div:nth-child(4)
+   > div > span:nth-child(1))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(2) >
+   div:nth-child(2) > button:nth-child(1) > div:nth-child(2) > div:nth-child(4)
+   > div > span:nth-child(2))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(2) >
+   div:nth-child(2) > button:nth-child(1) > div:nth-child(2) > div:nth-child(4)
+   > div > span:nth-child(3))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div:nth-child(2) >
+   div:nth-child(2) > button:nth-child(2) > div:nth-child(2) > div:nth-child(3)
+   > div:nth-child(1) > span:nth-child(1))
+
+   <span style="font-size: var(--font-size-sm); color:
+   var(--color-text-secondary);">התקדמות</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(2) >
+   div:nth-child(2) > button:nth-child(2) > div:nth-child(2) > div:nth-child(4)
+   > div > span:nth-child(1))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(2) >
+   div:nth-child(2) > button:nth-child(2) > div:nth-child(2) > div:nth-child(4)
+   > div > span:nth-child(2))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(2) >
+   div:nth-child(2) > button:nth-child(2) > div:nth-child(2) > div:nth-child(4)
+   > div > span:nth-child(3))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div:nth-child(2) >
+   div:nth-child(2) > button:nth-child(3) > div:nth-child(2) > div:nth-child(3)
+   > div:nth-child(1) > span:nth-child(1))
+
+   <span style="font-size: var(--font-size-sm); color:
+   var(--color-text-secondary);">התקדמות</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(2) >
+   div:nth-child(2) > button:nth-child(3) > div:nth-child(2) > div:nth-child(4)
+   > div > span:nth-child(1))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(2) >
+   div:nth-child(2) > button:nth-child(3) > div:nth-child(2) > div:nth-child(4)
+   > div > span:nth-child(2))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(2) >
+   div:nth-child(2) > button:nth-child(3) > div:nth-child(2) > div:nth-child(4)
+   > div > span:nth-child(3))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div:nth-child(2) >
+   div:nth-child(2) > button:nth-child(4) > div:nth-child(2) > div:nth-child(3)
+   > div:nth-child(1) > span:nth-child(1))
+
+   <span style="font-size: var(--font-size-sm); color:
+   var(--color-text-secondary);">התקדמות</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(2) >
+   div:nth-child(2) > button:nth-child(4) > div:nth-child(2) > div:nth-child(4)
+   > div > span:nth-child(1))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(2) >
+   div:nth-child(2) > button:nth-child(4) > div:nth-child(2) > div:nth-child(4)
+   > div > span:nth-child(2))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(2) >
+   div:nth-child(2) > button:nth-child(4) > div:nth-child(2) > div:nth-child(4)
+   > div > span:nth-child(3))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 3.36:1. Recommendation:  change background to #ad6424.
+
+   (#root > div > main > div > div > section > div:nth-child(3) > div >
+   div:nth-child(2) > button:nth-child(6))
+
+   <button type="button" aria-pressed="true" style="display: inline-flex;
+   align-items: center; justify-content: center; min-height:
+   var(--touch-filter-chip); min-width: var(--touch-filter-chip);
+   padding-inline: var(--space-md); border-radius: var(--radi...
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(1) > div:nth-child(1) > p:nth-child(2))
+
+   <p style="color: var(--color-text-secondary); font-size:
+   var(--font-size-sm);">זיהוי אותיות, צלילים וכתיבה ראש...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(1) > div:nth-child(1) > p:nth-child(3))
+
+   <p style="color: var(--color-text-secondary); font-size:
+   var(--font-size-xs);">התקדמות בקטגוריה: 0%</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(1) > div:nth-child(1) > p:nth-child(5))
+
+   <p style="color: var(--color-text-secondary); font-size:
+   var(--font-size-xs);">3 משחקים זמינים</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(1) > div:nth-child(2) > button:nth-child(1) > div:nth-child(2)
+   > div:nth-child(3) > div:nth-child(1) > span:nth-child(1))
+
+   <span style="font-size: var(--font-size-sm); color:
+   var(--color-text-secondary);">התקדמות</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(1) > div:nth-child(2) > button:nth-child(1) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(1))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(1) > div:nth-child(2) > button:nth-child(1) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(2))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(1) > div:nth-child(2) > button:nth-child(1) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(3))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(1) > div:nth-child(2) > button:nth-child(2) > div:nth-child(2)
+   > div:nth-child(3) > div:nth-child(1) > span:nth-child(1))
+
+   <span style="font-size: var(--font-size-sm); color:
+   var(--color-text-secondary);">התקדמות</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(1) > div:nth-child(2) > button:nth-child(2) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(1))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(1) > div:nth-child(2) > button:nth-child(2) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(2))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(1) > div:nth-child(2) > button:nth-child(2) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(3))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(1) > div:nth-child(2) > button:nth-child(3) > div:nth-child(2)
+   > div:nth-child(3) > div:nth-child(1) > span:nth-child(1))
+
+   <span style="font-size: var(--font-size-sm); color:
+   var(--color-text-secondary);">התקדמות</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(1) > div:nth-child(2) > button:nth-child(3) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(1))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(1) > div:nth-child(2) > button:nth-child(3) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(2))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(1) > div:nth-child(2) > button:nth-child(3) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(3))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(2) > div:nth-child(1) > p:nth-child(2))
+
+   <p style="color: var(--color-text-secondary); font-size:
+   var(--font-size-sm);">מילים, משפטים קצרים והבנת הנקרא</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(2) > div:nth-child(1) > p:nth-child(3))
+
+   <p style="color: var(--color-text-secondary); font-size:
+   var(--font-size-xs);">התקדמות בקטגוריה: 0%</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(2) > div:nth-child(1) > p:nth-child(5))
+
+   <p style="color: var(--color-text-secondary); font-size:
+   var(--font-size-xs);">5 משחקים זמינים</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(2) > div:nth-child(2) > button:nth-child(1) > div:nth-child(2)
+   > div:nth-child(3) > div:nth-child(1) > span:nth-child(1))
+
+   <span style="font-size: var(--font-size-sm); color:
+   var(--color-text-secondary);">התקדמות</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(2) > div:nth-child(2) > button:nth-child(1) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(1))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(2) > div:nth-child(2) > button:nth-child(1) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(2))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(2) > div:nth-child(2) > button:nth-child(1) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(3))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(2) > div:nth-child(2) > button:nth-child(2) > div:nth-child(2)
+   > div:nth-child(3) > div:nth-child(1) > span:nth-child(1))
+
+   <span style="font-size: var(--font-size-sm); color:
+   var(--color-text-secondary);">התקדמות</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(2) > div:nth-child(2) > button:nth-child(2) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(1))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(2) > div:nth-child(2) > button:nth-child(2) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(2))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(2) > div:nth-child(2) > button:nth-child(2) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(3))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(2) > div:nth-child(2) > button:nth-child(3) > div:nth-child(2)
+   > div:nth-child(3) > div:nth-child(1) > span:nth-child(1))
+
+   <span style="font-size: var(--font-size-sm); color:
+   var(--color-text-secondary);">התקדמות</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(2) > div:nth-child(2) > button:nth-child(3) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(1))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(2) > div:nth-child(2) > button:nth-child(3) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(2))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(2) > div:nth-child(2) > button:nth-child(3) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(3))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(2) > div:nth-child(2) > button:nth-child(4) > div:nth-child(2)
+   > div:nth-child(3) > div:nth-child(1) > span:nth-child(1))
+
+   <span style="font-size: var(--font-size-sm); color:
+   var(--color-text-secondary);">התקדמות</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(2) > div:nth-child(2) > button:nth-child(4) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(1))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(2) > div:nth-child(2) > button:nth-child(4) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(2))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(2) > div:nth-child(2) > button:nth-child(4) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(3))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(2) > div:nth-child(2) > button:nth-child(5) > div:nth-child(2)
+   > div:nth-child(3) > div:nth-child(1) > span:nth-child(1))
+
+   <span style="font-size: var(--font-size-sm); color:
+   var(--color-text-secondary);">התקדמות</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(2) > div:nth-child(2) > button:nth-child(5) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(1))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(2) > div:nth-child(2) > button:nth-child(5) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(2))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(2) > div:nth-child(2) > button:nth-child(5) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(3))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(3) > div:nth-child(1) > p:nth-child(2))
+
+   <p style="color: var(--color-text-secondary); font-size:
+   var(--font-size-sm);">ספירה, השוואה וסדר מספרי</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(3) > div:nth-child(1) > p:nth-child(3))
+
+   <p style="color: var(--color-text-secondary); font-size:
+   var(--font-size-xs);">התקדמות בקטגוריה: 0%</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(3) > div:nth-child(1) > p:nth-child(5))
+
+   <p style="color: var(--color-text-secondary); font-size:
+   var(--font-size-xs);">5 משחקים זמינים</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(3) > div:nth-child(2) > button:nth-child(1) > div:nth-child(2)
+   > div:nth-child(3) > div:nth-child(1) > span:nth-child(1))
+
+   <span style="font-size: var(--font-size-sm); color:
+   var(--color-text-secondary);">התקדמות</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(3) > div:nth-child(2) > button:nth-child(1) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(1))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(3) > div:nth-child(2) > button:nth-child(1) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(2))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(3) > div:nth-child(2) > button:nth-child(1) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(3))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(3) > div:nth-child(2) > button:nth-child(2) > div:nth-child(2)
+   > div:nth-child(3) > div:nth-child(1) > span:nth-child(1))
+
+   <span style="font-size: var(--font-size-sm); color:
+   var(--color-text-secondary);">התקדמות</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(3) > div:nth-child(2) > button:nth-child(2) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(1))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(3) > div:nth-child(2) > button:nth-child(2) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(2))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(3) > div:nth-child(2) > button:nth-child(2) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(3))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(3) > div:nth-child(2) > button:nth-child(3) > div:nth-child(2)
+   > div:nth-child(3) > div:nth-child(1) > span:nth-child(1))
+
+   <span style="font-size: var(--font-size-sm); color:
+   var(--color-text-secondary);">התקדמות</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(3) > div:nth-child(2) > button:nth-child(3) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(1))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(3) > div:nth-child(2) > button:nth-child(3) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(2))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(3) > div:nth-child(2) > button:nth-child(3) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(3))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(3) > div:nth-child(2) > button:nth-child(4) > div:nth-child(2)
+   > div:nth-child(3) > div:nth-child(1) > span:nth-child(1))
+
+   <span style="font-size: var(--font-size-sm); color:
+   var(--color-text-secondary);">התקדמות</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(3) > div:nth-child(2) > button:nth-child(4) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(1))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(3) > div:nth-child(2) > button:nth-child(4) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(2))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(3) > div:nth-child(2) > button:nth-child(4) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(3))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(3) > div:nth-child(2) > button:nth-child(5) > div:nth-child(2)
+   > div:nth-child(3) > div:nth-child(1) > span:nth-child(1))
+
+   <span style="font-size: var(--font-size-sm); color:
+   var(--color-text-secondary);">התקדמות</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(3) > div:nth-child(2) > button:nth-child(5) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(1))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(3) > div:nth-child(2) > button:nth-child(5) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(2))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(3) > div:nth-child(2) > button:nth-child(5) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(3))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(4) > div:nth-child(2) > button:nth-child(1) > div:nth-child(2)
+   > div:nth-child(3) > div:nth-child(1) > span:nth-child(1))
+
+   <span style="font-size: var(--font-size-sm); color:
+   var(--color-text-secondary);">התקדמות</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(4) > div:nth-child(2) > button:nth-child(1) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(1))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(4) > div:nth-child(2) > button:nth-child(1) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(2))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(4) > div:nth-child(2) > button:nth-child(1) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(3))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(4) > div:nth-child(2) > button:nth-child(2) > div:nth-child(2)
+   > div:nth-child(3) > div:nth-child(1) > span:nth-child(1))
+
+   <span style="font-size: var(--font-size-sm); color:
+   var(--color-text-secondary);">התקדמות</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(4) > div:nth-child(2) > button:nth-child(2) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(1))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(4) > div:nth-child(2) > button:nth-child(2) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(2))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 1.45:1. Recommendation:  change text colour to #9e9381.
+
+   (#root > div > main > div > div > section > div:nth-child(4) >
+   div:nth-child(4) > div:nth-child(2) > button:nth-child(2) > div:nth-child(2)
+   > div:nth-child(4) > div > span:nth-child(3))
+
+   <span style="color: var(--color-star-empty); transition:
+   var(--transition-fast);">★</span>
+
+✘ 0/1 URLs passed

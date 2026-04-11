@@ -1077,7 +1077,8 @@ export function LetterStorybookGame({ level: runtimeLevel, onComplete, audio }: 
         </div>
       </header>
 
-      <div className="letter-storybook__progress-row" aria-label={t('games.letterStorybook.instructions.checkpointReady')}>
+      <div className="letter-storybook__progress-row">
+        <span className="sr-only">{t('games.letterStorybook.instructions.checkpointReady')}</span>
         <div className="letter-storybook__clue-meter" role="status" aria-live="polite">
           {Array.from({ length: slotCount }, (_, index) => (
             <span

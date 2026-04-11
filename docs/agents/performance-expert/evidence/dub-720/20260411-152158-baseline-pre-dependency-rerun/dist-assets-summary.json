@@ -1,0 +1,124 @@
+{
+  "generatedAt": "2026-04-11T12:22:46.893Z",
+  "totals": {
+    "fileCount": 53,
+    "jsFileCount": 52,
+    "cssFileCount": 1,
+    "totalJsBytes": 1634534,
+    "totalCssBytes": 15400
+  },
+  "indexChunk": {
+    "name": "index-BNgosq4e.js",
+    "bytes": 480868,
+    "ext": ".js"
+  },
+  "topJs": [
+    {
+      "name": "index-BNgosq4e.js",
+      "bytes": 480868,
+      "ext": ".js"
+    },
+    {
+      "name": "supabase-k82gbVKr.js",
+      "bytes": 196612,
+      "ext": ".js"
+    },
+    {
+      "name": "InteractiveHandbookGame-BBs3Giay.js",
+      "bytes": 100587,
+      "ext": ".js"
+    },
+    {
+      "name": "i18n-CQO0ZaI5.js",
+      "bytes": 49391,
+      "ext": ".js"
+    },
+    {
+      "name": "react-dz6IX6RK.js",
+      "bytes": 49001,
+      "ext": ".js"
+    },
+    {
+      "name": "LetterSoundMatch-VkCAsa_B.js",
+      "bytes": 45555,
+      "ext": ".js"
+    },
+    {
+      "name": "ColorGarden-3oBS_5EO.js",
+      "bytes": 42672,
+      "ext": ".js"
+    },
+    {
+      "name": "LetterTracingTrail-CtUobW4R.js",
+      "bytes": 41667,
+      "ext": ".js"
+    },
+    {
+      "name": "DecodableMicroStories-B1sOU1u7.js",
+      "bytes": 40923,
+      "ext": ".js"
+    },
+    {
+      "name": "CountingPicnic-CNEjKV_Q.js",
+      "bytes": 38853,
+      "ext": ".js"
+    },
+    {
+      "name": "ConfusableLetterContrast-rHeHJbe_.js",
+      "bytes": 38252,
+      "ext": ".js"
+    },
+    {
+      "name": "LetterSkyCatcher-BG8h-j_A.js",
+      "bytes": 37877,
+      "ext": ".js"
+    },
+    {
+      "name": "PictureToWordBuilder-CnnNBzsl.js",
+      "bytes": 37466,
+      "ext": ".js"
+    },
+    {
+      "name": "LetterStorybook-BvQYe9ET.js",
+      "bytes": 35415,
+      "ext": ".js"
+    },
+    {
+      "name": "MoreOrLessMarket-BAPY5ISD.js",
+      "bytes": 34601,
+      "ext": ".js"
+    },
+    {
+      "name": "SightWordSprint-CudPvH-y.js",
+      "bytes": 34008,
+      "ext": ".js"
+    },
+    {
+      "name": "NumberLineJumps-DzMQc5dP.js",
+      "bytes": 33593,
+      "ext": ".js"
+    },
+    {
+      "name": "SubtractionStreet-CinepxFn.js",
+      "bytes": 32610,
+      "ext": ".js"
+    },
+    {
+      "name": "ShapeSafari-DlBs2Eqq.js",
+      "bytes": 30388,
+      "ext": ".js"
+    },
+    {
+      "name": "InteractiveHandbook-DBeXqtUj.js",
+      "bytes": 30302,
+      "ext": ".js"
+    }
+  ],
+  "topCss": [
+    {
+      "name": "index-BW_dU0ke.css",
+      "bytes": 15400,
+      "ext": ".css"
+    }
+  ]
+}

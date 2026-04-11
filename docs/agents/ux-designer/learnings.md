@@ -61,3 +61,12 @@ When older UX tickets still reference legacy routes (for example `/home`) while 
 
 ## 2026-04-11 — Long Alphabet Flows Need Dual Progress, Not Full Dot Rows
 For storybooks with 22+ pages, a full-width dot rail becomes visual noise and weakens scanability on tablet/mobile. A stronger contract is dual progress: persistent `current/total` chip plus a windowed local dot rail (max 5), which preserves orientation without shrinking indicators below child-legible sizes.
+
+## 2026-04-11 — Low-Score Route Sprints Close Faster with Semantic Surface Tokens
+When QA reports route-level polish gaps (`/terms`, `/privacy`, `/parent`, `/404`), providing only page-by-page layout notes is too brittle. Defining semantic surface tokens first (legal/parent/recovery widths, shell touch minima, gentle route-enter motion) gives FED a shared contract that scales across components and reduces repeated one-off pixel fixes.
+
+## 2026-04-11 — Fresh-Eyes Audits Need Explicit De-Dup Scope Before Recommendations
+For follow-up quality audits under a shared parent sprint, first lock a clear exclusion boundary against active sibling lanes (for example, route-polish work already covered in [DUB-678](/DUB/issues/DUB-678)). This keeps recommendations net-new, avoids cross-agent duplication, and makes PM-level synthesis faster because findings arrive pre-filtered by overlap risk.
+
+## 2026-04-11 — Secondary “Learn More” Paths Need a Guaranteed Return-to-Try CTA
+For parent-conversion funnels, any secondary info path (like `/parents`) must contain an always-visible continuation CTA back into trial/signup. Without that explicit bridge, curiosity clicks become dead-end sessions and materially reduce conversion even when trust content quality is good.

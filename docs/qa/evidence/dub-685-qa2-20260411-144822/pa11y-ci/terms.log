@@ -1,0 +1,71 @@
+$ npx --yes pa11y-ci --config /Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-685-qa2-20260411-144822/configs/terms.pa11y-ci.config.json
+Running Pa11y on 1 URLs:
+ > http://127.0.0.1:4187/terms - 8 errors
+
+Errors in http://127.0.0.1:4187/terms:
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.24:1. Recommendation:  change text colour to #030200.
+
+   (#root > div > main > div > header > div > p:nth-child(2))
+
+   <p class="legal-page__subtitle">השימוש בדובילנד מיועד ללמידה חו...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 2.27:1. Recommendation:  change text colour to #040200.
+
+   (#root > div > main > div > header > div > p:nth-child(3))
+
+   <p class="legal-page__updated">עדכון אחרון: 10 באפריל 2026</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > section > div:nth-child(1) > p)
+
+   <p class="legal-page__card-body">השימוש באתר ובמשחקים מהווה הסכמ...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > section > div:nth-child(2) > p)
+
+   <p class="legal-page__card-body">דובילנד מספקת משחקי למידה בעברי...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > section > div:nth-child(3) > p)
+
+   <p class="legal-page__card-body">השימוש מיועד לילדים בליווי ואחר...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > section > div:nth-child(4) > p)
+
+   <p class="legal-page__card-body">אין לעשות שימוש לרעה בפלטפורמה,...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > section > div:nth-child(5) > p)
+
+   <p class="legal-page__card-body">אנחנו פועלים לשמור על זמינות גב...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > section > div:nth-child(6) > p)
+
+   <p class="legal-page__card-body">לשאלות על תנאי השימוש ניתן לפנו...</p>
+
+✘ 0/1 URLs passed

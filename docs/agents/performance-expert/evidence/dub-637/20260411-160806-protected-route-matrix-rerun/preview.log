@@ -1,0 +1,2 @@
+$ yarn "workspace" "@dubiland/web" "preview" "--host" "127.0.0.1" "--port" "4196"
+  ➜  Local:   http://127.0.0.1:4196/

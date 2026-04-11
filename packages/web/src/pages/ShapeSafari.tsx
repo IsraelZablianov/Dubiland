@@ -1,16 +1,14 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import type { Child, Game, GameLevel } from '@dubiland/shared';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button, Card } from '@/components/design-system';
 import { ChildRouteHeader, ChildRouteScaffold } from '@/components/layout';
-import type { GameCompletionResult } from '@/games/engine';
 import { ShapeSafariGame } from '@/games/numbers/ShapeSafariGame';
 import { useAudioManager } from '@/hooks/useAudioManager';
 import { toChildAgeBand } from '@/lib/concurrentChoiceLimit';
 import { getActiveChildProfile } from '@/lib/session';
-
-type SyncState = 'idle' | 'syncing' | 'synced';
+import { useGameAttemptSync } from './useGameAttemptSync';
 
 const SHAPE_SAFARI_GAME: Game = {
   id: 'local-shape-safari',
@@ -70,17 +68,12 @@ export default function ShapeSafariPage() {
     [profileAgeBand],
   );
 
-  const [completionResult, setCompletionResult] = useState<GameCompletionResult | null>(null);
-  const [syncState, setSyncState] = useState<SyncState>('idle');
-
-  const handleComplete = useCallback((result: GameCompletionResult) => {
-    setCompletionResult(result);
-    setSyncState('syncing');
-
-    window.setTimeout(() => {
-      setSyncState('synced');
-    }, 450);
-  }, []);
+  const { completionResult, syncState, handleComplete, retryLastSync } = useGameAttemptSync({
+    childId: child.id,
+    childAgeBand: activeProfile?.ageBand,
+    game: SHAPE_SAFARI_GAME,
+    level: runtimeLevel,
+  });
 
   return (
     <ChildRouteScaffold width="wide">
@@ -105,8 +98,21 @@ export default function ShapeSafariPage() {
         {completionResult && (
           <Card padding="md" style={{ display: 'grid', gap: 'var(--space-xs)' }}>
             <p style={{ color: 'var(--color-text-primary)' }}>
-              {t(syncState === 'syncing' ? 'feedback.keepGoing' : 'feedback.excellent')}
+              {t(
+                syncState === 'error'
+                  ? 'errors.generic'
+                  : syncState === 'syncing'
+                    ? 'feedback.keepGoing'
+                    : 'feedback.excellent',
+              )}
             </p>
+            {syncState === 'error' && (
+              <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                <Button variant="secondary" size="md" onClick={retryLastSync} aria-label={t('profile.retry')}>
+                  {t('profile.retry')}
+                </Button>
+              </div>
+            )}
           </Card>
         )}
     </ChildRouteScaffold>

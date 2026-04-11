@@ -320,6 +320,8 @@ export function ShapeSafariGame({ level, child, onComplete, audio }: GameProps) 
   const [promptPulse, setPromptPulse] = useState(false);
   const [scorePulse, setScorePulse] = useState(false);
   const [boardFeedback, setBoardFeedback] = useState<BoardFeedback>('idle');
+  const [lastPickedShape, setLastPickedShape] = useState<ShapeId | null>(null);
+  const [pickFeedback, setPickFeedback] = useState<BoardFeedback>('idle');
 
   const [stats, setStats] = useState<SessionStats>({
     totalAttempts: 0,
@@ -334,6 +336,7 @@ export function ShapeSafariGame({ level, child, onComplete, audio }: GameProps) 
   const promptPulseTimeoutRef = useRef<number | null>(null);
   const scorePulseTimeoutRef = useRef<number | null>(null);
   const boardFeedbackTimeoutRef = useRef<number | null>(null);
+  const pickFeedbackTimeoutRef = useRef<number | null>(null);
   const recoveryInFlightRef = useRef(false);
   const nextActionInFlightRef = useRef(false);
   const pickAudioTokenRef = useRef(0);
@@ -397,6 +400,19 @@ export function ShapeSafariGame({ level, child, onComplete, audio }: GameProps) 
       setBoardFeedback('idle');
       boardFeedbackTimeoutRef.current = null;
     }, 340);
+  }, []);
+
+  const triggerPickFeedback = useCallback((shape: ShapeId, feedback: Exclude<BoardFeedback, 'idle'>) => {
+    setLastPickedShape(shape);
+    setPickFeedback(feedback);
+    if (pickFeedbackTimeoutRef.current !== null) {
+      window.clearTimeout(pickFeedbackTimeoutRef.current);
+    }
+    pickFeedbackTimeoutRef.current = window.setTimeout(() => {
+      setPickFeedback('idle');
+      setLastPickedShape(null);
+      pickFeedbackTimeoutRef.current = null;
+    }, 360);
   }, []);
 
   const triggerTargetHighlight = useCallback((shape: ShapeId, durationMs: number) => {
@@ -474,6 +490,8 @@ export function ShapeSafariGame({ level, child, onComplete, audio }: GameProps) 
     setHighlightShape(null);
     setPromptPulse(false);
     setBoardFeedback('idle');
+    setLastPickedShape(null);
+    setPickFeedback('idle');
     void announceRound(round);
   }, [announceRound, round]);
 
@@ -499,6 +517,9 @@ export function ShapeSafariGame({ level, child, onComplete, audio }: GameProps) 
       }
       if (boardFeedbackTimeoutRef.current !== null) {
         window.clearTimeout(boardFeedbackTimeoutRef.current);
+      }
+      if (pickFeedbackTimeoutRef.current !== null) {
+        window.clearTimeout(pickFeedbackTimeoutRef.current);
       }
     },
     [],
@@ -553,6 +574,8 @@ export function ShapeSafariGame({ level, child, onComplete, audio }: GameProps) 
     setConsecutiveMisses(0);
     setDragOver(false);
     setBoardFeedback('idle');
+    setLastPickedShape(null);
+    setPickFeedback('idle');
     setMessage({ key: encouragementKey, tone: 'hint' });
     incrementHintUsage(roundNumber);
     triggerReplayVisualFeedback(1200);
@@ -669,6 +692,7 @@ export function ShapeSafariGame({ level, child, onComplete, audio }: GameProps) 
 
       if (shape === round.target) {
         triggerBoardFeedback('success');
+        triggerPickFeedback(shape, 'success');
         if (attemptInRound === 0) {
           triggerScorePulse();
         }
@@ -688,6 +712,7 @@ export function ShapeSafariGame({ level, child, onComplete, audio }: GameProps) 
       } else {
         const nextMissCount = consecutiveMisses + 1;
         triggerBoardFeedback('miss');
+        triggerPickFeedback(shape, 'miss');
         setAttemptInRound((previous) => previous + 1);
         setConsecutiveMisses(nextMissCount);
         incrementHintUsage(roundNumber);
@@ -750,6 +775,7 @@ export function ShapeSafariGame({ level, child, onComplete, audio }: GameProps) 
       runRecoveryDemo,
       sessionComplete,
       triggerBoardFeedback,
+      triggerPickFeedback,
       triggerReplayVisualFeedback,
       triggerScorePulse,
       triggerTargetHighlight,
@@ -795,6 +821,7 @@ export function ShapeSafariGame({ level, child, onComplete, audio }: GameProps) 
   }, [stats.correctAnswers, stats.totalAttempts]);
 
   const toneClassName = `shape-safari__message shape-safari__message--${message.tone}`;
+  const guideVariant = message.tone === 'success' ? 'success' : 'hint';
 
   return (
     <Card padding="lg" className="shape-safari">
@@ -809,7 +836,8 @@ export function ShapeSafariGame({ level, child, onComplete, audio }: GameProps) 
         </div>
       </div>
 
-      <div className="shape-safari__progress" aria-label={t('games.estimatedTime', { minutes: 5 })}>
+      <div className="shape-safari__progress">
+        <span className="sr-only">{t('games.estimatedTime', { minutes: 5 })}</span>
         {progressSegments.map((segment) => {
           const state =
             segment < roundNumber
@@ -846,7 +874,7 @@ export function ShapeSafariGame({ level, child, onComplete, audio }: GameProps) 
       </div>
 
       <div className={['shape-safari__status-row', promptPulse ? 'shape-safari__status-row--pulse' : ''].join(' ')}>
-        <FloatingGuide />
+        <FloatingGuide variant={guideVariant} celebrate={boardFeedback === 'success'} />
         <p className={toneClassName}>{t(message.key)}</p>
       </div>
 
@@ -921,7 +949,12 @@ export function ShapeSafariGame({ level, child, onComplete, audio }: GameProps) 
                 <button
                   key={`${round.id}-${shape}`}
                   type="button"
-                  className={`shape-safari__shape-card ${isTargetHighlight ? 'is-highlight' : ''}`}
+                  className={[
+                    'shape-safari__shape-card',
+                    isTargetHighlight ? 'is-highlight' : '',
+                    lastPickedShape === shape && pickFeedback === 'success' ? 'is-picked-success' : '',
+                    lastPickedShape === shape && pickFeedback === 'miss' ? 'is-picked-miss' : '',
+                  ].join(' ')}
                   onClick={() => handlePickShape(shape)}
                   draggable={round.mode !== 'match'}
                   onDragStart={onDragStart(shape)}
@@ -1075,6 +1108,10 @@ export function ShapeSafariGame({ level, child, onComplete, audio }: GameProps) 
           pointer-events: none;
         }
 
+        .shape-safari__floating-guide--celebrate {
+          animation: shape-safari-guide-cheer 340ms ease-out;
+        }
+
         .shape-safari__message {
           margin: 0;
           font-size: var(--font-size-md);
@@ -1116,6 +1153,12 @@ export function ShapeSafariGame({ level, child, onComplete, audio }: GameProps) 
           font-size: 1.2rem;
           cursor: pointer;
           color: var(--color-text-primary);
+          transition: transform 130ms ease, box-shadow 130ms ease, border-color 130ms ease;
+        }
+
+        .shape-safari__icon-button:not(:disabled):active {
+          transform: scale(0.97);
+          box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
         }
 
         .shape-safari__icon-button:disabled {
@@ -1208,6 +1251,18 @@ export function ShapeSafariGame({ level, child, onComplete, audio }: GameProps) 
           box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent-primary) 26%, transparent);
         }
 
+        .shape-safari__shape-card.is-picked-success {
+          border-color: var(--color-accent-success);
+          box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent-success) 24%, transparent);
+          animation: shape-safari-card-pop 300ms ease-out;
+        }
+
+        .shape-safari__shape-card.is-picked-miss {
+          border-color: color-mix(in srgb, var(--color-warning) 80%, black);
+          box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-warning) 20%, transparent);
+          animation: shape-safari-card-miss 240ms ease-in-out;
+        }
+
         .shape-safari__shape-symbol {
           font-size: 1.8rem;
         }
@@ -1293,6 +1348,43 @@ export function ShapeSafariGame({ level, child, onComplete, audio }: GameProps) 
           }
         }
 
+        @keyframes shape-safari-guide-cheer {
+          0% {
+            transform: translateY(0) scale(1);
+          }
+          45% {
+            transform: translateY(-4px) scale(1.06);
+          }
+          100% {
+            transform: translateY(0) scale(1);
+          }
+        }
+
+        @keyframes shape-safari-card-pop {
+          0% {
+            transform: scale(1);
+          }
+          55% {
+            transform: scale(1.07);
+          }
+          100% {
+            transform: scale(1);
+          }
+        }
+
+        @keyframes shape-safari-card-miss {
+          0%,
+          100% {
+            transform: translateX(0);
+          }
+          25% {
+            transform: translateX(-5px);
+          }
+          75% {
+            transform: translateX(5px);
+          }
+        }
+
         @media (max-width: 768px) {
           .shape-safari {
             padding: var(--space-md);
@@ -1313,9 +1405,12 @@ export function ShapeSafariGame({ level, child, onComplete, audio }: GameProps) 
           .shape-safari__progress-dot,
           .shape-safari__progress-dot--active-live,
           .shape-safari__status-row--pulse,
+          .shape-safari__floating-guide--celebrate,
           .shape-safari__score-pill--pulse,
           .shape-safari__options-grid--success,
-          .shape-safari__options-grid--miss {
+          .shape-safari__options-grid--miss,
+          .shape-safari__shape-card.is-picked-success,
+          .shape-safari__shape-card.is-picked-miss {
             animation: none !important;
             transition: none !important;
             transform: none !important;
@@ -1326,10 +1421,15 @@ export function ShapeSafariGame({ level, child, onComplete, audio }: GameProps) 
   );
 }
 
-function FloatingGuide() {
+function FloatingGuide({ variant, celebrate }: { variant: 'hint' | 'success'; celebrate: boolean }) {
   return (
-    <div className="shape-safari__floating-guide" aria-hidden="true">
-      <MascotIllustration variant="hint" size={52} />
+    <div
+      className={['shape-safari__floating-guide', celebrate ? 'shape-safari__floating-guide--celebrate' : ''].join(
+        ' ',
+      )}
+      aria-hidden="true"
+    >
+      <MascotIllustration variant={variant} size={52} />
     </div>
   );
 }

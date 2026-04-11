@@ -1,0 +1,35 @@
+$ npx --yes pa11y-ci --config /Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-685-qa2-20260411-144822/configs/games__reading__sight__word__sprint.pa11y-ci.config.json
+Running Pa11y on 1 URLs:
+ > http://127.0.0.1:4187/games/reading/sight-word-sprint - 3 errors
+
+Errors in http://127.0.0.1:4187/games/reading/sight-word-sprint:
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div > section > div:nth-child(1)
+   > div > span)
+
+   <span class="sight-word-sprint__target-label">מילת המטרה</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div > section > div:nth-child(2)
+   > p)
+
+   <p class="sight-word-sprint__section-title">בחרו את המילה ששמעתם.</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div > section > div:nth-child(3)
+   > p:nth-child(1))
+
+   <p class="sight-word-sprint__section-title">גררו את המילה הנכונה לתוך
+   המשפט...</p>
+
+✘ 0/1 URLs passed

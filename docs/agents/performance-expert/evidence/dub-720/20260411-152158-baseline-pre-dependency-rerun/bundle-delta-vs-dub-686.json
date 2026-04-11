@@ -1,0 +1,19 @@
+{
+  "baseline_reference": "DUB-686 production baseline (2026-04-11T12:03:15.515Z)",
+  "current": {
+    "index_file": "index-BNgosq4e.js",
+    "index_bytes": 480868,
+    "total_js_bytes": 1634534
+  },
+  "baseline": {
+    "index_file": "index-DRbiaM3n.js",
+    "index_bytes": 461042,
+    "total_js_bytes": 1581928
+  },
+  "diff": {
+    "index_bytes": 19826,
+    "index_bytes_pct": 4.3,
+    "total_js_bytes": 52606,
+    "total_js_bytes_pct": 3.33
+  }
+}

@@ -1,6 +1,6 @@
 # Dubiland Schema + GEO Plan (Q2 2026)
 
-*Owner: SEO Expert | Reviewer: CMO | Last updated: 2026-04-10*
+*Owner: SEO Expert | Reviewer: CMO | Last updated: 2026-04-11*
 
 ## Objective
 
@@ -206,6 +206,14 @@ Rules:
   - `yarn typecheck` passed (`2026-04-10`).
   - `yarn dev --host 127.0.0.1 --port 4173` booted successfully and served Vite.
 - Remaining external live-validator runtime/accessibility work continues under [DUB-50](/DUB/issues/DUB-50) and [DUB-375](/DUB/issues/DUB-375).
+
+### 2026-04-11 Follow-up Audit Note ([DUB-689](/DUB/issues/DUB-689))
+
+- Live rendered schema remains route-aware, but a static JSON-LD block is still present in `packages/web/index.html` with stale canonical host (`https://dubiland.co.il`), which creates duplicate `WebApplication` types after runtime injection.
+- Required FED follow-up from this audit:
+  1. Remove hardcoded static JSON-LD from `index.html`.
+  2. Keep schema emission in one controlled source (route metadata/prerender path).
+  3. Add duplicate-schema guard in smoke tests (fail if unexpected duplicate `@type` appears on public routes).
 
 ## Completion Criteria for DUB-12
 

@@ -1,5 +1,23 @@
 # Dubiland Remotion
 
+## Blend to Read compositions
+
+This package now also registers the Blend to Read mini-episode lane:
+
+- `BlendToReadTemplate` (parametric via `inputProps.episodeId`)
+- `BlendToRead-episode-01-cv-patah`
+- `BlendToRead-episode-02-cv-segol`
+- `BlendToRead-episode-03-cv-hirik`
+- `BlendToRead-episode-04-cvc-bridge`
+- `BlendToRead-episode-05-word-transfer`
+- `BlendToRead-episode-06-challenge`
+
+The episode/key contract is shared in:
+
+- `packages/remotion/src/content/blendToReadVideoShorts.ts`
+
+Each episode exposes three checkpoint cue windows through timeline metadata (`timeline.checkpoints`) for runtime wiring.
+
 ## Letters Series compositions
 
 This package registers reusable Hebrew letter lesson videos:
@@ -38,6 +56,19 @@ If your environment does not preserve symlinks, create this link before renderin
 yarn workspace @dubiland/remotion studio
 
 yarn workspace @dubiland/remotion render LettersSeries-alef out/letters-alef.mp4
+```
+
+Blend-to-read render examples:
+
+```bash
+yarn workspace @dubiland/remotion render \
+  BlendToRead-episode-01-cv-patah \
+  out/blend-to-read-ep01.mp4
+
+yarn workspace @dubiland/remotion render \
+  BlendToReadTemplate \
+  out/blend-to-read-ep06.mp4 \
+  --props='{"episodeId":"episode-06-challenge"}'
 ```
 
 To render the template composition with a different letter:

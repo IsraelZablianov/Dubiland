@@ -16,6 +16,9 @@ export type RouteMetadataKey =
   | 'shapeSafariGame'
   | 'moreOrLessMarketGame'
   | 'numberLineJumpsGame'
+  | 'build10WorkshopGame'
+  | 'subtractionStreetGame'
+  | 'timeAndRoutineBuilderGame'
   | 'colorGardenGame'
   | 'letterSoundMatchGame'
   | 'letterTracingTrailGame'
@@ -23,10 +26,14 @@ export type RouteMetadataKey =
   | 'pictureToWordBuilderGame'
   | 'sightWordSprintGame'
   | 'decodableMicroStoriesGame'
+  | 'decodableStoryMissionsGame'
   | 'interactiveHandbookGame'
   | 'letterStorybookGame'
   | 'rootFamilyStickersGame'
   | 'confusableLetterContrastGame'
+  | 'nikudSoundLadderGame'
+  | 'syllableTrainBuilderGame'
+  | 'blendToReadVideoShortsGame'
   | 'notFound'
   | 'default';
 
@@ -128,6 +135,21 @@ const ROUTE_METADATA_BY_PATH: Record<string, RouteMetadataDefinition> = {
     canonicalPath: '/games/numbers/number-line-jumps',
     indexable: false,
   },
+  '/games/numbers/build-10-workshop': {
+    key: 'build10WorkshopGame',
+    canonicalPath: '/games/numbers/build-10-workshop',
+    indexable: false,
+  },
+  '/games/numbers/subtraction-street': {
+    key: 'subtractionStreetGame',
+    canonicalPath: '/games/numbers/subtraction-street',
+    indexable: false,
+  },
+  '/games/numbers/time-and-routine-builder': {
+    key: 'timeAndRoutineBuilderGame',
+    canonicalPath: '/games/numbers/time-and-routine-builder',
+    indexable: false,
+  },
   '/games/colors/color-garden': {
     key: 'colorGardenGame',
     canonicalPath: '/games/colors/color-garden',
@@ -163,6 +185,11 @@ const ROUTE_METADATA_BY_PATH: Record<string, RouteMetadataDefinition> = {
     canonicalPath: '/games/reading/decodable-micro-stories',
     indexable: false,
   },
+  '/games/reading/decodable-story-missions': {
+    key: 'decodableStoryMissionsGame',
+    canonicalPath: '/games/reading/decodable-story-missions',
+    indexable: false,
+  },
   '/games/reading/interactive-handbook': {
     key: 'interactiveHandbookGame',
     canonicalPath: '/games/reading/interactive-handbook',
@@ -181,6 +208,21 @@ const ROUTE_METADATA_BY_PATH: Record<string, RouteMetadataDefinition> = {
   '/games/reading/confusable-letter-contrast': {
     key: 'confusableLetterContrastGame',
     canonicalPath: '/games/reading/confusable-letter-contrast',
+    indexable: false,
+  },
+  '/games/reading/nikud-sound-ladder': {
+    key: 'nikudSoundLadderGame',
+    canonicalPath: '/games/reading/nikud-sound-ladder',
+    indexable: false,
+  },
+  '/games/reading/syllable-train-builder': {
+    key: 'syllableTrainBuilderGame',
+    canonicalPath: '/games/reading/syllable-train-builder',
+    indexable: false,
+  },
+  '/games/reading/blend-to-read-video-shorts': {
+    key: 'blendToReadVideoShortsGame',
+    canonicalPath: '/games/reading/blend-to-read-video-shorts',
     indexable: false,
   },
 };

@@ -1,0 +1,22 @@
+{
+  "defaults": {
+    "standard": "WCAG2AA",
+    "timeout": 120000,
+    "wait": 250,
+    "actions": [
+      "navigate to http://127.0.0.1:4187/login",
+      "wait for path to be /login",
+      "wait for element .login-page__guest-cta button to be visible",
+      "click element .login-page__guest-cta button",
+      "wait for path to be /profiles",
+      "wait for element footer button:last-child to be visible",
+      "click element footer button:last-child",
+      "wait for path to be /games",
+      "navigate to http://127.0.0.1:4187/games/reading/picture-to-word-builder",
+      "wait for path to be /games/reading/picture-to-word-builder"
+    ]
+  },
+  "urls": [
+    "http://127.0.0.1:4187/games/reading/picture-to-word-builder"
+  ]
+}

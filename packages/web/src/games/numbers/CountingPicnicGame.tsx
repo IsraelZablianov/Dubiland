@@ -930,7 +930,8 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
             </button>
           </div>
 
-          <div className="counting-picnic__stars" aria-label={t('feedback.excellent')}>
+          <div className="counting-picnic__stars">
+            <span className="sr-only">{t('feedback.excellent')}</span>
             {Array.from({ length: Math.max(1, starTokens) }).map((_, index) => (
               <span key={`star-${index}`} className="counting-picnic__star" aria-hidden="true">
                 ⭐
@@ -1079,7 +1080,8 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
           </div>
         </header>
 
-        <div className="counting-picnic__round-progress" aria-label={t('games.estimatedTime', { minutes: 6 })}>
+        <div className="counting-picnic__round-progress">
+          <span className="sr-only">{t('games.estimatedTime', { minutes: 6 })}</span>
           {roundProgressSegments.map((segment) => {
             const state =
               segment < round.roundNumber
@@ -1104,12 +1106,13 @@ export function CountingPicnicGame({ onComplete, audio }: GameProps) {
               'counting-picnic__score-pill',
               scorePulse ? 'counting-picnic__score-pill--pulse' : '',
             ].join(' ')}
-            aria-label={t('feedback.excellent')}
           >
+            <span className="sr-only">{t('feedback.excellent')}</span>
             <span aria-hidden="true">⭐</span>
             <span>{Math.min(3, starTokens)}</span>
           </span>
-          <span className="counting-picnic__score-pill" aria-label={t('nav.next')}>
+          <span className="counting-picnic__score-pill">
+            <span className="sr-only">{t('nav.next')}</span>
             <span aria-hidden="true">🧩</span>
             <span>
               {round.roundNumber} / {TOTAL_ROUNDS}

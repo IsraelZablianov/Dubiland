@@ -253,3 +253,15 @@ If a previously completed implementation issue is reassigned/left `blocked` on F
 
 ## 2026-04-11 — Runtime anti-guess guards are safer when trigger evaluation is pure and UI scaffold state is one-shot
 For reading choice flows, keep anti-guess trigger math (rapid-tap window + short-response streak) in a pure helper and return a resettable tracker state on trigger. Then apply UI recovery through one-shot per-page scaffold budgets (reduce options by one for the next retry/trial), which avoids sticky reduced-choice states and makes regression tests deterministic.
+
+## 2026-04-11 — Score-7 game polish uplift can ship as event-driven micro-feedback layers
+For mature game components that already meet core gameplay requirements, the fastest safe uplift is adding event-driven micro-feedback (board success/miss pulses, tapped-card pop/shake, hop-trail animations) directly on existing state transitions rather than rewriting round flow. This raises delight/clarity while preserving i18n/audio contracts and minimizing regression risk.
+
+## 2026-04-11 — Reading-game mascot + micro-feedback retrofit works best off existing tone/feedback state
+For established reading games, bind `MascotIllustration` variant to existing `message/status tone + boardFeedback` state (`success/hint/hero`) and add per-control animation classes using small transient selection trackers (`lastAttemptWordId`, `selectedTransferChoice`, active sort bucket). This delivers visible polish without touching progression logic, i18n keys, or audio flows.
+
+## 2026-04-11 — New game route wiring should pair typed trend-key mapping with locale key coverage checks
+For new `GameProps` pages that render parent-summary trend strings from dynamic metrics, map trend values (`improving|steady|needs_support`) to explicit literal i18n keys before calling `t(...)`; template-string keys can fail strict typed-i18n signatures. In the same heartbeat, run a key-coverage script against the game component and locale JSON to catch missing `games.<slug>.*` / `parentDashboard.games.<slug>.*` keys before QA.
+
+## 2026-04-11 — Nikud near-foil safety is easiest to enforce by prompt-mode + unlock-gate split
+For `NikudSoundLadder`, keep same-sound guardrails deterministic by tagging rounds with prompt mode (`sound` vs `name/anchor/transfer`) and filtering out any sound-only round that includes `ַ/ָ` or `ֶ/ֵ`. Model `D1` as separate near-foil round pools and unlock them only when last-10 family accuracy reaches 80%, so level composition rules stay testable and do not leak ambiguous prompts.

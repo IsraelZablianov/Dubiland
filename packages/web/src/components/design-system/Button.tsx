@@ -40,7 +40,8 @@ const sizeStyles: Record<ButtonSize, React.CSSProperties> = {
     borderRadius: 'var(--radius-sm)',
   },
   md: {
-    minHeight: 'var(--touch-min)',
+    minHeight: 'max(var(--touch-min-primary), var(--touch-min))',
+    minWidth: 'max(var(--touch-min-primary), var(--touch-min))',
     padding: 'var(--space-sm) var(--space-lg)',
     fontSize: 'var(--font-size-md)',
     borderRadius: 'var(--radius-md)',

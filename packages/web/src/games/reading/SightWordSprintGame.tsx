@@ -387,6 +387,7 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
   const [boardFeedbackTone, setBoardFeedbackTone] = useState<BoardFeedbackTone>('idle');
   const [scorePulse, setScorePulse] = useState(false);
   const [countdownSec, setCountdownSec] = useState(initialRoundSeconds);
+  const [lastAttemptWordId, setLastAttemptWordId] = useState<WordId | null>(null);
   const [roundMessage, setRoundMessage] = useState<RoundMessage>({
     key: 'games.sightWordSprint.instructions.intro',
     tone: 'neutral',
@@ -538,6 +539,7 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
     roundUsedHintRef.current = false;
     setHintStage(0);
     setSlotWord(null);
+    setLastAttemptWordId(null);
     setHighlightTarget(false);
     setHighlightSlot(false);
     setBoardFeedbackTone('idle');
@@ -658,6 +660,7 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
     setRound(nextRound);
     setHintStage(0);
     setSlotWord(null);
+    setLastAttemptWordId(null);
     setBoardFeedbackTone('idle');
   }, [clearRoundAdvanceTimeout, finishSession, levelId, optionCount, roundIndex, routingContext.ageBand, setMessageWithAudio, totalRounds]);
 
@@ -675,7 +678,8 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
     [levelId, round.targetWord],
   );
 
-  const registerWrongAttempt = useCallback(() => {
+  const registerWrongAttempt = useCallback((attemptedWordId: WordId) => {
+    setLastAttemptWordId(attemptedWordId);
     roundHadMistakeRef.current = true;
     missesRef.current += 1;
     wordStatsRef.current[round.targetWord] = {
@@ -710,9 +714,10 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
       }
 
       attemptsRef.current += 1;
+      setLastAttemptWordId(wordId);
 
       if (wordId !== round.targetWord) {
-        registerWrongAttempt();
+        registerWrongAttempt(wordId);
         return;
       }
 
@@ -740,8 +745,10 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
         return;
       }
 
+      setLastAttemptWordId(wordId);
+
       if (wordId !== round.targetWord) {
-        registerWrongAttempt();
+        registerWrongAttempt(wordId);
         setHighlightSlot(true);
         clearHighlightsSoon();
         setMessageWithAudio('games.sightWordSprint.feedback.retry.frameRetry', 'hint', 'interrupt');
@@ -816,6 +823,7 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
     setPhase('select');
     setSlotWord(null);
     setHintStage(0);
+    setLastAttemptWordId(null);
     setHighlightTarget(false);
     setHighlightSlot(false);
     setBoardFeedbackTone('idle');
@@ -929,6 +937,11 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
   }, [clearTimer, phase, playAudio, roundSeconds, sessionComplete, setMessageWithAudio]);
 
   const targetWordLabel = t(WORDS[round.targetWord].key);
+  const statusMascotVariant = sessionComplete || boardFeedbackTone === 'success' || roundMessage.tone === 'success'
+    ? 'success'
+    : roundMessage.tone === 'hint' || boardFeedbackTone === 'miss'
+      ? 'hint'
+      : 'hero';
 
   const completionSummary = summary ?? {
     accuracy: 0,
@@ -961,8 +974,17 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
         }
       />
 
-      <div className={['sight-word-sprint__status', roundMessage.tone === 'hint' ? 'sight-word-sprint__status--hint' : '', roundMessage.tone === 'success' ? 'sight-word-sprint__status--success' : ''].join(' ')}>
-        <MascotIllustration variant="hint" size={50} />
+      <div className={['sight-word-sprint__status', roundMessage.tone === 'hint' ? 'sight-word-sprint__status--hint' : '', roundMessage.tone === 'success' ? 'sight-word-sprint__status--success' : '', boardFeedbackTone === 'miss' ? 'sight-word-sprint__status--miss' : ''].join(' ')}>
+        <span
+          className={[
+            'sight-word-sprint__status-mascot',
+            statusMascotVariant === 'success' ? 'sight-word-sprint__status-mascot--success' : '',
+            statusMascotVariant === 'hint' ? 'sight-word-sprint__status-mascot--hint' : '',
+          ].join(' ')}
+          aria-hidden="true"
+        >
+          <MascotIllustration variant={statusMascotVariant} size={50} />
+        </span>
         <p className="sight-word-sprint__status-text">{t(roundMessage.key as any)}</p>
         <button
           type="button"
@@ -1051,6 +1073,8 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
                     className={[
                       'sight-word-sprint__word-chip',
                       shouldGlow ? 'sight-word-sprint__word-chip--hint' : '',
+                      boardFeedbackTone === 'success' && isTarget && lastAttemptWordId === wordId ? 'sight-word-sprint__word-chip--success' : '',
+                      boardFeedbackTone === 'miss' && lastAttemptWordId === wordId ? 'sight-word-sprint__word-chip--miss' : '',
                     ].join(' ')}
                     onClick={() => handleSelectWord(wordId)}
                     aria-label={t(WORDS[wordId].key)}
@@ -1077,6 +1101,8 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
                   'sight-word-sprint__drop-slot',
                   highlightSlot ? 'sight-word-sprint__drop-slot--hint' : '',
                   slotWord ? 'sight-word-sprint__drop-slot--filled' : '',
+                  boardFeedbackTone === 'success' && slotWord === round.targetWord ? 'sight-word-sprint__drop-slot--success' : '',
+                  phase === 'frame' && boardFeedbackTone === 'miss' ? 'sight-word-sprint__drop-slot--miss' : '',
                 ].join(' ')}
                 onDragOver={(event) => {
                   event.preventDefault();
@@ -1103,7 +1129,15 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
                     key={`frame-chip-${wordId}`}
                     type="button"
                     draggable
-                    className="sight-word-sprint__frame-chip"
+                    className={[
+                      'sight-word-sprint__frame-chip',
+                      boardFeedbackTone === 'success' && wordId === round.targetWord && lastAttemptWordId === wordId
+                        ? 'sight-word-sprint__frame-chip--success'
+                        : '',
+                      boardFeedbackTone === 'miss' && lastAttemptWordId === wordId
+                        ? 'sight-word-sprint__frame-chip--miss'
+                        : '',
+                    ].join(' ')}
                     onDragStart={(event) => {
                       event.dataTransfer.setData('text/plain', wordId);
                     }}
@@ -1194,6 +1228,31 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
 
         .sight-word-sprint__status--success {
           border-color: color-mix(in srgb, var(--color-accent-success) 58%, transparent);
+        }
+
+        .sight-word-sprint__status--miss {
+          border-color: color-mix(in srgb, var(--color-accent-warning) 62%, transparent);
+        }
+
+        .sight-word-sprint__status-mascot {
+          min-inline-size: 52px;
+          min-block-size: 52px;
+          border-radius: var(--radius-full);
+          border: 1px solid color-mix(in srgb, var(--color-border) 74%, transparent);
+          background: color-mix(in srgb, var(--color-surface) 86%, transparent);
+          display: inline-grid;
+          place-items: center;
+          padding: 2px;
+        }
+
+        .sight-word-sprint__status-mascot--hint {
+          border-color: color-mix(in srgb, var(--color-accent-warning) 56%, transparent);
+          background: color-mix(in srgb, var(--color-accent-warning) 12%, var(--color-surface));
+        }
+
+        .sight-word-sprint__status-mascot--success {
+          border-color: color-mix(in srgb, var(--color-accent-success) 56%, transparent);
+          background: color-mix(in srgb, var(--color-accent-success) 12%, var(--color-surface));
         }
 
         .sight-word-sprint__status-text {
@@ -1329,6 +1388,20 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
           box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent-warning) 34%, transparent);
         }
 
+        .sight-word-sprint__word-chip--success,
+        .sight-word-sprint__frame-chip--success {
+          border-color: color-mix(in srgb, var(--color-accent-success) 58%, transparent);
+          background: color-mix(in srgb, var(--color-accent-success) 12%, var(--color-surface));
+          animation: sight-word-choice-success 320ms ease-out;
+        }
+
+        .sight-word-sprint__word-chip--miss,
+        .sight-word-sprint__frame-chip--miss {
+          border-color: color-mix(in srgb, var(--color-accent-warning) 62%, transparent);
+          background: color-mix(in srgb, var(--color-accent-warning) 14%, var(--color-surface));
+          animation: sight-word-choice-miss 300ms ease-in-out;
+        }
+
         .sight-word-sprint__frame-text {
           margin: 0;
           color: var(--color-text-primary);
@@ -1355,6 +1428,17 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
 
         .sight-word-sprint__drop-slot--filled {
           border-style: solid;
+        }
+
+        .sight-word-sprint__drop-slot--success {
+          border-color: color-mix(in srgb, var(--color-accent-success) 62%, transparent);
+          background: color-mix(in srgb, var(--color-accent-success) 16%, var(--color-surface));
+          animation: sight-word-slot-success 320ms ease-out;
+        }
+
+        .sight-word-sprint__drop-slot--miss {
+          border-color: color-mix(in srgb, var(--color-accent-warning) 66%, transparent);
+          animation: sight-word-choice-miss 300ms ease-in-out;
         }
 
         .sight-word-sprint__completion {
@@ -1417,10 +1501,53 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
           }
         }
 
+        @keyframes sight-word-choice-success {
+          0% {
+            transform: scale(1);
+          }
+          55% {
+            transform: scale(1.06);
+          }
+          100% {
+            transform: scale(1);
+          }
+        }
+
+        @keyframes sight-word-choice-miss {
+          0%,
+          100% {
+            transform: translateX(0);
+          }
+          28% {
+            transform: translateX(-4px);
+          }
+          72% {
+            transform: translateX(4px);
+          }
+        }
+
+        @keyframes sight-word-slot-success {
+          0% {
+            transform: scale(1);
+          }
+          45% {
+            transform: scale(1.03);
+          }
+          100% {
+            transform: scale(1);
+          }
+        }
+
         @media (prefers-reduced-motion: reduce) {
           .sight-word-sprint__score-pill--pulse,
           .sight-word-sprint__board--success,
           .sight-word-sprint__board--miss,
+          .sight-word-sprint__word-chip--success,
+          .sight-word-sprint__word-chip--miss,
+          .sight-word-sprint__frame-chip--success,
+          .sight-word-sprint__frame-chip--miss,
+          .sight-word-sprint__drop-slot--success,
+          .sight-word-sprint__drop-slot--miss,
           .sight-word-sprint__icon-button,
           .sight-word-sprint__word-chip,
           .sight-word-sprint__frame-chip,

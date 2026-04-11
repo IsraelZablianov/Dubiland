@@ -1,0 +1,10 @@
+{
+  "standard": "WCAG2AA",
+  "timeout": 120000,
+  "wait": 500,
+  "actions": [
+    "navigate to http://127.0.0.1:4187/",
+    "wait for path to be /",
+    "wait for element #root > div to be visible"
+  ]
+}

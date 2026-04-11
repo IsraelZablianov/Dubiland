@@ -1,0 +1,66 @@
+[
+  {
+    "code": "aria-prohibited-attr",
+    "type": "error",
+    "typeCode": 1,
+    "message": "Elements must only use permitted ARIA attributes (https://dequeuniversity.com/rules/axe/4.11/aria-prohibited-attr?application=axeAPI)",
+    "context": "<div class=\"letter-sound-match__progress\" aria-label=\"משך משוער: 5 דקות\"><span class=\"letter-sound-match...</div>",
+    "selector": "#root > div > main > div > div > section > div > div > div:nth-child(2)",
+    "runner": "axe",
+    "runnerExtras": {
+      "description": "Ensure ARIA attributes are not prohibited for an element's role",
+      "impact": "serious",
+      "needsFurtherReview": false,
+      "help": "Elements must only use permitted ARIA attributes",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/aria-prohibited-attr?application=axeAPI"
+    }
+  },
+  {
+    "code": "aria-prohibited-attr",
+    "type": "error",
+    "typeCode": 1,
+    "message": "Elements must only use permitted ARIA attributes (https://dequeuniversity.com/rules/axe/4.11/aria-prohibited-attr?application=axeAPI)",
+    "context": "<span class=\"letter-sound-match__metric-pill\" aria-label=\"רמת קושי\">🎯 2</span>",
+    "selector": "#root > div > main > div > div > section > div > div > section > div:nth-child(3) > div:nth-child(1) > div > span:nth-child(1)",
+    "runner": "axe",
+    "runnerExtras": {
+      "description": "Ensure ARIA attributes are not prohibited for an element's role",
+      "impact": "serious",
+      "needsFurtherReview": true,
+      "help": "Elements must only use permitted ARIA attributes",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/aria-prohibited-attr?application=axeAPI"
+    }
+  },
+  {
+    "code": "aria-prohibited-attr",
+    "type": "error",
+    "typeCode": 1,
+    "message": "Elements must only use permitted ARIA attributes (https://dequeuniversity.com/rules/axe/4.11/aria-prohibited-attr?application=axeAPI)",
+    "context": "<span class=\"letter-sound-match__metric-pill\" aria-label=\"הבא\">1/8</span>",
+    "selector": "#root > div > main > div > div > section > div > div > section > div:nth-child(3) > div:nth-child(1) > div > span:nth-child(2)",
+    "runner": "axe",
+    "runnerExtras": {
+      "description": "Ensure ARIA attributes are not prohibited for an element's role",
+      "impact": "serious",
+      "needsFurtherReview": true,
+      "help": "Elements must only use permitted ARIA attributes",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/aria-prohibited-attr?application=axeAPI"
+    }
+  },
+  {
+    "code": "aria-prohibited-attr",
+    "type": "error",
+    "typeCode": 1,
+    "message": "Elements must only use permitted ARIA attributes (https://dequeuniversity.com/rules/axe/4.11/aria-prohibited-attr?application=axeAPI)",
+    "context": "<span class=\"letter-sound-match__metric-pill\" aria-label=\"להמשיך, אתה בדרך הנכונה!\">0%</span>",
+    "selector": "#root > div > main > div > div > section > div > div > section > div:nth-child(3) > div:nth-child(1) > div > span:nth-child(3)",
+    "runner": "axe",
+    "runnerExtras": {
+      "description": "Ensure ARIA attributes are not prohibited for an element's role",
+      "impact": "serious",
+      "needsFurtherReview": true,
+      "help": "Elements must only use permitted ARIA attributes",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/aria-prohibited-attr?application=axeAPI"
+    }
+  }
+]

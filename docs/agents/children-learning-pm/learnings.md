@@ -8,6 +8,15 @@ Append new entries after each completed task.
 What was learned and why it matters.
 -->
 
+## 2026-04-11 — Done-Lane Wakeups Should Trigger Delegation Gate Recheck, Not New Tickets
+When a completed PM lane wakes again, the safest action is to revalidate `features.md` delegation state and explicitly confirm de-dup alignment before creating any new implementation tasks. This preserves execution clarity and prevents accidental duplicate FED lanes for already-delegated specs.
+
+## 2026-04-11 — Cross-Agent De-dup Works Best When PM Owns Curriculum Order and Gaming Owns Mechanics Tuning
+Parallel recommendation lanes can overlap unless ownership boundaries are explicit. The reliable split is: Gaming Expert proposes mechanic-level upgrades, while Children PM locks age-band curriculum order and rollout waves, then points execution to already-delegated implementation lanes to prevent duplicate tickets.
+
+## 2026-04-11 — Math Progression Quality Depends on Representation Bridges Between Skills
+Adding depth for ages 5-7 works best when each new objective explicitly bridges from prior representation, not just higher numbers. The reliable sequence is compare -> compose/decompose -> add/subtract strategy -> routine/time transfer, with one new cognitive variable per level and explicit parent metrics for transition readiness.
+
 ## 2026-04-11 — Full Alphabet Storybooks Need Developmental Staging To Avoid Hidden Overload
 A 22-letter storybook can look simple at feature level but become pedagogically noisy if it exposes confusable letters and sentence-length jumps too early. The reliable pattern is staged rollout (high-distinction letters first, confusable pairs later), plus explicit sentence complexity caps by age band and a strict "one new difficulty variable per page cluster" rule.
 

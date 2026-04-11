@@ -112,3 +112,18 @@ When a wake task is assigned to Gaming Expert but already `cancelled` as a dupli
 
 ## 2026-04-11 — Storybook Gamification Should Reward Literacy Actions, Not Session Time
 For ages 3-7 letter storybooks, the most reliable low-complexity hooks are progress-visible rewards that trigger directly from solved literacy checkpoints (letter card reveal + story clue meter). Keep rewards non-punitive and grant progression after supported success so motivation remains tied to learning behavior instead of speed or daily streak pressure.
+
+## 2026-04-11 — Gap Proposals Land Better When They Pair New Concepts with Upgrade Deltas
+For game ideation tasks, PM decision speed improves when proposals include both (1) 3-5 new concept briefs and (2) concrete upgrade actions for existing live specs. Pairing each concept with explicit age-band gates, adaptive fallback triggers, and benchmark pattern mapping (TinyTap/Khan Kids/Duolingo ABC) reduces follow-up clarification work and makes prioritization immediate.
+
+## 2026-04-11 — Impact/Effort Matrices Accelerate PM Adoption of Game Proposals
+For improvement sprints, proposal comments land faster when each recommendation includes explicit impact/effort grading and a first sprint slice. Pairing low-effort P0 upgrades on existing games with one net-new P0 concept creates visible child-impact wins without overloading implementation lanes.
+
+## 2026-04-11 — Nikud Mechanics Must Separate Sound Discrimination from Grapheme Discrimination
+For nikud games, sound-only prompts become ambiguous for same-sound grapheme pairs (`ַ/ָ`, `ֶ/ֵ`). Specs should explicitly gate when near-foil distractors unlock, require name/anchored prompts for those pairs, and define miss/inactivity-triggered hint ladders with numeric promotion/regression thresholds so FED and Content can implement one deterministic difficulty model.
+
+## 2026-04-11 — Syllable Builder Specs Need Gate Metrics + Rapid-Tap Recovery in the Same Contract
+For Hebrew syllable blending games (CV/CVC progression), implementation quality improves when specs define promotion gates as explicit numeric mastery criteria (item counts, first-try accuracy, coverage constraints, hint caps) and pair them with an anti-random-tap recovery trigger (time-windowed miss threshold -> short pause + modeled assist). Adding a mandatory icon inventory table at the same time keeps FED and Content aligned on control-audio semantics.
+
+## 2026-04-11 — Decodable Mission Specs Should Use Independent-Pass vs Supported-Pass Instead of Hard Freeze
+For decodable connected-text games, decode-first quality is easier to implement and fairer for children when specs explicitly split mission outcomes into `independent-pass` (numeric decode-first + hint caps met) and `supported-pass` (mission completes, then one recovery mission). Pair this with Level 3 sequencing that introduces partial-pointing fade before new comprehension formats, so only one new variable changes per cluster.

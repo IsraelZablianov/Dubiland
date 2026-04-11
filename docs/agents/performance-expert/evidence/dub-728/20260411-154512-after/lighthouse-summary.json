@@ -1,0 +1,61 @@
+{
+  "generated_at": "2026-04-11T12:46:56.804Z",
+  "routes": [
+    {
+      "key": "root",
+      "route": "/",
+      "performance": 92,
+      "fcp_ms": 2640,
+      "lcp_ms": 2715,
+      "cls": 0.033,
+      "tbt_ms": 0,
+      "transfer_bytes": 175839,
+      "script_transfer_bytes": 117678,
+      "lcp_element_selector": "section.landing__hero > div.landing__hero-inner > div.landing__hero-content > p.landing__hero-subtitle",
+      "lcp_element_label": "דובילנד — פלטפורמת הלמידה שהילדים שלכם יאהבו. משחקי אותיות, מספרים וקריאה לגילא…",
+      "lcp_element_snippet": "<p class=\"landing__hero-subtitle\">"
+    },
+    {
+      "key": "letters",
+      "route": "/letters",
+      "performance": 89,
+      "fcp_ms": 2580,
+      "lcp_ms": 3192,
+      "cls": 0.004,
+      "tbt_ms": 18,
+      "transfer_bytes": 221543,
+      "script_transfer_bytes": 119417,
+      "lcp_element_selector": "section.topic-pillar__hero > div.topic-pillar__hero-grid > div.topic-pillar__hero-copy > p.topic-pillar__subtitle",
+      "lcp_element_label": "שלושה נושאי לימוד מרכזיים שמכסים את הבסיס ללימודי בית ספר",
+      "lcp_element_snippet": "<p class=\"topic-pillar__subtitle\">"
+    },
+    {
+      "key": "parents",
+      "route": "/parents",
+      "performance": 92,
+      "fcp_ms": 2586,
+      "lcp_ms": 2736,
+      "cls": 0.013,
+      "tbt_ms": 0,
+      "transfer_bytes": 172259,
+      "script_transfer_bytes": 116770,
+      "lcp_element_selector": "main.marketing-shell__content > div.parents > section.parents__hero > p.parents__hero-text",
+      "lcp_element_label": "כל מה שצריך לדעת כדי להתחיל עם דובילנד",
+      "lcp_element_snippet": "<p class=\"parents__hero-text\">"
+    },
+    {
+      "key": "parents-faq",
+      "route": "/parents/faq",
+      "performance": 93,
+      "fcp_ms": 2592,
+      "lcp_ms": 2667,
+      "cls": 0.003,
+      "tbt_ms": 0,
+      "transfer_bytes": 170230,
+      "script_transfer_bytes": 114741,
+      "lcp_element_selector": "section.parents-faq__content > div.parents-faq__list > div.parents-faq__item > p.parents-faq__answer",
+      "lcp_element_label": "לא! כל ההוראות והטקסטים מושמעים. דובילנד מתאימה גם לילדים שעדיין לא קוראים.",
+      "lcp_element_snippet": "<p class=\"parents-faq__answer\">"
+    }
+  ]
+}

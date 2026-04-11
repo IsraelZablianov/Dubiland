@@ -197,7 +197,6 @@ function buildBreadcrumbItems(
 export function RouteMetadataManager() {
   const { t: tSeo } = useTranslation('seo');
   const { t: tPublic } = useTranslation('public');
-  const { t: tCommon } = useTranslation('common');
   const location = useLocation();
   const canonicalBaseUrl = useMemo(() => resolveCanonicalBaseUrl(), []);
   const canonicalOrigin = useMemo(() => canonicalBaseUrl.origin, [canonicalBaseUrl]);
@@ -224,10 +223,10 @@ export function RouteMetadataManager() {
     }
 
     const breadcrumbItems = buildBreadcrumbItems(routeMetadata.key, {
-      home: tCommon('branding.appName'),
-      letters: tCommon('topics.letters'),
-      numbers: tCommon('topics.math'),
-      reading: tCommon('topics.reading'),
+      home: tPublic('footer.aboutTitle'),
+      letters: tPublic('landing.topicLettersTitle'),
+      numbers: tPublic('landing.topicMathTitle'),
+      reading: tPublic('landing.topicReadingTitle'),
       parents: tPublic('header.parents'),
       parentsFaq: tPublic('parents.faqTitle'),
       terms: tPublic('footer.terms'),
@@ -249,11 +248,11 @@ export function RouteMetadataManager() {
       canonicalPath: routeMetadata.canonicalPath,
       title: metadata.title,
       description: metadata.description,
-      appName: tCommon('branding.appName'),
+      appName: tPublic('footer.aboutTitle'),
       breadcrumbItems,
       faqItems,
     });
-  }, [canonicalOrigin, metadata.description, metadata.title, routeMetadata, tCommon, tPublic]);
+  }, [canonicalOrigin, metadata.description, metadata.title, routeMetadata, tPublic]);
 
   useEffect(() => {
     if (import.meta.env.DEV) {

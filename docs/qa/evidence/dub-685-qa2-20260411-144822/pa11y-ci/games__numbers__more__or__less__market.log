@@ -1,0 +1,16 @@
+$ npx --yes pa11y-ci --config /Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-685-qa2-20260411-144822/configs/games__numbers__more__or__less__market.pa11y-ci.config.json
+Running Pa11y on 1 URLs:
+ > http://127.0.0.1:4187/games/numbers/more-or-less-market - 1 errors
+
+Errors in http://127.0.0.1:4187/games/numbers/more-or-less-market:
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div > div > header >
+   div:nth-child(1) > p)
+
+   <p class="more-less-market__subtitle">נשווה כמויות ונבחר יותר, פחות א...</p>
+
+✘ 0/1 URLs passed

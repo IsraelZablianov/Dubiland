@@ -1,0 +1,41 @@
+{
+  "generated_at": "2026-04-11T12:38:11.456Z",
+  "routes": [
+    {
+      "key": "root",
+      "perf": 89,
+      "fcp_ms": 2884,
+      "lcp_ms": 3057,
+      "cls": 0.033,
+      "tbt_ms": 0,
+      "lcp_snippet": ""
+    },
+    {
+      "key": "letters",
+      "perf": 84,
+      "fcp_ms": 2879,
+      "lcp_ms": 3675,
+      "cls": 0.002,
+      "tbt_ms": 121,
+      "lcp_snippet": ""
+    },
+    {
+      "key": "parents",
+      "perf": 96,
+      "fcp_ms": 2276,
+      "lcp_ms": 2298,
+      "cls": 0.013,
+      "tbt_ms": 0,
+      "lcp_snippet": ""
+    },
+    {
+      "key": "parents-faq",
+      "perf": 89,
+      "fcp_ms": 2875,
+      "lcp_ms": 3045,
+      "cls": 0.003,
+      "tbt_ms": 0,
+      "lcp_snippet": ""
+    }
+  ]
+}

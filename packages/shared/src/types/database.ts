@@ -267,6 +267,18 @@ export type Database = {
           level_id: string | null
           mastery_outcome: string | null
           payload: Json
+          pm_accuracy_pct: number | null
+          pm_age_band: string | null
+          pm_contract_version: string | null
+          pm_decode_accuracy_pct: number | null
+          pm_domain: string | null
+          pm_gate_passed: boolean | null
+          pm_hint_trend: string | null
+          pm_independence_trend: string | null
+          pm_listen_participation_pct: number | null
+          pm_progression_band: string | null
+          pm_sequence_evidence_score: number | null
+          pm_skill_key: string | null
           score: number
           session_id: string
           stars: number
@@ -287,6 +299,18 @@ export type Database = {
           level_id?: string | null
           mastery_outcome?: string | null
           payload?: Json
+          pm_accuracy_pct?: number | null
+          pm_age_band?: string | null
+          pm_contract_version?: string | null
+          pm_decode_accuracy_pct?: number | null
+          pm_domain?: string | null
+          pm_gate_passed?: boolean | null
+          pm_hint_trend?: string | null
+          pm_independence_trend?: string | null
+          pm_listen_participation_pct?: number | null
+          pm_progression_band?: string | null
+          pm_sequence_evidence_score?: number | null
+          pm_skill_key?: string | null
           score?: number
           session_id: string
           stars?: number
@@ -307,6 +331,18 @@ export type Database = {
           level_id?: string | null
           mastery_outcome?: string | null
           payload?: Json
+          pm_accuracy_pct?: number | null
+          pm_age_band?: string | null
+          pm_contract_version?: string | null
+          pm_decode_accuracy_pct?: number | null
+          pm_domain?: string | null
+          pm_gate_passed?: boolean | null
+          pm_hint_trend?: string | null
+          pm_independence_trend?: string | null
+          pm_listen_participation_pct?: number | null
+          pm_progression_band?: string | null
+          pm_sequence_evidence_score?: number | null
+          pm_skill_key?: string | null
           score?: number
           session_id?: string
           stars?: number
@@ -528,6 +564,7 @@ export type Database = {
           audio_url: string | null
           component_key: string
           created_at: string | null
+          curriculum_domain: string | null
           description_key: string | null
           difficulty: number | null
           game_type: string
@@ -545,6 +582,7 @@ export type Database = {
           audio_url?: string | null
           component_key: string
           created_at?: string | null
+          curriculum_domain?: string | null
           description_key?: string | null
           difficulty?: number | null
           game_type: string
@@ -562,6 +600,7 @@ export type Database = {
           audio_url?: string | null
           component_key?: string
           created_at?: string | null
+          curriculum_domain?: string | null
           description_key?: string | null
           difficulty?: number | null
           game_type?: string
@@ -1212,6 +1251,15 @@ export type Database = {
         }[]
       }
       dubiland_child_age_band: { Args: { p_child_id: string }; Returns: string }
+      dubiland_child_home_progress_metrics: {
+        Args: { p_child_id: string; p_timezone?: string }
+        Returns: {
+          child_id: string
+          game_progress_by_slug: Json
+          today_learning_minutes: number
+          topic_progress: Json
+        }[]
+      }
       dubiland_consecutive_play_streak_days: {
         Args: { p_child_id: string; p_tz: string }
         Returns: number

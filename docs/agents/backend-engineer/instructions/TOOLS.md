@@ -142,6 +142,28 @@ Key endpoints:
 
 Rate limit: 120 requests/minute per user per project/organization.
 
+## Perf matrix auth (DUB-637 / DUB-726)
+
+Deterministic protected-route Lighthouse runs use `scripts/dub-637-protected-route-matrix.mjs` with an `authenticated` profile. That path requires **non-production** parent credentials and a matching project ref:
+
+- `DUBILAND_PERF_EMAIL` / `DUBILAND_PERF_PASSWORD` — dedicated perf parent account (never production accounts).
+- `SUPABASE_PROJECT_REF` — must match the Supabase project backing `VITE_SUPABASE_URL` so the `sb-<ref>-auth-token` localStorage key matches the app.
+
+**Provision the Supabase user (once per environment):**
+
+```bash
+# Repo-root .env must include VITE_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY (script-only; never in Vite).
+yarn perf:provision-auth-user
+```
+
+Copy the printed `DUBILAND_*` lines into the **same `.env` file** used by Paperclip heartbeats for this workspace (gitignored), then verify:
+
+```bash
+yarn perf:check-auth-env
+```
+
+Expected: JSON with `"ok": true` and all three presence flags true. Do not paste passwords into issue comments.
+
 ## Browser Access (Fallback Only)
 
 Use browser access only when the CLI/API cannot accomplish a task (e.g., enabling specific auth providers via UI toggles). Prefer CLI for everything else.

@@ -2,6 +2,9 @@ import type { Child, Game, GameLevel, GameResult } from '@dubiland/shared';
 
 export type StableRange = '1-3' | '1-5' | '1-10';
 export type HintTrend = 'improving' | 'steady' | 'needs_support';
+export type AccuracyByRangeKey = 'within10' | 'within20';
+export type MisconceptionTag = 'overshoot' | 'direction' | 'crossing10' | 'before_after' | 'clock_anchor';
+export type HintUsageLevelKey = 'within10' | 'within20' | 'missingPart';
 
 export interface ParentSummaryMetrics {
   highestStableRange: StableRange;
@@ -12,6 +15,12 @@ export interface ParentSummaryMetrics {
   decodeAccuracy?: number;
   sequenceEvidenceScore?: number;
   gatePassed?: boolean;
+  alternateDecompositionRate?: number;
+  unknownPartAccuracyTrend?: HintTrend;
+  masteredTotalsKey?: string;
+  accuracyByRange?: Partial<Record<AccuracyByRangeKey, number>>;
+  misconceptionTrend?: Partial<Record<MisconceptionTag, number>>;
+  hintUsageByLevel?: Partial<Record<HintUsageLevelKey, number>>;
 }
 
 export interface ReadingGateStatus {

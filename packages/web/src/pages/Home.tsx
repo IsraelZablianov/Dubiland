@@ -24,6 +24,9 @@ type HomeGameSlug =
   | 'countingPicnic'
   | 'moreOrLessMarket'
   | 'numberLineJumps'
+  | 'build10Workshop'
+  | 'subtractionStreet'
+  | 'timeAndRoutineBuilder'
   | 'colorGarden'
   | 'shapeSafari'
   | 'letterSoundMatch'
@@ -32,10 +35,13 @@ type HomeGameSlug =
   | 'pictureToWordBuilder'
   | 'sightWordSprint'
   | 'decodableMicroStories'
+  | 'decodableStoryMissions'
   | 'interactiveHandbook'
   | 'letterStorybook'
   | 'rootFamilyStickers'
-  | 'confusableLetterContrast';
+  | 'confusableLetterContrast'
+  | 'nikudSoundLadder'
+  | 'syllableTrainBuilder';
 
 interface TopicGameOption {
   slug: HomeGameSlug;
@@ -110,6 +116,36 @@ const HOME_GAME_OPTIONS: TopicGameOption[] = [
     difficulty: 3,
     primaryAgeBand: '5-6',
     supportAgeBands: ['6-7'],
+    topic: 'math',
+    section: 'math',
+  },
+  {
+    slug: 'build10Workshop',
+    route: '/games/numbers/build-10-workshop',
+    thumbnailUrl: DEFAULT_GAME_THUMBNAIL,
+    difficulty: 4,
+    primaryAgeBand: '5-6',
+    supportAgeBands: ['6-7'],
+    topic: 'math',
+    section: 'math',
+  },
+  {
+    slug: 'subtractionStreet',
+    route: '/games/numbers/subtraction-street',
+    thumbnailUrl: DEFAULT_GAME_THUMBNAIL,
+    difficulty: 4,
+    primaryAgeBand: '6-7',
+    supportAgeBands: ['5-6'],
+    topic: 'math',
+    section: 'math',
+  },
+  {
+    slug: 'timeAndRoutineBuilder',
+    route: '/games/numbers/time-and-routine-builder',
+    thumbnailUrl: DEFAULT_GAME_THUMBNAIL,
+    difficulty: 4,
+    primaryAgeBand: '6-7',
+    supportAgeBands: ['5-6'],
     topic: 'math',
     section: 'math',
   },
@@ -194,6 +230,16 @@ const HOME_GAME_OPTIONS: TopicGameOption[] = [
     section: 'reading',
   },
   {
+    slug: 'decodableStoryMissions',
+    route: '/games/reading/decodable-story-missions',
+    thumbnailUrl: DEFAULT_GAME_THUMBNAIL,
+    difficulty: 5,
+    primaryAgeBand: '6-7',
+    supportAgeBands: ['5-6'],
+    topic: 'reading',
+    section: 'reading',
+  },
+  {
     slug: 'interactiveHandbook',
     route: '/games/reading/interactive-handbook',
     thumbnailUrl: '/images/games/thumbnails/interactiveHandbook/thumb-16x10.webp',
@@ -226,6 +272,26 @@ const HOME_GAME_OPTIONS: TopicGameOption[] = [
   {
     slug: 'confusableLetterContrast',
     route: '/games/reading/confusable-letter-contrast',
+    thumbnailUrl: DEFAULT_GAME_THUMBNAIL,
+    difficulty: 4,
+    primaryAgeBand: '5-6',
+    supportAgeBands: ['6-7'],
+    topic: 'reading',
+    section: 'reading',
+  },
+  {
+    slug: 'nikudSoundLadder',
+    route: '/games/reading/nikud-sound-ladder',
+    thumbnailUrl: DEFAULT_GAME_THUMBNAIL,
+    difficulty: 4,
+    primaryAgeBand: '5-6',
+    supportAgeBands: ['6-7'],
+    topic: 'reading',
+    section: 'reading',
+  },
+  {
+    slug: 'syllableTrainBuilder',
+    route: '/games/reading/syllable-train-builder',
     thumbnailUrl: DEFAULT_GAME_THUMBNAIL,
     difficulty: 4,
     primaryAgeBand: '5-6',

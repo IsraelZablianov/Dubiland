@@ -1,0 +1,35 @@
+$ npx --yes pa11y-ci --config /Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-685-qa2-20260411-144822/configs/games__reading__confusable__letter__contrast.pa11y-ci.config.json
+Running Pa11y on 1 URLs:
+ > http://127.0.0.1:4187/games/reading/confusable-letter-contrast - 3 errors
+
+Errors in http://127.0.0.1:4187/games/reading/confusable-letter-contrast:
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div > div:nth-child(4) > section
+   > p)
+
+   <p class="confusable-contrast__stage-title">הקשיבו לצליל ובחרו את האות
+   המתא...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div > div:nth-child(4) > section
+   > div > button:nth-child(1) > span:nth-child(2))
+
+   <span class="confusable-contrast__letter-name">כף</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > div > section > div > div:nth-child(4) > section
+   > div > button:nth-child(2) > span:nth-child(2))
+
+   <span class="confusable-contrast__letter-name">בית</span>
+
+✘ 0/1 URLs passed

@@ -1,0 +1,35 @@
+{
+  "public": [
+    "/",
+    "/about",
+    "/parents",
+    "/parents/faq",
+    "/terms",
+    "/privacy",
+    "/letters",
+    "/numbers",
+    "/reading",
+    "/login",
+    "/__qa-404__"
+  ],
+  "protected": [
+    "/profiles",
+    "/games",
+    "/parent",
+    "/games/numbers/counting-picnic",
+    "/games/numbers/more-or-less-market",
+    "/games/numbers/shape-safari",
+    "/games/numbers/number-line-jumps",
+    "/games/colors/color-garden",
+    "/games/reading/picture-to-word-builder",
+    "/games/reading/sight-word-sprint",
+    "/games/reading/decodable-micro-stories",
+    "/games/reading/interactive-handbook",
+    "/games/reading/letter-storybook",
+    "/games/reading/root-family-stickers",
+    "/games/reading/confusable-letter-contrast",
+    "/games/letters/letter-sound-match",
+    "/games/letters/letter-tracing-trail",
+    "/games/letters/letter-sky-catcher"
+  ]
+}

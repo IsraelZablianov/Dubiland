@@ -33,3 +33,14 @@ Run this before visual QA and before shipping game UI changes, then either:
 
 1. Define the missing token in the token layer, or
 2. Replace its usage with an existing supported token.
+
+## Route Polish Extension (DUB-678)
+
+When a UX QA sweep flags low-scoring routes, define semantic surface tokens before per-page tweaks:
+
+- `--surface-legal-*` for legal/trust pages
+- `--surface-parent-*` for parent dashboard rhythm
+- `--surface-recovery-*` for 404/recovery flows
+- `--shell-*-touch-min` for header/footer controls
+
+This keeps fixes systemic and lowers risk of regressions from route-local pixel literals.

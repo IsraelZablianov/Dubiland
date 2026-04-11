@@ -1042,7 +1042,8 @@ export function ColorGardenGame({ onComplete, audio }: GameProps) {
           <h2 className="color-garden__title">{t('feedback.youDidIt')}</h2>
           <p className="color-garden__subtitle">{t('games.colorGarden.roundComplete.gardenGrowing')}</p>
 
-          <div className="color-garden__stars" aria-label={t(summaryReport.hintTrendLabelKey)}>
+          <div className="color-garden__stars">
+            <span className="sr-only">{t(summaryReport.hintTrendLabelKey)}</span>
             {Array.from({ length: Math.max(1, starTokens) }).map((_, index) => (
               <span key={`star-${index}`} className="color-garden__star" aria-hidden="true">
                 🌟
@@ -1153,7 +1154,8 @@ export function ColorGardenGame({ onComplete, audio }: GameProps) {
           </div>
         </header>
 
-        <div className="color-garden__progress" aria-label={t('games.estimatedTime', { minutes: 5 })}>
+        <div className="color-garden__progress">
+          <span className="sr-only">{t('games.estimatedTime', { minutes: 5 })}</span>
           {roundProgressSegments.map((segment) => {
             const state =
               segment < roundConfig.roundNumber

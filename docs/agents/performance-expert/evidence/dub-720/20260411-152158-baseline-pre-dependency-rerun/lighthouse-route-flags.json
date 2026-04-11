@@ -1,0 +1,192 @@
+[
+  {
+    "route": "/terms",
+    "requested_count": 15,
+    "login_chunk_requested": false,
+    "supabase_chunk_requested": false,
+    "route_chunk_markers": {
+      "terms": true,
+      "privacy": false,
+      "parent": false,
+      "notFound": false,
+      "moreOrLess": false,
+      "shapeSafari": false,
+      "numberLine": false,
+      "pictureToWord": false,
+      "sightWord": false,
+      "confusable": false
+    },
+    "lcp_element_snippet": null
+  },
+  {
+    "route": "/privacy",
+    "requested_count": 15,
+    "login_chunk_requested": false,
+    "supabase_chunk_requested": false,
+    "route_chunk_markers": {
+      "terms": false,
+      "privacy": true,
+      "parent": false,
+      "notFound": false,
+      "moreOrLess": false,
+      "shapeSafari": false,
+      "numberLine": false,
+      "pictureToWord": false,
+      "sightWord": false,
+      "confusable": false
+    },
+    "lcp_element_snippet": null
+  },
+  {
+    "route": "/parent",
+    "requested_count": 28,
+    "login_chunk_requested": true,
+    "supabase_chunk_requested": true,
+    "route_chunk_markers": {
+      "terms": false,
+      "privacy": false,
+      "parent": true,
+      "notFound": false,
+      "moreOrLess": false,
+      "shapeSafari": false,
+      "numberLine": false,
+      "pictureToWord": false,
+      "sightWord": false,
+      "confusable": false
+    },
+    "lcp_element_snippet": null
+  },
+  {
+    "route": "/no-such-page",
+    "requested_count": 16,
+    "login_chunk_requested": false,
+    "supabase_chunk_requested": false,
+    "route_chunk_markers": {
+      "terms": false,
+      "privacy": false,
+      "parent": false,
+      "notFound": true,
+      "moreOrLess": false,
+      "shapeSafari": false,
+      "numberLine": false,
+      "pictureToWord": false,
+      "sightWord": false,
+      "confusable": false
+    },
+    "lcp_element_snippet": null
+  },
+  {
+    "route": "/games/numbers/more-or-less-market",
+    "requested_count": 31,
+    "login_chunk_requested": true,
+    "supabase_chunk_requested": true,
+    "route_chunk_markers": {
+      "terms": false,
+      "privacy": false,
+      "parent": false,
+      "notFound": false,
+      "moreOrLess": true,
+      "shapeSafari": false,
+      "numberLine": false,
+      "pictureToWord": false,
+      "sightWord": false,
+      "confusable": false
+    },
+    "lcp_element_snippet": null
+  },
+  {
+    "route": "/games/numbers/shape-safari",
+    "requested_count": 37,
+    "login_chunk_requested": true,
+    "supabase_chunk_requested": true,
+    "route_chunk_markers": {
+      "terms": false,
+      "privacy": false,
+      "parent": false,
+      "notFound": false,
+      "moreOrLess": false,
+      "shapeSafari": true,
+      "numberLine": false,
+      "pictureToWord": false,
+      "sightWord": false,
+      "confusable": false
+    },
+    "lcp_element_snippet": null
+  },
+  {
+    "route": "/games/numbers/number-line-jumps",
+    "requested_count": 36,
+    "login_chunk_requested": true,
+    "supabase_chunk_requested": true,
+    "route_chunk_markers": {
+      "terms": false,
+      "privacy": false,
+      "parent": false,
+      "notFound": false,
+      "moreOrLess": false,
+      "shapeSafari": false,
+      "numberLine": true,
+      "pictureToWord": false,
+      "sightWord": false,
+      "confusable": false
+    },
+    "lcp_element_snippet": null
+  },
+  {
+    "route": "/games/reading/picture-to-word-builder",
+    "requested_count": 30,
+    "login_chunk_requested": true,
+    "supabase_chunk_requested": true,
+    "route_chunk_markers": {
+      "terms": false,
+      "privacy": false,
+      "parent": false,
+      "notFound": false,
+      "moreOrLess": false,
+      "shapeSafari": false,
+      "numberLine": false,
+      "pictureToWord": true,
+      "sightWord": false,
+      "confusable": false
+    },
+    "lcp_element_snippet": null
+  },
+  {
+    "route": "/games/reading/sight-word-sprint",
+    "requested_count": 41,
+    "login_chunk_requested": true,
+    "supabase_chunk_requested": true,
+    "route_chunk_markers": {
+      "terms": false,
+      "privacy": false,
+      "parent": false,
+      "notFound": false,
+      "moreOrLess": false,
+      "shapeSafari": false,
+      "numberLine": false,
+      "pictureToWord": false,
+      "sightWord": true,
+      "confusable": false
+    },
+    "lcp_element_snippet": null
+  },
+  {
+    "route": "/games/reading/confusable-letter-contrast",
+    "requested_count": 36,
+    "login_chunk_requested": true,
+    "supabase_chunk_requested": true,
+    "route_chunk_markers": {
+      "terms": false,
+      "privacy": false,
+      "parent": false,
+      "notFound": false,
+      "moreOrLess": false,
+      "shapeSafari": false,
+      "numberLine": false,
+      "pictureToWord": false,
+      "sightWord": false,
+      "confusable": true
+    },
+    "lcp_element_snippet": null
+  }
+]

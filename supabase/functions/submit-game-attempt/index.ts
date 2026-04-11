@@ -27,6 +27,11 @@ type AttemptBody = {
   gameId: string;
   /** Idempotent session key per child (omit for always-new session). */
   clientSessionId?: string;
+  /**
+   * Optional wall-clock end for this session touch (ISO-8601). When omitted, server uses now().
+   * `ended_at` is set to GREATEST(previous, clamped candidate) for idempotent retries.
+   */
+  sessionEndedAt?: string | null;
   levelId?: string | null;
   /** Level the child started from for this progression context (must belong to gameId). */
   startingLevelId?: string | null;
@@ -273,27 +278,25 @@ async function resolveCurriculumDomainAndSkill(
 > {
   const gr = await supabase
     .from("games")
-    .select("slug, topic_id")
+    .select("slug, curriculum_domain")
     .eq("id", gameId)
     .maybeSingle();
   if (gr.error) return { ok: false, message: gr.error.message };
-  if (!gr.data?.slug || !gr.data.topic_id) {
-    return { ok: false, message: "game not found or not visible for curriculum mapping" };
+  const domain = gr.data?.curriculum_domain;
+  const slug = gr.data?.slug;
+  if (!slug || !domain) {
+    return {
+      ok: false,
+      message: "game not found, not visible, or has no parent-metrics curriculum domain",
+    };
   }
-  const tr = await supabase
-    .from("topics")
-    .select("slug")
-    .eq("id", gr.data.topic_id)
-    .maybeSingle();
-  if (tr.error) return { ok: false, message: tr.error.message };
-  const topicSlug = tr.data?.slug;
-  if (topicSlug !== "math" && topicSlug !== "letters" && topicSlug !== "reading") {
+  if (domain !== "math" && domain !== "letters" && domain !== "reading") {
     return { ok: false, message: "game topic is not a curriculum domain" };
   }
   return {
     ok: true,
-    domain: topicSlug,
-    skillKey: gr.data.slug,
+    domain,
+    skillKey: slug,
   };
 }
 
@@ -322,6 +325,7 @@ Deno.serve(async (req: Request) => {
     childId,
     gameId,
     clientSessionId,
+    sessionEndedAt,
     levelId,
     startingLevelId,
     startedAt,
@@ -369,6 +373,15 @@ Deno.serve(async (req: Request) => {
       { error: "startingLevelId must be a UUID when provided" },
       400,
     );
+  }
+  if (sessionEndedAt != null && sessionEndedAt.trim() !== "") {
+    const parsedEnd = Date.parse(sessionEndedAt);
+    if (!Number.isFinite(parsedEnd)) {
+      return jsonResponse(
+        { error: "sessionEndedAt must be a valid ISO-8601 timestamp when provided" },
+        400,
+      );
+    }
   }
   const trimmedMastery =
     masteryOutcome && masteryOutcome.trim() !== ""
@@ -471,11 +484,13 @@ Deno.serve(async (req: Request) => {
   }
 
   let sessionId: string;
+  let sessionStartedAtMs: number;
+  let sessionEndedAtPrevMs: number | null;
 
   if (clientSessionId && clientSessionId.trim() !== "") {
     const { data: existing, error: selErr } = await supabase
       .from("game_sessions")
-      .select("id, game_id")
+      .select("id, game_id, started_at, ended_at")
       .eq("child_id", childId)
       .eq("client_session_id", clientSessionId.trim())
       .maybeSingle();
@@ -492,6 +507,10 @@ Deno.serve(async (req: Request) => {
         );
       }
       sessionId = existing.id;
+      sessionStartedAtMs = Date.parse(existing.started_at as string);
+      sessionEndedAtPrevMs = existing.ended_at
+        ? Date.parse(existing.ended_at as string)
+        : null;
     } else {
       const ins = await supabase
         .from("game_sessions")
@@ -501,7 +520,7 @@ Deno.serve(async (req: Request) => {
           client_session_id: clientSessionId.trim(),
           started_at: startedAt ?? new Date().toISOString(),
         })
-        .select("id")
+        .select("id, started_at, ended_at")
         .single();
 
       if (ins.error || !ins.data?.id) {
@@ -511,6 +530,10 @@ Deno.serve(async (req: Request) => {
         );
       }
       sessionId = ins.data.id;
+      sessionStartedAtMs = Date.parse(ins.data.started_at as string);
+      sessionEndedAtPrevMs = ins.data.ended_at
+        ? Date.parse(ins.data.ended_at as string)
+        : null;
     }
   } else {
     const ins = await supabase
@@ -520,7 +543,7 @@ Deno.serve(async (req: Request) => {
         game_id: gameId,
         started_at: startedAt ?? new Date().toISOString(),
       })
-      .select("id")
+      .select("id, started_at, ended_at")
       .single();
 
     if (ins.error || !ins.data?.id) {
@@ -530,6 +553,14 @@ Deno.serve(async (req: Request) => {
       );
     }
     sessionId = ins.data.id;
+    sessionStartedAtMs = Date.parse(ins.data.started_at as string);
+    sessionEndedAtPrevMs = ins.data.ended_at
+      ? Date.parse(ins.data.ended_at as string)
+      : null;
+  }
+
+  if (!Number.isFinite(sessionStartedAtMs)) {
+    return jsonResponse({ error: "Invalid session started_at" }, 400);
   }
 
   const basePayload =
@@ -557,7 +588,12 @@ Deno.serve(async (req: Request) => {
     if (!validated.ok) {
       return jsonResponse({ error: validated.message }, 400);
     }
-    basePayload.parentMetricsV1 = validated.value;
+    const mapRes = await resolveCurriculumDomainAndSkill(supabase, gameId);
+    if (!mapRes.ok) {
+      return jsonResponse({ error: mapRes.message }, 400);
+    }
+    const coerced = { ...validated.value, domain: mapRes.domain };
+    basePayload.parentMetricsV1 = coerced;
   } else if (isRecord(basePayload.summaryMetrics)) {
     const mapRes = await resolveCurriculumDomainAndSkill(supabase, gameId);
     if (mapRes.ok) {
@@ -619,10 +655,38 @@ Deno.serve(async (req: Request) => {
     );
   }
 
+  const nowMs = Date.now();
+  const skewMs = 120_000;
+  const explicitEnd =
+    sessionEndedAt != null && sessionEndedAt.trim() !== ""
+      ? Date.parse(sessionEndedAt.trim())
+      : nowMs;
+  const candidateMs = Number.isFinite(explicitEnd) ? explicitEnd : nowMs;
+  const maxEndMs = nowMs + skewMs;
+  let endMs = Math.min(candidateMs, maxEndMs);
+  endMs = Math.max(endMs, sessionStartedAtMs);
+  if (sessionEndedAtPrevMs != null && Number.isFinite(sessionEndedAtPrevMs)) {
+    endMs = Math.max(endMs, sessionEndedAtPrevMs);
+  }
+
+  const endIso = new Date(endMs).toISOString();
+  const sessUp = await supabase
+    .from("game_sessions")
+    .update({ ended_at: endIso })
+    .eq("id", sessionId);
+
+  if (sessUp.error) {
+    return jsonResponse(
+      { error: sessUp.error.message ?? "Failed to finalize session" },
+      400,
+    );
+  }
+
   return jsonResponse({
     sessionId,
     attemptId: att.data.id,
     createdAt: att.data.created_at,
     updatedAt: att.data.updated_at,
+    sessionEndedAt: endIso,
   });
 });

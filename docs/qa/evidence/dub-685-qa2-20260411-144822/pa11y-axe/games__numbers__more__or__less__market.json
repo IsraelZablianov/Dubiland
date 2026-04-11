@@ -1,0 +1,274 @@
+[
+  {
+    "code": "aria-prohibited-attr",
+    "type": "error",
+    "typeCode": 1,
+    "message": "Elements must only use permitted ARIA attributes (https://dequeuniversity.com/rules/axe/4.11/aria-prohibited-attr?application=axeAPI)",
+    "context": "<div class=\"more-less-market__progress\" aria-label=\"משך משוער: 5 דקות\"><span class=\"more-less-market__...</div>",
+    "selector": "#root > div > main > div > div > section > div > div > div:nth-child(2)",
+    "runner": "axe",
+    "runnerExtras": {
+      "description": "Ensure ARIA attributes are not prohibited for an element's role",
+      "impact": "serious",
+      "needsFurtherReview": false,
+      "help": "Elements must only use permitted ARIA attributes",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/aria-prohibited-attr?application=axeAPI"
+    }
+  },
+  {
+    "code": "color-contrast",
+    "type": "error",
+    "typeCode": 1,
+    "message": "Elements must meet minimum color contrast ratio thresholds (https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI)",
+    "context": "<h2 class=\"more-less-market__title\">שוק יותר או פחות עם דובי</h2>",
+    "selector": "#root > div > main > div > div > section > div > div > header > div:nth-child(1) > h2",
+    "runner": "axe",
+    "runnerExtras": {
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "impact": "serious",
+      "needsFurtherReview": false,
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI"
+    }
+  },
+  {
+    "code": "color-contrast",
+    "type": "error",
+    "typeCode": 1,
+    "message": "Elements must meet minimum color contrast ratio thresholds (https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI)",
+    "context": "<p class=\"more-less-market__subtitle\">נשווה כמויות ונבחר יותר, פחות א...</p>",
+    "selector": "#root > div > main > div > div > section > div > div > header > div:nth-child(1) > p",
+    "runner": "axe",
+    "runnerExtras": {
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "impact": "serious",
+      "needsFurtherReview": false,
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI"
+    }
+  },
+  {
+    "code": "color-contrast",
+    "type": "error",
+    "typeCode": 1,
+    "message": "Elements must meet minimum color contrast ratio thresholds (https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI)",
+    "context": "<span>1 / 9</span>",
+    "selector": "#root > div > main > div > div > section > div > div > div:nth-child(3) > span:nth-child(2) > span:nth-child(2)",
+    "runner": "axe",
+    "runnerExtras": {
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "impact": "serious",
+      "needsFurtherReview": false,
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI"
+    }
+  },
+  {
+    "code": "color-contrast",
+    "type": "error",
+    "typeCode": 1,
+    "message": "Elements must meet minimum color contrast ratio thresholds (https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI)",
+    "context": "<p class=\"more-less-market__message more-less-market__message--neutral\" aria-live=\"polite\">השוו כמויות ובחרו תשובה.</p>",
+    "selector": "#root > div > main > div > div > section > div > div > p",
+    "runner": "axe",
+    "runnerExtras": {
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "impact": "serious",
+      "needsFurtherReview": false,
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI"
+    }
+  },
+  {
+    "code": "color-contrast",
+    "type": "error",
+    "typeCode": 1,
+    "message": "Elements must meet minimum color contrast ratio thresholds (https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI)",
+    "context": "<p class=\"more-less-market__prompt\">איזה סל יש בו יותר תפוזים?</p>",
+    "selector": "#root > div > main > div > div > section > div > div > div:nth-child(5) > p",
+    "runner": "axe",
+    "runnerExtras": {
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "impact": "serious",
+      "needsFurtherReview": false,
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI"
+    }
+  },
+  {
+    "code": "nested-interactive",
+    "type": "error",
+    "typeCode": 1,
+    "message": "Interactive controls must not be nested (https://dequeuniversity.com/rules/axe/4.11/nested-interactive?application=axeAPI)",
+    "context": "<div class=\"more-less-market__basket    \" role=\"button\" tabindex=\"0\" aria-label=\"הקישו על הסל הימני.\"><div class=\"more-less-market__t...</div>",
+    "selector": "#root > div > main > div > div > section > div > div > section > div:nth-child(2)",
+    "runner": "axe",
+    "runnerExtras": {
+      "description": "Ensure interactive controls are not nested as they are not always announced by screen readers or can cause focus problems for assistive technologies",
+      "impact": "serious",
+      "needsFurtherReview": false,
+      "help": "Interactive controls must not be nested",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/nested-interactive?application=axeAPI"
+    }
+  },
+  {
+    "code": "nested-interactive",
+    "type": "error",
+    "typeCode": 1,
+    "message": "Interactive controls must not be nested (https://dequeuniversity.com/rules/axe/4.11/nested-interactive?application=axeAPI)",
+    "context": "<div class=\"more-less-market__basket    \" role=\"button\" tabindex=\"0\" aria-label=\"הקישו על הסל השמאלי.\"><div class=\"more-less-market__t...</div>",
+    "selector": "#root > div > main > div > div > section > div > div > section > div:nth-child(3)",
+    "runner": "axe",
+    "runnerExtras": {
+      "description": "Ensure interactive controls are not nested as they are not always announced by screen readers or can cause focus problems for assistive technologies",
+      "impact": "serious",
+      "needsFurtherReview": false,
+      "help": "Interactive controls must not be nested",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/nested-interactive?application=axeAPI"
+    }
+  },
+  {
+    "code": "aria-prohibited-attr",
+    "type": "error",
+    "typeCode": 1,
+    "message": "Elements must only use permitted ARIA attributes (https://dequeuniversity.com/rules/axe/4.11/aria-prohibited-attr?application=axeAPI)",
+    "context": "<span class=\"more-less-market__score-pill \" aria-label=\"מצוין!\"><span aria-hidden=\"true\">⭐</spa...</span>",
+    "selector": "#root > div > main > div > div > section > div > div > div:nth-child(3) > span:nth-child(1)",
+    "runner": "axe",
+    "runnerExtras": {
+      "description": "Ensure ARIA attributes are not prohibited for an element's role",
+      "impact": "serious",
+      "needsFurtherReview": true,
+      "help": "Elements must only use permitted ARIA attributes",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/aria-prohibited-attr?application=axeAPI"
+    }
+  },
+  {
+    "code": "aria-prohibited-attr",
+    "type": "error",
+    "typeCode": 1,
+    "message": "Elements must only use permitted ARIA attributes (https://dequeuniversity.com/rules/axe/4.11/aria-prohibited-attr?application=axeAPI)",
+    "context": "<span class=\"more-less-market__score-pill\" aria-label=\"הבא\"><span aria-hidden=\"true\">🧩</sp...</span>",
+    "selector": "#root > div > main > div > div > section > div > div > div:nth-child(3) > span:nth-child(2)",
+    "runner": "axe",
+    "runnerExtras": {
+      "description": "Ensure ARIA attributes are not prohibited for an element's role",
+      "impact": "serious",
+      "needsFurtherReview": true,
+      "help": "Elements must only use permitted ARIA attributes",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/aria-prohibited-attr?application=axeAPI"
+    }
+  },
+  {
+    "code": "color-contrast",
+    "type": "error",
+    "typeCode": 1,
+    "message": "Elements must meet minimum color contrast ratio thresholds (https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI)",
+    "context": "<h1 style=\"margin: 0px; font-size: var(--font-size-2xl); color: var(--color-text-primary); font-weight: var(--font-weight-extrabold);\">שוק יותר או פחות עם דובי</h1>",
+    "selector": "#root > div > main > div > div > section > header > div:nth-child(1) > h1",
+    "runner": "axe",
+    "runnerExtras": {
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "impact": "serious",
+      "needsFurtherReview": true,
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI"
+    }
+  },
+  {
+    "code": "color-contrast",
+    "type": "error",
+    "typeCode": 1,
+    "message": "Elements must meet minimum color contrast ratio thresholds (https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI)",
+    "context": "<p style=\"margin: 0px; color: var(--color-text-secondary); font-size: var(--font-size-md);\">נשווה כמויות ונבחר יותר, פחות א...</p>",
+    "selector": "#root > div > main > div > div > section > header > div:nth-child(1) > p",
+    "runner": "axe",
+    "runnerExtras": {
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "impact": "serious",
+      "needsFurtherReview": true,
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI"
+    }
+  },
+  {
+    "code": "color-contrast",
+    "type": "error",
+    "typeCode": 1,
+    "message": "Elements must meet minimum color contrast ratio thresholds (https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI)",
+    "context": "<button aria-label=\"חזרה\" style=\"display: inline-flex; align-items: center; justify-content: center; gap: var(--space-sm); font-family: var(--font-family-primary); font-weight: var(--font-weight-bold); line-height: var(--line-height-tight); transitio...",
+    "selector": "#root > div > main > div > div > section > header > div:nth-child(2) > button",
+    "runner": "axe",
+    "runnerExtras": {
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "impact": "serious",
+      "needsFurtherReview": true,
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI"
+    }
+  },
+  {
+    "code": "color-contrast",
+    "type": "error",
+    "typeCode": 1,
+    "message": "Elements must meet minimum color contrast ratio thresholds (https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI)",
+    "context": "<button aria-label=\"לא נורא, ננסה שוב יחד.\" style=\"display: inline-flex; align-items: center; justify-content: center; gap: var(--space-sm); font-family: var(--font-family-primary); font-weight: var(--font-weight-bold); line-height: var(--line-height...",
+    "selector": "#root > div > main > div > div > section > div > div > header > div:nth-child(2) > button:nth-child(3)",
+    "runner": "axe",
+    "runnerExtras": {
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "impact": "serious",
+      "needsFurtherReview": true,
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI"
+    }
+  },
+  {
+    "code": "color-contrast",
+    "type": "error",
+    "typeCode": 1,
+    "message": "Elements must meet minimum color contrast ratio thresholds (https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI)",
+    "context": "<span>0</span>",
+    "selector": "#root > div > main > div > div > section > div > div > div:nth-child(3) > span:nth-child(1) > span:nth-child(2)",
+    "runner": "axe",
+    "runnerExtras": {
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "impact": "serious",
+      "needsFurtherReview": true,
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI"
+    }
+  },
+  {
+    "code": "color-contrast",
+    "type": "error",
+    "typeCode": 1,
+    "message": "Elements must meet minimum color contrast ratio thresholds (https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI)",
+    "context": "<span class=\"more-less-market__count-chip\" aria-hidden=\"true\">1</span>",
+    "selector": "#root > div > main > div > div > section > div > div > section > div:nth-child(2) > span",
+    "runner": "axe",
+    "runnerExtras": {
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "impact": "serious",
+      "needsFurtherReview": true,
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI"
+    }
+  },
+  {
+    "code": "color-contrast",
+    "type": "error",
+    "typeCode": 1,
+    "message": "Elements must meet minimum color contrast ratio thresholds (https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI)",
+    "context": "<span class=\"more-less-market__count-chip\" aria-hidden=\"true\">5</span>",
+    "selector": "#root > div > main > div > div > section > div > div > section > div:nth-child(3) > span",
+    "runner": "axe",
+    "runnerExtras": {
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "impact": "serious",
+      "needsFurtherReview": true,
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/color-contrast?application=axeAPI"
+    }
+  }
+]

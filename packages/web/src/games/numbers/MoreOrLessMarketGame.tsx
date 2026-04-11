@@ -13,6 +13,7 @@ type Side = 'left' | 'right';
 type DisplayMode = 'setVsSet' | 'setVsNumber';
 type MessageTone = 'neutral' | 'hint' | 'success';
 type ThemeKey = 'basketFruits' | 'basketToys' | 'basketShells';
+type BoardFeedback = 'idle' | 'success' | 'miss';
 
 type InstructionKey =
   | 'games.moreOrLessMarket.instructions.intro'
@@ -408,6 +409,8 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
   const [badgeSlotHot, setBadgeSlotHot] = useState(false);
   const [badgeSlotAcceptPulse, setBadgeSlotAcceptPulse] = useState(false);
   const [badgeSlotRejectPulse, setBadgeSlotRejectPulse] = useState(false);
+  const [boardFeedback, setBoardFeedback] = useState<BoardFeedback>('idle');
+  const [feedbackSide, setFeedbackSide] = useState<Side | null>(null);
 
   const [showCountScaffold, setShowCountScaffold] = useState(round.showCountScaffold);
   const [revealedCountBySide, setRevealedCountBySide] = useState<Record<Side, boolean>>({
@@ -446,6 +449,7 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
   });
 
   const completionReportedRef = useRef(false);
+  const boardFeedbackTimeoutRef = useRef<number | null>(null);
 
   const progressSegments = useMemo(() => Array.from({ length: TOTAL_ROUNDS }, (_, index) => index + 1), []);
 
@@ -478,6 +482,24 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
     setNonCriticalAudioReady(true);
   }, []);
 
+  const triggerBoardFeedback = useCallback(
+    (feedback: Exclude<BoardFeedback, 'idle'>, side: Side | null) => {
+      if (boardFeedbackTimeoutRef.current !== null) {
+        window.clearTimeout(boardFeedbackTimeoutRef.current);
+      }
+
+      setBoardFeedback(feedback);
+      setFeedbackSide(side);
+
+      boardFeedbackTimeoutRef.current = window.setTimeout(() => {
+        setBoardFeedback('idle');
+        setFeedbackSide(null);
+        boardFeedbackTimeoutRef.current = null;
+      }, 380);
+    },
+    [],
+  );
+
   const resetRoundInteractions = useCallback((nextRound: RoundState) => {
     setSelectedSide(null);
     setSelectedBadge(null);
@@ -492,6 +514,8 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
     setHintStep(0);
     setUsedHintThisRound(false);
     setScorePulse(false);
+    setBoardFeedback('idle');
+    setFeedbackSide(null);
   }, []);
 
   const loadRound = useCallback(
@@ -691,6 +715,10 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
             : candidateSide === round.correctSide;
 
       if (isCorrect) {
+        const resolvedSide =
+          candidateSide ??
+          (round.correctSide === 'left' || round.correctSide === 'right' ? round.correctSide : null);
+        triggerBoardFeedback('success', resolvedSide);
         if (round.requiresBadge) {
           setBadgeSlotHot(false);
           setBadgeSlotAcceptPulse(true);
@@ -702,6 +730,7 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
       if (round.requiresBadge) {
         setBadgeSlotRejectPulse(true);
       }
+      triggerBoardFeedback('miss', candidateSide);
       registerMistake();
     },
     [
@@ -713,6 +742,7 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
       round.requiresBadge,
       sessionComplete,
       setMessageWithAudio,
+      triggerBoardFeedback,
     ],
   );
 
@@ -1003,6 +1033,9 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
 
   useEffect(() => {
     return () => {
+      if (boardFeedbackTimeoutRef.current !== null) {
+        window.clearTimeout(boardFeedbackTimeoutRef.current);
+      }
       audio.stop();
     };
   }, [audio]);
@@ -1102,7 +1135,8 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
           </div>
         </header>
 
-        <div className="more-less-market__progress" aria-label={t('games.estimatedTime', { minutes: 5 })}>
+        <div className="more-less-market__progress">
+          <span className="sr-only">{t('games.estimatedTime', { minutes: 5 })}</span>
           {progressSegments.map((segment) => {
             const state =
               segment < roundConfig.roundNumber
@@ -1127,12 +1161,13 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
               'more-less-market__score-pill',
               scorePulse ? 'more-less-market__score-pill--pulse' : '',
             ].join(' ')}
-            aria-label={t('feedback.excellent')}
           >
+            <span className="sr-only">{t('feedback.excellent')}</span>
             <span aria-hidden="true">⭐</span>
             <span>{sessionStats.firstAttemptSuccesses}</span>
           </span>
-          <span className="more-less-market__score-pill" aria-label={t('nav.next')}>
+          <span className="more-less-market__score-pill">
+            <span className="sr-only">{t('nav.next')}</span>
             <span aria-hidden="true">🧩</span>
             <span>
               {roundConfig.roundNumber} / {TOTAL_ROUNDS}
@@ -1153,7 +1188,14 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
           <p className="more-less-market__prompt">{t(round.promptKey)}</p>
         </Card>
 
-        <section className="more-less-market__board" dir="rtl">
+        <section
+          className={[
+            'more-less-market__board',
+            boardFeedback === 'success' ? 'more-less-market__board--success' : '',
+            boardFeedback === 'miss' ? 'more-less-market__board--miss' : '',
+          ].join(' ')}
+          dir="rtl"
+        >
           <div className="more-less-market__coach" aria-hidden="true">
             <MascotIllustration variant={coachVariant} size={54} />
           </div>
@@ -1163,6 +1205,12 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
               'more-less-market__basket',
               selectedSide === 'right' ? 'more-less-market__basket--selected' : '',
               highlightCorrectSide && round.correctSide === 'right' ? 'more-less-market__basket--hint' : '',
+              boardFeedback === 'success' && feedbackSide === 'right'
+                ? 'more-less-market__basket--success'
+                : '',
+              boardFeedback === 'miss' && feedbackSide === 'right'
+                ? 'more-less-market__basket--miss'
+                : '',
             ].join(' ')}
             onClick={() => handleSideChoice('right')}
             onKeyDown={(event) => {
@@ -1182,7 +1230,15 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
                 {chunkTokens(round.rightTokens).map((tokenRow, rowIndex) => (
                   <div key={`right-row-${rowIndex}`} className="more-less-market__token-row">
                     {tokenRow.map((token, tokenIndex) => (
-                      <span key={`right-token-${rowIndex}-${tokenIndex}`} className="more-less-market__token">
+                      <span
+                        key={`right-token-${rowIndex}-${tokenIndex}`}
+                        className={[
+                          'more-less-market__token',
+                          boardFeedback === 'success' && feedbackSide === 'right'
+                            ? 'more-less-market__token--celebrate'
+                            : '',
+                        ].join(' ')}
+                      >
                         {token}
                       </span>
                     ))}
@@ -1285,6 +1341,12 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
               'more-less-market__basket',
               selectedSide === 'left' ? 'more-less-market__basket--selected' : '',
               highlightCorrectSide && round.correctSide === 'left' ? 'more-less-market__basket--hint' : '',
+              boardFeedback === 'success' && feedbackSide === 'left'
+                ? 'more-less-market__basket--success'
+                : '',
+              boardFeedback === 'miss' && feedbackSide === 'left'
+                ? 'more-less-market__basket--miss'
+                : '',
             ].join(' ')}
             onClick={() => handleSideChoice('left')}
             onKeyDown={(event) => {
@@ -1304,7 +1366,15 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
                 {chunkTokens(round.leftTokens).map((tokenRow, rowIndex) => (
                   <div key={`left-row-${rowIndex}`} className="more-less-market__token-row">
                     {tokenRow.map((token, tokenIndex) => (
-                      <span key={`left-token-${rowIndex}-${tokenIndex}`} className="more-less-market__token">
+                      <span
+                        key={`left-token-${rowIndex}-${tokenIndex}`}
+                        className={[
+                          'more-less-market__token',
+                          boardFeedback === 'success' && feedbackSide === 'left'
+                            ? 'more-less-market__token--celebrate'
+                            : '',
+                        ].join(' ')}
+                      >
                         {token}
                       </span>
                     ))}
@@ -1481,6 +1551,15 @@ const moreLessMarketStyles = `
     align-items: stretch;
     position: relative;
     overflow: hidden;
+    transform-origin: center;
+  }
+
+  .more-less-market__board--success {
+    animation: more-less-board-success 340ms ease-out;
+  }
+
+  .more-less-market__board--miss {
+    animation: more-less-board-miss 300ms ease-in-out;
   }
 
   .more-less-market__coach {
@@ -1520,6 +1599,10 @@ const moreLessMarketStyles = `
     align-content: start;
     gap: var(--space-xs);
     cursor: pointer;
+    transition:
+      transform 180ms ease,
+      border-color var(--transition-fast),
+      box-shadow var(--transition-fast);
   }
 
   .more-less-market__basket--selected {
@@ -1530,6 +1613,18 @@ const moreLessMarketStyles = `
   .more-less-market__basket--hint {
     border-color: var(--color-accent-success);
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent-success) 18%, transparent);
+  }
+
+  .more-less-market__basket--success {
+    border-color: var(--color-accent-success);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent-success) 24%, transparent);
+    animation: more-less-basket-pop 300ms ease-out;
+  }
+
+  .more-less-market__basket--miss {
+    border-color: color-mix(in srgb, var(--color-warning) 78%, black);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-warning) 18%, transparent);
+    animation: more-less-basket-shake 240ms ease-in-out;
   }
 
   .more-less-market__token-grid {
@@ -1554,6 +1649,10 @@ const moreLessMarketStyles = `
     align-items: center;
     justify-content: center;
     font-size: 1rem;
+  }
+
+  .more-less-market__token--celebrate {
+    animation: more-less-token-pop 300ms ease-out;
   }
 
   .more-less-market__number {
@@ -1712,6 +1811,71 @@ const moreLessMarketStyles = `
     }
   }
 
+  @keyframes more-less-board-success {
+    0% {
+      transform: scale(1);
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent-success) 0%, transparent);
+    }
+    45% {
+      transform: scale(1.01);
+      box-shadow: 0 0 0 8px color-mix(in srgb, var(--color-accent-success) 0%, transparent);
+    }
+    100% {
+      transform: scale(1);
+      box-shadow: none;
+    }
+  }
+
+  @keyframes more-less-board-miss {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    30% {
+      transform: translateX(5px);
+    }
+    70% {
+      transform: translateX(-5px);
+    }
+  }
+
+  @keyframes more-less-basket-pop {
+    0% {
+      transform: scale(1);
+    }
+    55% {
+      transform: scale(1.04);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes more-less-basket-shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-6px);
+    }
+    75% {
+      transform: translateX(6px);
+    }
+  }
+
+  @keyframes more-less-token-pop {
+    0% {
+      transform: scale(0.85);
+    }
+    55% {
+      transform: scale(1.12);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
   @keyframes more-less-slot-shake {
     0%,
     100% {
@@ -1753,6 +1917,11 @@ const moreLessMarketStyles = `
 
   @media (prefers-reduced-motion: reduce) {
     .more-less-market__progress-dot--active,
+    .more-less-market__board--success,
+    .more-less-market__board--miss,
+    .more-less-market__basket--success,
+    .more-less-market__basket--miss,
+    .more-less-market__token--celebrate,
     .more-less-market__badge-slot--accept,
     .more-less-market__badge-slot--reject,
     .more-less-market__score-pill--pulse {

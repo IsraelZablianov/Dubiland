@@ -1,6 +1,8 @@
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Button, Card } from '@/components/design-system';
+import { trackParentFunnelEvent } from '@/lib/parentFunnelInstrumentation';
 
 const FAQ_ITEMS = [
   { questionKey: 'parents.faq1Q', answerKey: 'parents.faq1A' },
@@ -18,6 +20,22 @@ const PUBLIC_ENTRY_PRIMARY_CTA_STYLE = {
 export default function ParentsFaq() {
   const { t } = useTranslation('public');
 
+  useEffect(() => {
+    trackParentFunnelEvent('parents_page_view', {
+      sourcePath: '/parents/faq',
+      targetPath: '/parents/faq',
+      ctaId: 'faq_surface',
+    });
+  }, []);
+
+  const handleParentsFaqLoginClick = () => {
+    trackParentFunnelEvent('parents_to_login_cta_click', {
+      sourcePath: '/parents/faq',
+      targetPath: '/login',
+      ctaId: 'parents_faq_primary',
+    });
+  };
+
   return (
     <div className="parents-faq">
       <section className="parents-faq__hero">
@@ -25,7 +43,7 @@ export default function ParentsFaq() {
         <p className="parents-faq__subtitle">{t('parents.heroText')}</p>
       </section>
 
-      <section className="parents-faq__content">
+      <section className="parents-faq__content parents-faq__section--deferred">
         <div className="parents-faq__list">
           {FAQ_ITEMS.map((item) => (
             <Card key={item.questionKey} padding="lg" className="parents-faq__item">
@@ -42,7 +60,7 @@ export default function ParentsFaq() {
             {t('footer.parentsLink')}
           </Button>
         </Link>
-        <Link to="/login">
+        <Link to="/login" onClick={handleParentsFaqLoginClick}>
           <Button variant="primary" size="lg" style={PUBLIC_ENTRY_PRIMARY_CTA_STYLE}>
             {t('header.tryFree')}
           </Button>
@@ -92,6 +110,11 @@ export default function ParentsFaq() {
           display: flex;
           flex-direction: column;
           gap: var(--space-md);
+        }
+
+        .parents-faq__section--deferred {
+          content-visibility: auto;
+          contain-intrinsic-size: 960px;
         }
 
         .parents-faq__item {

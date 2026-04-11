@@ -1088,6 +1088,7 @@ const INTERACTION_KEY_ALIAS_BY_SLUG: Partial<Record<HandbookSlug, Record<string,
   magicLetterMap: {
     // Legacy ids still arrive from older flow/runtime payloads.
     chooseWordByNikud: 'decodePointedWord',
+    confusableContrast: 'chooseLetter',
     literalAfterDecoding: 'literalComprehension',
   },
 };
@@ -1125,6 +1126,19 @@ function normalizeRuntimeInteractionTextKey(
   }
 
   const normalizedInteractionId = resolveInteractionKeyAlias(slug, interactionId);
+  const shortFormKeys = new Set<string>([
+    `${interactionId}.${field}`,
+    `interactions.${interactionId}.${field}`,
+  ]);
+  if (normalizedInteractionId !== interactionId) {
+    shortFormKeys.add(`${normalizedInteractionId}.${field}`);
+    shortFormKeys.add(`interactions.${normalizedInteractionId}.${field}`);
+  }
+
+  if (shortFormKeys.has(textKey)) {
+    return handbookInteractionKey(slug, interactionId, field);
+  }
+
   if (normalizedInteractionId === interactionId) {
     return textKey;
   }
@@ -1499,7 +1513,9 @@ function hasPolicyEntries(policy: AgeBandNumericPolicy | undefined): boolean {
 }
 
 function resolveRuntimeFallbackChoices(handbookSlug: HandbookSlug, interactionId: string): ChoiceDefinition[] {
-  const presetId = RUNTIME_INTERACTION_PRESET_FALLBACKS[handbookSlug]?.[interactionId];
+  const presetByInteractionId = RUNTIME_INTERACTION_PRESET_FALLBACKS[handbookSlug];
+  const presetId = presetByInteractionId?.[interactionId] ??
+    presetByInteractionId?.[resolveInteractionKeyAlias(handbookSlug, interactionId)];
   if (!presetId) {
     return [];
   }

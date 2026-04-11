@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-11T10:00:15.152Z",
+  "generatedAt": "2026-04-11T12:56:31.288Z",
   "sourceRoot": "assets-src/images",
   "outputRoot": "public/images",
   "settings": {
@@ -8,15 +8,17 @@
     "compactWidth": 960
   },
   "summary": {
-    "totalAssets": 74,
-    "totalBytes": 1663973,
+    "totalAssets": 76,
+    "totalBytes": 3440358,
     "byFormat": {
+      "png": 1936292,
+      "jpg": 248816,
       "webp": 1069486,
       "avif": 169831,
-      "png": 408723,
       "svg": 15933
     },
     "byClass": {
+      "general": 1776385,
       "background": 87856,
       "thumbnail": 695490,
       "handbookCover": 59794,
@@ -27,6 +29,28 @@
     }
   },
   "assets": [
+    {
+      "path": "images/about/boys-soccer-raw.png",
+      "sourcePath": null,
+      "generated": false,
+      "assetClass": "general",
+      "format": "png",
+      "bytes": 1527569,
+      "sha256": "c81b24ba43644ddf48d017bcfbbf25840cd46d1a02924634c694d4e83d8e532f",
+      "width": 1296,
+      "height": 782
+    },
+    {
+      "path": "images/about/boys-soccer.jpg",
+      "sourcePath": null,
+      "generated": false,
+      "assetClass": "general",
+      "format": "jpg",
+      "bytes": 248816,
+      "sha256": "e1bc2040a7522dae7b2ddd15698baf41459fafe13cd6d874e34c5a9ee2d6198e",
+      "width": 892,
+      "height": 478
+    },
     {
       "path": "images/backgrounds/home/home-storybook.webp",
       "sourcePath": null,

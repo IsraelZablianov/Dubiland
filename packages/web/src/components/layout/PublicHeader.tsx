@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/design-system';
 import { MascotIllustration } from '@/components/illustrations';
 import { useAuth } from '@/hooks/useAuth';
+import { ensureCommonNamespaceLoaded, hasCommonNamespaceLoaded } from '@/i18n';
 import { usePublicAuthState } from '@/hooks/usePublicAuthState';
+import { trackParentFunnelEvent } from '@/lib/parentFunnelInstrumentation';
 import {
   clearActiveChildProfile,
   disableGuestMode,
@@ -58,6 +60,7 @@ export function PublicHeader() {
   const location = useLocation();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [commonNamespaceReady, setCommonNamespaceReady] = useState(() => hasCommonNamespaceLoaded());
   const { signOut } = useAuth();
   const child = getActiveChildProfile();
 
@@ -71,6 +74,24 @@ export function PublicHeader() {
   const isProfiles = location.pathname === '/profiles';
   const isParentArea = location.pathname === '/parent';
   const headerClassName = `public-header ${showAppActions ? 'public-header--app' : 'public-header--public'}`;
+  const isParentsRoute = location.pathname === '/parents' || location.pathname === '/parents/faq';
+
+  useEffect(() => {
+    if (!showAppActions || commonNamespaceReady) {
+      return;
+    }
+
+    let active = true;
+
+    void ensureCommonNamespaceLoaded().then(() => {
+      if (!active) return;
+      setCommonNamespaceReady(true);
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [commonNamespaceReady, showAppActions]);
 
   const goToAppRoute = (path: string) => {
     navigate(path);
@@ -91,12 +112,24 @@ export function PublicHeader() {
     navigate('/');
   };
 
+  const handlePublicLoginCtaClick = (ctaId: 'header_login' | 'header_try_free') => {
+    if (isParentsRoute) {
+      trackParentFunnelEvent('parents_to_login_cta_click', {
+        sourcePath: location.pathname,
+        targetPath: '/login',
+        ctaId,
+      });
+    }
+
+    setMenuOpen(false);
+  };
+
   return (
     <header className={headerClassName}>
       <div className="public-header__inner">
         <Link to={homeDestination} className="public-header__logo" aria-label={t('header.logoAlt')}>
           <MascotIllustration variant="hero" size={42} className="public-header__logo-icon" />
-          <span className="public-header__logo-text">{t('common:branding.appName')}</span>
+          <span className="public-header__logo-text">{t('footer.aboutTitle')}</span>
         </Link>
 
         <button
@@ -124,10 +157,10 @@ export function PublicHeader() {
         <div className={`public-header__actions ${menuOpen ? 'public-header__actions--open' : ''}`}>
           {showPublicActions && (
             <div className="public-header__public-actions">
-              <Link to="/login" onClick={() => setMenuOpen(false)}>
+              <Link to="/login" onClick={() => handlePublicLoginCtaClick('header_login')}>
                 <Button variant="ghost" size="sm">{t('header.login')}</Button>
               </Link>
-              <Link to="/login" onClick={() => setMenuOpen(false)}>
+              <Link to="/login" onClick={() => handlePublicLoginCtaClick('header_try_free')}>
                 <Button variant="primary" size="sm" style={MARKETING_HEADER_CTA_STYLE}>
                   {t('header.tryFree')}
                 </Button>
@@ -135,7 +168,7 @@ export function PublicHeader() {
             </div>
           )}
 
-          {showAppActions && (
+          {showAppActions && commonNamespaceReady && (
             <div className="public-header__app-actions">
               {child && (
                 <div className="public-header__child">

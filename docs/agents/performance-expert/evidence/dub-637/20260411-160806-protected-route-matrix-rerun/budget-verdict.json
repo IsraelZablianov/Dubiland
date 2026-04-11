@@ -1,0 +1,238 @@
+{
+  "pass": false,
+  "evaluations": [
+    {
+      "profile": "guest_shell",
+      "path": "/games",
+      "status": "ok",
+      "reason": null,
+      "pass": false,
+      "checks": {
+        "lcp_ms": false,
+        "fcp_ms": false,
+        "max_long_task_ms": false,
+        "total_transfer_bytes": false,
+        "login_chunk_requested": true,
+        "supabase_chunk_requested": true
+      }
+    },
+    {
+      "profile": "guest_shell",
+      "path": "/profiles",
+      "status": "ok",
+      "reason": null,
+      "pass": false,
+      "checks": {
+        "lcp_ms": false,
+        "fcp_ms": false,
+        "max_long_task_ms": false,
+        "total_transfer_bytes": false,
+        "login_chunk_requested": true,
+        "supabase_chunk_requested": true
+      }
+    },
+    {
+      "profile": "guest_shell",
+      "path": "/parent",
+      "status": "ok",
+      "reason": null,
+      "pass": false,
+      "checks": {
+        "lcp_ms": false,
+        "fcp_ms": false,
+        "max_long_task_ms": false,
+        "total_transfer_bytes": false,
+        "login_chunk_requested": true,
+        "supabase_chunk_requested": true
+      }
+    },
+    {
+      "profile": "guest_shell",
+      "path": "/games/reading/interactive-handbook",
+      "status": "ok",
+      "reason": null,
+      "pass": false,
+      "checks": {
+        "lcp_ms": false,
+        "fcp_ms": false,
+        "max_long_task_ms": false,
+        "total_transfer_bytes": true,
+        "login_chunk_requested": true,
+        "supabase_chunk_requested": false
+      }
+    },
+    {
+      "profile": "anonymous_redirect",
+      "path": "/games",
+      "status": "ok",
+      "reason": null,
+      "pass": true,
+      "checks": {
+        "redirects_to_login": true,
+        "redirect_probe_source": "browser_probe"
+      }
+    },
+    {
+      "profile": "anonymous_redirect",
+      "path": "/profiles",
+      "status": "ok",
+      "reason": null,
+      "pass": true,
+      "checks": {
+        "redirects_to_login": true,
+        "redirect_probe_source": "browser_probe"
+      }
+    },
+    {
+      "profile": "anonymous_redirect",
+      "path": "/parent",
+      "status": "ok",
+      "reason": null,
+      "pass": true,
+      "checks": {
+        "redirects_to_login": true,
+        "redirect_probe_source": "browser_probe"
+      }
+    },
+    {
+      "profile": "anonymous_redirect",
+      "path": "/games/reading/interactive-handbook",
+      "status": "ok",
+      "reason": null,
+      "pass": true,
+      "checks": {
+        "redirects_to_login": true,
+        "redirect_probe_source": "browser_probe"
+      }
+    },
+    {
+      "profile": "authenticated",
+      "path": "/games",
+      "status": "skipped",
+      "reason": "missing_credentials",
+      "pass": null,
+      "checks": {}
+    },
+    {
+      "profile": "authenticated",
+      "path": "/profiles",
+      "status": "skipped",
+      "reason": "missing_credentials",
+      "pass": null,
+      "checks": {}
+    },
+    {
+      "profile": "authenticated",
+      "path": "/parent",
+      "status": "skipped",
+      "reason": "missing_credentials",
+      "pass": null,
+      "checks": {}
+    },
+    {
+      "profile": "authenticated",
+      "path": "/games/reading/interactive-handbook",
+      "status": "skipped",
+      "reason": "missing_credentials",
+      "pass": null,
+      "checks": {}
+    }
+  ],
+  "failed": [
+    {
+      "profile": "guest_shell",
+      "path": "/games",
+      "status": "ok",
+      "reason": null,
+      "pass": false,
+      "checks": {
+        "lcp_ms": false,
+        "fcp_ms": false,
+        "max_long_task_ms": false,
+        "total_transfer_bytes": false,
+        "login_chunk_requested": true,
+        "supabase_chunk_requested": true
+      }
+    },
+    {
+      "profile": "guest_shell",
+      "path": "/profiles",
+      "status": "ok",
+      "reason": null,
+      "pass": false,
+      "checks": {
+        "lcp_ms": false,
+        "fcp_ms": false,
+        "max_long_task_ms": false,
+        "total_transfer_bytes": false,
+        "login_chunk_requested": true,
+        "supabase_chunk_requested": true
+      }
+    },
+    {
+      "profile": "guest_shell",
+      "path": "/parent",
+      "status": "ok",
+      "reason": null,
+      "pass": false,
+      "checks": {
+        "lcp_ms": false,
+        "fcp_ms": false,
+        "max_long_task_ms": false,
+        "total_transfer_bytes": false,
+        "login_chunk_requested": true,
+        "supabase_chunk_requested": true
+      }
+    },
+    {
+      "profile": "guest_shell",
+      "path": "/games/reading/interactive-handbook",
+      "status": "ok",
+      "reason": null,
+      "pass": false,
+      "checks": {
+        "lcp_ms": false,
+        "fcp_ms": false,
+        "max_long_task_ms": false,
+        "total_transfer_bytes": true,
+        "login_chunk_requested": true,
+        "supabase_chunk_requested": false
+      }
+    }
+  ],
+  "skipped": [
+    {
+      "profile": "authenticated",
+      "path": "/games",
+      "status": "skipped",
+      "reason": "missing_credentials",
+      "pass": null,
+      "checks": {}
+    },
+    {
+      "profile": "authenticated",
+      "path": "/profiles",
+      "status": "skipped",
+      "reason": "missing_credentials",
+      "pass": null,
+      "checks": {}
+    },
+    {
+      "profile": "authenticated",
+      "path": "/parent",
+      "status": "skipped",
+      "reason": "missing_credentials",
+      "pass": null,
+      "checks": {}
+    },
+    {
+      "profile": "authenticated",
+      "path": "/games/reading/interactive-handbook",
+      "status": "skipped",
+      "reason": "missing_credentials",
+      "pass": null,
+      "checks": {}
+    }
+  ],
+  "hardErrors": []
+}

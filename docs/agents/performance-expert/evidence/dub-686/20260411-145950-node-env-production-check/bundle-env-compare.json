@@ -1,0 +1,35 @@
+{
+  "generated_at": "2026-04-11T12:03:15.515Z",
+  "development": {
+    "env": "development",
+    "index_file": "index-DuRURq84.js",
+    "react_file": "react-1vPFPl-A.js",
+    "i18n_file": "i18n-q2g83lQp.js",
+    "index_bytes": 668553,
+    "index_gzip_bytes": 178343,
+    "react_bytes": 67522,
+    "react_gzip_bytes": 22440,
+    "i18n_bytes": 49391,
+    "i18n_gzip_bytes": 15381,
+    "total_js_bytes": 2098691
+  },
+  "production": {
+    "env": "production",
+    "index_file": "index-DRbiaM3n.js",
+    "react_file": "react-dz6IX6RK.js",
+    "i18n_file": "i18n-CQO0ZaI5.js",
+    "index_bytes": 461042,
+    "index_gzip_bytes": 124891,
+    "react_bytes": 49001,
+    "react_gzip_bytes": 17106,
+    "i18n_bytes": 49391,
+    "i18n_gzip_bytes": 15382,
+    "total_js_bytes": 1581928
+  },
+  "delta": {
+    "index_bytes": -207511,
+    "index_gzip_bytes": -53452,
+    "total_js_bytes": -516763,
+    "perf_expected": "production should be smaller/faster; negative deltas are improvements"
+  }
+}

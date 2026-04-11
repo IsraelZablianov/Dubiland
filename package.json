@@ -21,10 +21,13 @@
     "supabase:types": "npx supabase gen types typescript --local --schema public > packages/shared/src/types/database.ts",
     "supabase:types:linked": "npx supabase gen types typescript --linked --schema public > packages/shared/src/types/database.ts",
     "test:automation-recovery-gateway": "npx --yes deno test supabase/functions/automation-recovery-gateway/handler_test.ts --allow-env",
-    "test:guardrail-v2": "node --test scripts/manager-assignee-guardrail-v2.test.mjs"
+    "test:guardrail-v2": "node --test scripts/manager-assignee-guardrail-v2.test.mjs",
+    "perf:provision-auth-user": "node scripts/provision-dubiland-perf-auth-user.mjs",
+    "perf:check-auth-env": "node scripts/check-dubiland-perf-auth-env.mjs --load-dotenv"
   },
   "devDependencies": {
     "@google/genai": "^1.49.0",
+    "puppeteer": "^24.40.0",
     "tsx": "^4.19.0",
     "typescript": "^5.7.0"
   },

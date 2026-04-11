@@ -1,0 +1,63 @@
+$ npx --yes pa11y-ci --config /Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-685-qa2-20260411-144822/configs/parents__faq.pa11y-ci.config.json
+Running Pa11y on 1 URLs:
+ > http://127.0.0.1:4187/parents/faq - 6 errors
+
+Errors in http://127.0.0.1:4187/parents/faq:
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > section:nth-child(2) > div > div:nth-child(1) >
+   p)
+
+   <p class="parents-faq__answer">דובילנד מיועדת לילדים בגילאי 3 ...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > section:nth-child(2) > div > div:nth-child(2) >
+   p)
+
+   <p class="parents-faq__answer">כן, כרגע דובילנד זמינה בחינם לכ...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > section:nth-child(2) > div > div:nth-child(3) >
+   p)
+
+   <p class="parents-faq__answer">לא! כל ההוראות והטקסטים מושמעים...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > section:nth-child(2) > div > div:nth-child(4) >
+   p)
+
+   <p class="parents-faq__answer">כן, כל חשבון משפחתי תומך בריבוי...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > section:nth-child(2) > div > div:nth-child(5) >
+   p)
+
+   <p class="parents-faq__answer">דובילנד עובדת בדפדפן על כל מכשי...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 2.31:1. Recommendation:  change background to #e7742a.
+
+   (#root > div > main > div > section:nth-child(3) > a:nth-child(2) > button)
+
+   <button style="display: inline-flex; align-items: center; justify-content:
+   center; gap: var(--space-sm); font-family: var(--font-family-primary);
+   font-weight: var(--font-weight-bold); line-height: var(--line-height-tight);
+   transition: var(--transitio...
+
+✘ 0/1 URLs passed

@@ -218,6 +218,9 @@ When QA requires an empty-state CTA "instead of" zero metrics, treat the whole d
 ## 2026-04-10 — RTL reader controls should derive direction once and mirror navigation glyphs
 For Hebrew storybook controls, compute `isRtl` from `i18n.dir()` in the component and use it for forward-arrow glyphs (`←` in RTL, `→` in LTR); pair this with stronger text contrast (not near-threshold secondary tones) on small labels/buttons to avoid QA contrast failures around 4.49:1.
 
+## 2026-04-11 — Route-level completion persistence is safest behind one shared hook
+For game routes that all call `persistGameAttempt`, a single `useGameAttemptSync` hook (session/attempt ids, optimistic `syncing` state, retry on failure) reduces duplicated refs/effects and keeps parent-summary status behavior consistent when migrating multiple pages together.
+
 ## 2026-04-11 — Shell-unification lanes should collapse duplicate wrappers into one app shell
 When header/footer consistency issues target protected routes, replacing multiple wrapper variants (`ChildPlayShell`, `ParentShell`) with one `AppShell` reduces drift risk while preserving route-level content ownership; keep `PublicHeader` + `PublicFooter` composition fixed in that single shell path.
 
@@ -325,3 +328,12 @@ When app-mode actions are wider than public CTAs, RTL overflow can appear at 820
 
 ## 2026-04-11 — Danger actions should use a strong red token for reliable AA contrast
 The default soft danger tone can under-shoot AA on white text in parent surfaces; using a dedicated `--color-accent-danger-strong` token in the shared `Button` danger variant removes per-page contrast patching.
+
+## 2026-04-11 — Keep adaptive gate math explicit in one function and telemetry tags flat in summary payloads
+For misconception-aware math games, encode promotion windows/thresholds in a single gate evaluator (`window`, `min success`, `max hints`) and emit misconception trends as flat keys (`overshoot`, `direction`, `crossing10`) inside `summaryMetrics`; this keeps QA validation deterministic and avoids string-mapping ambiguity between UI and persisted attempt payloads.
+
+## 2026-04-11 — RTL timelines can be mirrored while analog-clock math must stay canonical clockwise
+For time-sequencing games, keep the routine timeline and slot flow `dir="rtl"`, but isolate analog clock interaction/rendering from container direction (fixed LTR dial math, clockwise angle progression). Treat timeline direction and clock direction as separate invariants to avoid subtle reversed-time bugs.
+
+## 2026-04-11 — Runtime adapters for interactive video should parse metadata cues but keep deterministic frame fallback
+For Remotion-backed checkpoints, parse `timeline.checkpoints[]` (`sceneStartFrame`, `responseStartFrame`, `responseEndFrame`) when payload is present, but always keep a local frame fallback path so web runtime remains playable when metadata export lags behind content/audio updates.

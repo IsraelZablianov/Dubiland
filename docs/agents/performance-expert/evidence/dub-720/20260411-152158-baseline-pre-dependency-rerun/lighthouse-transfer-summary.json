@@ -1,0 +1,92 @@
+[
+  {
+    "route": "/terms",
+    "request_count": 15,
+    "transfer_bytes": 221630,
+    "resource_bytes": 676462,
+    "script_transfer_bytes": 166143,
+    "image_transfer_bytes": 1195,
+    "font_transfer_bytes": 44735
+  },
+  {
+    "route": "/privacy",
+    "request_count": 15,
+    "transfer_bytes": 221629,
+    "resource_bytes": 676461,
+    "script_transfer_bytes": 166142,
+    "image_transfer_bytes": 1195,
+    "font_transfer_bytes": 44735
+  },
+  {
+    "route": "/parent",
+    "request_count": 28,
+    "transfer_bytes": 372539,
+    "resource_bytes": 1002638,
+    "script_transfer_bytes": 227817,
+    "image_transfer_bytes": 90430,
+    "font_transfer_bytes": 44735
+  },
+  {
+    "route": "/no-such-page",
+    "request_count": 16,
+    "transfer_bytes": 222478,
+    "resource_bytes": 678517,
+    "script_transfer_bytes": 165976,
+    "image_transfer_bytes": 2210,
+    "font_transfer_bytes": 44735
+  },
+  {
+    "route": "/games/numbers/more-or-less-market",
+    "request_count": 31,
+    "transfer_bytes": 325725,
+    "resource_bytes": 1392448,
+    "script_transfer_bytes": 232166,
+    "image_transfer_bytes": 1195,
+    "font_transfer_bytes": 82807
+  },
+  {
+    "route": "/games/numbers/shape-safari",
+    "request_count": 37,
+    "transfer_bytes": 368436,
+    "resource_bytes": 1450877,
+    "script_transfer_bytes": 232103,
+    "image_transfer_bytes": 2306,
+    "font_transfer_bytes": 82807
+  },
+  {
+    "route": "/games/numbers/number-line-jumps",
+    "request_count": 36,
+    "transfer_bytes": 368126,
+    "resource_bytes": 1451986,
+    "script_transfer_bytes": 232904,
+    "image_transfer_bytes": 1195,
+    "font_transfer_bytes": 82807
+  },
+  {
+    "route": "/games/reading/picture-to-word-builder",
+    "request_count": 30,
+    "transfer_bytes": 344963,
+    "resource_bytes": 1371578,
+    "script_transfer_bytes": 233542,
+    "image_transfer_bytes": 1195,
+    "font_transfer_bytes": 59006
+  },
+  {
+    "route": "/games/reading/sight-word-sprint",
+    "request_count": 41,
+    "transfer_bytes": 367105,
+    "resource_bytes": 1557396,
+    "script_transfer_bytes": 231883,
+    "image_transfer_bytes": 1195,
+    "font_transfer_bytes": 82807
+  },
+  {
+    "route": "/games/reading/confusable-letter-contrast",
+    "request_count": 36,
+    "transfer_bytes": 366325,
+    "resource_bytes": 1535059,
+    "script_transfer_bytes": 231103,
+    "image_transfer_bytes": 1195,
+    "font_transfer_bytes": 82807
+  }
+]

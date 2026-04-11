@@ -10,8 +10,12 @@
   "common.contentFilters.age.resetToProfile": "חזרה לגיל הפרופיל",
   "common.games.estimatedTime": "משך משוער, דקות",
   "common.games.numberLineJumps.instructions.jumpByStep": "קפיצה קדימה",
+  "common.games.subtractionStreet.instructions.jumpByStep": "קפיצה אחורה",
   "common.parentDashboard.games.moreOrLessMarket.progressSummary": "איזה יופי. הילד מתקדם יפה בהשוואת כמויות, עם פחות ופחות רמזים.",
   "common.parentDashboard.games.numberLineJumps.progressSummary": "איזה יופי. הילד מתקדם בקפיצות על קו המספרים, פותר תרגילי חיבור ומסתמך פחות על רמזים.",
+  "common.parentDashboard.games.build10Workshop.progressSummary": "איזה יופי. הילד בונה מספרים עד עשר ועד עשרים, מוצא יותר פירוקים חלופיים ומתקדם יפה גם בזיהוי חלק חסר.",
+  "common.parentDashboard.games.subtractionStreet.progressSummary": "איזה יופי. הילד מתקדם בחיסור בקפיצות לאחור, מחזק דיוק גם עד עשר וגם עד עשרים, ומזהה טוב יותר טעויות כיוון ומעבר דרך עשר.",
+  "common.parentDashboard.games.timeAndRoutineBuilder.progressSummary": "איזה יופי. הילד מתקדם בסידור סדר יום, מזהה טוב יותר מה קודם ומה אחר כך, ומדייק יותר בהתאמת שעות עגולות וחצאים.",
   "common.parentDashboard.games.shapeSafari.progressSummary": "איזה יופי. הילד מתקדם בזיהוי צורות ובמיון שלהן, עם דיוק שהולך ומשתפר.",
   "common.parentDashboard.games.colorGarden.progressSummary": "איזה יופי. הילד מתקדם בזיהוי צבעים ובמיון לפי צבע, ומתחיל להבחין טוב יותר גם בין גוונים דומים.",
   "common.parentDashboard.games.letterTracingTrail.progressSummary": "איזה יופי. הילד מתקדם במסלול עקיבת האותיות ומשתמש בפחות רמזים.",
@@ -50,5 +54,11 @@
   "common.parentDashboard.handbooks.tamarWordTower.evidenceReading": "ניכר שיפור בבחירת תשובות לפי ראיה מתוך הטקסט.",
   "common.parentDashboard.handbooks.tamarWordTower.independenceTrend": "מגמת העצמאות בקריאה ובהבנת טקסט חיובית מאוד.",
   "common.parentDashboard.games.letterStorybook.progressSummary": "איזה יופי. הילד מתקדם בסיפור האותיות, מזהה יותר אותיות ומסתמך פחות על רמזים.",
-  "common.parentDashboard.games.letterStorybook.confusions": "בדוח ההורים מוצג זוג האותיות שכרגע דורש עוד תרגול עדין ומודרך."
+  "common.parentDashboard.games.letterStorybook.confusions": "בדוח ההורים מוצג זוג האותיות שכרגע דורש עוד תרגול עדין ומודרך.",
+  "common.parentDashboard.games.syllableTrainBuilder.progressSummary": "איזה יופי. הילד מתקדם במעבר מהברה למילה, מדייק יותר ומשתמש בפחות רמזים.",
+  "common.parentDashboard.games.syllableTrainBuilder.patternBreakdown": "בדוח ההורים מופיע כיסוי תבניות ההברה והסיומות, יחד עם דיוק בזיהוי מסיחים דומים.",
+  "common.parentDashboard.games.decodableStoryMissions.progressSummary": "איזה יופי. הילד מתקדם במסלול פענוח-תחילה, מדייק יותר בקריאה וגם בהבנת הטקסט.",
+  "common.parentDashboard.games.decodableStoryMissions.missionBreakdown": "בדוח ההורים מוצגים המעברים העצמאיים, המעברים הנתמכים, ותדירות השימוש ברמז שלב שלוש במשימות האחרונות.",
+  "common.parentDashboard.videos.blendToRead.progressSummary": "איזה יופי. הילד מתקדם בפרקי החיבור לקריאה, מדייק יותר ומבקש פחות השמעה חוזרת.",
+  "common.parentDashboard.videos.blendToRead.patternBreakdown": "בדוח ההורים מוצג דפוס החיבור שבו הילד כבר יציב, ולצידו הדפוס הבא שמומלץ לחזק."
 }

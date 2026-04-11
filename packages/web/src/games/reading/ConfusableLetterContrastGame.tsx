@@ -377,6 +377,8 @@ export function ConfusableLetterContrastGame({ level: runtimeLevel, onComplete, 
   const [sortCards, setSortCards] = useState<SortCard[]>([]);
   const [selectedTapChoice, setSelectedTapChoice] = useState<LetterId | null>(null);
   const [selectedSortCardId, setSelectedSortCardId] = useState<string | null>(null);
+  const [selectedTransferChoice, setSelectedTransferChoice] = useState<LetterId | null>(null);
+  const [activeSortBucket, setActiveSortBucket] = useState<'target' | 'confusable' | null>(null);
   const [masteredPairs, setMasteredPairs] = useState<Set<PairId>>(new Set());
   const [showCompletionCelebration, setShowCompletionCelebration] = useState(false);
   const [audioPlaybackFailed, setAudioPlaybackFailed] = useState(false);
@@ -702,6 +704,8 @@ export function ConfusableLetterContrastGame({ level: runtimeLevel, onComplete, 
         return;
       }
 
+      setSelectedSortCardId(cardId);
+      setActiveSortBucket(bucket);
       const card = sortCards.find((entry) => entry.id === cardId);
       if (!card) {
         return;
@@ -753,6 +757,7 @@ export function ConfusableLetterContrastGame({ level: runtimeLevel, onComplete, 
       }
 
       draggedSortCardIdRef.current = null;
+      setActiveSortBucket(bucket);
       placeSortCard(draggedCardId, bucket);
     },
     [placeSortCard, selectedSortCardId],
@@ -766,6 +771,7 @@ export function ConfusableLetterContrastGame({ level: runtimeLevel, onComplete, 
 
       statsRef.current.totalActions += 1;
       statsRef.current.transferAttempts += 1;
+      setSelectedTransferChoice(choice);
       void playAudioNow(transferItemAudioPath(choice));
 
       if (choice === currentPair.target) {
@@ -833,6 +839,8 @@ export function ConfusableLetterContrastGame({ level: runtimeLevel, onComplete, 
 
     setSelectedTapChoice(null);
     setSelectedSortCardId(null);
+    setSelectedTransferChoice(null);
+    setActiveSortBucket(null);
 
     if (phase === 'sort') {
       initializeLevel2Sort();
@@ -938,6 +946,8 @@ export function ConfusableLetterContrastGame({ level: runtimeLevel, onComplete, 
     setCanContinue(false);
     setSelectedTapChoice(null);
     setSelectedSortCardId(null);
+    setSelectedTransferChoice(null);
+    setActiveSortBucket(null);
     setBoardFeedback('idle');
 
     if (effectiveLevel === 3) {
@@ -1033,6 +1043,11 @@ export function ConfusableLetterContrastGame({ level: runtimeLevel, onComplete, 
   }, [masteredPairs, symbolForLetter]);
 
   const progressIndex = phase === 'sessionDone' ? totalRounds : roundIndex + 1;
+  const statusMascotVariant = phase === 'sessionDone' || status.tone === 'success' || boardFeedback === 'success'
+    ? 'success'
+    : status.tone === 'hint' || status.tone === 'error' || boardFeedback === 'miss'
+      ? 'hint'
+      : 'hero';
 
   const controlButtons = (
     <div className="confusable-contrast__control-row">
@@ -1137,8 +1152,24 @@ export function ConfusableLetterContrastGame({ level: runtimeLevel, onComplete, 
         ].join(' ')}
         padding="md"
       >
-        <div className="confusable-contrast__status-row">
-          <MascotIllustration variant={phase === 'sessionDone' ? 'success' : 'hero'} size={72} />
+        <div
+          className={[
+            'confusable-contrast__status-row',
+            status.tone === 'hint' ? 'confusable-contrast__status-row--hint' : '',
+            status.tone === 'success' ? 'confusable-contrast__status-row--success' : '',
+            status.tone === 'error' ? 'confusable-contrast__status-row--error' : '',
+          ].join(' ')}
+        >
+          <span
+            className={[
+              'confusable-contrast__status-mascot',
+              statusMascotVariant === 'success' ? 'confusable-contrast__status-mascot--success' : '',
+              statusMascotVariant === 'hint' ? 'confusable-contrast__status-mascot--hint' : '',
+            ].join(' ')}
+            aria-hidden="true"
+          >
+            <MascotIllustration variant={statusMascotVariant} size={72} />
+          </span>
 
           <div className="confusable-contrast__status-text-wrap">
             <div className="confusable-contrast__instruction-row">
@@ -1183,6 +1214,10 @@ export function ConfusableLetterContrastGame({ level: runtimeLevel, onComplete, 
                     className={[
                       'confusable-contrast__letter-option',
                       isSelected ? 'confusable-contrast__letter-option--selected' : '',
+                      boardFeedback === 'success' && isSelected && choice === currentPair.target
+                        ? 'confusable-contrast__letter-option--success'
+                        : '',
+                      boardFeedback === 'miss' && isSelected ? 'confusable-contrast__letter-option--miss' : '',
                     ].join(' ')}
                     onClick={() => handleTapChoice(choice)}
                     aria-label={tx(LETTER_PRONUNCIATION_KEY[choice])}
@@ -1206,7 +1241,11 @@ export function ConfusableLetterContrastGame({ level: runtimeLevel, onComplete, 
             <div className="confusable-contrast__bucket-grid">
               <button
                 type="button"
-                className="confusable-contrast__bucket"
+                className={[
+                  'confusable-contrast__bucket',
+                  activeSortBucket === 'target' && boardFeedback === 'success' ? 'confusable-contrast__bucket--success' : '',
+                  activeSortBucket === 'target' && boardFeedback === 'miss' ? 'confusable-contrast__bucket--miss' : '',
+                ].join(' ')}
                 onClick={() => handleDropOnBucket('target')}
                 onDragOver={(event) => {
                   event.preventDefault();
@@ -1226,7 +1265,11 @@ export function ConfusableLetterContrastGame({ level: runtimeLevel, onComplete, 
 
               <button
                 type="button"
-                className="confusable-contrast__bucket"
+                className={[
+                  'confusable-contrast__bucket',
+                  activeSortBucket === 'confusable' && boardFeedback === 'success' ? 'confusable-contrast__bucket--success' : '',
+                  activeSortBucket === 'confusable' && boardFeedback === 'miss' ? 'confusable-contrast__bucket--miss' : '',
+                ].join(' ')}
                 onClick={() => handleDropOnBucket('confusable')}
                 onDragOver={(event) => {
                   event.preventDefault();
@@ -1253,6 +1296,10 @@ export function ConfusableLetterContrastGame({ level: runtimeLevel, onComplete, 
                   className={[
                     'confusable-contrast__sort-card',
                     selectedSortCardId === card.id ? 'confusable-contrast__sort-card--selected' : '',
+                    boardFeedback === 'success' && selectedSortCardId === card.id
+                      ? 'confusable-contrast__sort-card--success'
+                      : '',
+                    boardFeedback === 'miss' && selectedSortCardId === card.id ? 'confusable-contrast__sort-card--miss' : '',
                   ].join(' ')}
                   draggable
                   onDragStart={() => {
@@ -1286,7 +1333,16 @@ export function ConfusableLetterContrastGame({ level: runtimeLevel, onComplete, 
                 <button
                   key={`${currentRound.id}-transfer-${choice}`}
                   type="button"
-                  className="confusable-contrast__transfer-option"
+                  className={[
+                    'confusable-contrast__transfer-option',
+                    selectedTransferChoice === choice ? 'confusable-contrast__transfer-option--selected' : '',
+                    boardFeedback === 'success' && selectedTransferChoice === choice
+                      ? 'confusable-contrast__transfer-option--success'
+                      : '',
+                    boardFeedback === 'miss' && selectedTransferChoice === choice
+                      ? 'confusable-contrast__transfer-option--miss'
+                      : '',
+                  ].join(' ')}
                   onClick={() => handleTransferChoice(choice)}
                   aria-label={tx(transferItemTextKey(choice))}
                   disabled={isInputLocked}
@@ -1417,6 +1473,43 @@ export function ConfusableLetterContrastGame({ level: runtimeLevel, onComplete, 
           grid-template-columns: auto 1fr;
           gap: var(--space-sm);
           align-items: center;
+          border-radius: var(--radius-md);
+          border: 1px solid color-mix(in srgb, var(--color-border) 72%, transparent);
+          background: color-mix(in srgb, var(--color-bg-secondary) 78%, transparent);
+          padding: var(--space-xs);
+        }
+
+        .confusable-contrast__status-row--hint {
+          border-color: color-mix(in srgb, var(--color-accent-warning) 56%, transparent);
+        }
+
+        .confusable-contrast__status-row--success {
+          border-color: color-mix(in srgb, var(--color-accent-success) 56%, transparent);
+        }
+
+        .confusable-contrast__status-row--error {
+          border-color: color-mix(in srgb, var(--color-accent-warning) 62%, transparent);
+        }
+
+        .confusable-contrast__status-mascot {
+          inline-size: 72px;
+          block-size: 72px;
+          border-radius: var(--radius-full);
+          border: 1px solid color-mix(in srgb, var(--color-border) 76%, transparent);
+          background: color-mix(in srgb, var(--color-bg-card) 86%, white);
+          display: grid;
+          place-items: center;
+          padding: 2px;
+        }
+
+        .confusable-contrast__status-mascot--hint {
+          border-color: color-mix(in srgb, var(--color-accent-warning) 58%, transparent);
+          background: color-mix(in srgb, var(--color-accent-warning) 12%, var(--color-bg-card));
+        }
+
+        .confusable-contrast__status-mascot--success {
+          border-color: color-mix(in srgb, var(--color-accent-success) 58%, transparent);
+          background: color-mix(in srgb, var(--color-accent-success) 12%, var(--color-bg-card));
         }
 
         .confusable-contrast__status-text-wrap {
@@ -1500,6 +1593,26 @@ export function ConfusableLetterContrastGame({ level: runtimeLevel, onComplete, 
           box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-accent-primary) 24%, transparent);
         }
 
+        .confusable-contrast__letter-option--success,
+        .confusable-contrast__sort-card--success,
+        .confusable-contrast__transfer-option--success {
+          border-color: color-mix(in srgb, var(--color-accent-success) 60%, transparent);
+          background: color-mix(in srgb, var(--color-accent-success) 14%, var(--color-bg-surface));
+          animation: confusable-choice-success 320ms ease-out;
+        }
+
+        .confusable-contrast__letter-option--miss,
+        .confusable-contrast__sort-card--miss,
+        .confusable-contrast__transfer-option--miss {
+          border-color: color-mix(in srgb, var(--color-accent-warning) 64%, transparent);
+          background: color-mix(in srgb, var(--color-accent-warning) 14%, var(--color-bg-surface));
+          animation: confusable-choice-miss 300ms ease-in-out;
+        }
+
+        .confusable-contrast__transfer-option--selected {
+          box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-accent-primary) 24%, transparent);
+        }
+
         .confusable-contrast__letter-symbol {
           font-size: clamp(1.85rem, 4vw, 2.5rem);
           font-weight: var(--font-weight-extrabold);
@@ -1528,6 +1641,19 @@ export function ConfusableLetterContrastGame({ level: runtimeLevel, onComplete, 
           text-align: center;
           padding: var(--space-sm);
           cursor: pointer;
+        }
+
+        .confusable-contrast__bucket--success {
+          border-style: solid;
+          border-color: color-mix(in srgb, var(--color-accent-success) 62%, transparent);
+          background: color-mix(in srgb, var(--color-accent-success) 14%, var(--color-bg-surface));
+          animation: confusable-choice-success 320ms ease-out;
+        }
+
+        .confusable-contrast__bucket--miss {
+          border-color: color-mix(in srgb, var(--color-accent-warning) 68%, transparent);
+          background: color-mix(in srgb, var(--color-accent-warning) 14%, var(--color-bg-surface));
+          animation: confusable-choice-miss 300ms ease-in-out;
         }
 
         .confusable-contrast__sort-cards,
@@ -1563,6 +1689,31 @@ export function ConfusableLetterContrastGame({ level: runtimeLevel, onComplete, 
           }
         }
 
+        @keyframes confusable-choice-success {
+          0% {
+            transform: scale(1);
+          }
+          55% {
+            transform: scale(1.06);
+          }
+          100% {
+            transform: scale(1);
+          }
+        }
+
+        @keyframes confusable-choice-miss {
+          0%,
+          100% {
+            transform: translateX(0);
+          }
+          30% {
+            transform: translateX(-4px);
+          }
+          70% {
+            transform: translateX(4px);
+          }
+        }
+
         @media (max-width: 720px) {
           .confusable-contrast__header {
             grid-template-columns: 1fr;
@@ -1582,7 +1733,15 @@ export function ConfusableLetterContrastGame({ level: runtimeLevel, onComplete, 
           .confusable-contrast__board,
           .confusable-contrast__letter-option,
           .confusable-contrast__sort-card,
-          .confusable-contrast__transfer-option {
+          .confusable-contrast__transfer-option,
+          .confusable-contrast__bucket--success,
+          .confusable-contrast__bucket--miss,
+          .confusable-contrast__letter-option--success,
+          .confusable-contrast__letter-option--miss,
+          .confusable-contrast__sort-card--success,
+          .confusable-contrast__sort-card--miss,
+          .confusable-contrast__transfer-option--success,
+          .confusable-contrast__transfer-option--miss {
             animation: none !important;
             transition: none !important;
           }

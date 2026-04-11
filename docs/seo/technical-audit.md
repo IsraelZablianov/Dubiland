@@ -1,6 +1,6 @@
 # Dubiland Technical SEO Audit (Q2 Baseline)
 
-*Owner: SEO Expert | Reviewer: CMO | Last updated: 2026-04-10*
+*Owner: SEO Expert | Reviewer: CMO | Last updated: 2026-04-11*
 
 ## Scope
 
@@ -19,6 +19,19 @@ Key launch findings:
 - Critical crawlability blocker: public SEO routes return `404` to non-JS probes.
 - High indexation blocker: canonical/hreflang URLs are path-incorrect for current base-path deployment.
 - High crawl asset mismatch: `robots.txt` and `sitemap.xml` point to unresolved `https://dubiland.co.il`.
+
+## DUB-689 Follow-up (2026-04-11)
+
+Latest technical audit + keyword expansion execution package:
+
+- `docs/seo/reports/2026-04-dub-689-technical-audit-keyword-opportunities.md`
+
+Key 2026-04-11 findings:
+
+- Public route crawlability is now stable (`200` for all indexable public routes).
+- High-risk non-JS parity gap remains: static HTML for indexable routes is identical and generic.
+- High-risk schema duplication remains: static `index.html` still contains stale `WebApplication` JSON-LD (`https://dubiland.co.il`) in addition to runtime schema.
+- Mobile LCP still misses target on public pages (~`3.46s-3.61s` vs target `<2.5s`).
 
 Execution tickets opened from this follow-up:
 

@@ -1,0 +1,50 @@
+{
+  "out_dir": "docs/agents/performance-expert/evidence/dub-686/20260411-145149-baseline-preview",
+  "generated_at": "2026-04-11T12:02:11.564Z",
+  "routes": [
+    {
+      "route": "about",
+      "performance": 82,
+      "fcp_ms": 3718,
+      "lcp_ms": 3718,
+      "tbt_ms": 0,
+      "cls": 0.002,
+      "max_potential_fid_ms": 30
+    },
+    {
+      "route": "letters",
+      "performance": 82,
+      "fcp_ms": 3723,
+      "lcp_ms": 3723,
+      "tbt_ms": 0,
+      "cls": 0.002,
+      "max_potential_fid_ms": 37
+    },
+    {
+      "route": "parents",
+      "performance": 83,
+      "fcp_ms": 3605,
+      "lcp_ms": 3605,
+      "tbt_ms": 0,
+      "cls": 0.004,
+      "max_potential_fid_ms": 30
+    },
+    {
+      "route": "root",
+      "performance": 77,
+      "fcp_ms": 3688,
+      "lcp_ms": 4413,
+      "tbt_ms": 0,
+      "cls": 0.033,
+      "max_potential_fid_ms": 31
+    }
+  ],
+  "medians": {
+    "performance": 82,
+    "fcp_ms": 3703,
+    "lcp_ms": 3721,
+    "tbt_ms": 0,
+    "cls": 0.003,
+    "max_potential_fid_ms": 31
+  }
+}

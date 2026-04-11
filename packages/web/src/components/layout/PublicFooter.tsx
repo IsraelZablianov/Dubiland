@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { MascotIllustration } from '@/components/illustrations';
 
 export function PublicFooter() {
-  const { t } = useTranslation(['public', 'common']);
+  const { t } = useTranslation('public');
   const year = new Date().getFullYear();
 
   return (
@@ -12,7 +12,7 @@ export function PublicFooter() {
         <div className="public-footer__brand">
           <Link to="/" className="public-footer__logo">
             <MascotIllustration variant="hero" size={36} className="public-footer__logo-icon" />
-            <span className="public-footer__logo-text">{t('common:branding.appName')}</span>
+            <span className="public-footer__logo-text">{t('footer.aboutTitle')}</span>
           </Link>
           <p className="public-footer__tagline">{t('footer.tagline')}</p>
         </div>

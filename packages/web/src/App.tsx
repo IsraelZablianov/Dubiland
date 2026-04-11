@@ -1,9 +1,11 @@
-import { lazy, Suspense, type ReactNode } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { lazy, Suspense, useEffect, useState, type ReactNode } from 'react';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { AppShell, MarketingShell } from '@/components/layout';
 import { AnimatedPage } from '@/components/motion';
 import { ScrollToTop } from '@/components/routing/ScrollToTop';
-import { RouteMetadataManager } from '@/seo/RouteMetadataManager';
+import { ensureCommonNamespaceLoaded, hasCommonNamespaceLoaded } from '@/i18n';
+import { flushParentFunnelEventQueue } from '@/lib/parentFunnelInstrumentation';
+import { GAME_ROUTE_MANIFEST, type GameRouteManifestEntry } from '@/routing/gameRouteManifest';
 
 const Landing = lazy(() => import('@/pages/Landing'));
 const About = lazy(() => import('@/pages/About'));
@@ -21,21 +23,10 @@ const ProtectedRoute = lazy(async () => {
   const module = await import('@/components/ProtectedRoute');
   return { default: module.ProtectedRoute };
 });
-const CountingPicnic = lazy(() => import('@/pages/CountingPicnic'));
-const MoreOrLessMarket = lazy(() => import('@/pages/MoreOrLessMarket'));
-const ShapeSafari = lazy(() => import('@/pages/ShapeSafari'));
-const ColorGarden = lazy(() => import('@/pages/ColorGarden'));
-const NumberLineJumps = lazy(() => import('@/pages/NumberLineJumps'));
-const PictureToWordBuilder = lazy(() => import('@/pages/PictureToWordBuilder'));
-const SightWordSprint = lazy(() => import('@/pages/SightWordSprint'));
-const DecodableMicroStories = lazy(() => import('@/pages/DecodableMicroStories'));
-const InteractiveHandbook = lazy(() => import('@/pages/InteractiveHandbook'));
-const LetterStorybook = lazy(() => import('@/pages/LetterStorybook'));
-const RootFamilyStickers = lazy(() => import('@/pages/RootFamilyStickers'));
-const ConfusableLetterContrast = lazy(() => import('@/pages/ConfusableLetterContrast'));
-const LetterSoundMatch = lazy(() => import('@/pages/LetterSoundMatch'));
-const LetterTracingTrail = lazy(() => import('@/pages/LetterTracingTrail'));
-const LetterSkyCatcher = lazy(() => import('@/pages/LetterSkyCatcher'));
+const RouteMetadataManager = lazy(async () => {
+  const module = await import('@/seo/RouteMetadataManager');
+  return { default: module.RouteMetadataManager };
+});
 
 function RouteFallback() {
   return (
@@ -53,6 +44,15 @@ function RouteFallback() {
 }
 
 type RouteShell = 'public' | 'app';
+const COMMON_NAMESPACE_BOOTSTRAP_PREFIXES = ['/games', '/parent'] as const;
+
+function requiresCommonNamespace(pathname: string) {
+  if (pathname === '/login' || pathname === '/profiles') {
+    return true;
+  }
+
+  return COMMON_NAMESPACE_BOOTSTRAP_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+}
 
 function withAnimatedPage(element: ReactNode, shell: RouteShell) {
   if (shell === 'public') {
@@ -62,11 +62,73 @@ function withAnimatedPage(element: ReactNode, shell: RouteShell) {
   return <AnimatedPage className={`animated-page--shell-${shell}`}>{element}</AnimatedPage>;
 }
 
+function withProtectedAppShell(element: ReactNode) {
+  return (
+    <ProtectedRoute>
+      <AppShell>{element}</AppShell>
+    </ProtectedRoute>
+  );
+}
+
+function buildGameRouteElement(route: GameRouteManifestEntry) {
+  const RouteComponent = route.component;
+  const content = route.disableShellAnimation
+    ? <RouteComponent />
+    : withAnimatedPage(<RouteComponent />, 'app');
+
+  return withProtectedAppShell(content);
+}
+
 export default function App() {
+  const location = useLocation();
+  const commonNamespaceRequired = requiresCommonNamespace(location.pathname);
+  const [commonNamespaceReady, setCommonNamespaceReady] = useState(
+    () => !commonNamespaceRequired || hasCommonNamespaceLoaded(),
+  );
+
+  useEffect(() => {
+    let active = true;
+
+    if (!commonNamespaceRequired) {
+      setCommonNamespaceReady(true);
+      return () => {
+        active = false;
+      };
+    }
+
+    if (hasCommonNamespaceLoaded()) {
+      setCommonNamespaceReady(true);
+      return () => {
+        active = false;
+      };
+    }
+
+    setCommonNamespaceReady(false);
+
+    void ensureCommonNamespaceLoaded().then(() => {
+      if (!active) return;
+      setCommonNamespaceReady(true);
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [commonNamespaceRequired]);
+
+  useEffect(() => {
+    void flushParentFunnelEventQueue();
+  }, [location.pathname]);
+
+  if (!commonNamespaceReady) {
+    return <RouteFallback />;
+  }
+
   return (
     <>
       <ScrollToTop />
-      <RouteMetadataManager />
+      <Suspense fallback={null}>
+        <RouteMetadataManager />
+      </Suspense>
 
       <Suspense fallback={<RouteFallback />}>
         <Routes>
@@ -87,148 +149,19 @@ export default function App() {
           {/* App shell — authenticated profile + game routes */}
           <Route
             path="/profiles"
-            element={
-              <ProtectedRoute>
-                <AppShell>{withAnimatedPage(<ProfilePicker />, 'app')}</AppShell>
-              </ProtectedRoute>
-            }
+            element={withProtectedAppShell(withAnimatedPage(<ProfilePicker />, 'app'))}
           />
           <Route
             path="/games"
-            element={
-              <ProtectedRoute>
-                <AppShell>{withAnimatedPage(<Home />, 'app')}</AppShell>
-              </ProtectedRoute>
-            }
+            element={withProtectedAppShell(withAnimatedPage(<Home />, 'app'))}
           />
           <Route
             path="/parent"
-            element={
-              <ProtectedRoute>
-                <AppShell>{withAnimatedPage(<ParentDashboard />, 'app')}</AppShell>
-              </ProtectedRoute>
-            }
+            element={withProtectedAppShell(withAnimatedPage(<ParentDashboard />, 'app'))}
           />
-          <Route
-            path="/games/numbers/counting-picnic"
-            element={
-              <ProtectedRoute>
-                <AppShell>{withAnimatedPage(<CountingPicnic />, 'app')}</AppShell>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/games/numbers/more-or-less-market"
-            element={
-              <ProtectedRoute>
-                <AppShell>{withAnimatedPage(<MoreOrLessMarket />, 'app')}</AppShell>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/games/numbers/shape-safari"
-            element={
-              <ProtectedRoute>
-                <AppShell>{withAnimatedPage(<ShapeSafari />, 'app')}</AppShell>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/games/numbers/number-line-jumps"
-            element={
-              <ProtectedRoute>
-                <AppShell>{withAnimatedPage(<NumberLineJumps />, 'app')}</AppShell>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/games/colors/color-garden"
-            element={
-              <ProtectedRoute>
-                <AppShell>{withAnimatedPage(<ColorGarden />, 'app')}</AppShell>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/games/reading/picture-to-word-builder"
-            element={
-              <ProtectedRoute>
-                <AppShell>{withAnimatedPage(<PictureToWordBuilder />, 'app')}</AppShell>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/games/reading/sight-word-sprint"
-            element={
-              <ProtectedRoute>
-                <AppShell>{withAnimatedPage(<SightWordSprint />, 'app')}</AppShell>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/games/reading/decodable-micro-stories"
-            element={
-              <ProtectedRoute>
-                <AppShell>{withAnimatedPage(<DecodableMicroStories />, 'app')}</AppShell>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/games/reading/interactive-handbook"
-            element={
-              <ProtectedRoute>
-                <AppShell><InteractiveHandbook /></AppShell>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/games/reading/letter-storybook"
-            element={
-              <ProtectedRoute>
-                <AppShell>{withAnimatedPage(<LetterStorybook />, 'app')}</AppShell>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/games/reading/root-family-stickers"
-            element={
-              <ProtectedRoute>
-                <AppShell>{withAnimatedPage(<RootFamilyStickers />, 'app')}</AppShell>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/games/reading/confusable-letter-contrast"
-            element={
-              <ProtectedRoute>
-                <AppShell>{withAnimatedPage(<ConfusableLetterContrast />, 'app')}</AppShell>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/games/letters/letter-sound-match"
-            element={
-              <ProtectedRoute>
-                <AppShell>{withAnimatedPage(<LetterSoundMatch />, 'app')}</AppShell>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/games/letters/letter-tracing-trail"
-            element={
-              <ProtectedRoute>
-                <AppShell>{withAnimatedPage(<LetterTracingTrail />, 'app')}</AppShell>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/games/letters/letter-sky-catcher"
-            element={
-              <ProtectedRoute>
-                <AppShell>{withAnimatedPage(<LetterSkyCatcher />, 'app')}</AppShell>
-              </ProtectedRoute>
-            }
-          />
+          {GAME_ROUTE_MANIFEST.map((route) => (
+            <Route key={route.path} path={route.path} element={buildGameRouteElement(route)} />
+          ))}
 
           {/* 404 */}
           <Route path="*" element={<MarketingShell>{withAnimatedPage(<NotFound />, 'public')}</MarketingShell>} />

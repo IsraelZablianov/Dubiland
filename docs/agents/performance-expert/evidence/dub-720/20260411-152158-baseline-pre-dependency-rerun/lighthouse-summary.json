@@ -1,0 +1,330 @@
+{
+  "out_dir": "/Users/israelz/Documents/dev/AI/Learning/docs/agents/performance-expert/evidence/dub-720/20260411-152158-baseline-pre-dependency-rerun",
+  "generated_at": "2026-04-11T12:27:46.932Z",
+  "budgets": {
+    "performance_min": 85,
+    "lcp_ms_max": 2500,
+    "cls_max": 0.1,
+    "tbt_ms_max": 200
+  },
+  "routes": [
+    {
+      "key": "terms",
+      "route": "/terms",
+      "performance": 88,
+      "fcp_ms": 3126,
+      "lcp_ms": 3126,
+      "tbt_ms": 0,
+      "cls": 0.002,
+      "max_potential_fid_ms": 17,
+      "final_url": "http://127.0.0.1:4191/terms",
+      "checks": {
+        "performance": true,
+        "lcp_ms": false,
+        "cls": true,
+        "tbt_ms": true
+      },
+      "pass": false
+    },
+    {
+      "key": "privacy",
+      "route": "/privacy",
+      "performance": 88,
+      "fcp_ms": 3125,
+      "lcp_ms": 3125,
+      "tbt_ms": 0,
+      "cls": 0.002,
+      "max_potential_fid_ms": 20,
+      "final_url": "http://127.0.0.1:4191/privacy",
+      "checks": {
+        "performance": true,
+        "lcp_ms": false,
+        "cls": true,
+        "tbt_ms": true
+      },
+      "pass": false
+    },
+    {
+      "key": "parent",
+      "route": "/parent",
+      "performance": 79,
+      "fcp_ms": 3980,
+      "lcp_ms": 4055,
+      "tbt_ms": 0,
+      "cls": 0.001,
+      "max_potential_fid_ms": 31,
+      "final_url": "http://127.0.0.1:4191/parent",
+      "checks": {
+        "performance": false,
+        "lcp_ms": false,
+        "cls": true,
+        "tbt_ms": true
+      },
+      "pass": false
+    },
+    {
+      "key": "not-found",
+      "route": "/no-such-page",
+      "performance": 86,
+      "fcp_ms": 3148,
+      "lcp_ms": 3415,
+      "tbt_ms": 0,
+      "cls": 0.001,
+      "max_potential_fid_ms": 18,
+      "final_url": "http://127.0.0.1:4191/no-such-page",
+      "checks": {
+        "performance": true,
+        "lcp_ms": false,
+        "cls": true,
+        "tbt_ms": true
+      },
+      "pass": false
+    },
+    {
+      "key": "game-more-or-less",
+      "route": "/games/numbers/more-or-less-market",
+      "performance": 76,
+      "fcp_ms": 4320,
+      "lcp_ms": 4386,
+      "tbt_ms": 0,
+      "cls": 0.001,
+      "max_potential_fid_ms": 26,
+      "final_url": "http://127.0.0.1:4191/games/numbers/more-or-less-market",
+      "checks": {
+        "performance": false,
+        "lcp_ms": false,
+        "cls": true,
+        "tbt_ms": true
+      },
+      "pass": false
+    },
+    {
+      "key": "game-shape-safari",
+      "route": "/games/numbers/shape-safari",
+      "performance": 75,
+      "fcp_ms": 4380,
+      "lcp_ms": 4455,
+      "tbt_ms": 0,
+      "cls": 0.001,
+      "max_potential_fid_ms": 22,
+      "final_url": "http://127.0.0.1:4191/games/numbers/shape-safari",
+      "checks": {
+        "performance": false,
+        "lcp_ms": false,
+        "cls": true,
+        "tbt_ms": true
+      },
+      "pass": false
+    },
+    {
+      "key": "game-number-line-jumps",
+      "route": "/games/numbers/number-line-jumps",
+      "performance": 75,
+      "fcp_ms": 4349,
+      "lcp_ms": 4449,
+      "tbt_ms": 0,
+      "cls": 0.001,
+      "max_potential_fid_ms": 23,
+      "final_url": "http://127.0.0.1:4191/games/numbers/number-line-jumps",
+      "checks": {
+        "performance": false,
+        "lcp_ms": false,
+        "cls": true,
+        "tbt_ms": true
+      },
+      "pass": false
+    },
+    {
+      "key": "game-picture-to-word-builder",
+      "route": "/games/reading/picture-to-word-builder",
+      "performance": 75,
+      "fcp_ms": 4338,
+      "lcp_ms": 4405,
+      "tbt_ms": 0,
+      "cls": 0.001,
+      "max_potential_fid_ms": 25,
+      "final_url": "http://127.0.0.1:4191/games/reading/picture-to-word-builder",
+      "checks": {
+        "performance": false,
+        "lcp_ms": false,
+        "cls": true,
+        "tbt_ms": true
+      },
+      "pass": false
+    },
+    {
+      "key": "game-sight-word-sprint",
+      "route": "/games/reading/sight-word-sprint",
+      "performance": 75,
+      "fcp_ms": 4374,
+      "lcp_ms": 4507,
+      "tbt_ms": 0,
+      "cls": 0.001,
+      "max_potential_fid_ms": 34,
+      "final_url": "http://127.0.0.1:4191/games/reading/sight-word-sprint",
+      "checks": {
+        "performance": false,
+        "lcp_ms": false,
+        "cls": true,
+        "tbt_ms": true
+      },
+      "pass": false
+    },
+    {
+      "key": "game-confusable-letter-contrast",
+      "route": "/games/reading/confusable-letter-contrast",
+      "performance": 77,
+      "fcp_ms": 4029,
+      "lcp_ms": 4196,
+      "tbt_ms": 0,
+      "cls": 0.001,
+      "max_potential_fid_ms": 44,
+      "final_url": "http://127.0.0.1:4191/games/reading/confusable-letter-contrast",
+      "checks": {
+        "performance": false,
+        "lcp_ms": false,
+        "cls": true,
+        "tbt_ms": true
+      },
+      "pass": false
+    }
+  ],
+  "aggregate": {
+    "route_count": 10,
+    "pass_count": 0,
+    "fail_count": 10,
+    "performance_median": 77,
+    "lcp_median_ms": 4386,
+    "worst_lcp_route": "/games/reading/sight-word-sprint",
+    "worst_perf_route": "/games/numbers/shape-safari"
+  },
+  "failed": [
+    {
+      "route": "/terms",
+      "failed_checks": [
+        "lcp_ms"
+      ],
+      "metrics": {
+        "performance": 88,
+        "lcp_ms": 3126,
+        "cls": 0.002,
+        "tbt_ms": 0
+      }
+    },
+    {
+      "route": "/privacy",
+      "failed_checks": [
+        "lcp_ms"
+      ],
+      "metrics": {
+        "performance": 88,
+        "lcp_ms": 3125,
+        "cls": 0.002,
+        "tbt_ms": 0
+      }
+    },
+    {
+      "route": "/parent",
+      "failed_checks": [
+        "performance",
+        "lcp_ms"
+      ],
+      "metrics": {
+        "performance": 79,
+        "lcp_ms": 4055,
+        "cls": 0.001,
+        "tbt_ms": 0
+      }
+    },
+    {
+      "route": "/no-such-page",
+      "failed_checks": [
+        "lcp_ms"
+      ],
+      "metrics": {
+        "performance": 86,
+        "lcp_ms": 3415,
+        "cls": 0.001,
+        "tbt_ms": 0
+      }
+    },
+    {
+      "route": "/games/numbers/more-or-less-market",
+      "failed_checks": [
+        "performance",
+        "lcp_ms"
+      ],
+      "metrics": {
+        "performance": 76,
+        "lcp_ms": 4386,
+        "cls": 0.001,
+        "tbt_ms": 0
+      }
+    },
+    {
+      "route": "/games/numbers/shape-safari",
+      "failed_checks": [
+        "performance",
+        "lcp_ms"
+      ],
+      "metrics": {
+        "performance": 75,
+        "lcp_ms": 4455,
+        "cls": 0.001,
+        "tbt_ms": 0
+      }
+    },
+    {
+      "route": "/games/numbers/number-line-jumps",
+      "failed_checks": [
+        "performance",
+        "lcp_ms"
+      ],
+      "metrics": {
+        "performance": 75,
+        "lcp_ms": 4449,
+        "cls": 0.001,
+        "tbt_ms": 0
+      }
+    },
+    {
+      "route": "/games/reading/picture-to-word-builder",
+      "failed_checks": [
+        "performance",
+        "lcp_ms"
+      ],
+      "metrics": {
+        "performance": 75,
+        "lcp_ms": 4405,
+        "cls": 0.001,
+        "tbt_ms": 0
+      }
+    },
+    {
+      "route": "/games/reading/sight-word-sprint",
+      "failed_checks": [
+        "performance",
+        "lcp_ms"
+      ],
+      "metrics": {
+        "performance": 75,
+        "lcp_ms": 4507,
+        "cls": 0.001,
+        "tbt_ms": 0
+      }
+    },
+    {
+      "route": "/games/reading/confusable-letter-contrast",
+      "failed_checks": [
+        "performance",
+        "lcp_ms"
+      ],
+      "metrics": {
+        "performance": 77,
+        "lcp_ms": 4196,
+        "cls": 0.001,
+        "tbt_ms": 0
+      }
+    }
+  ]
+}

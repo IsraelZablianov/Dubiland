@@ -18,31 +18,53 @@ export default function NotFound() {
 
   return (
     <div className="not-found">
-      <FloatingElement className="not-found__mascot">
-        <MascotIllustration variant="loading" size={160} />
-      </FloatingElement>
-      <h1 className="not-found__code">404</h1>
-      <h2 className="not-found__title">{t('notFound.title')}</h2>
-      <p className="not-found__text">{t('notFound.text')}</p>
-      <div className="not-found__actions">
-        <Link to={primaryPath}>
-          <Button variant="primary" size="lg">{primaryLabel}</Button>
-        </Link>
-        <Link to={secondaryPath}>
-          <Button variant="secondary" size="lg">{secondaryLabel}</Button>
-        </Link>
+      <div className="not-found__panel">
+        <FloatingElement className="not-found__mascot">
+          <MascotIllustration variant="loading" size={160} />
+        </FloatingElement>
+        <h1 className="not-found__code">404</h1>
+        <h2 className="not-found__title">{t('notFound.title')}</h2>
+        <p className="not-found__text">{t('notFound.text')}</p>
+        <div className="not-found__actions">
+          <Link to={primaryPath}>
+            <Button variant="primary" size="lg">{primaryLabel}</Button>
+          </Link>
+          <Link to={secondaryPath}>
+            <Button variant="secondary" size="lg">{secondaryLabel}</Button>
+          </Link>
+        </div>
       </div>
 
       <style>{`
         .not-found {
-          min-height: 60vh;
+          min-height: max(62vh, 420px);
+          display: grid;
+          place-items: center;
+          padding: var(--space-3xl) var(--space-xl);
+          background:
+            radial-gradient(circle at 12% 10%, color-mix(in srgb, var(--color-theme-secondary) 26%, transparent), transparent 36%),
+            radial-gradient(circle at 84% 18%, color-mix(in srgb, var(--color-theme-primary) 18%, transparent), transparent 40%),
+            transparent;
+        }
+
+        .not-found__panel {
+          inline-size: min(680px, 100%);
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          padding: var(--space-3xl) var(--space-xl);
           text-align: center;
           gap: var(--space-md);
+          padding: clamp(var(--space-lg), 3.4vw, var(--space-2xl));
+          border-radius: var(--radius-xl);
+          border: 2px solid color-mix(in srgb, var(--color-theme-primary) 14%, transparent);
+          background:
+            linear-gradient(
+              165deg,
+              color-mix(in srgb, var(--color-bg-card) 90%, var(--color-theme-secondary) 10%),
+              var(--color-bg-card)
+            );
+          box-shadow: var(--shadow-card);
         }
 
         .not-found a { text-decoration: none; }
@@ -74,6 +96,32 @@ export default function NotFound() {
           flex-wrap: wrap;
           justify-content: center;
           margin-top: var(--space-md);
+        }
+
+        .not-found__actions a {
+          display: inline-flex;
+        }
+
+        @media (max-width: 640px) {
+          .not-found {
+            padding: var(--space-lg) var(--space-md);
+          }
+
+          .not-found__panel {
+            padding: var(--space-lg) var(--space-md);
+          }
+
+          .not-found__actions {
+            inline-size: 100%;
+          }
+
+          .not-found__actions a {
+            inline-size: 100%;
+          }
+
+          .not-found__actions a > button {
+            inline-size: 100%;
+          }
         }
       `}</style>
     </div>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { loadSupabaseRuntime } from '@/lib/loadSupabaseRuntime';
+import { isPersistableChildId } from '@/lib/persistableChildId';
 import { isSupabaseConfigured } from '@/lib/supabaseConfig';
 
 type TopicSlug = 'math' | 'letters' | 'reading';
@@ -31,10 +32,13 @@ export function useChildProgress(childId: string | null): ChildProgressData {
   const [data, setData] = useState<ChildProgressData>({ ...EMPTY, loading: true });
 
   useEffect(() => {
-    if (!childId || childId === 'guest' || !isSupabaseConfigured) {
+    const persistableChildId = isPersistableChildId(childId) ? childId : null;
+
+    if (!persistableChildId || !isSupabaseConfigured) {
       setData(EMPTY);
       return;
     }
+    const resolvedChildId: string = persistableChildId;
 
     let cancelled = false;
 
@@ -51,11 +55,11 @@ export function useChildProgress(childId: string | null): ChildProgressData {
         const [topicsRes, gamesRes, summariesRes, sessionsRes] = await Promise.all([
           supabase.from('topics').select('id, slug'),
           supabase.from('games').select('id, slug, topic_id, is_published').eq('is_published', true),
-          supabase.from('child_game_summaries').select('game_id, best_stars').eq('child_id', childId!),
+          supabase.from('child_game_summaries').select('game_id, best_stars').eq('child_id', resolvedChildId),
           supabase
             .from('game_sessions')
             .select('started_at, ended_at')
-            .eq('child_id', childId!)
+            .eq('child_id', resolvedChildId)
             .gte('started_at', new Date().toISOString().slice(0, 10)),
         ]);
 

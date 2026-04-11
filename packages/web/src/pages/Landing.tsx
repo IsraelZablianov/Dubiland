@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Button, Card } from '@/components/design-system';
@@ -8,6 +9,7 @@ import {
   type FeatureIllustrationKind,
   type TopicIllustrationSlug,
 } from '@/components/illustrations';
+import { trackParentFunnelEvent } from '@/lib/parentFunnelInstrumentation';
 
 const TOPIC_CARDS: Array<{ key: 'Math' | 'Letters' | 'Reading'; topic: TopicIllustrationSlug }> = [
   { key: 'Math', topic: 'math' },
@@ -36,6 +38,21 @@ const PROMINENT_MARKETING_CTA_STYLE = {
 export default function Landing() {
   const { t } = useTranslation('public');
 
+  useEffect(() => {
+    trackParentFunnelEvent('landing_page_view', {
+      sourcePath: '/',
+      targetPath: '/',
+    });
+  }, []);
+
+  const trackLandingPrimaryCtaClick = (ctaId: 'hero_primary' | 'footer_primary') => {
+    trackParentFunnelEvent('landing_primary_cta_click', {
+      sourcePath: '/',
+      targetPath: '/login',
+      ctaId,
+    });
+  };
+
   return (
     <div className="landing">
       <section className="landing__hero">
@@ -44,7 +61,7 @@ export default function Landing() {
             <h1 className="landing__hero-title">{t('landing.heroTitle')}</h1>
             <p className="landing__hero-subtitle">{t('landing.heroSubtitle')}</p>
             <div className="landing__hero-actions">
-              <Link to="/login">
+              <Link to="/login" onClick={() => trackLandingPrimaryCtaClick('hero_primary')}>
                 <Button variant="primary" size="lg" style={PROMINENT_MARKETING_CTA_STYLE}>
                   {t('landing.heroCta')}
                 </Button>
@@ -110,7 +127,7 @@ export default function Landing() {
       <section className="landing__cta landing__section--deferred">
         <h2 className="landing__cta-title">{t('landing.ctaTitle')}</h2>
         <p className="landing__cta-subtitle">{t('landing.ctaSubtitle')}</p>
-        <Link to="/login">
+        <Link to="/login" onClick={() => trackLandingPrimaryCtaClick('footer_primary')}>
           <Button variant="primary" size="lg" style={PROMINENT_MARKETING_CTA_STYLE}>
             {t('landing.ctaButton')}
           </Button>

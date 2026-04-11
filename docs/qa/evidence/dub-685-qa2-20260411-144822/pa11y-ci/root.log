@@ -1,0 +1,160 @@
+$ npx --yes pa11y-ci --config /Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-685-qa2-20260411-144822/configs/root.pa11y-ci.config.json
+Running Pa11y on 1 URLs:
+ > http://127.0.0.1:4187/ - 17 errors
+
+Errors in http://127.0.0.1:4187/:
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 2.31:1. Recommendation:  change background to #e7742a.
+
+   (#root > div > main > div > section:nth-child(1) > div > div:nth-child(1) >
+   div > a:nth-child(1) > button)
+
+   <button style="display: inline-flex; align-items: center; justify-content:
+   center; gap: var(--space-sm); font-family: var(--font-family-primary);
+   font-weight: var(--font-weight-bold); line-height: var(--line-height-tight);
+   transition: var(--transitio...
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.24:1. Recommendation:  change text colour to #030200.
+
+   (#topics > p)
+
+   <p class="landing__section-subtitle">שלושה נושאי לימוד מרכזיים שמכסי...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#topics > div > div:nth-child(1) > p)
+
+   <p class="landing__topic-desc">ספירה, זיהוי מספרים, השוואה וחש...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#topics > div > div:nth-child(2) > p)
+
+   <p class="landing__topic-desc">הכרת האלף-בית, צלילי אותיות, כת...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#topics > div > div:nth-child(3) > p)
+
+   <p class="landing__topic-desc">חיבור הברות, בניית מילים וקריאת...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.24:1. Recommendation:  change text colour to #030200.
+
+   (#root > div > main > div > section:nth-child(3) > p)
+
+   <p class="landing__section-subtitle">שלושה צעדים פשוטים להתחלה</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 2.31:1. Recommendation:  change background to #e7742a.
+
+   (#root > div > main > div > section:nth-child(3) > div > div:nth-child(1) >
+   div)
+
+   <div class="landing__step-number">1</div>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.24:1. Recommendation:  change text colour to #030200.
+
+   (#root > div > main > div > section:nth-child(3) > div > div:nth-child(1) >
+   p)
+
+   <p class="landing__step-desc">צרו חשבון משפחתי תוך דקה והוסיפ...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 2.31:1. Recommendation:  change background to #e7742a.
+
+   (#root > div > main > div > section:nth-child(3) > div > div:nth-child(2) >
+   div)
+
+   <div class="landing__step-number">2</div>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.24:1. Recommendation:  change text colour to #030200.
+
+   (#root > div > main > div > section:nth-child(3) > div > div:nth-child(2) >
+   p)
+
+   <p class="landing__step-desc">הילדים בוחרים מה ללמוד — אותיות...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 2.31:1. Recommendation:  change background to #e7742a.
+
+   (#root > div > main > div > section:nth-child(3) > div > div:nth-child(3) >
+   div)
+
+   <div class="landing__step-number">3</div>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.24:1. Recommendation:  change text colour to #030200.
+
+   (#root > div > main > div > section:nth-child(3) > div > div:nth-child(3) >
+   p)
+
+   <p class="landing__step-desc">דובי מלווה את הילדים במשחקים שמ...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > section:nth-child(4) > div > div:nth-child(1) >
+   p)
+
+   <p class="landing__trust-item-desc">ללא פרסומות, ללא רכישות מתוך הא...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > section:nth-child(4) > div > div:nth-child(2) >
+   p)
+
+   <p class="landing__trust-item-desc">נבנה מהיסוד בעברית — לא תרגום מ...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > section:nth-child(4) > div > div:nth-child(3) >
+   p)
+
+   <p class="landing__trust-item-desc">רמת קושי מותאמת, מעקב התקדמות ו...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > section:nth-child(4) > div > div:nth-child(4) >
+   p)
+
+   <p class="landing__trust-item-desc">כל הוראה וטקסט מושמעים — ילדים ...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 2.31:1. Recommendation:  change background to #e7742a.
+
+   (#root > div > main > div > section:nth-child(5) > a > button)
+
+   <button style="display: inline-flex; align-items: center; justify-content:
+   center; gap: var(--space-sm); font-family: var(--font-family-primary);
+   font-weight: var(--font-weight-bold); line-height: var(--line-height-tight);
+   transition: var(--transitio...
+
+✘ 0/1 URLs passed

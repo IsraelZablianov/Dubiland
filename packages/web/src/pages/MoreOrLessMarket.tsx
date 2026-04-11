@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import type { Child, Game, GameLevel } from '@dubiland/shared';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -8,8 +8,7 @@ import type { GameCompletionResult } from '@/games/engine';
 import { MoreOrLessMarketGame } from '@/games/numbers/MoreOrLessMarketGame';
 import { useAudioManager } from '@/hooks/useAudioManager';
 import { getActiveChildProfile } from '@/lib/session';
-
-type SyncState = 'idle' | 'syncing' | 'synced';
+import { useGameAttemptSync } from './useGameAttemptSync';
 
 const MORE_OR_LESS_MARKET_GAME: Game = {
   id: 'local-more-or-less-market',
@@ -74,17 +73,12 @@ export default function MoreOrLessMarketPage() {
     [activeProfile?.emoji, activeProfile?.id, activeProfile?.name, t],
   );
 
-  const [completionResult, setCompletionResult] = useState<GameCompletionResult | null>(null);
-  const [syncState, setSyncState] = useState<SyncState>('idle');
-
-  const handleComplete = useCallback((result: GameCompletionResult) => {
-    setCompletionResult(result);
-    setSyncState('syncing');
-
-    window.setTimeout(() => {
-      setSyncState('synced');
-    }, 450);
-  }, []);
+  const { completionResult, syncState, handleComplete, retryLastSync } = useGameAttemptSync({
+    childId: child.id,
+    childAgeBand: activeProfile?.ageBand,
+    game: MORE_OR_LESS_MARKET_GAME,
+    level: MORE_OR_LESS_MARKET_LEVEL,
+  });
 
   return (
     <ChildRouteScaffold width="wide">
@@ -116,8 +110,19 @@ export default function MoreOrLessMarketPage() {
               })}
             </p>
             <p style={{ color: 'var(--color-text-secondary)' }}>
-              {syncState === 'syncing' ? t('feedback.keepGoing') : t('feedback.excellent')}
+              {syncState === 'error'
+                ? t('errors.generic')
+                : syncState === 'syncing'
+                  ? t('feedback.keepGoing')
+                  : t('feedback.excellent')}
             </p>
+            {syncState === 'error' && (
+              <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                <Button variant="secondary" size="md" onClick={retryLastSync} aria-label={t('profile.retry')}>
+                  {t('profile.retry')}
+                </Button>
+              </div>
+            )}
           </Card>
         )}
     </ChildRouteScaffold>

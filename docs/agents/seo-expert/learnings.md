@@ -180,3 +180,11 @@
 - When Rich Results Test is reachable but shows `Something went wrong` + `Log in and try again`, treat this as an authentication blocker (not a schema-quality blocker) and explicitly request authenticated execution evidence for final dual-validator closeout.
 
 - 2026-04-11: For Dubiland schema validation closeouts, treat Google Rich Results auth-gated failures ("Log in and try again") as external-tool limitation when Schema.org validator raw payloads already show `fetchError=null` and `isRendered=true` for target routes; capture Rich Results screenshots/HAR as evidence and close SEO lane once dependency evidence issue is done.
+
+## 2026-04-11 — DUB-689 Live Audit Pattern (JS vs Non-JS)
+
+- A route can be technically crawlable (`HTTP 200` on path URLs) while still being SEO-fragile for non-JS agents if static HTML heads are identical across routes.
+- For Dubiland, cloned route HTML solved 404 crawlability but introduced metadata parity risk: raw HTML stayed generic and route-specific tags only appeared after JS execution.
+- Static schema in `index.html` can silently regress canonical identity and create duplicate schema types when runtime JSON-LD is also injected. Keep schema emission single-source and test for duplicate `@type` values.
+- GEO quality should be measured on extractable block length, not just schema presence: short 5-14 word snippets underperform the 40-60 word citation-ready target.
+- In constrained heartbeat runtimes, maintain a fallback keyword method (Suggest + SERP-size proxy) and explicitly flag when exact search-volume tooling is rate-limited.

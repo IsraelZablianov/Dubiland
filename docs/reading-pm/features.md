@@ -6,19 +6,47 @@ Track all reading games and features across their lifecycle.
 
 | Reading Skill Area | Games Planned | Games In Progress | Games Shipped |
 |---|---|---|---|
-| Letter Recognition | 0 | 2 | 4 |
-| Nikud (Vowel Diacritics) | 0 | 1 | 2 |
-| Syllable Decoding | 0 | 1 | 2 |
-| Word Reading | 0 | 1 | 2 |
+| Letter Recognition | 0 | 1 | 5 |
+| Nikud (Vowel Diacritics) | 0 | 1 | 3 |
+| Syllable Decoding | 0 | 1 | 3 |
+| Word Reading | 0 | 2 | 2 |
 | Word Building | 0 | 0 | 1 |
 | Sight Words / High Frequency | 0 | 0 | 1 |
-| Phrase & Sentence Reading | 0 | 0 | 4 |
-| Reading Comprehension | 0 | 0 | 4 |
+| Phrase & Sentence Reading | 0 | 1 | 4 |
+| Reading Comprehension | 0 | 1 | 4 |
 | Morphology (Light) | 0 | 0 | 1 |
-| Decodable Stories | 0 | 0 | 4 |
-| Educational Videos | 0 | 1 | 1 |
+| Decodable Stories | 0 | 1 | 4 |
+| Educational Videos | 0 | 2 | 1 |
 
 ## Features
+
+### Nikud Sound Ladder
+- **Status:** Delegated to FED Engineer 2 + Content Writer + Gaming Expert (Shipped)
+- **Spec:** `docs/games/nikud-sound-ladder.md`
+- **Reading Skill:** Nikud (Vowel Diacritics), Early Syllable Decoding
+- **Curriculum Position:** After letter-sound/confusable foundations and before shva-focused decoding and wider story transfer.
+- **Delegated Issue:** [DUB-700](/DUB/issues/DUB-700) (implementation, done), [DUB-701](/DUB/issues/DUB-701) (Hebrew i18n/audio, done), [DUB-702](/DUB/issues/DUB-702) (mechanics review, done)
+
+### Syllable Train Builder
+- **Status:** Delegated to FED Engineer 3 + Content Writer + Gaming Expert (In Progress)
+- **Spec:** `docs/games/syllable-train-builder.md`
+- **Reading Skill:** Syllable Decoding, Word Reading transfer
+- **Curriculum Position:** After foundational nikud mapping and before advanced shva work plus connected-text decodable lanes.
+- **Delegated Issue:** [DUB-703](/DUB/issues/DUB-703) (implementation, todo), [DUB-704](/DUB/issues/DUB-704) (Hebrew i18n/audio, done), [DUB-705](/DUB/issues/DUB-705) (mechanics review, done)
+
+### Decodable Story Missions
+- **Status:** Delegated to FED Engineer 2 + Content Writer + Gaming Expert (In Progress)
+- **Spec:** `docs/games/decodable-story-missions.md`
+- **Reading Skill:** Decodable Stories, Phrase & Sentence Reading, Reading Comprehension
+- **Curriculum Position:** After `decodable-micro-stories` baseline and before partially pointed long-form reading tracks.
+- **Delegated Issue:** [DUB-706](/DUB/issues/DUB-706) (implementation, in_progress), [DUB-707](/DUB/issues/DUB-707) (Hebrew i18n/audio, done), [DUB-708](/DUB/issues/DUB-708) (mechanics review, done)
+
+### Blend to Read Video Shorts
+- **Status:** Delegated to FED Engineer + Media Expert + Content Writer (In Progress)
+- **Spec:** `docs/games/blend-to-read-video-shorts.md`
+- **Reading Skill:** Educational Videos (blending transfer), Syllable Decoding support
+- **Curriculum Position:** Cross-track instructional support after letter-sound familiarity and before independent syllable/word decoding expectations.
+- **Delegated Issue:** [DUB-711](/DUB/issues/DUB-711) (runtime integration, in_progress), [DUB-709](/DUB/issues/DUB-709) (video composition, done), [DUB-710](/DUB/issues/DUB-710) (Hebrew script/audio, done)
 
 ### Letter Tracing Trail
 - **Status:** Delegated to FED Engineer (Shipped)
@@ -56,11 +84,11 @@ Track all reading games and features across their lifecycle.
 - **Delegated Issue:** [DUB-406](/DUB/issues/DUB-406) (implementation, done), [DUB-407](/DUB/issues/DUB-407) (Hebrew i18n/audio, done), [DUB-408](/DUB/issues/DUB-408) (mechanics review, done)
 
 ### Learn the Letters Storybook
-- **Status:** Delegated to FED Engineer 2 + Content Writer (In Progress)
+- **Status:** Delegated to FED Engineer 2 + Content Writer (Shipped)
 - **Spec:** `docs/games/letter-storybook.md`
 - **Reading Skill:** Letter Recognition (full 22-letter coverage + final-forms bridge)
 - **Curriculum Position:** After `letter-tracing-trail` + `letter-sound-match`, before confusable-transfer drills and broader decodable story tracks.
-- **Delegated Issue:** [DUB-657](/DUB/issues/DUB-657) (implementation, in_progress), [DUB-658](/DUB/issues/DUB-658) (Hebrew i18n/audio, in_progress)
+- **Delegated Issue:** [DUB-657](/DUB/issues/DUB-657) (implementation, done), [DUB-658](/DUB/issues/DUB-658) (Hebrew i18n/audio, done)
 
 ### Sofit Word-End Detective
 - **Status:** Delegated to FED Engineer 3 + Content Writer + Gaming Expert (In Progress)

@@ -8,6 +8,8 @@
     "build": "yarn images:pipeline && tsc -b && vite build && yarn generate:crawl-assets:dist && node ./scripts/generate-seo-route-html.mjs",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
+    "test:nikud-sound-ladder-prototype": "node --import tsx --test ./scripts/nikud-sound-ladder-prototype.test.mjs",
+    "test:aria-prohibited-hud": "node --test ./scripts/aria-prohibited-hud-regression.test.mjs",
     "test:touch-shell": "node --test ./scripts/touch-shell-regression.test.mjs",
     "test:protected-route-guard": "node --test ./scripts/protected-route-guard-smoke.test.mjs",
     "images:optimize": "node ./scripts/optimize-images.mjs",
@@ -32,6 +34,7 @@
     "@vitejs/plugin-react": "^4.4.0",
     "sharp": "^0.34.5",
     "typescript": "^5.7.0",
-    "vite": "^6.0.0"
+    "vite": "^6.0.0",
+    "vite-plugin-pwa": "^1.0.3"
   }
 }

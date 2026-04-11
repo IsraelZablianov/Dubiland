@@ -66,6 +66,36 @@ HEBREW_NUMBERS = {
     "10": "עשר",
 }
 
+BLEND_TO_READ_CLIP_BY_SUFFIX = {
+    ("narration", "intro"): "intro",
+    ("narration", "model"): "model-blend",
+    ("checkpoints", "one", "prompt"): "checkpoint-one",
+    ("checkpoints", "two", "prompt"): "checkpoint-two",
+    ("checkpoints", "three", "prompt"): "checkpoint-three",
+    ("narration", "recap"): "recap",
+    ("narration", "celebration"): "celebration",
+}
+
+
+def blend_to_read_episode_relative_path(key: str):
+    """Map blend-to-read episode scene keys to media-contract clip paths."""
+    segments = key.split(".")
+
+    if len(segments) < 7:
+        return None
+
+    if segments[0] != "common" or segments[1:4] != ["videos", "blendToRead", "episodes"]:
+        return None
+
+    episode_id = segments[4]
+    suffix = tuple(segments[5:])
+    clip = BLEND_TO_READ_CLIP_BY_SUFFIX.get(suffix)
+
+    if not clip:
+        return None
+
+    return os.path.join("videos", "blend-to-read", episode_id, f"{clip}.mp3")
+
 
 def load_audio_overrides() -> dict:
     """Load audio text overrides — keys where spoken text differs from display text."""
@@ -84,6 +114,10 @@ def to_kebab_case(value: str) -> str:
 
 
 def key_to_relative_path(key: str) -> str:
+    blend_to_read_path = blend_to_read_episode_relative_path(key)
+    if blend_to_read_path:
+        return blend_to_read_path
+
     segments = key.split(".")
     namespace = segments[0]
     key_segments = segments[1:] if namespace == "common" else segments

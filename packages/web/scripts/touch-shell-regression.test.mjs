@@ -80,6 +80,31 @@ test('touch token floor aliases remain defined', () => {
   assert.ok(primaryFloor >= 60, `Expected --touch-min-primary to be at least 60px, got ${primaryFloor}px`);
 });
 
+test('medium button size keeps child-primary touch floor', () => {
+  const buttonSource = read('src/components/design-system/Button.tsx');
+
+  assert.match(
+    buttonSource,
+    /minHeight:\s*'max\(var\(--touch-min-primary\), var\(--touch-min\)\)'/,
+    'Button size md should keep a child-primary min-height floor',
+  );
+  assert.match(
+    buttonSource,
+    /minWidth:\s*'max\(var\(--touch-min-primary\), var\(--touch-min\)\)'/,
+    'Button size md should keep a child-primary min-width floor',
+  );
+});
+
+test('child route scaffold promotes touch min to child-primary floor', () => {
+  const source = read('src/components/layout/ChildRouteLayout.tsx');
+
+  assert.match(
+    source,
+    /--touch-min'\]\s*=\s*'var\(--touch-min-primary\)'/,
+    'ChildRouteScaffold should raise touch-min to the child-primary floor for route content',
+  );
+});
+
 test('public header shell keeps touch-floor contract', () => {
   const headerSource = read('src/components/layout/PublicHeader.tsx');
   const logoBlock = extractCssBlock(headerSource, '.public-header__logo');
@@ -189,5 +214,21 @@ test('parent dashboard route avoids nested main landmarks in app shells', () => 
     source,
     /className="parent-dashboard__page"/,
     'ParentDashboard should render a neutral page container element',
+  );
+});
+
+test('legal routes avoid nested main landmarks in marketing shell', () => {
+  const termsSource = read('src/pages/Terms.tsx');
+  const privacySource = read('src/pages/Privacy.tsx');
+
+  assert.doesNotMatch(
+    termsSource,
+    /<main\b/,
+    'Terms page should not render a main landmark because MarketingShell already provides one',
+  );
+  assert.doesNotMatch(
+    privacySource,
+    /<main\b/,
+    'Privacy page should not render a main landmark because MarketingShell already provides one',
   );
 });

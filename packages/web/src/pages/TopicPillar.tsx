@@ -10,6 +10,7 @@ import {
   type TopicIllustrationSlug,
 } from '@/components/illustrations';
 import { useAudioManager } from '@/hooks/useAudioManager';
+import { ensureCommonNamespaceLoaded, hasCommonNamespaceLoaded } from '@/i18n';
 import { resolveAudioPathFromKey } from '@/lib/audioPathResolver';
 import type { RouteTopicSlug } from '@/lib/topicSlugMap';
 import type { PublishedTopicVideo } from '@/lib/videosRepository';
@@ -26,12 +27,12 @@ interface AudioIconButtonProps {
   onClick: () => void;
 }
 
-function resolveCommonAudioPath(rawKey: string): string {
-  return resolveAudioPathFromKey(rawKey, 'common');
+function resolveNamespacedAudioPath(rawKey: string, namespace: 'common' | 'public'): string {
+  return resolveAudioPathFromKey(rawKey, namespace);
 }
 
-function stripCommonNamespace(rawKey: string): string {
-  return rawKey.startsWith('common.') ? rawKey.slice('common.'.length) : rawKey;
+function stripNamespace(rawKey: string, namespace: 'common' | 'public'): string {
+  return rawKey.startsWith(`${namespace}.`) ? rawKey.slice(`${namespace}.`.length) : rawKey;
 }
 
 function AudioIconButton({ label, onClick }: AudioIconButtonProps) {
@@ -46,12 +47,8 @@ const TOPIC_CONFIG: Record<
   TopicSlug,
   {
     illustration: TopicIllustrationSlug;
-    labelKey: 'topics.letters' | 'topics.math' | 'topics.reading';
+    titleKey: 'landing.topicLettersTitle' | 'landing.topicMathTitle' | 'landing.topicReadingTitle';
     descriptionKey:
-      | 'topicDescriptions.letters'
-      | 'topicDescriptions.math'
-      | 'topicDescriptions.reading';
-    landingDescriptionKey:
       | 'landing.topicLettersDesc'
       | 'landing.topicMathDesc'
       | 'landing.topicReadingDesc';
@@ -59,21 +56,18 @@ const TOPIC_CONFIG: Record<
 > = {
   letters: {
     illustration: 'letters',
-    labelKey: 'topics.letters',
-    descriptionKey: 'topicDescriptions.letters',
-    landingDescriptionKey: 'landing.topicLettersDesc',
+    titleKey: 'landing.topicLettersTitle',
+    descriptionKey: 'landing.topicLettersDesc',
   },
   numbers: {
     illustration: 'numbers',
-    labelKey: 'topics.math',
-    descriptionKey: 'topicDescriptions.math',
-    landingDescriptionKey: 'landing.topicMathDesc',
+    titleKey: 'landing.topicMathTitle',
+    descriptionKey: 'landing.topicMathDesc',
   },
   reading: {
     illustration: 'reading',
-    labelKey: 'topics.reading',
-    descriptionKey: 'topicDescriptions.reading',
-    landingDescriptionKey: 'landing.topicReadingDesc',
+    titleKey: 'landing.topicReadingTitle',
+    descriptionKey: 'landing.topicReadingDesc',
   },
 };
 
@@ -120,13 +114,14 @@ export default function TopicPillar({ topic }: TopicPillarProps) {
   const [videos, setVideos] = useState<PublishedTopicVideo[]>([]);
   const [videoLoadStatus, setVideoLoadStatus] = useState<VideoLoadStatus>('idle');
   const [shouldLoadVideos, setShouldLoadVideos] = useState(false);
+  const [commonNamespaceReady, setCommonNamespaceReady] = useState(() => hasCommonNamespaceLoaded());
 
   const config = TOPIC_CONFIG[topic];
-  const getCommonText = useCallback((rawKey: string) => tCommon(stripCommonNamespace(rawKey) as any), [tCommon]);
+  const getCommonText = useCallback((rawKey: string) => tCommon(stripNamespace(rawKey, 'common') as any), [tCommon]);
 
-  const playCommonKeyAudio = useCallback(
-    (rawKey: string) => {
-      void audio.play(resolveCommonAudioPath(rawKey));
+  const playKeyAudio = useCallback(
+    (rawKey: string, namespace: 'common' | 'public') => {
+      void audio.play(resolveNamespacedAudioPath(rawKey, namespace));
     },
     [audio],
   );
@@ -171,9 +166,35 @@ export default function TopicPillar({ topic }: TopicPillarProps) {
   useEffect(() => {
     let active = true;
 
+    if (topic !== 'letters' || !shouldLoadVideos || commonNamespaceReady) {
+      return () => {
+        active = false;
+      };
+    }
+
+    void ensureCommonNamespaceLoaded().then(() => {
+      if (!active) return;
+      setCommonNamespaceReady(true);
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [commonNamespaceReady, shouldLoadVideos, topic]);
+
+  useEffect(() => {
+    let active = true;
+
     if (topic !== 'letters' || !shouldLoadVideos) {
       setVideos([]);
       setVideoLoadStatus('idle');
+      return () => {
+        active = false;
+      };
+    }
+
+    if (!commonNamespaceReady) {
+      setVideoLoadStatus('loading');
       return () => {
         active = false;
       };
@@ -197,10 +218,10 @@ export default function TopicPillar({ topic }: TopicPillarProps) {
     return () => {
       active = false;
     };
-  }, [shouldLoadVideos, topic]);
+  }, [commonNamespaceReady, shouldLoadVideos, topic]);
 
-  const lettersSeriesTitle = getCommonText('common.videos.lettersSeries.title');
-  const lettersSeriesSubtitle = getCommonText('common.videos.lettersSeries.subtitle');
+  const lettersSeriesTitle = tPublic('landing.topicLettersTitle');
+  const lettersSeriesSubtitle = tPublic('landing.topicLettersDesc');
   const genericError = getCommonText('common.errors.generic');
   const genericEmpty = getCommonText('common.games.empty');
 
@@ -212,9 +233,9 @@ export default function TopicPillar({ topic }: TopicPillarProps) {
             <span className="topic-pillar__icon" aria-hidden="true">
               <TopicIllustration topic={config.illustration} size={90} />
             </span>
-            <h1 className="topic-pillar__title">{tCommon(config.labelKey)}</h1>
-            <p className="topic-pillar__subtitle">{tCommon(config.descriptionKey)}</p>
-            <p className="topic-pillar__description">{tPublic(config.landingDescriptionKey)}</p>
+            <h1 className="topic-pillar__title">{tPublic(config.titleKey)}</h1>
+            <p className="topic-pillar__subtitle">{tPublic('landing.topicsSubtitle')}</p>
+            <p className="topic-pillar__description">{tPublic(config.descriptionKey)}</p>
             <div className="topic-pillar__actions">
               <Link to="/login">
                 <Button variant="primary" size="lg" style={TOPIC_MARKETING_CTA_STYLE}>
@@ -236,13 +257,13 @@ export default function TopicPillar({ topic }: TopicPillarProps) {
       </section>
 
       {topic === 'letters' && (
-        <section className="topic-pillar__section topic-pillar__section--letters-videos">
+        <section className="topic-pillar__section topic-pillar__section--letters-videos topic-pillar__section--deferred">
           <div className="topic-pillar__letters-series-header">
             <div className="topic-pillar__letters-series-row">
               <h2 className="topic-pillar__section-title">{lettersSeriesTitle}</h2>
               <AudioIconButton
                 label={lettersSeriesTitle}
-                onClick={() => playCommonKeyAudio('common.videos.lettersSeries.title')}
+                onClick={() => playKeyAudio('landing.topicLettersTitle', 'public')}
               />
             </div>
 
@@ -250,7 +271,7 @@ export default function TopicPillar({ topic }: TopicPillarProps) {
               <p className="topic-pillar__card-text">{lettersSeriesSubtitle}</p>
               <AudioIconButton
                 label={lettersSeriesSubtitle}
-                onClick={() => playCommonKeyAudio('common.videos.lettersSeries.subtitle')}
+                onClick={() => playKeyAudio('landing.topicLettersDesc', 'public')}
               />
             </div>
           </div>
@@ -274,14 +295,14 @@ export default function TopicPillar({ topic }: TopicPillarProps) {
           {videoLoadStatus === 'error' && (
             <Card padding="lg" className="topic-pillar__video-state-card">
               <p className="topic-pillar__card-text">{genericError}</p>
-              <AudioIconButton label={genericError} onClick={() => playCommonKeyAudio('common.errors.generic')} />
+              <AudioIconButton label={genericError} onClick={() => playKeyAudio('common.errors.generic', 'common')} />
             </Card>
           )}
 
           {videoLoadStatus === 'ready' && videos.length === 0 && (
             <Card padding="lg" className="topic-pillar__video-state-card">
               <p className="topic-pillar__card-text">{genericEmpty}</p>
-              <AudioIconButton label={genericEmpty} onClick={() => playCommonKeyAudio('common.games.empty')} />
+              <AudioIconButton label={genericEmpty} onClick={() => playKeyAudio('common.games.empty', 'common')} />
             </Card>
           )}
 
@@ -306,7 +327,7 @@ export default function TopicPillar({ topic }: TopicPillarProps) {
                     <div className="topic-pillar__video-copy">
                       <div className="topic-pillar__video-row">
                         <h3 className="topic-pillar__card-title">{videoTitle}</h3>
-                        <AudioIconButton label={videoTitle} onClick={() => playCommonKeyAudio(video.nameKey)} />
+                        <AudioIconButton label={videoTitle} onClick={() => playKeyAudio(video.nameKey, 'common')} />
                       </div>
 
                       {videoDescription && videoDescriptionKey && (
@@ -314,7 +335,7 @@ export default function TopicPillar({ topic }: TopicPillarProps) {
                           <p className="topic-pillar__card-text">{videoDescription}</p>
                           <AudioIconButton
                             label={videoDescription}
-                            onClick={() => playCommonKeyAudio(videoDescriptionKey)}
+                            onClick={() => playKeyAudio(videoDescriptionKey, 'common')}
                           />
                         </div>
                       )}
@@ -337,7 +358,7 @@ export default function TopicPillar({ topic }: TopicPillarProps) {
         </section>
       )}
 
-      <section className="topic-pillar__section">
+      <section className="topic-pillar__section topic-pillar__section--deferred">
         <h2 className="topic-pillar__section-title">{tPublic('landing.howTitle')}</h2>
         <div className="topic-pillar__steps">
           {HOW_STEPS.map((step, index) => (
@@ -353,7 +374,7 @@ export default function TopicPillar({ topic }: TopicPillarProps) {
         </div>
       </section>
 
-      <section className="topic-pillar__section topic-pillar__section--alt">
+      <section className="topic-pillar__section topic-pillar__section--alt topic-pillar__section--deferred">
         <h2 className="topic-pillar__section-title">{tPublic('landing.trustTitle')}</h2>
         <div className="topic-pillar__trust-grid">
           {TRUST_ITEMS.map((item) => (
@@ -381,6 +402,11 @@ export default function TopicPillar({ topic }: TopicPillarProps) {
           max-width: 1000px;
           margin: 0 auto;
           padding: var(--space-3xl) var(--space-xl);
+        }
+
+        .topic-pillar__section--deferred {
+          content-visibility: auto;
+          contain-intrinsic-size: 960px;
         }
 
         .topic-pillar__hero-grid {

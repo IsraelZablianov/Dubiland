@@ -1,0 +1,82 @@
+[
+  {
+    "code": "aria-prohibited-attr",
+    "type": "error",
+    "typeCode": 1,
+    "message": "Elements must only use permitted ARIA attributes (https://dequeuniversity.com/rules/axe/4.11/aria-prohibited-attr?application=axeAPI)",
+    "context": "<div class=\"letter-tracing-trail__progress\" aria-label=\"משך משוער: 7 דקות\"><span class=\"letter-tracing-tra...</div>",
+    "selector": "#root > div > main > div > div > section > div > div > div:nth-child(2)",
+    "runner": "axe",
+    "runnerExtras": {
+      "description": "Ensure ARIA attributes are not prohibited for an element's role",
+      "impact": "serious",
+      "needsFurtherReview": false,
+      "help": "Elements must only use permitted ARIA attributes",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/aria-prohibited-attr?application=axeAPI"
+    }
+  },
+  {
+    "code": "aria-prohibited-attr",
+    "type": "error",
+    "typeCode": 1,
+    "message": "Elements must only use permitted ARIA attributes (https://dequeuniversity.com/rules/axe/4.11/aria-prohibited-attr?application=axeAPI)",
+    "context": "<span aria-label=\"מצוין!\" class=\"letter-tracing-trail__metric-pill \">⭐ 0</span>",
+    "selector": "#root > div > main > div > div > section > div > div > section > div:nth-child(1) > div > div > span:nth-child(1)",
+    "runner": "axe",
+    "runnerExtras": {
+      "description": "Ensure ARIA attributes are not prohibited for an element's role",
+      "impact": "serious",
+      "needsFurtherReview": true,
+      "help": "Elements must only use permitted ARIA attributes",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/aria-prohibited-attr?application=axeAPI"
+    }
+  },
+  {
+    "code": "aria-prohibited-attr",
+    "type": "error",
+    "typeCode": 1,
+    "message": "Elements must only use permitted ARIA attributes (https://dequeuniversity.com/rules/axe/4.11/aria-prohibited-attr?application=axeAPI)",
+    "context": "<span aria-label=\"רמת קושי\" class=\"letter-tracing-trail__metric-pill\">🎯 1</span>",
+    "selector": "#root > div > main > div > div > section > div > div > section > div:nth-child(1) > div > div > span:nth-child(2)",
+    "runner": "axe",
+    "runnerExtras": {
+      "description": "Ensure ARIA attributes are not prohibited for an element's role",
+      "impact": "serious",
+      "needsFurtherReview": true,
+      "help": "Elements must only use permitted ARIA attributes",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/aria-prohibited-attr?application=axeAPI"
+    }
+  },
+  {
+    "code": "aria-prohibited-attr",
+    "type": "error",
+    "typeCode": 1,
+    "message": "Elements must only use permitted ARIA attributes (https://dequeuniversity.com/rules/axe/4.11/aria-prohibited-attr?application=axeAPI)",
+    "context": "<span aria-label=\"להמשיך, אתה בדרך הנכונה!\" class=\"letter-tracing-trail__metric-pill\">0%</span>",
+    "selector": "#root > div > main > div > div > section > div > div > section > div:nth-child(1) > div > div > span:nth-child(3)",
+    "runner": "axe",
+    "runnerExtras": {
+      "description": "Ensure ARIA attributes are not prohibited for an element's role",
+      "impact": "serious",
+      "needsFurtherReview": true,
+      "help": "Elements must only use permitted ARIA attributes",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/aria-prohibited-attr?application=axeAPI"
+    }
+  },
+  {
+    "code": "aria-prohibited-attr",
+    "type": "error",
+    "typeCode": 1,
+    "message": "Elements must only use permitted ARIA attributes (https://dequeuniversity.com/rules/axe/4.11/aria-prohibited-attr?application=axeAPI)",
+    "context": "<span aria-label=\"הבא\" class=\"letter-tracing-trail__metric-pill\">1/8</span>",
+    "selector": "#root > div > main > div > div > section > div > div > section > div:nth-child(1) > div > div > span:nth-child(4)",
+    "runner": "axe",
+    "runnerExtras": {
+      "description": "Ensure ARIA attributes are not prohibited for an element's role",
+      "impact": "serious",
+      "needsFurtherReview": true,
+      "help": "Elements must only use permitted ARIA attributes",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/aria-prohibited-attr?application=axeAPI"
+    }
+  }
+]

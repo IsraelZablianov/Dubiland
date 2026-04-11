@@ -1,0 +1,69 @@
+$ npx --yes pa11y-ci --config /Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-685-qa2-20260411-144822/configs/about.pa11y-ci.config.json
+Running Pa11y on 1 URLs:
+ > http://127.0.0.1:4187/about - 7 errors
+
+Errors in http://127.0.0.1:4187/about:
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > section:nth-child(3) > div > div:nth-child(1) >
+   p)
+
+   <p class="about__family-card-text">דובילנד נבנתה עבור יהונתן ושי ז...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > section:nth-child(3) > div > div:nth-child(2) >
+   p)
+
+   <p class="about__family-card-text">דובילנד פתוחה לגמרי בחינם לכל מ...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.24:1. Recommendation:  change text colour to #030200.
+
+   (#root > div > main > div > section:nth-child(4) > p)
+
+   <p class="about__section-text">אנחנו מאמינים שלמידה צריכה להיו...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > section:nth-child(5) > div > div:nth-child(1) >
+   p)
+
+   <p class="about__approach-card-desc">כל פעילות בדובילנד היא משחק. יל...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > section:nth-child(5) > div > div:nth-child(2) >
+   p)
+
+   <p class="about__approach-card-desc">דובילנד לא מתורגמת — היא נכתבה ...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > section:nth-child(5) > div > div:nth-child(3) >
+   p)
+
+   <p class="about__approach-card-desc">כל משחק מותאם לגילאי 3-7 עם רמו...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > section:nth-child(5) > div > div:nth-child(4) >
+   p)
+
+   <p class="about__approach-card-desc">ללא פרסומות, ללא רכישות, ללא תו...</p>
+
+✘ 0/1 URLs passed

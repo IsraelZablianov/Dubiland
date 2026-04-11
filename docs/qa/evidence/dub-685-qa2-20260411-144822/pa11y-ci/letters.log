@@ -1,0 +1,118 @@
+$ npx --yes pa11y-ci --config /Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-685-qa2-20260411-144822/configs/letters.pa11y-ci.config.json
+Running Pa11y on 1 URLs:
+ > http://127.0.0.1:4187/letters - 12 errors
+
+Errors in http://127.0.0.1:4187/letters:
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.24:1. Recommendation:  change text colour to #030200.
+
+   (#root > div > main > div > section:nth-child(1) > div > div:nth-child(1) >
+   p:nth-child(4))
+
+   <p class="topic-pillar__description">הכרת האלף-בית, צלילי אותיות, כת...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 3:1, but text in this element has a contrast
+   ratio of 2.31:1. Recommendation:  change background to #e7742a.
+
+   (#root > div > main > div > section:nth-child(1) > div > div:nth-child(1) >
+   div > a:nth-child(1) > button)
+
+   <button style="display: inline-flex; align-items: center; justify-content:
+   center; gap: var(--space-sm); font-family: var(--font-family-primary);
+   font-weight: var(--font-weight-bold); line-height: var(--line-height-tight);
+   transition: var(--transitio...
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.24:1. Recommendation:  change text colour to #030200.
+
+   (#root > div > main > div > section:nth-child(2) > div > div:nth-child(2) >
+   p)
+
+   <p class="topic-pillar__card-text">נכיר אותיות, נתרגל צלילים ונחגו...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 2.31:1. Recommendation:  change background to #c65309.
+
+   (#root > div > main > div > section:nth-child(3) > div > div:nth-child(1) >
+   div > span:nth-child(1))
+
+   <span class="topic-pillar__step-number">1</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > section:nth-child(3) > div > div:nth-child(1) >
+   p)
+
+   <p class="topic-pillar__card-text">צרו חשבון משפחתי תוך דקה והוסיפ...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 2.31:1. Recommendation:  change background to #c65309.
+
+   (#root > div > main > div > section:nth-child(3) > div > div:nth-child(2) >
+   div > span:nth-child(1))
+
+   <span class="topic-pillar__step-number">2</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > section:nth-child(3) > div > div:nth-child(2) >
+   p)
+
+   <p class="topic-pillar__card-text">הילדים בוחרים מה ללמוד — אותיות...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 2.31:1. Recommendation:  change background to #c65309.
+
+   (#root > div > main > div > section:nth-child(3) > div > div:nth-child(3) >
+   div > span:nth-child(1))
+
+   <span class="topic-pillar__step-number">3</span>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > section:nth-child(3) > div > div:nth-child(3) >
+   p)
+
+   <p class="topic-pillar__card-text">דובי מלווה את הילדים במשחקים שמ...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > section:nth-child(4) > div > div:nth-child(1) >
+   p)
+
+   <p class="topic-pillar__card-text">ללא פרסומות, ללא רכישות מתוך הא...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > section:nth-child(4) > div > div:nth-child(2) >
+   p)
+
+   <p class="topic-pillar__card-text">נבנה מהיסוד בעברית — לא תרגום מ...</p>
+
+ • This element has insufficient contrast at this conformance level. Expected a
+   contrast ratio of at least 4.5:1, but text in this element has a contrast
+   ratio of 4.49:1. Recommendation:  change text colour to #8a7254.
+
+   (#root > div > main > div > section:nth-child(4) > div > div:nth-child(3) >
+   p)
+
+   <p class="topic-pillar__card-text">רמת קושי מותאמת, מעקב התקדמות ו...</p>
+
+✘ 0/1 URLs passed

@@ -1,6 +1,6 @@
 # Dubiland Hebrew Keyword Research
 
-*Owner: SEO Expert | Reviewer: CMO | Last updated: 2026-04-09*
+*Owner: SEO Expert | Reviewer: CMO | Last updated: 2026-04-11*
 
 ## Scope and Method
 
@@ -124,6 +124,31 @@ Ship these first as primary targets for parent-facing pages and metadata:
 | Home learning activities | `/parents/home-learning-activities` | `פעילויות לילדים בבית` | Expands top-of-funnel parent queries and supports internal links to games. |
 | Screen-time guidance | `/parents/screen-time` | `זמן מסך לילדים` | High trust/E-E-A-T opportunity for conversion-adjacent parent intent. |
 | Reading support FAQ | `/parents/faq/reading-support` | `לימוד קריאה לילדים מתקשים` | Problem-solving query with high AI citation potential in FAQ format. |
+
+## DUB-689 Expansion Set (New Game Topics, 2026-04-11)
+
+Data capture used in this heartbeat:
+
+- Bing SERP-size (`sb_count`) as demand/competition proxy.
+- Google Suggest (Hebrew locale) to validate live query phrasing variants.
+- Runtime note: Google Trends API was rate-limited (`HTTP 429`) in this heartbeat, so this set is proxy-validated and should be finalized against monthly-volume tooling when available.
+
+| Priority | Keyword (Hebrew) | Bing SERP-size | Google Suggest signals | Suggested URL target | Topic cluster |
+|----------|-------------------|----------------|------------------------|----------------------|---------------|
+| P1 | `לימוד צבעים לילדים` | 33,700 | 8 suggestions | `/games/colors/color-garden` | Colors |
+| P1 | `לימוד צורות לילדים` | 112,000 | 1 suggestion | `/games/numbers/shape-safari` (or `/games/shapes`) | Shapes |
+| P1 | `הבנת הנקרא לכיתה א` | 84,000 | 8 suggestions | `/reading/reading-comprehension-grade-1` | Reading comprehension |
+| P1 | `משחקי חריזה לילדים` | 162,000 | 1 suggestion | `/games/reading/rhyme-games` | Phonological awareness |
+| P1 | `השוואת כמויות לילדים` | 10,800 | 0 suggestions | `/games/numbers/more-or-less-market` | Numeracy comparison |
+| P2 | `קריאה מנוקדת לילדים` | 1,140,000 | 0 suggestions | `/reading/nikud-reading` | Nikud reading |
+| P2 | `לימוד שורשים בעברית` | 3,010 | 1 suggestion | `/games/reading/root-family-stickers` | Hebrew morphology |
+| P2 | `אותיות סופיות לילדים` | 55 | 1 suggestion | `/games/letters/final-forms` | Final letters |
+
+Execution order recommendation:
+
+1. Start with the first three P1 targets (`colors`, `shapes`, `grade-1 reading comprehension`) because they combine clear demand signals with direct mapping to Dubiland gameplay/current roadmap surfaces.
+2. Add one FAQ block per new page and keep answer-first intro paragraphs at 40-60 words to improve GEO extractability and citation potential.
+3. Route all new pages through canonical + schema QA before launch (`FAQPage` where FAQ is present, plus breadcrumb/internal links from `/letters`, `/numbers`, `/reading`, `/parents`).
 
 ## Handoff to Content Writer + FED
 

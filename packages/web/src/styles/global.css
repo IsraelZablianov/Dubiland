@@ -30,6 +30,18 @@ button {
   font-family: inherit;
 }
 
+.sr-only {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
 .animated-page {
   animation: var(--motion-page-transition-in);
   animation-delay: var(--animated-page-delay, 0ms);

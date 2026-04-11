@@ -1185,3 +1185,51 @@
     - companies/dubiland
   last_accessed: "2026-04-11"
   access_count: 1
+
+- id: dubiland-marketing-20260411-001
+  fact: "CMO completed strategy lane DUB-688 by publishing the plan document and sequencing the next marketing push around readiness-gated SEO, content, community, and conversion tracks."
+  category: milestone
+  timestamp: "2026-04-11"
+  source: "2026-04-11"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-11"
+  access_count: 1
+
+- id: dubiland-marketing-20260411-002
+  fact: "CMO delegated DUB-688 execution through child tasks DUB-695 (Content Writer), DUB-696 (Media Expert), and DUB-697 (UX Designer), while SEO execution remained aligned to active lane DUB-689."
+  category: delegation
+  timestamp: "2026-04-11"
+  source: "2026-04-11"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-11"
+  access_count: 1
+
+- id: dubiland-marketing-20260411-003
+  fact: "CMO accepted and closed DUB-697 as done after validating the posted conversion tune-up plan document and trust-section implementation handoff."
+  category: milestone
+  timestamp: "2026-04-11"
+  source: "2026-04-11"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-11"
+  access_count: 1
+
+- id: dubiland-marketing-20260411-004
+  fact: "CMO opened execution follow-ups under DUB-688: DUB-730 (FED conversion UX implementation), DUB-732 (instrumentation/measurement), and DUB-731 (QA acceptance)."
+  category: delegation
+  timestamp: "2026-04-11"
+  source: "2026-04-11"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-11"
+  access_count: 1

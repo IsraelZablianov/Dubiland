@@ -1,0 +1,5 @@
+{
+  "standard": "WCAG2AA",
+  "timeout": 120000,
+  "wait": 250
+}

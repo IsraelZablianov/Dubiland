@@ -13,6 +13,35 @@ Learning-focused changelog maintained by the Children Learning PM. Record game s
 
 ---
 
+### 2026-04-11 — Age-Band Progression and Curriculum-Fit Review Delivered to DUB-674
+- Delivered age-band review artifact `docs/children-learning-pm/age-band-progression-curriculum-fit-review-2026-04-11.md` from [DUB-693](/DUB/issues/DUB-693), covering 3-4, 4-5, 5-6, and 6-7 progression fit.
+- Posted parent-lane recommendations on [DUB-674](/DUB/issues/DUB-674#comment-7e79b5d7-4981-4fea-a537-7c49e873b3f4) with:
+  - prioritized gap closure order (subtraction, number bonds, time/routine transfer),
+  - wave-based rollout plan (quick wins -> delegated depth lanes -> next-wave backlog),
+  - explicit de-dup alignment with [DUB-692](/DUB/issues/DUB-692) to avoid duplicate implementation tickets.
+- Locked execution source-of-truth for math depth to existing delegated lanes:
+  - [DUB-694](/DUB/issues/DUB-694)
+  - [DUB-698](/DUB/issues/DUB-698)
+  - [DUB-699](/DUB/issues/DUB-699)
+- Learning areas affected: Numbers (מספרים), cross-curriculum time/sequence readiness, progression continuity across ages 3-7.
+
+### 2026-04-11 — Math Depth Spec Pack Authored and Directly Delegated (DUB-676)
+- Completed math/early-skills progression review artifact at `docs/children-learning-pm/math-early-skills-objectives-2026-04-11.md` under [DUB-676](/DUB/issues/DUB-676), with updated objective mapping and next-wave idea backlog.
+- Authored three new gap-closure game specs:
+  - `docs/games/subtraction-street.md`
+  - `docs/games/build-10-workshop.md`
+  - `docs/games/time-and-routine-builder.md`
+- Created direct implementation lanes and assigned ownership with load-aware FED balancing:
+  - Subtraction Street -> FED Engineer ([DUB-694](/DUB/issues/DUB-694))
+  - Build-10 Workshop -> FED Engineer 2 ([DUB-698](/DUB/issues/DUB-698))
+  - Time-and-Routine Builder -> FED Engineer ([DUB-699](/DUB/issues/DUB-699))
+- Updated `docs/children-learning-pm/features.md`:
+  - moved the three P0 math-gap items from Planned to In Progress with delegated status links.
+  - refreshed curriculum coverage for Numbers and added a dedicated Time & Sequence coverage row.
+  - added next-wave planned idea rows (Pattern Train, Measure and Match, Money Market Mini).
+- Delegation gate check completed: no newly finalized specs remain in non-delegated or "not yet handed off" state.
+- Learning areas affected: Numbers (מספרים), cross-curriculum math transfer (זמן וסדר יום), early logic sequencing.
+
 ### 2026-04-11 — Letter Storybook Pedagogy and Sequencing Gates Validated
 - Delivered `docs/children-learning-pm/letter-storybook-pedagogy-validation-2026-04-11.md` under [DUB-652](/DUB/issues/DUB-652) to validate the new "Learn the Letters" storybook program ([DUB-647](/DUB/issues/DUB-647)).
 - Locked required constraints for spec sign-off in [DUB-651](/DUB/issues/DUB-651):

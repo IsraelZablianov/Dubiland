@@ -317,6 +317,73 @@ test('magic-letter-map legacy chooseWordByNikud interaction falls back to locali
     mergedPage.interaction.retryKey,
     'games.interactiveHandbook.handbooks.magicLetterMap.interactions.decodePointedWord.retry',
   );
+  assert.equal(mergedPage.interaction.required, true, 'alias-aware fallback choices should keep interaction required');
+  assert.equal(mergedPage.interaction.choices.length, 3, 'alias-aware fallback should provide actionable choices');
+  assert.equal(mergedPage.interaction.choices[0]?.id, 'gan');
+});
+
+test('magic-letter-map confusable-contrast shorthand success key normalizes to localized choose-letter key', () => {
+  const basePages = [
+    {
+      id: 'p06',
+      narrationKey: 'games.interactiveHandbook.handbooks.magicLetterMap.pages.p06.narration',
+      promptKey: 'games.interactiveHandbook.handbooks.magicLetterMap.pages.p06.prompt',
+      interaction: undefined,
+    },
+  ];
+
+  const runtimeContent = {
+    pages: [
+      {
+        pageId: 'p06',
+        pageNumber: 6,
+        layoutKind: 'picture_book',
+        narrationKey: 'games.interactiveHandbook.handbooks.magicLetterMap.pages.p06.narration',
+        estimatedReadSec: 45,
+        blocks: [],
+        interactions: [
+          {
+            id: 'confusableContrast',
+            required: true,
+            promptKey: null,
+            hintKey: null,
+            successKey: 'confusableContrast.success',
+            retryKey: null,
+            isScored: false,
+            requiresTextActionBeforeChoice: false,
+            allowImageBeforeAnswer: true,
+            choiceLockUntilTextAction: false,
+            hintTriggerByBand: {},
+            maxChoicesByBand: {},
+            choices: [],
+          },
+        ],
+      },
+    ],
+    mediaAssets: [],
+  };
+
+  const [mergedPage] = mergeRuntimePageDefinitions(basePages, runtimeContent, 'magicLetterMap');
+  assert.ok(mergedPage?.interaction, 'expected runtime interaction to be merged');
+  assert.equal(
+    mergedPage.interaction.promptKey,
+    'games.interactiveHandbook.handbooks.magicLetterMap.interactions.chooseLetter.prompt',
+  );
+  assert.equal(
+    mergedPage.interaction.hintKey,
+    'games.interactiveHandbook.handbooks.magicLetterMap.interactions.chooseLetter.hint',
+  );
+  assert.equal(
+    mergedPage.interaction.successKey,
+    'games.interactiveHandbook.handbooks.magicLetterMap.interactions.chooseLetter.success',
+  );
+  assert.equal(
+    mergedPage.interaction.retryKey,
+    'games.interactiveHandbook.handbooks.magicLetterMap.interactions.chooseLetter.retry',
+  );
+  assert.equal(mergedPage.interaction.required, true, 'alias-aware fallback choices should keep interaction required');
+  assert.equal(mergedPage.interaction.choices.length, 3, 'alias-aware fallback should provide actionable choices');
+  assert.equal(mergedPage.interaction.choices[0]?.id, 'pe');
 });
 
 test('magic-letter-map runtime-only final-page interaction stays optional for deterministic completion transition', () => {

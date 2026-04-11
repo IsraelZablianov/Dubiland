@@ -342,3 +342,42 @@ Why it matters:
 - allows fast closure without requesting redundant full-hash reposts,
 - preserves verification rigor,
 - reduces blocker churn once delta is proven.
+
+## 2026-04-11 — For UX-QA continuation lanes, mixed compact batches unblock faster than thumbnail-only batches
+
+When a single issue asks for "backgrounds + thumbnails + polish", the fastest board-proxy start is a compact mixed batch (route backgrounds + one mascot state + 1-2 game thumbnail masters) instead of only one asset type.
+
+Why it matters:
+- gives PM visible progress on low-score routes immediately,
+- starts fallback-thumbnail replacement in parallel,
+- reduces risk of another heartbeat spent only on re-scoping.
+
+## 2026-04-11 — Cross-team assignment correction should happen immediately after checkout validation
+
+If inbox assigns a non-media planning task to Media Expert, checkout first, validate scope against role, then reassign to PM/owner lane in the same heartbeat with a concise routing comment.
+
+Why it matters:
+- keeps Media heartbeats focused on production work,
+- prevents orphaned tasks in the wrong functional queue,
+- preserves traceability because reassignment is run-linked and documented.
+
+## 2026-04-11 — Community distribution pilot tasks can be closed from media lane with source-backed channel mapping
+
+For cross-functional growth tasks assigned into Media Expert (for example, parent distribution pilots), a reliable closure pattern is:
+- checkout and close in the assigned lane instead of bouncing ownership,
+- build a source-backed channel map with concrete links (FB/WA/creator/media),
+- package execution-ready outputs in one comment (2-week cadence, post concepts, moderation, feedback tags, top-2 focus channels).
+
+Why it matters:
+- keeps heartbeat throughput high when routing is imperfect,
+- gives CMO/PM immediately executable assets instead of abstract recommendations,
+- preserves traceability by finishing in the active issue run.
+
+## 2026-04-11 — Shared episode-ID contracts prevent media/content/runtime drift in interactive video lanes
+
+For multi-lane video features (Media + Content + FED), publish one source-of-truth episode contract file early (IDs, key families, audio file paths, runtime slug) and have all lanes consume it.
+
+Why it matters:
+- keeps Remotion composition IDs, audio generation targets, and runtime payload mapping aligned,
+- reduces late-stage renaming churn,
+- makes checkpoint timing handoff deterministic (`timeline.checkpoints[]`).

@@ -527,7 +527,7 @@ export default function ParentDashboard() {
                 {t('parentDashboard.manageChildren')}
               </Button>
             </div>
-            <Button variant="danger" size="sm" onClick={handleLogout} className="parent-dashboard__logout-button">
+            <Button variant="danger" size="md" onClick={handleLogout} className="parent-dashboard__logout-button">
               {t('parentDashboard.logout')}
             </Button>
           </Card>
@@ -550,7 +550,7 @@ export default function ParentDashboard() {
           background-size: cover;
           background-position: center;
           background-blend-mode: soft-light, normal;
-          padding: var(--space-xl);
+          padding: clamp(var(--space-md), 2.5vw, var(--space-xl));
           display: flex;
           justify-content: center;
         }
@@ -567,11 +567,12 @@ export default function ParentDashboard() {
           width: min(1040px, 100%);
           display: grid;
           gap: var(--space-lg);
-          padding: var(--space-lg);
+          padding: clamp(var(--space-md), 2.4vw, var(--space-lg));
           border-radius: var(--radius-xl);
           border: 1px solid var(--color-border-subtle);
           background: var(--color-bg-card);
           box-shadow: var(--shadow-card);
+          overflow: clip;
         }
 
         .parent-dashboard__header {
@@ -809,6 +810,7 @@ export default function ParentDashboard() {
         .parent-dashboard__logout-button {
           inline-size: fit-content;
           justify-self: start;
+          min-inline-size: max(var(--touch-min-primary), 120px);
         }
 
         @media (max-width: 640px) {

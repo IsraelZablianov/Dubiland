@@ -1,0 +1,61 @@
+{
+  "generated_at": "2026-04-11T12:49:27.041Z",
+  "routes": [
+    {
+      "key": "root",
+      "route": "/",
+      "performance": 98,
+      "fcp_ms": 1831,
+      "lcp_ms": 2003,
+      "cls": 0,
+      "tbt_ms": 0,
+      "transfer_bytes": 128633,
+      "script_transfer_bytes": 117865,
+      "lcp_element_selector": "main.marketing-shell__content > div.landing > section#topics > h2.landing__section-title",
+      "lcp_element_label": "מה לומדים בדובילנד?",
+      "lcp_element_snippet": "<h2 class=\"landing__section-title\">"
+    },
+    {
+      "key": "letters",
+      "route": "/letters",
+      "performance": 98,
+      "fcp_ms": 1824,
+      "lcp_ms": 2147,
+      "cls": 0,
+      "tbt_ms": 51,
+      "transfer_bytes": 127702,
+      "script_transfer_bytes": 119606,
+      "lcp_element_selector": "section.topic-pillar__hero > div.topic-pillar__hero-grid > div.topic-pillar__hero-copy > p.topic-pillar__subtitle",
+      "lcp_element_label": "שלושה נושאי לימוד מרכזיים שמכסים את הבסיס ללימודי בית ספר",
+      "lcp_element_snippet": "<p class=\"topic-pillar__subtitle\">"
+    },
+    {
+      "key": "parents",
+      "route": "/parents",
+      "performance": 98,
+      "fcp_ms": 1826,
+      "lcp_ms": 1997,
+      "cls": 0,
+      "tbt_ms": 0,
+      "transfer_bytes": 125055,
+      "script_transfer_bytes": 116959,
+      "lcp_element_selector": "main.marketing-shell__content > div.parents > section.parents__hero > p.parents__hero-text",
+      "lcp_element_label": "כל מה שצריך לדעת כדי להתחיל עם דובילנד",
+      "lcp_element_snippet": "<p class=\"parents__hero-text\">"
+    },
+    {
+      "key": "parents-faq",
+      "route": "/parents/faq",
+      "performance": 98,
+      "fcp_ms": 1829,
+      "lcp_ms": 2000,
+      "cls": 0,
+      "tbt_ms": 0,
+      "transfer_bytes": 123028,
+      "script_transfer_bytes": 114932,
+      "lcp_element_selector": "section.parents-faq__content > div.parents-faq__list > div.parents-faq__item > p.parents-faq__answer",
+      "lcp_element_label": "לא! כל ההוראות והטקסטים מושמעים. דובילנד מתאימה גם לילדים שעדיין לא קוראים.",
+      "lcp_element_snippet": "<p class=\"parents-faq__answer\">"
+    }
+  ]
+}

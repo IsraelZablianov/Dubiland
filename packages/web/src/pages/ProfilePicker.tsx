@@ -9,7 +9,9 @@ import { useAudioManager } from '@/hooks/useAudioManager';
 import { useAuth } from '@/hooks/useAuth';
 import { resolveAudioPathFromKey } from '@/lib/audioPathResolver';
 import { childAvatarToEmoji } from '@/lib/childAvatarEmoji';
+import { resolveAgeBandFromBirthDate, type ChildAgeBand } from '@/lib/concurrentChoiceLimit';
 import { loadSupabaseRuntime } from '@/lib/loadSupabaseRuntime';
+import { trackParentFunnelEvent } from '@/lib/parentFunnelInstrumentation';
 import {
   getActiveChildProfile,
   isGuestModeEnabled,
@@ -39,7 +41,58 @@ function resolveProfileSelectionAudioKey(profile: ActiveChildProfile): string {
 }
 
 type PickerState = 'ftue_collapsed' | 'ftue_expanded_demo' | 'profile_selected';
+type AgeBandLabelKey =
+  | 'contentFilters.age.band.3_4'
+  | 'contentFilters.age.band.4_5'
+  | 'contentFilters.age.band.5_6'
+  | 'contentFilters.age.band.6_7';
+
 const NAVIGATION_AUDIO_LEAD_MS = 140;
+const AGE_BAND_OPTIONS: ReadonlyArray<{ value: ChildAgeBand; labelKey: AgeBandLabelKey }> = [
+  { value: '3-4', labelKey: 'contentFilters.age.band.3_4' },
+  { value: '4-5', labelKey: 'contentFilters.age.band.4_5' },
+  { value: '5-6', labelKey: 'contentFilters.age.band.5_6' },
+  { value: '6-7', labelKey: 'contentFilters.age.band.6_7' },
+];
+
+interface HostedChildProfileRow {
+  id: string;
+  name: string;
+  avatar: string | null;
+  birth_date: string | null;
+}
+
+function isChildAgeBand(value: string): value is ChildAgeBand {
+  return value === '3-4' || value === '4-5' || value === '5-6' || value === '6-7';
+}
+
+function toAgeBandLabelKey(ageBand: ChildAgeBand): AgeBandLabelKey {
+  if (ageBand === '3-4') return 'contentFilters.age.band.3_4';
+  if (ageBand === '4-5') return 'contentFilters.age.band.4_5';
+  if (ageBand === '5-6') return 'contentFilters.age.band.5_6';
+  return 'contentFilters.age.band.6_7';
+}
+
+function toBirthDateFromAgeBand(ageBand: ChildAgeBand, now: Date = new Date()): string {
+  const yearsByBand: Record<ChildAgeBand, number> = {
+    '3-4': 4,
+    '4-5': 5,
+    '5-6': 6,
+    '6-7': 7,
+  };
+  const birthYear = now.getUTCFullYear() - yearsByBand[ageBand];
+  const birthDate = new Date(Date.UTC(birthYear, 0, 1));
+  return birthDate.toISOString().slice(0, 10);
+}
+
+function toHostedActiveProfile(row: HostedChildProfileRow): ActiveChildProfile {
+  return {
+    id: row.id,
+    name: row.name,
+    emoji: childAvatarToEmoji(row.avatar),
+    ageBand: resolveAgeBandFromBirthDate(row.birth_date) ?? undefined,
+  };
+}
 
 export default function ProfilePicker() {
   const { t } = useTranslation('common');
@@ -102,9 +155,21 @@ export default function ProfilePicker() {
   const [childrenLoading, setChildrenLoading] = useState(false);
   const [childrenError, setChildrenError] = useState('');
   const [newChildName, setNewChildName] = useState('');
+  const [newChildAgeBand, setNewChildAgeBand] = useState<ChildAgeBand>('3-4');
   const [addBusy, setAddBusy] = useState(false);
   const [addError, setAddError] = useState('');
   const [childrenReloadNonce, setChildrenReloadNonce] = useState(0);
+
+  const handleNewChildAgeBandChange = useCallback(
+    (value: string) => {
+      if (!isChildAgeBand(value)) {
+        return;
+      }
+      setNewChildAgeBand(value);
+      playCommonAudioNow(toAgeBandLabelKey(value));
+    },
+    [playCommonAudioNow],
+  );
 
   useEffect(() => {
     if (!useHostedChildProfiles) {
@@ -129,7 +194,7 @@ export default function ProfilePicker() {
 
       const { data, error } = await supabase
         .from('children')
-        .select('id, name, avatar')
+        .select('id, name, avatar, birth_date')
         .order('created_at', { ascending: true });
 
       if (cancelled) return;
@@ -140,13 +205,7 @@ export default function ProfilePicker() {
         return;
       }
 
-      setDbProfiles(
-        (data ?? []).map((row) => ({
-          id: row.id,
-          name: row.name,
-          emoji: childAvatarToEmoji(row.avatar),
-        })),
-      );
+      setDbProfiles((data ?? []).map((row) => toHostedActiveProfile(row)));
     })();
 
     return () => {
@@ -195,9 +254,25 @@ export default function ProfilePicker() {
 
   const handleContinue = useCallback(() => {
     if (!selectedProfile) return;
+
+    trackParentFunnelEvent('profile_entry_completed', {
+      sourcePath: '/profiles',
+      targetPath: '/games',
+      entryMethod: useHostedChildProfiles ? 'authenticated_profile_continue' : 'guest_profile_continue',
+      authMode: useHostedChildProfiles ? 'authenticated' : 'guest',
+      metadata: {
+        selectedProfileId: selectedProfile.id,
+        selectedProfileType: useHostedChildProfiles
+          ? 'hosted_child'
+          : selectedProfile.id === 'guest'
+            ? 'guest'
+            : 'demo_profile',
+      },
+    });
+
     setActiveChildProfile(selectedProfile);
     navigateWithLeadAudio('/games', 'profile.continue');
-  }, [navigateWithLeadAudio, selectedProfile]);
+  }, [navigateWithLeadAudio, selectedProfile, useHostedChildProfiles]);
 
   const handleAddChild = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -221,8 +296,13 @@ export default function ProfilePicker() {
     }
     const ins = await supabase
       .from('children')
-      .insert({ family_id: fam.id, name, avatar: 'bear' })
-      .select('id, name, avatar')
+      .insert({
+        family_id: fam.id,
+        name,
+        avatar: 'bear',
+        birth_date: toBirthDateFromAgeBand(newChildAgeBand),
+      })
+      .select('id, name, avatar, birth_date')
       .single();
 
     if (ins.error || !ins.data) {
@@ -231,14 +311,11 @@ export default function ProfilePicker() {
       return;
     }
 
-    const profile: ActiveChildProfile = {
-      id: ins.data.id,
-      name: ins.data.name,
-      emoji: childAvatarToEmoji(ins.data.avatar),
-    };
+    const profile = toHostedActiveProfile(ins.data);
     setDbProfiles((prev) => [...(prev ?? []), profile]);
     setSelectedProfileId(profile.id);
     setNewChildName('');
+    setNewChildAgeBand('3-4');
     setAddBusy(false);
   };
 
@@ -339,6 +416,33 @@ export default function ProfilePicker() {
                 fontFamily: 'var(--font-family-primary)',
               }}
             />
+            <label htmlFor="profile-picker-age-band-empty" style={{ display: 'grid', gap: 'var(--space-2xs)' }}>
+              <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
+                {t('contentFilters.age.title')}
+              </span>
+              <select
+                id="profile-picker-age-band-empty"
+                value={newChildAgeBand}
+                onChange={(event) => handleNewChildAgeBandChange(event.target.value)}
+                aria-label={t('contentFilters.age.title')}
+                style={{
+                  minHeight: 'var(--touch-min)',
+                  borderRadius: 'var(--radius-md)',
+                  border: '2px solid var(--color-bg-secondary)',
+                  padding: '0 var(--space-md)',
+                  fontSize: 'var(--font-size-md)',
+                  fontFamily: 'var(--font-family-primary)',
+                  background: 'var(--color-surface-primary)',
+                  color: 'var(--color-text-primary)',
+                }}
+              >
+                {AGE_BAND_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {t(option.labelKey)}
+                  </option>
+                ))}
+              </select>
+            </label>
             {addError ? (
               <p style={{ color: 'var(--color-accent-danger)', fontSize: 'var(--font-size-sm)' }}>{addError}</p>
             ) : null}
@@ -367,9 +471,7 @@ export default function ProfilePicker() {
         onSubmit={handleAddChild}
         style={{
           display: 'grid',
-          gridTemplateColumns: 'minmax(0, 1fr) auto',
           gap: 'var(--space-sm)',
-          alignItems: 'center',
         }}
       >
         <input
@@ -388,14 +490,50 @@ export default function ProfilePicker() {
             fontFamily: 'var(--font-family-primary)',
           }}
         />
-        <Button
-          variant="primary"
-          size="lg"
-          type="submit"
-          disabled={!newChildName.trim() || addBusy}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'minmax(0, 1fr) auto',
+            gap: 'var(--space-sm)',
+            alignItems: 'end',
+          }}
         >
-          {t('profile.addChild')}
-        </Button>
+          <label htmlFor="profile-picker-age-band-inline" style={{ display: 'grid', gap: 'var(--space-2xs)' }}>
+            <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
+              {t('contentFilters.age.title')}
+            </span>
+            <select
+              id="profile-picker-age-band-inline"
+              value={newChildAgeBand}
+              onChange={(event) => handleNewChildAgeBandChange(event.target.value)}
+              aria-label={t('contentFilters.age.title')}
+              style={{
+                minHeight: 'var(--touch-min)',
+                borderRadius: 'var(--radius-md)',
+                border: '2px solid var(--color-bg-secondary)',
+                padding: '0 var(--space-md)',
+                fontSize: 'var(--font-size-md)',
+                fontFamily: 'var(--font-family-primary)',
+                background: 'var(--color-surface-primary)',
+                color: 'var(--color-text-primary)',
+              }}
+            >
+              {AGE_BAND_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {t(option.labelKey)}
+                </option>
+              ))}
+            </select>
+          </label>
+          <Button
+            variant="primary"
+            size="lg"
+            type="submit"
+            disabled={!newChildName.trim() || addBusy}
+          >
+            {t('profile.addChild')}
+          </Button>
+        </div>
       </form>
       {addError ? (
         <p style={{ color: 'var(--color-accent-danger)', fontSize: 'var(--font-size-sm)' }}>{addError}</p>

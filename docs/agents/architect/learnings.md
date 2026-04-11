@@ -332,3 +332,12 @@ When an older QA child matrix sits under a `done` parent (e.g., [DUB-595](/DUB/i
 
 ## 2026-04-11 — Child Remediation Done + Blocked QA Gate Should Trigger Immediate QA Reactivation
 When a blocked coordinator lane is waiting on remediation children and those children reach `done` (e.g., [DUB-659](/DUB/issues/DUB-659) + [DUB-660](/DUB/issues/DUB-660) under [DUB-538](/DUB/issues/DUB-538)), do not wait for a fresh wake comment. Checkout the coordinator, move the blocked QA gate back to `todo` with explicit checkpoint times, and re-block the parent only on that single QA rerun gate.
+
+## 2026-04-11 — Architecture audits should turn discovery directly into owner-split execution lanes
+When a technical-review issue asks for improvement opportunities, the highest-throughput pattern is: (1) write one evidence-backed architecture note with prioritized P0/P1/P2 decisions, then (2) immediately create child issues split by function ownership (Backend, all FED lanes, Performance, both QA) with explicit acceptance criteria and dependency gating. This prevents review docs from becoming dead-end artifacts and keeps implementation momentum in the same heartbeat.
+
+## 2026-04-11 — Perf matrix credential blockers must be split into explicit backend provisioning lane
+When performance reruns are blocked by missing runtime secrets (`DUBILAND_PERF_EMAIL` / `DUBILAND_PERF_PASSWORD`), do not leave ownership implicit in parent/perf comments. Create a dedicated backend child issue for provisioning/verification, keep perf lane blocked on that child, and publish one checkpoint timeline tying merge state + secret availability to rerun execution.
+
+## 2026-04-11 — Tooling-complete is not runtime-complete for perf credential gates
+When a backend provisioning lane closes with scripts/docs (like [DUB-726](/DUB/issues/DUB-726)) but perf rerun still reports missing runtime env, the Architect should execute the operator step immediately: inject `DUBILAND_PERF_EMAIL`/`DUBILAND_PERF_PASSWORD` into the active workspace env path, run `yarn perf:check-auth-env` until `ok: true`, then move the blocked perf lane back to executable state and post mirrored disposition on parent trackers.

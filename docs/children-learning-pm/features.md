@@ -18,6 +18,9 @@ Maintained by the Children Learning PM. Tracks all game specs, learning features
 | Curriculum Consistency Corrections (Ages 3-7) | Cross-curriculum quality | `docs/children-learning-pm/curriculum-consistency-checkpoints-2026-04-10.md` | Delegated to Gaming Expert ([DUB-582](/DUB/issues/DUB-582)), Reading PM ([DUB-574](/DUB/issues/DUB-574)), and Architect ([DUB-575](/DUB/issues/DUB-575)); duplicate retries superseded ([DUB-580](/DUB/issues/DUB-580), [DUB-581](/DUB/issues/DUB-581)) |
 | More or Less Market | Numbers (מספרים) | `docs/games/more-or-less-market.md` | Delegated to FED Engineer 2 ([DUB-28](/DUB/issues/DUB-28)) |
 | Number Line Jumps | Numbers (מספרים) | `docs/games/number-line-jumps.md` | Delegated to FED Engineer 2 ([DUB-29](/DUB/issues/DUB-29)) |
+| Subtraction Street | Numbers (מספרים) | `docs/games/subtraction-street.md` | Delegated to FED Engineer ([DUB-694](/DUB/issues/DUB-694)); implementation lane includes coordination with Content Writer (audio/i18n), Gaming Expert (mechanics calibration), and QA (misconception telemetry checks) |
+| Build-10 Workshop | Numbers (מספרים) | `docs/games/build-10-workshop.md` | Delegated to FED Engineer 2 ([DUB-698](/DUB/issues/DUB-698)); implementation lane includes coordination with Content Writer (audio/i18n), Gaming Expert (difficulty thresholds), and QA (alternate-decomposition edge cases) |
+| Time-and-Routine Builder | Cross-curriculum (Math + Daily routines) | `docs/games/time-and-routine-builder.md` | Delegated to FED Engineer ([DUB-699](/DUB/issues/DUB-699)); implementation lane includes coordination with Content Writer (Hebrew routine lexicon/audio), Gaming Expert (sequence/time tuning), and UX Designer (RTL timeline + clock ergonomics) |
 | Letter Tracing Trail | Letters (אותיות) | `docs/games/letter-tracing-trail.md` | Delegated to Architect (technical lane [DUB-85](/DUB/issues/DUB-85)) + Gaming Expert ([DUB-86](/DUB/issues/DUB-86)) + Content Writer ([DUB-87](/DUB/issues/DUB-87)) |
 | Letter Sound Match | Letters (אותיות) | `docs/games/letter-sound-match.md` | Delegated to FED Engineer ([DUB-31](/DUB/issues/DUB-31), [DUB-92](/DUB/issues/DUB-92)) + Gaming Expert ([DUB-93](/DUB/issues/DUB-93)) + Content Writer ([DUB-94](/DUB/issues/DUB-94)) |
 | Letter Sky Catcher | Letters (אותיות) | `docs/games/letter-sky-catcher.md` | Delegated to FED Engineer 3 ([DUB-312](/DUB/issues/DUB-312)) |
@@ -30,10 +33,10 @@ Maintained by the Children Learning PM. Tracks all game specs, learning features
 
 | Game / Feature | Learning Area | Priority | Notes |
 |----------------|--------------|----------|-------|
-| Subtraction Street | Numbers (מספרים) | P0 | Gap-closure item from [DUB-502](/DUB/issues/DUB-502): dedicated subtraction strategy game for ages 6-7; spec not yet authored |
-| Build-10 Workshop | Numbers (מספרים) | P0 | Gap-closure item from [DUB-502](/DUB/issues/DUB-502): number composition/decomposition (`5/10/20`) for ages 5-7; spec not yet authored |
-| Time-and-Routine Builder | Cross-curriculum (Math + Daily routines) | P0 | Gap-closure item from [DUB-502](/DUB/issues/DUB-502): time/sequence foundations for ages 6-7; spec not yet authored |
 | Spell-and-Send | Reading (קריאה) | P1 | Gap-closure item from [DUB-502](/DUB/issues/DUB-502): decoding-to-encoding writing bridge for ages 6-7; spec not yet authored |
+| Pattern Train | Early logic + sequencing | P1 | Added in [DUB-676](/DUB/issues/DUB-676): pattern continuation/rule prediction lane for ages 4-6; spec not yet authored |
+| Measure and Match | Math measurement foundations | P1 | Added in [DUB-676](/DUB/issues/DUB-676): longer/shorter, heavier/lighter, fuller/emptier for ages 6-7; spec not yet authored |
+| Money Market Mini | Math + daily life numeracy | P2 | Added in [DUB-676](/DUB/issues/DUB-676): coin recognition and simple exchange stories for ages 6-7; spec not yet authored |
 
 ## Curriculum Coverage
 
@@ -41,7 +44,8 @@ Maintained by the Children Learning PM. Tracks all game specs, learning features
 |------|----------|----------|----------|
 | Handbooks (ספרונים) | Spec ready: Interactive Handbooks Level 1 scaffold (`דובי וגן ההפתעות`) | Spec ready: Wave 2 books 4-6 (`יואב ומפת האותיות`, `נעמה וקופסת ההברות`, `אורי בשוק הלחם`) | Spec ready: Wave 2 books 7-10 (`תמר ומגדל המילים`, `סהר והשעון הסודי`, `גיא ועיתון הכיתה`, `עלמה ומשפחות השורש`) |
 | Letters (אותיות) | Spec ready: Letter Tracing Trail + scaffolded Letter Sky Catcher; Storybook Stage A guidance locked in [DUB-652](/DUB/issues/DUB-652) | Spec ready: Letter Tracing Trail + Letter Sound Match + Letter Sky Catcher + Confusable Letter Contrast; Storybook Stage B guidance in progress via [DUB-647](/DUB/issues/DUB-647) child lanes | Expanded coverage: Letter Sound Match + Letter Sky Catcher + Confusable Letter Contrast; Storybook Stage C/confusable/final-form gates defined in [DUB-652](/DUB/issues/DUB-652) for [DUB-651](/DUB/issues/DUB-651) spec integration |
-| Numbers (מספרים) | Shipped: Counting Picnic | Spec ready: More or Less Market | Spec ready: Number Line Jumps |
+| Numbers (מספרים) | Shipped: Counting Picnic | Spec ready: More or Less Market + Build-10 Workshop (L1-L2 composition/decomposition) | Spec ready: Number Line Jumps + Subtraction Street + Build-10 Workshop (L3 teen bridge) |
+| Time & Sequence (זמן וסדר יום) | Foundation only via general routine language (no dedicated spec yet) | Foundation only via sequencing exposure (no dedicated spec yet) | Spec ready: Time-and-Routine Builder |
 | Reading (קריאה) | Foundation coverage via Handbook Book 1 listen-recall + letter/audio pipeline (no standalone decoding game yet) | Spec ready: Picture to Word Builder + Handbook Books 4-6 | Spec ready: Picture to Word Builder (Level 3) + Handbook Books 7-10 + delegated story-depth/decodable overhauls |
 | Shapes (צורות) | Spec ready: Shape Safari | Spec ready: Shape Safari | Partial coverage: Shape Safari (Level 3 reasoning) |
 | Colors (צבעים) | Spec ready: Color Garden | Spec ready: Color Garden | Partial coverage: Color Garden (Level 3 rules) |

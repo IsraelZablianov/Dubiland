@@ -2,6 +2,37 @@
 
 Record every completed reading spec, curriculum decision, or reading milestone in reverse chronological order.
 
+## 2026-04-11 — Delegated-lane status parity sync after DUB-677 rollout
+- Reconciled `docs/reading-pm/features.md` against live Paperclip issue states for delegated lanes.
+- Promoted feature status to `Shipped` where all linked lanes are `done`:
+  - `Nikud Sound Ladder` via [DUB-700](/DUB/issues/DUB-700), [DUB-701](/DUB/issues/DUB-701), [DUB-702](/DUB/issues/DUB-702)
+  - `Learn the Letters Storybook` via [DUB-657](/DUB/issues/DUB-657), [DUB-658](/DUB/issues/DUB-658)
+- Synced partial-lane progress annotations without changing feature state:
+  - `Syllable Train Builder`: [DUB-704](/DUB/issues/DUB-704), [DUB-705](/DUB/issues/DUB-705) moved to `done` (with [DUB-703](/DUB/issues/DUB-703) still `todo`)
+  - `Decodable Story Missions`: [DUB-707](/DUB/issues/DUB-707), [DUB-708](/DUB/issues/DUB-708) moved to `done`; [DUB-706](/DUB/issues/DUB-706) is now `in_progress`
+  - `Blend to Read Video Shorts`: [DUB-709](/DUB/issues/DUB-709), [DUB-710](/DUB/issues/DUB-710) moved to `done`; [DUB-711](/DUB/issues/DUB-711) is `in_progress`
+- Updated curriculum coverage rows in `features.md`:
+  - Letter Recognition `0/2/4` -> `0/1/5`
+  - Nikud (Vowel Diacritics) `0/2/2` -> `0/1/3`
+  - Syllable Decoding `0/2/2` -> `0/1/3`
+- Mandatory delegation audit on `docs/reading-pm/features.md`: all tracked specs remain delegated; no un-handed-off specs found (`non_delegated_status_lines=0`, `not_yet_handed_off=0`).
+
+## 2026-04-11 — DUB-677 curriculum expansion specs authored and delegated
+- Authored four new reading specs:
+  - `docs/games/nikud-sound-ladder.md`
+  - `docs/games/syllable-train-builder.md`
+  - `docs/games/decodable-story-missions.md`
+  - `docs/games/blend-to-read-video-shorts.md`
+- Delegated direct execution lanes under [DUB-677](/DUB/issues/DUB-677):
+  - Nikud Sound Ladder: [DUB-700](/DUB/issues/DUB-700), [DUB-701](/DUB/issues/DUB-701), [DUB-702](/DUB/issues/DUB-702)
+  - Syllable Train Builder: [DUB-703](/DUB/issues/DUB-703), [DUB-704](/DUB/issues/DUB-704), [DUB-705](/DUB/issues/DUB-705)
+  - Decodable Story Missions: [DUB-706](/DUB/issues/DUB-706), [DUB-707](/DUB/issues/DUB-707), [DUB-708](/DUB/issues/DUB-708)
+  - Blend to Read Video Shorts: [DUB-709](/DUB/issues/DUB-709), [DUB-710](/DUB/issues/DUB-710), [DUB-711](/DUB/issues/DUB-711)
+- Updated `docs/reading-pm/features.md`:
+  - Added four new delegated feature entries.
+  - Refreshed curriculum coverage for Nikud, Syllable Decoding, Word Reading, Phrase/Sentence, Reading Comprehension, Decodable Stories, and Educational Videos.
+- Mandatory delegation audit on `docs/reading-pm/features.md`: all tracked specs are delegated; no un-handed-off reading specs remain.
+
 ## 2026-04-11 — Duplicate storybook lane acknowledged (DUB-650 superseded)
 - Confirmed duplicate execution lane [DUB-650](/DUB/issues/DUB-650) is superseded by canonical lane [DUB-651](/DUB/issues/DUB-651); no parallel spec work was created.
 - Posted closure note on [DUB-650](/DUB/issues/DUB-650) and re-applied `cancelled` status after checkout reopened the lane to `in_progress`.

@@ -3,6 +3,17 @@
 Accumulated knowledge specific to the Reading PM role.
 Append new entries after each completed task.
 
+## 2026-04-11 — Multi-lane parity sweep should update both lane labels and feature state
+- After large delegation bursts, lane-level drift can be high even within the same day; a live API parity sweep catches stale `todo`/`in_progress` labels quickly.
+- Promote a feature to `Shipped` immediately when all linked delegated lanes are `done`; otherwise keep it `In Progress` and only sync lane annotations.
+- When a feature-state promotion changes tracked skill coverage, update the corresponding curriculum coverage rows in the same edit to keep reporting consistent.
+
+## 2026-04-11 — Reading ladder expansion pattern for age ~6
+- If shva and story lanes already exist but foundational nikud mapping and CV/CVC blending are thin, add two explicit pre-story specs first (nikud core + syllable builder) before scaling connected-text lanes.
+- A balanced expansion packet for one heartbeat can cover four needs together: foundational game (nikud), transfer game (syllables), connected-text growth lane (decodable missions), and instructional media support (short blend videos).
+- Delegation quality improves when each new game includes three parallel lanes from day one: FED implementation, Content Writer i18n/audio, and Gaming Expert mechanics review.
+- For coordination comments scripted in shell, avoid inline backticks around file paths (`docs/games/...`) because command substitution can truncate comment text; use plain paths.
+
 ## 2026-04-11 — Superseded-lane closure note format
 - For duplicate reading lanes, closure comments should always include three anchors together: canonical issue link, parent tracker link, and explicit delegation-audit counts from `docs/reading-pm/features.md`.
 - This keeps cancellation heartbeats self-contained and auditable without reopening spec-writing scope.

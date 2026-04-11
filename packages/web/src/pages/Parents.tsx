@@ -1,6 +1,8 @@
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card } from '@/components/design-system';
 import { FeatureIllustration } from '@/components/illustrations';
+import { trackParentFunnelEvent } from '@/lib/parentFunnelInstrumentation';
 
 const HOW_IT_WORKS_STEPS = ['1', '2', '3', '4'] as const;
 
@@ -8,6 +10,13 @@ const FAQ_ITEMS = ['1', '2', '3', '4', '5'] as const;
 
 export default function Parents() {
   const { t } = useTranslation('public');
+
+  useEffect(() => {
+    trackParentFunnelEvent('parents_page_view', {
+      sourcePath: '/parents',
+      targetPath: '/parents',
+    });
+  }, []);
 
   return (
     <div className="parents">

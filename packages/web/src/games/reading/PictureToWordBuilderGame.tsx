@@ -1183,6 +1183,11 @@ export function PictureToWordBuilderGame({ level: runtimeLevel, onComplete, audi
   const replayButtonAriaLabel = t('games.pictureToWordBuilder.instructions.tapReplayWord');
   const showRoundCelebration = roundMessage.tone === 'success';
   const showInRoundCoach = coachVisible && !showRoundCelebration;
+  const coachVariant = showRoundCelebration || boardFeedback === 'success'
+    ? 'success'
+    : boardFeedback === 'miss' || roundMessage.tone === 'hint'
+      ? 'hint'
+      : 'hero';
   const firstAttemptStars = sessionStatsRef.current.firstAttemptSuccesses;
   const resolvedRounds = sessionStatsRef.current.hintUsageByRound.length;
 
@@ -1401,8 +1406,15 @@ export function PictureToWordBuilderGame({ level: runtimeLevel, onComplete, audi
             <span>🔤</span>
           </div>
           {showInRoundCoach && (
-            <div className="picture-word-builder__coach" aria-hidden="true">
-              <MascotIllustration variant="hint" size={56} />
+            <div
+              className={[
+                'picture-word-builder__coach',
+                coachVariant === 'success' ? 'picture-word-builder__coach--success' : '',
+                coachVariant === 'hint' ? 'picture-word-builder__coach--hint' : '',
+              ].join(' ')}
+              aria-hidden="true"
+            >
+              <MascotIllustration variant={coachVariant} size={56} />
             </div>
           )}
 
@@ -1427,6 +1439,8 @@ export function PictureToWordBuilderGame({ level: runtimeLevel, onComplete, audi
                       slot ? 'picture-word-builder__slot--filled' : '',
                       slot?.locked ? 'picture-word-builder__slot--locked' : '',
                       isInvalid ? 'picture-word-builder__slot--invalid' : '',
+                      boardFeedback === 'success' && slot ? 'picture-word-builder__slot--success' : '',
+                      boardFeedback === 'miss' && isInvalid ? 'picture-word-builder__slot--shake' : '',
                     ].join(' ')}
                     onClick={() => handleSlotTap(slotIndex)}
                     onDragOver={(event) => {
@@ -1724,6 +1738,16 @@ const pictureWordBuilderStyles = `
     animation: picture-word-builder-coach-float 1600ms ease-in-out infinite;
   }
 
+  .picture-word-builder__coach--success {
+    border-color: color-mix(in srgb, var(--color-accent-success) 58%, transparent);
+    background: color-mix(in srgb, var(--color-accent-success) 10%, var(--color-bg-card));
+  }
+
+  .picture-word-builder__coach--hint {
+    border-color: color-mix(in srgb, var(--color-accent-warning) 52%, transparent);
+    background: color-mix(in srgb, var(--color-accent-warning) 10%, var(--color-bg-card));
+  }
+
   .picture-word-builder__coach,
   .picture-word-builder__coach * {
     pointer-events: none;
@@ -1784,6 +1808,14 @@ const pictureWordBuilderStyles = `
   .picture-word-builder__slot--invalid {
     border-color: var(--color-accent-danger);
     background: color-mix(in srgb, var(--color-accent-danger) 16%, #ffffff);
+  }
+
+  .picture-word-builder__slot--success {
+    animation: picture-word-builder-slot-success 340ms ease-out;
+  }
+
+  .picture-word-builder__slot--shake {
+    animation: picture-word-builder-slot-shake 320ms ease-in-out;
   }
 
   .picture-word-builder__slot-letter {
@@ -1960,6 +1992,35 @@ const pictureWordBuilderStyles = `
     }
   }
 
+  @keyframes picture-word-builder-slot-success {
+    0% {
+      transform: scale(1);
+    }
+
+    55% {
+      transform: scale(1.08);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes picture-word-builder-slot-shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+
+    30% {
+      transform: translateX(-3px);
+    }
+
+    70% {
+      transform: translateX(3px);
+    }
+  }
+
   @media (min-width: 860px) {
     .picture-word-builder__board {
       grid-template-columns: 1.1fr 1fr;
@@ -1986,6 +2047,8 @@ const pictureWordBuilderStyles = `
     .picture-word-builder__score-pill--pulse,
     .picture-word-builder__board--success,
     .picture-word-builder__board--miss,
+    .picture-word-builder__slot--success,
+    .picture-word-builder__slot--shake,
     .picture-word-builder__celebration-overlay,
     .picture-word-builder__celebration-mascot,
     .picture-word-builder__coach {

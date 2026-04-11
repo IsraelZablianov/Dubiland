@@ -1336,7 +1336,8 @@ export function LetterTracingTrailGame({ level: runtimeLevel, onComplete, audio 
             </button>
           </div>
 
-          <div className="letter-tracing-trail__stars" aria-label={t('feedback.excellent')}>
+          <div className="letter-tracing-trail__stars">
+            <span className="sr-only">{t('feedback.excellent')}</span>
             {Array.from({ length: Math.max(1, starTokens) }).map((_, index) => (
               <span key={`star-${index}`} className="letter-tracing-trail__star" aria-hidden="true">
                 ⭐
@@ -1510,7 +1511,8 @@ export function LetterTracingTrailGame({ level: runtimeLevel, onComplete, audio 
           </div>
         </header>
 
-        <div className="letter-tracing-trail__progress" aria-label={t('games.estimatedTime', { minutes: 7 })}>
+        <div className="letter-tracing-trail__progress">
+          <span className="sr-only">{t('games.estimatedTime', { minutes: 7 })}</span>
           {roundProgressSegments.map((segment) => {
             const state =
               segment < round.roundNumber
@@ -1563,21 +1565,24 @@ export function LetterTracingTrailGame({ level: runtimeLevel, onComplete, audio 
 
               <div className="letter-tracing-trail__metrics">
                 <span
-                  aria-label={t('feedback.excellent')}
                   className={[
                     'letter-tracing-trail__metric-pill',
                     scorePulse ? 'letter-tracing-trail__metric-pill--pulse' : '',
                   ].join(' ')}
                 >
+                  <span className="sr-only">{t('feedback.excellent')}</span>
                   ⭐ {starTokens}
                 </span>
-                <span aria-label={t('games.difficulty')} className="letter-tracing-trail__metric-pill">
+                <span className="letter-tracing-trail__metric-pill">
+                  <span className="sr-only">{t('games.difficulty')}</span>
                   🎯 {round.level}
                 </span>
-                <span aria-label={t('feedback.keepGoing')} className="letter-tracing-trail__metric-pill">
+                <span className="letter-tracing-trail__metric-pill">
+                  <span className="sr-only">{t('feedback.keepGoing')}</span>
                   {Math.round(traceCoverage * 100)}%
                 </span>
-                <span aria-label={t('nav.next')} className="letter-tracing-trail__metric-pill">
+                <span className="letter-tracing-trail__metric-pill">
+                  <span className="sr-only">{t('nav.next')}</span>
                   {round.roundNumber}/{TOTAL_ROUNDS}
                 </span>
               </div>

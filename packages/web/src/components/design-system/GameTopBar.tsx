@@ -159,8 +159,8 @@ export function GameTopBar({
             onClick={onReplayInstruction}
             aria-label={replayAriaLabel}
             style={{
-              minInlineSize: '52px',
-              minBlockSize: '52px',
+              minInlineSize: 'max(60px, var(--touch-min-primary))',
+              minBlockSize: 'max(60px, var(--touch-min-primary))',
               borderRadius: 'var(--radius-md)',
               border: '2px solid var(--color-border)',
               background: 'var(--color-bg-card)',

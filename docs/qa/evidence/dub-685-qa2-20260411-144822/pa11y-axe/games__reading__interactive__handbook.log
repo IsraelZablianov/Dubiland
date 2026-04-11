@@ -1,0 +1,1 @@
+$ npx --yes pa11y http://127.0.0.1:4187/games/reading/interactive-handbook --config /Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-685-qa2-20260411-144822/configs/games__reading__interactive__handbook.pa11y.config.json --runner axe --reporter json

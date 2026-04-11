@@ -25,17 +25,19 @@ export function ChildRouteScaffold({
   sectionStyle,
   sectionProps,
 }: ChildRouteScaffoldProps) {
+  const scaffoldStyle: CSSProperties = {
+    flex: 1,
+    background: 'var(--color-theme-bg)',
+    padding: 'var(--child-route-inline-padding)',
+    display: 'flex',
+    justifyContent: 'center',
+    ...mainStyle,
+  };
+  // Child route controls should keep the larger interaction floor.
+  (scaffoldStyle as Record<string, string>)['--touch-min'] = 'var(--touch-min-primary)';
+
   return (
-    <div
-      style={{
-        flex: 1,
-        background: 'var(--color-theme-bg)',
-        padding: 'var(--child-route-inline-padding)',
-        display: 'flex',
-        justifyContent: 'center',
-        ...mainStyle,
-      }}
-    >
+    <div className="child-route-scaffold" style={scaffoldStyle}>
       <section
         {...sectionProps}
         style={{

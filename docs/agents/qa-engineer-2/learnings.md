@@ -259,3 +259,12 @@ For protected-route flows, `pa11y-ci` ignores flat config keys (`standard`, `act
 
 ## 2026-04-11 — Handbook progression QA must assert click actionability (chip-change) and control viewport reachability together
 In portrait handbook flows, `.interactive-handbook__controls` can drift to edge/off-screen states; `page.click()` may report success while `עמוד` chip does not advance. Reliable blocker proof requires both checks in the same trace: (1) next-control rect stays inside viewport, and (2) chip changes after click. Pair this with untranslated-status scan (`games.*`/`handbooks.*`) because functional flow may still leak raw keys (seen on `confusableContrast.success`).
+
+## 2026-04-11 — DUB-685 all-route accessibility pass
+
+- `pa11y --runner axe` can yield false negatives/empty output on SPA routes if checks run before app root render (observed `[]` on `/games` while `pa11y-ci` reported many contrast errors).
+- For Dubiland SPA routes, include explicit wait actions before axe analysis (for example: `wait for element #root > div to be visible`) and rerun suspicious zero-result routes.
+- Systemic contrast regressions are currently broad across marketing + game screens; keep contrast token review (`tokens.css`) as an early QA gate before route-level audits.
+
+## 2026-04-11 — For heartbeat dependency checks, use `/api/issues/{identifier}` over company issue lists
+On this run, `/api/companies/{companyId}/issues` did not surface freshly created `[DUB-745](/DUB/issues/DUB-745)` and `[DUB-746](/DUB/issues/DUB-746)` lanes, while direct lookups (`/api/issues/DUB-745`, `/api/issues/DUB-746`) returned accurate status and comments immediately. For blocker verification, fetch prerequisite tickets by identifier directly before deciding whether to start QA execution.

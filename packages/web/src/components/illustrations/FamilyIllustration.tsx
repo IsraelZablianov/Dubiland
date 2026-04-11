@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode, SVGProps } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export type FamilyScene = 'soccer' | 'highfive' | 'celebrate';
 
@@ -503,13 +504,26 @@ const SCENE_MAP: Record<FamilyScene, () => ReactNode> = {
   celebrate: CelebrateScene,
 };
 
+type FamilySceneAriaLabelKey =
+  | 'illustrations.family.sceneLabels.soccer'
+  | 'illustrations.family.sceneLabels.highfive'
+  | 'illustrations.family.sceneLabels.celebrate';
+
+const SCENE_ARIA_LABEL_KEYS: Record<FamilyScene, FamilySceneAriaLabelKey> = {
+  soccer: 'illustrations.family.sceneLabels.soccer',
+  highfive: 'illustrations.family.sceneLabels.highfive',
+  celebrate: 'illustrations.family.sceneLabels.celebrate',
+};
+
 export function FamilyIllustration({
   scene = 'soccer',
   size,
   style,
   ...props
 }: FamilyIllustrationProps) {
+  const { t } = useTranslation('common');
   const SceneComponent = SCENE_MAP[scene];
+  const sceneAriaLabel = t(SCENE_ARIA_LABEL_KEYS[scene]);
   const sizeVal = size ?? '100%';
   const dimension = typeof sizeVal === 'number' ? `${sizeVal}px` : sizeVal;
 
@@ -525,7 +539,7 @@ export function FamilyIllustration({
       viewBox="0 0 400 300"
       xmlns="http://www.w3.org/2000/svg"
       role="img"
-      aria-label="יהונתן ושי משחקים כדורגל"
+      aria-label={sceneAriaLabel}
       style={mergedStyle}
       {...props}
     >

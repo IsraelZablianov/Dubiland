@@ -1187,7 +1187,8 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
         </div>
       </div>
 
-      <div className="letter-sky-catcher__progress" aria-label={t('games.estimatedTime', { minutes: 5 })}>
+      <div className="letter-sky-catcher__progress">
+        <span className="sr-only">{t('games.estimatedTime', { minutes: 5 })}</span>
         {Array.from({ length: TOTAL_BLOCKS }, (_, index) => (
           <span
             key={`letter-block-${index + 1}`}

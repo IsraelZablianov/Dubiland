@@ -127,6 +127,13 @@ interface SessionSummary {
   hintTrendText: string;
 }
 
+interface JumpTrailSegment {
+  id: string;
+  from: number;
+  to: number;
+  step: number;
+}
+
 const TOTAL_ROUNDS = 8;
 const CHECKPOINT_ROUND = 4;
 const NUMBER_LINE_MAX = 20;
@@ -460,6 +467,21 @@ export function NumberLineJumpsGame({ level, child, onComplete, audio }: GamePro
   const totalJump = useMemo(() => selectedSteps.reduce((sum, value) => sum + value, 0), [selectedSteps]);
   const previewValue = round.start + totalJump;
   const remainingJump = Math.max(0, round.requiredJump - totalJump);
+  const jumpTrail = useMemo<JumpTrailSegment[]>(() => {
+    let cursor = round.start;
+    return selectedSteps.map((step, index) => {
+      const from = cursor;
+      const to = Math.min(NUMBER_LINE_MAX, from + step);
+      cursor = to;
+      return {
+        id: `${round.id}-hop-${index}-${from}-${to}`,
+        from,
+        to,
+        step,
+      };
+    });
+  }, [round.id, round.start, selectedSteps]);
+  const lastHopTarget = jumpTrail.length > 0 ? jumpTrail[jumpTrail.length - 1]?.to ?? null : null;
 
   const progressSegments = useMemo(() => Array.from({ length: TOTAL_ROUNDS }, (_, index) => index + 1), []);
 
@@ -1025,7 +1047,8 @@ export function NumberLineJumpsGame({ level, child, onComplete, audio }: GamePro
           </div>
         </header>
 
-        <div className="number-line-jumps__progress" aria-label={t('games.estimatedTime', { minutes: 5 })}>
+        <div className="number-line-jumps__progress">
+          <span className="sr-only">{t('games.estimatedTime', { minutes: 5 })}</span>
           {progressSegments.map((segment) => {
             const state =
               segment <= resolvedRounds ? 'done' : segment === resolvedRounds + 1 ? 'active' : 'pending';
@@ -1103,6 +1126,7 @@ export function NumberLineJumpsGame({ level, child, onComplete, audio }: GamePro
                     isStart ? 'number-line-jumps__marker--start' : '',
                     isPreview ? 'number-line-jumps__marker--preview' : '',
                     isTarget ? 'number-line-jumps__marker--target' : '',
+                    lastHopTarget === value ? 'number-line-jumps__marker--hop-target' : '',
                   ].join(' ')}
                   aria-hidden="true"
                 >
@@ -1111,6 +1135,25 @@ export function NumberLineJumpsGame({ level, child, onComplete, audio }: GamePro
               );
             })}
           </div>
+
+          {jumpTrail.length > 0 && (
+            <ol className="number-line-jumps__hop-trail" aria-hidden="true">
+              {jumpTrail.map((hop, index) => (
+                <li
+                  key={hop.id}
+                  className={[
+                    'number-line-jumps__hop-chip',
+                    boardFeedback === 'success' ? 'number-line-jumps__hop-chip--success' : '',
+                    boardFeedback === 'miss' ? 'number-line-jumps__hop-chip--miss' : '',
+                  ].join(' ')}
+                  style={{ ['--number-line-hop-delay' as string]: `${index * 70}ms` }}
+                >
+                  <span className="number-line-jumps__hop-range">{hop.from}→{hop.to}</span>
+                  <span className="number-line-jumps__hop-step">+{hop.step}</span>
+                </li>
+              ))}
+            </ol>
+          )}
 
           {round.showTenAnchor && (
             <div className="number-line-jumps__anchor" aria-hidden="true">
@@ -1383,10 +1426,67 @@ const numberLineJumpsStyles = `
     box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--color-warning) 80%, black);
   }
 
+  .number-line-jumps__marker--hop-target {
+    box-shadow:
+      inset 0 0 0 2px color-mix(in srgb, var(--color-accent-info) 72%, transparent),
+      0 0 0 4px color-mix(in srgb, var(--color-accent-info) 16%, transparent);
+    transform: translateY(-2px);
+  }
+
   .number-line-jumps__marker-value {
     font-size: var(--font-size-sm);
     color: var(--color-text-primary);
     font-weight: var(--font-weight-bold);
+  }
+
+  .number-line-jumps__hop-trail {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  .number-line-jumps__hop-chip {
+    min-height: var(--touch-min);
+    border-radius: var(--radius-full);
+    border: 1px solid color-mix(in srgb, var(--color-accent-info) 34%, white);
+    background: color-mix(in srgb, var(--color-accent-info) 12%, white);
+    color: var(--color-text-primary);
+    padding-inline: var(--space-sm);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    font-weight: var(--font-weight-semibold);
+    animation: number-line-jumps-hop-enter 280ms ease-out both;
+    animation-delay: var(--number-line-hop-delay, 0ms);
+  }
+
+  .number-line-jumps__hop-chip--success {
+    border-color: color-mix(in srgb, var(--color-accent-success) 52%, white);
+    background: color-mix(in srgb, var(--color-accent-success) 16%, white);
+  }
+
+  .number-line-jumps__hop-chip--miss {
+    border-color: color-mix(in srgb, var(--color-warning) 62%, white);
+    background: color-mix(in srgb, var(--color-warning) 16%, white);
+  }
+
+  .number-line-jumps__hop-range {
+    font-size: var(--font-size-sm);
+  }
+
+  .number-line-jumps__hop-step {
+    font-size: var(--font-size-xs);
+    color: color-mix(in srgb, var(--color-text-primary) 82%, transparent);
+    background: color-mix(in srgb, var(--color-bg-primary) 72%, transparent);
+    border-radius: var(--radius-full);
+    padding-inline: 6px;
+    min-height: 22px;
+    display: inline-flex;
+    align-items: center;
   }
 
   .number-line-jumps__anchor {
@@ -1600,6 +1700,17 @@ const numberLineJumpsStyles = `
     }
   }
 
+  @keyframes number-line-jumps-hop-enter {
+    0% {
+      opacity: 0;
+      transform: translateY(6px) scale(0.94);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
   @media (max-width: 920px) {
     .number-line-jumps {
       padding: var(--space-md);
@@ -1621,6 +1732,8 @@ const numberLineJumpsStyles = `
 
   @media (prefers-reduced-motion: reduce) {
     .number-line-jumps__marker,
+    .number-line-jumps__marker--hop-target,
+    .number-line-jumps__hop-chip,
     .number-line-jumps__step-chip,
     .number-line-jumps__step-chip--pulse,
     .number-line-jumps__progress-dot--live,

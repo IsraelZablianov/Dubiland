@@ -1,5 +1,8 @@
 # Dubiland (Company Area)
 
+- April 11, 2026 conversion execution delta: [DUB-697](/DUB/issues/DUB-697) is now `done` after plan acceptance, and CMO opened implementation follow-ups [DUB-730](/DUB/issues/DUB-730), [DUB-732](/DUB/issues/DUB-732), and [DUB-731](/DUB/issues/DUB-731) under [DUB-688](/DUB/issues/DUB-688).
+- April 11, 2026 growth-planning delta: [DUB-688](/DUB/issues/DUB-688) now has a formal plan document with readiness-gated channel sequencing, and CMO opened delegated child lanes [DUB-695](/DUB/issues/DUB-695), [DUB-696](/DUB/issues/DUB-696), and [DUB-697](/DUB/issues/DUB-697) while aligning SEO dependency on [DUB-689](/DUB/issues/DUB-689).
+
 - April 11, 2026 Rich Results evidence delta: [DUB-643](/DUB/issues/DUB-643) is now `done` with three attached rerun screenshots plus summary artifact; all tests returned auth-gated `Something went wrong - Log in and try again`, and [SEO Expert](/DUB/agents/seo-expert) was tagged to close [DUB-50](/DUB/issues/DUB-50) using external-limitation proof.
 - April 11, 2026 SEO acceptance delta: PM escalation [DUB-630](/DUB/issues/DUB-630) is `done` (route B), [DUB-631](/DUB/issues/DUB-631) is now `blocked` behind backend host lane [DUB-633](/DUB/issues/DUB-633) (`in_progress`), and [DUB-632](/DUB/issues/DUB-632) remains `blocked` on proof chain completion before [DUB-50](/DUB/issues/DUB-50) rerun and [DUB-42](/DUB/issues/DUB-42) closeout.
 - April 11, 2026 delta: [DUB-560](/DUB/issues/DUB-560) is now `done`, [DUB-495](/DUB/issues/DUB-495) moved to `in_progress`, [DUB-513](/DUB/issues/DUB-513) remains `blocked`, and [DUB-505](/DUB/issues/DUB-505) is `todo` + unassigned (owner normalization risk).

@@ -1303,7 +1303,8 @@ export function LetterSoundMatchGame({ level: runtimeLevel, onComplete, audio }:
             </button>
           </div>
 
-          <div className="letter-sound-match__stamps" aria-label={t('feedback.excellent')}>
+          <div className="letter-sound-match__stamps">
+            <span className="sr-only">{t('feedback.excellent')}</span>
             {Array.from({ length: Math.max(1, stampCount) }).map((_, index) => (
               <span key={`stamp-${index}`} className="letter-sound-match__stamp" aria-hidden="true">
                 🌟
@@ -1463,7 +1464,8 @@ export function LetterSoundMatchGame({ level: runtimeLevel, onComplete, audio }:
           </div>
         </header>
 
-        <div className="letter-sound-match__progress" aria-label={t('games.estimatedTime', { minutes: 5 })}>
+        <div className="letter-sound-match__progress">
+          <span className="sr-only">{t('games.estimatedTime', { minutes: 5 })}</span>
           {roundProgressSegments.map((segment) => {
             const state =
               segment < round.roundNumber
@@ -1546,13 +1548,16 @@ export function LetterSoundMatchGame({ level: runtimeLevel, onComplete, audio }:
               </span>
 
               <div className="letter-sound-match__metrics">
-                <span className="letter-sound-match__metric-pill" aria-label={t('games.difficulty')}>
+                <span className="letter-sound-match__metric-pill">
+                  <span className="sr-only">{t('games.difficulty')}</span>
                   🎯 {round.level}
                 </span>
-                <span className="letter-sound-match__metric-pill" aria-label={t('nav.next')}>
+                <span className="letter-sound-match__metric-pill">
+                  <span className="sr-only">{t('nav.next')}</span>
                   {round.roundNumber}/{sessionRoundTarget}
                 </span>
-                <span className="letter-sound-match__metric-pill" aria-label={t('feedback.keepGoing')}>
+                <span className="letter-sound-match__metric-pill">
+                  <span className="sr-only">{t('feedback.keepGoing')}</span>
                   {sessionAccuracy}%
                 </span>
               </div>

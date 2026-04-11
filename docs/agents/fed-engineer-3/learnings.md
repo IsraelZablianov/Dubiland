@@ -187,3 +187,24 @@ Even with `node --import tsx --test`, running `interactive-handbook-runtime-regr
 
 ## 2026-04-11 — Page transitions should auto-recenter handbook controls when prior scroll offset hides them
 In portrait handbook flows, preserving a deep `window.scrollY` across page transitions can push the controls row above the viewport (for example around page 7), making `next` feel broken. A lightweight page-change guard that checks control-row bounds and calls `scrollIntoView({ block: 'nearest', inline: 'nearest' })` when out-of-frame prevents progression stalls without rewriting the layout system.
+
+## 2026-04-11 — Legacy handbook runtime keys can leak from shorthand forms unless normalized pre-render
+Book4 runtime payloads may still emit shorthand keys like `confusableContrast.success` (without full namespace). If merge logic treats those as final, status surfaces can display raw keys. Normalize shorthand `interactionId.field` and `interactions.interactionId.field` through the canonical interaction-key builder (with alias mapping, e.g. `confusableContrast -> chooseLetter`) before status/audio binding.
+
+## 2026-04-11 — Prototype game lanes close faster with exported round builders plus runtime i18n/touch evidence
+For new `GameProps` reading prototypes, exporting a pure round-builder (`build...Rounds`) enables fast TSX-backed node tests (`node --import tsx --test`) for level scaling/correct-choice contracts, while a short Playwright pass on the real route should explicitly confirm `dir="rtl"`, success-state Hebrew copy (no raw i18n key text), and min button size >=44px.
+
+## 2026-04-11 — Gate-driven reading games should keep mastery telemetry independent from retry UX
+For adaptive decoding lanes (`CV -> CVC -> transfer`), compute promotion/regression strictly from first-try signals and bounded windows, while keeping retries/hints non-punitive in UI. This lets gameplay stay calm for kids while thresholds remain auditable (`>=10 CV @85%`, `>=12 CVC @80%`, near-miss success, rapid-tap calm-assist) and easier to tune from level config JSON.
+
+## 2026-04-11 — Route manifests should carry both route-topic and canonical content-topic
+For game routing cleanup in `App.tsx`, defining a typed manifest with both `routeTopicSlug` (URL segment) and `contentTopicSlug` (canonical domain) prevents drift when aliases exist (for example `colors` route path mapping to `math` content domain) and keeps protected-route generation declarative.
+
+## 2026-04-11 — Hosted profile age-band propagation is safest through birth-date read/write + session hydration
+In hosted profile pickers, fetch `children.birth_date`, derive `ageBand`, and persist that `ageBand` into `ActiveChildProfile` before navigation. For child creation, collecting age band and writing a deterministic `birth_date` at insert time keeps `activeProfile.ageBand` available immediately for difficulty routing without changing guest/demo flows.
+
+## 2026-04-11 — Demo profiles must be treated as non-persistable child identities in all Supabase `child_id` paths
+Sample profile IDs (`maya/noam/liel`) are valid UI/session IDs but not DB UUIDs; any `child_id` filter/upsert path (for example progress summary hooks and handbook progress hydration) should gate on a UUID-level persistable-child check before querying Supabase to prevent `400 invalid input syntax for type uuid` noise.
+
+## 2026-04-11 — HUD wrapper labels should use hidden text, not `aria-label` on generic containers
+For game HUD `div`/`span` wrappers (progress dots, stars/stamps, score/metric pills), `aria-label` can trigger `aria-prohibited-attr`. Keep wrappers non-labeled and inject equivalent `.sr-only` text content while leaving decorative glyphs/dots `aria-hidden`; lock this with a focused regression script (`packages/web/scripts/aria-prohibited-hud-regression.test.mjs`).

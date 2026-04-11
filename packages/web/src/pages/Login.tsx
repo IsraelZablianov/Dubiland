@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useNavigate } from 'react-router-dom';
@@ -6,6 +6,7 @@ import { Button, Card } from '@/components/design-system';
 import { MascotIllustration } from '@/components/illustrations';
 import { FloatingElement } from '@/components/motion';
 import { useAuth } from '@/hooks/useAuth';
+import { trackParentFunnelEvent, type ParentFunnelAuthMode } from '@/lib/parentFunnelInstrumentation';
 import { isSupabaseConfigured } from '@/lib/supabaseConfig';
 import { enableGuestMode, getActiveChildProfile, isGuestModeEnabled, setActiveChildProfile } from '@/lib/session';
 
@@ -27,6 +28,22 @@ export default function Login() {
     hasConfiguredChild &&
     (!isSupabaseConfigured || isGuestModeEnabled() || Boolean(user));
 
+  const trackLoginEntryAction = (entryMethod: string, authMode: ParentFunnelAuthMode) => {
+    trackParentFunnelEvent('login_entry_action', {
+      sourcePath: '/login',
+      targetPath: '/profiles',
+      entryMethod,
+      authMode,
+    });
+  };
+
+  useEffect(() => {
+    trackParentFunnelEvent('login_page_view', {
+      sourcePath: '/login',
+      targetPath: '/login',
+    });
+  }, []);
+
   if (canSkipOnboarding) {
     return <Navigate to="/games" replace />;
   }
@@ -36,6 +53,7 @@ export default function Login() {
   }
 
   const handleGuestContinue = () => {
+    trackLoginEntryAction('guest_continue', 'guest');
     enableGuestMode();
     setActiveChildProfile({ id: 'guest', name: t('common:profile.guestName'), emoji: '🧒' });
     navigate('/profiles');
@@ -43,6 +61,7 @@ export default function Login() {
 
   const handleGoogleSignIn = async () => {
     setError('');
+    trackLoginEntryAction('google_sign_in', 'authenticated');
 
     if (!canUseHostedAuth) {
       setError(t('onboarding:googleNeedsSupabase'));
@@ -71,6 +90,8 @@ export default function Login() {
       handleGuestContinue();
       return;
     }
+
+    trackLoginEntryAction(isSignUp ? 'email_sign_up' : 'email_sign_in', 'authenticated');
 
     try {
       if (isSignUp) {
