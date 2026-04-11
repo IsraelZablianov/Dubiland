@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Child, Game, GameLevel, Json } from '@dubiland/shared';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button, Card } from '@/components/design-system';
+import { ChildRouteHeader, ChildRouteScaffold } from '@/components/layout';
 import { SuccessCelebration } from '@/components/motion';
 import type { GameCompletionResult } from '@/games/engine';
 import {
-  InteractiveHandbookGame,
   type HandbookPreloadManifest,
   type InteractiveHandbookPageProgress,
   type InteractiveHandbookProgressSnapshot,
@@ -23,6 +23,7 @@ import {
   type ReadingAgeBand,
 } from '@/games/reading/readingRuntimeMatrix';
 import { useAudioManager } from '@/hooks/useAudioManager';
+import { resolveAudioPathFromKey } from '@/lib/audioPathResolver';
 import { getActiveChildProfile } from '@/lib/session';
 import { isSupabaseConfigured } from '@/lib/supabaseConfig';
 
@@ -134,6 +135,11 @@ const BOOK_ICON_BY_ID: Record<LadderBookId, string> = {
   book9: '📰',
   book10: '🧪',
 };
+
+const LazyInteractiveHandbookGame = lazy(async () => {
+  const module = await import('@/games/reading/InteractiveHandbookGame');
+  return { default: module.InteractiveHandbookGame };
+});
 
 const BASE_INTERACTIVE_HANDBOOK_GAME: Game = {
   id: 'local-interactive-handbook',
@@ -326,16 +332,8 @@ function parentHandbookKey(slug: HandbookSlug, field: 'progressSummary' | 'nextS
   return `parentDashboard.handbooks.${slug}.${field}`;
 }
 
-function toKebabCase(value: string): string {
-  return value
-    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-    .replace(/[^a-zA-Z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .toLowerCase();
-}
-
 function keyToAudioPath(key: string): string {
-  return `/audio/he/${key.split('.').map(toKebabCase).join('/')}.mp3`;
+  return resolveAudioPathFromKey(key, 'common');
 }
 
 function handbookIntroAudioKey(slug: HandbookSlug): string {
@@ -913,47 +911,41 @@ export default function InteractiveHandbookPage() {
   }, [bookshelfBooks, featuredBookshelfBook, selectedBookshelfIndex]);
 
   const showCelebrationScreen = Boolean(completionResult);
+  // Wait for `child_handbook_progress` hydration before mounting the reader for a real child profile.
+  // Otherwise the game emits a default page-1 progress snapshot first, `hasLocalProgressRef` latches,
+  // and the hydrated DB snapshot is skipped (reload appears to lose furthest page). See DUB-660.
+  const shouldDeferHandbookGameForProgressHydration = Boolean(persistableChildId) && isHydratingProgress;
   const gameInstanceKey = `${activeHandbookSlug}-${sessionVersion}`;
   const completionTitle = t(handbookCompletionTitleKey(activeDisplaySlug) as any);
   const completionNextStep = t(handbookCompletionNextStepKey(activeDisplaySlug) as any);
-
-  return (
-    <main
+  const gameLoadingFallback = (
+    <Card
+      padding="lg"
       style={{
-        flex: 1,
-        background:
-          'radial-gradient(circle at 12% 12%, color-mix(in srgb, var(--color-theme-secondary) 24%, transparent), transparent 42%), linear-gradient(180deg, var(--color-theme-bg) 0%, color-mix(in srgb, var(--color-bg-card) 92%, white 8%) 100%)',
-        padding: 'var(--space-lg)',
-        display: 'flex',
-        justifyContent: 'center',
+        minHeight: '340px',
+        display: 'grid',
+        placeItems: 'center',
       }}
     >
-      <section style={{ width: 'min(1180px, 100%)', display: 'grid', gap: 'var(--space-md)' }}>
-        <header
-          style={{
-            display: 'flex',
-            gap: 'var(--space-sm)',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-          }}
-        >
-          <div style={{ display: 'grid', gap: 'var(--space-2xs)' }}>
-            <h1
-              style={{
-                margin: 0,
-                fontSize: 'var(--font-size-2xl)',
-                color: 'var(--color-text-primary)',
-                fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
-              }}
-            >
-              {t(handbookMetaKey(activeDisplaySlug, 'title') as any)}
-            </h1>
-            <p style={{ margin: 0, color: 'var(--color-text-secondary)' }}>
-              {t(handbookMetaKey(activeDisplaySlug, 'estimatedDuration') as any)}
-            </p>
-          </div>
-        </header>
+      <p style={{ margin: 0, color: 'var(--color-text-secondary)' }}>
+        {t('handbooks.reader.status.loading')}
+      </p>
+    </Card>
+  );
+
+  return (
+    <ChildRouteScaffold
+      width="wide"
+      mainStyle={{
+        background:
+          'radial-gradient(circle at 12% 12%, color-mix(in srgb, var(--color-theme-secondary) 24%, transparent), transparent 42%), linear-gradient(180deg, var(--color-theme-bg) 0%, color-mix(in srgb, var(--color-bg-card) 92%, white 8%) 100%)',
+      }}
+    >
+      <ChildRouteHeader
+        title={t(handbookMetaKey(activeDisplaySlug, 'title') as any)}
+        subtitle={t(handbookMetaKey(activeDisplaySlug, 'estimatedDuration') as any)}
+        headingStyle={{ gap: 'var(--space-2xs)' }}
+      />
 
         {hasBookshelf && featuredBookshelfBook && (
           <Card
@@ -1102,19 +1094,25 @@ export default function InteractiveHandbookPage() {
           </Card>
         ) : (
           <>
-            <InteractiveHandbookGame
-              key={gameInstanceKey}
-              game={runtimeGame}
-              level={runtimeLevel}
-              child={child}
-              onComplete={handleComplete}
-              audio={audio}
-              initialProgress={effectiveInitialProgress}
-              onProgressChange={handleProgressChange}
-              preloadManifest={preloadManifest}
-              runtimeContent={runtimeContent}
-              onRequestBack={handleBackToGames}
-            />
+            {shouldDeferHandbookGameForProgressHydration ? (
+              gameLoadingFallback
+            ) : (
+              <Suspense fallback={gameLoadingFallback}>
+                <LazyInteractiveHandbookGame
+                  key={gameInstanceKey}
+                  game={runtimeGame}
+                  level={runtimeLevel}
+                  child={child}
+                  onComplete={handleComplete}
+                  audio={audio}
+                  initialProgress={effectiveInitialProgress}
+                  onProgressChange={handleProgressChange}
+                  preloadManifest={preloadManifest}
+                  runtimeContent={runtimeContent}
+                  onRequestBack={handleBackToGames}
+                />
+              </Suspense>
+            )}
 
             {isHydratingProgress ? (
               <p style={{ margin: 0, color: 'var(--color-text-secondary)' }}>
@@ -1124,7 +1122,7 @@ export default function InteractiveHandbookPage() {
           </>
         )}
 
-        <style>{`
+      <style>{`
           .interactive-handbook__bookshelf-stage {
             display: grid;
             grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.85fr);
@@ -1390,8 +1388,7 @@ export default function InteractiveHandbookPage() {
               transition: none;
             }
           }
-        `}</style>
-      </section>
-    </main>
+      `}</style>
+    </ChildRouteScaffold>
   );
 }

@@ -92,11 +92,11 @@ export function PublicFooter() {
           font-family: var(--font-family-display);
           font-size: var(--font-size-lg);
           font-weight: var(--font-weight-extrabold);
-          color: var(--color-theme-primary);
+          color: var(--color-text-primary);
         }
 
         .public-footer__tagline {
-          color: var(--color-text-secondary);
+          color: var(--color-text-primary);
           font-size: var(--font-size-sm);
           line-height: var(--line-height-relaxed);
         }
@@ -126,7 +126,7 @@ export function PublicFooter() {
           display: inline-flex;
           align-items: center;
           text-decoration: none;
-          color: var(--color-text-secondary);
+          color: var(--color-text-primary);
           font-size: var(--font-size-sm);
           transition: var(--transition-fast);
           min-block-size: var(--touch-min-secondary);
@@ -136,7 +136,8 @@ export function PublicFooter() {
         }
 
         .public-footer__links a:hover {
-          color: var(--color-theme-primary);
+          color: var(--color-text-primary);
+          background: color-mix(in srgb, var(--color-bg-card) 76%, var(--color-bg-secondary) 24%);
         }
 
         .public-footer__bottom {
@@ -151,7 +152,7 @@ export function PublicFooter() {
         }
 
         .public-footer__bottom p {
-          color: var(--color-text-light);
+          color: var(--color-text-primary);
           font-size: var(--font-size-xs);
         }
 

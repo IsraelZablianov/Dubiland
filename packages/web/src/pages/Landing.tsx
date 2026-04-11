@@ -8,7 +8,6 @@ import {
   type FeatureIllustrationKind,
   type TopicIllustrationSlug,
 } from '@/components/illustrations';
-import { FloatingElement, SuccessCelebration } from '@/components/motion';
 
 const TOPIC_CARDS: Array<{ key: 'Math' | 'Letters' | 'Reading'; topic: TopicIllustrationSlug }> = [
   { key: 'Math', topic: 'math' },
@@ -57,12 +56,9 @@ export default function Landing() {
           </div>
 
           <div className="landing__hero-visual" aria-hidden="true">
-            <FloatingElement className="landing__hero-float" durationMs={3400}>
-              <div className="landing__hero-mascot-shell">
-                <MascotIllustration variant="hero" size={210} />
-              </div>
-            </FloatingElement>
-            <SuccessCelebration className="landing__hero-celebration" />
+            <div className="landing__hero-mascot-shell">
+              <MascotIllustration variant="hero" size={210} />
+            </div>
           </div>
         </div>
       </section>
@@ -83,7 +79,7 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="landing__section landing__section--alt">
+      <section className="landing__section landing__section--alt landing__section--deferred">
         <h2 className="landing__section-title">{t('landing.howTitle')}</h2>
         <p className="landing__section-subtitle">{t('landing.howSubtitle')}</p>
         <div className="landing__steps">
@@ -98,7 +94,7 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="landing__section">
+      <section className="landing__section landing__section--deferred">
         <h2 className="landing__section-title">{t('landing.trustTitle')}</h2>
         <div className="landing__trust-grid">
           {TRUST_ITEMS.map(({ key, icon }) => (
@@ -111,7 +107,7 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="landing__cta">
+      <section className="landing__cta landing__section--deferred">
         <h2 className="landing__cta-title">{t('landing.ctaTitle')}</h2>
         <p className="landing__cta-subtitle">{t('landing.ctaSubtitle')}</p>
         <Link to="/login">
@@ -175,10 +171,6 @@ export default function Landing() {
           align-items: center;
         }
 
-        .landing__hero-float {
-          z-index: 1;
-        }
-
         .landing__hero-mascot-shell {
           display: grid;
           place-items: center;
@@ -192,16 +184,15 @@ export default function Landing() {
           animation: var(--motion-entrance-bounce);
         }
 
-        .landing__hero-celebration {
-          position: absolute;
-          inset-block-end: -12px;
-          inline-size: min(320px, 100%);
-        }
-
         .landing__section {
           max-width: 1200px;
           margin: 0 auto;
           padding: var(--space-3xl) var(--space-xl);
+        }
+
+        .landing__section--deferred {
+          content-visibility: auto;
+          contain-intrinsic-size: 900px;
         }
 
         .landing__section--alt {

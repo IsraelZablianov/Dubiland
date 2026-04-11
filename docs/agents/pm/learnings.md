@@ -193,3 +193,6 @@ When a board UX request overlaps an active technical bug stream (for example [DU
 
 ## 2026-04-10 — In board-seeded crisis trees, PM should add only missing leadership lanes
 When a new critical parent already contains broad child delegation created by the board, PM should avoid duplicating execution tickets. First map existing owners, then create only uncovered lanes (for example CMO/co-founder leadership tracks), and lock expectations through one parent coordination comment.
+
+## 2026-04-11 — When delegation retries create duplicate child lanes, cancel superseded lanes immediately
+If API retries create duplicate subtasks under a PM parent, keep one canonical lane active and mark the extra lanes `cancelled` with explicit superseded links in the same heartbeat. This prevents parallel duplicate execution and keeps board-facing tracking clean.

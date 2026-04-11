@@ -1,0 +1,39 @@
+{
+  "runs": [
+    {
+      "performance": 80,
+      "fcp_ms": 2749.178,
+      "lcp_ms": 3807.495,
+      "tbt_ms": 252.54799999999977,
+      "max_potential_fid_ms": 302.548,
+      "cls": 0.032541,
+      "max_long_task_ms": 302.548
+    },
+    {
+      "performance": 78,
+      "fcp_ms": 2746.269,
+      "lcp_ms": 3846.259,
+      "tbt_ms": 284.3489999999997,
+      "max_potential_fid_ms": 334.349,
+      "cls": 0.032541,
+      "max_long_task_ms": 334.349
+    },
+    {
+      "performance": 80,
+      "fcp_ms": 2743.901,
+      "lcp_ms": 3810.556,
+      "tbt_ms": 251.27700000000004,
+      "max_potential_fid_ms": 301.277,
+      "cls": 0.032541,
+      "max_long_task_ms": 301.277
+    }
+  ],
+  "aggregate": {
+    "lcp_min_ms": 3807.495,
+    "lcp_max_ms": 3846.259,
+    "long_task_min_ms": 301.277,
+    "long_task_max_ms": 334.349,
+    "perf_min": 78,
+    "perf_max": 80
+  }
+}

@@ -3,32 +3,27 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, Button, Card } from '@/components/design-system';
 import { MascotIllustration } from '@/components/illustrations';
+import { ChildRouteHeader, ChildRouteScaffold } from '@/components/layout';
 import { FloatingElement } from '@/components/motion';
 import { useAudioManager } from '@/hooks/useAudioManager';
 import { useAuth } from '@/hooks/useAuth';
+import { resolveAudioPathFromKey } from '@/lib/audioPathResolver';
 import { childAvatarToEmoji } from '@/lib/childAvatarEmoji';
+import { loadSupabaseRuntime } from '@/lib/loadSupabaseRuntime';
 import {
   getActiveChildProfile,
   isGuestModeEnabled,
   setActiveChildProfile,
   type ActiveChildProfile,
 } from '@/lib/session';
-import { isSupabaseConfigured, supabase } from '@/lib/supabase';
+import { isSupabaseConfigured } from '@/lib/supabaseConfig';
 
 function cardIsSelected(selectedId: string | null, profileId: string) {
   return selectedId === profileId;
 }
 
-function toKebabCase(value: string): string {
-  return value
-    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-    .replace(/[^a-zA-Z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .toLowerCase();
-}
-
 function resolveCommonAudioPath(rawKey: string): string {
-  return `/audio/he/${rawKey.split('.').map(toKebabCase).join('/')}.mp3`;
+  return resolveAudioPathFromKey(rawKey, 'common');
 }
 
 function resolveProfileSelectionAudioKey(profile: ActiveChildProfile): string {
@@ -122,26 +117,37 @@ export default function ProfilePicker() {
     setChildrenLoading(true);
     setChildrenError('');
 
-    void supabase
-      .from('children')
-      .select('id, name, avatar')
-      .order('created_at', { ascending: true })
-      .then(({ data, error }) => {
+    void (async () => {
+      const supabase = await loadSupabaseRuntime();
+      if (!supabase) {
         if (cancelled) return;
         setChildrenLoading(false);
-        if (error) {
-          setChildrenError(t('errors.generic'));
-          setDbProfiles([]);
-          return;
-        }
-        setDbProfiles(
-          (data ?? []).map((row) => ({
-            id: row.id,
-            name: row.name,
-            emoji: childAvatarToEmoji(row.avatar),
-          })),
-        );
-      });
+        setChildrenError(t('errors.generic'));
+        setDbProfiles([]);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('children')
+        .select('id, name, avatar')
+        .order('created_at', { ascending: true });
+
+      if (cancelled) return;
+      setChildrenLoading(false);
+      if (error) {
+        setChildrenError(t('errors.generic'));
+        setDbProfiles([]);
+        return;
+      }
+
+      setDbProfiles(
+        (data ?? []).map((row) => ({
+          id: row.id,
+          name: row.name,
+          emoji: childAvatarToEmoji(row.avatar),
+        })),
+      );
+    })();
 
     return () => {
       cancelled = true;
@@ -199,6 +205,14 @@ export default function ProfilePicker() {
     if (!name || !useHostedChildProfiles) return;
     setAddBusy(true);
     setAddError('');
+
+    const supabase = await loadSupabaseRuntime();
+    if (!supabase) {
+      setAddError(t('errors.generic'));
+      setAddBusy(false);
+      return;
+    }
+
     const { data: fam, error: famErr } = await supabase.from('families').select('id').maybeSingle();
     if (famErr || !fam?.id) {
       setAddError(t('errors.generic'));
@@ -274,16 +288,23 @@ export default function ProfilePicker() {
 
   if (useHostedChildProfiles && dbProfiles?.length === 0) {
     return (
-      <main
-        style={{
-          flex: 1,
+      <ChildRouteScaffold
+        width="narrow"
+        gap="var(--space-lg)"
+        mainStyle={{
           background: 'var(--color-theme-bg)',
           padding: 'var(--space-xl)',
-          display: 'flex',
-          justifyContent: 'center',
         }}
       >
-        <section style={{ width: 'min(480px, 100%)', display: 'grid', gap: 'var(--space-lg)' }}>
+        <div
+          style={{
+            inlineSize: '100%',
+            maxInlineSize: '480px',
+            justifySelf: 'center',
+            display: 'grid',
+            gap: 'var(--space-lg)',
+          }}
+        >
           <header style={{ display: 'grid', gap: 'var(--space-sm)', textAlign: 'center' }}>
             <FloatingElement>
               <MascotIllustration variant="hero" size={112} />
@@ -328,8 +349,8 @@ export default function ProfilePicker() {
           <Button variant="secondary" size="md" type="button" onClick={() => navigate('/parent')}>
             {t('profile.parentZone')}
           </Button>
-        </section>
-      </main>
+        </div>
+      </ChildRouteScaffold>
     );
   }
 
@@ -383,46 +404,31 @@ export default function ProfilePicker() {
   ) : null;
 
   return (
-    <main
-      style={{
-        flex: 1,
+    <ChildRouteScaffold
+      width="narrow"
+      gap="var(--space-lg)"
+      mainStyle={{
         background: 'var(--color-theme-bg)',
         padding: 'var(--space-xl)',
-        display: 'flex',
-        justifyContent: 'center',
       }}
     >
-      <section
-        data-picker-state={pickerState}
-        style={{ width: 'min(960px, 100%)', display: 'grid', gap: 'var(--space-lg)' }}
-      >
-        <header
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr auto',
-            alignItems: 'center',
-            gap: 'var(--space-md)',
-          }}
-        >
-          <div style={{ display: 'grid', gap: 'var(--space-xs)' }}>
-            <h1
-              style={{
-                fontSize: 'var(--font-size-2xl)',
-                fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
-                color: 'var(--color-text-primary)',
-              }}
-            >
-              {t('profile.whoPlaysToday')}
-            </h1>
-            <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-md)' }}>
-              {t('profile.subtitle')}
-            </p>
-          </div>
-
+      <div data-picker-state={pickerState} style={{ display: 'grid', gap: 'var(--space-lg)' }}>
+      <ChildRouteHeader
+        title={t('profile.whoPlaysToday')}
+        subtitle={t('profile.subtitle')}
+        trailing={
           <FloatingElement>
             <MascotIllustration variant="hero" size={112} />
           </FloatingElement>
-        </header>
+        }
+        headingStyle={{ gap: 'var(--space-xs)' }}
+        titleStyle={{
+          fontSize: 'var(--font-size-2xl)',
+          fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
+          color: 'var(--color-text-primary)',
+        }}
+        subtitleStyle={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-md)' }}
+      />
 
         <div style={{ display: 'grid', gap: 'var(--space-md)' }}>
           <Card
@@ -634,7 +640,7 @@ export default function ProfilePicker() {
             {t('profile.continue')}
           </Button>
         </footer>
-      </section>
-    </main>
+      </div>
+    </ChildRouteScaffold>
   );
 }

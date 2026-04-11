@@ -127,3 +127,21 @@ When a handbook content issue remains `in_progress` but the targeted slugs alrea
 
 ## 2026-04-10 — Escalation checkpoint lanes may require evidence repost even when source issue is already done
 When asked for an “immediate checkpoint” on a completed source lane, treat it as a communication deliverable: post fresh evidence + exact next gate on the source issue, mirror owner/ETA on the parent coordination issue, then close the checkpoint lane with links to both comments.
+
+## 2026-04-10 — Reading parity lanes should combine age-band key overrides with parent-summary language locks
+For script/audio parity tasks like [DUB-588](/DUB/issues/DUB-588), lock `3-4` listen/explore wording by adding runtime-consumed age-band overrides under `common.games.decodableMicroStories.ageBand.*` and `common.parentDashboard.games.decodableMicroStories.ageBand.*`, and rewrite `common.parentDashboard.handbooks.mikaSoundGarden.{decodeInStoryAccuracy,evidenceReading,independenceTrend}` to listening-oriented phrasing. Then run one targeted parity script (`manifest + file existence`) over icon-control and decode-first families before closing.
+
+## 2026-04-11 — Consistency checkpoints should publish one measurable cross-family audit snapshot
+For CEO consistency gates like [DUB-565](/DUB/issues/DUB-565), publish a single artifact that includes: target key count across active families, missing manifest/file counts, and a short list of overlong narration candidates. This gives PM a comparable checkpoint format across lanes and turns “consistency” into measurable evidence rather than subjective review.
+
+## 2026-04-11 — Launch-handbook closures need a deterministic map doc for FED/QA unblock
+For launch handbook lanes like [DUB-541](/DUB/issues/DUB-541), do not close on parity counts alone. Publish a dedicated key->audio mapping artifact (including page-level mapping) so FED and QA can trace runtime lookups deterministically without reverse-engineering manifest keys.
+
+## 2026-04-11 — Age-band overhaul specs require true story-pack families, not only wording overrides
+For decodable age-band lanes like [DUB-528](/DUB/issues/DUB-528), `ageBand.<band>.instructions/hints` overrides are insufficient for spec closure. Add explicit `stories.<storyId>.pages.<pageId>.{narration,prompt}` families plus per-band feedback and parent metric keys, then validate parity by each band prefix.
+
+## 2026-04-11 — Letter-storybook kickoff lanes should ship one reusable lexicon + key/audio contract artifact
+For early storybook planning tasks like [DUB-654](/DUB/issues/DUB-654), deliver one standalone framework doc that includes: (1) canonical 22-letter association words aligned with existing `common.letters.anchorWords.*`, (2) short child-facing sentence templates by beat, and (3) explicit `common.handbooks.<slug>` + `common.parentDashboard.handbooks.<slug>` key families with audio conventions. This gives PM/FED a concrete contract before runtime i18n implementation starts and reduces follow-up wording/schema churn.
+
+## 2026-04-11 — Storybook runtime lanes should lock canonical letter keys before FED wiring
+For 22-letter storybook packs, publish runtime-facing keys under `common.games.<slug>` and explicitly lock the letter-key set to existing cross-game canon (`qof` instead of `kuf`) in the handoff map. This prevents FED wiring drift and keeps reuse of `common.letters.anchorWords.*` consistent across games/videos.

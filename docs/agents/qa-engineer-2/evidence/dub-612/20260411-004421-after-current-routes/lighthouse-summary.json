@@ -1,0 +1,99 @@
+{
+  "routes": [
+    {
+      "route": "/",
+      "performance": 82,
+      "fcp_ms": 3156.005,
+      "lcp_ms": 3864.328,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 25.071,
+      "longest_task_ms": 359.833,
+      "cls": 0.032541,
+      "speed_index_ms": 2478
+    },
+    {
+      "route": "/games",
+      "performance": 79,
+      "fcp_ms": 4001.898,
+      "lcp_ms": 4001.898,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 19.89,
+      "longest_task_ms": 289.835,
+      "cls": 0.000786,
+      "speed_index_ms": 2968
+    },
+    {
+      "route": "/profiles",
+      "performance": 79,
+      "fcp_ms": 3982.689,
+      "lcp_ms": 3982.689,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 20.387,
+      "longest_task_ms": 272.256,
+      "cls": 0.000786,
+      "speed_index_ms": 2965
+    },
+    {
+      "route": "/parent",
+      "performance": 80,
+      "fcp_ms": 3939.688,
+      "lcp_ms": 3939.688,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 17.563,
+      "longest_task_ms": 249.123,
+      "cls": 0.000786,
+      "speed_index_ms": 2937
+    },
+    {
+      "route": "/games/reading/interactive-handbook",
+      "performance": 83,
+      "fcp_ms": 3616.196,
+      "lcp_ms": 3616.196,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 19.912,
+      "longest_task_ms": 263.012,
+      "cls": 0.000786,
+      "speed_index_ms": 2685
+    }
+  ],
+  "aggregate": {
+    "count": 5,
+    "perf_median": 80,
+    "lcp_median_ms": 3939.688,
+    "cls_max": 0.032541,
+    "longest_task_p95_proxy_ms": 359.833,
+    "worst_lcp_route": {
+      "route": "/games",
+      "performance": 79,
+      "fcp_ms": 4001.898,
+      "lcp_ms": 4001.898,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 19.89,
+      "longest_task_ms": 289.835,
+      "cls": 0.000786,
+      "speed_index_ms": 2968
+    },
+    "worst_longest_task_route": {
+      "route": "/",
+      "performance": 82,
+      "fcp_ms": 3156.005,
+      "lcp_ms": 3864.328,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 25.071,
+      "longest_task_ms": 359.833,
+      "cls": 0.032541,
+      "speed_index_ms": 2478
+    },
+    "worst_tbt_route": {
+      "route": "/games/reading/interactive-handbook",
+      "performance": 83,
+      "fcp_ms": 3616.196,
+      "lcp_ms": 3616.196,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 19.912,
+      "longest_task_ms": 263.012,
+      "cls": 0.000786,
+      "speed_index_ms": 2685
+    }
+  }
+}

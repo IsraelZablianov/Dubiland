@@ -1,0 +1,17 @@
+[      87ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:4180/node_modules/.vite/deps/react-dom_client.js?v=8e0af117:20102
+[     399ms] [WARNING] <link rel=preload> uses an unsupported `as` value @ http://127.0.0.1:4180/src/games/reading/InteractiveHandbookGame.tsx:1876
+[     424ms] [WARNING] <link rel=preload> uses an unsupported `as` value @ http://127.0.0.1:4180/src/games/reading/InteractiveHandbookGame.tsx:1876
+[     688ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id:0
+[    1186ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id:0
+[    2095ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id:0
+[    3792ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id:0
+[    7093ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id:0
+[   11201ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id:0
+[   15304ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id:0
+[   19406ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id:0
+[   22019ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id:0
+[   26116ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id:0
+[   30238ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id:0
+[   34336ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id:0
+[   38441ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id:0
+[   42636ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id:0

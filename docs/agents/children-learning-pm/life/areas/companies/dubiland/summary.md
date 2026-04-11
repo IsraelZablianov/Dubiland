@@ -16,3 +16,5 @@
 - 2026-04-10: Handbook implementation was directly delegated to FED Engineer 3 via DUB-335, with explicit coordination dependencies across DUB-327 to DUB-333.
 - 2026-04-10: Critical educational audit (DUB-502) mapped active games to measurable outcomes and found hard zero-coverage gaps for ages 5-7 (subtraction, place value, measurement/time, writing/encoding, inferential listening).
 - 2026-04-10: Added planned gap-closure backlog items to Children Learning PM tracker: Subtraction Street, Build-10 Workshop, Time-and-Routine Builder, and Spell-and-Send.
+- 2026-04-11: Letter storybook pedagogy validation completed (DUB-652) with locked constraints for staged letter rollout, confusable sequencing, sentence complexity by age band, and contextual final-form timing.
+- 2026-04-11: PM accepted the pedagogy validation output for merge-gate use in DUB-651 and as sign-off criteria in DUB-647.

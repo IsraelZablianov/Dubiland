@@ -10,6 +10,7 @@ import {
   type TopicIllustrationSlug,
 } from '@/components/illustrations';
 import { useAudioManager } from '@/hooks/useAudioManager';
+import { resolveAudioPathFromKey } from '@/lib/audioPathResolver';
 import type { RouteTopicSlug } from '@/lib/topicSlugMap';
 import type { PublishedTopicVideo } from '@/lib/videosRepository';
 
@@ -25,30 +26,12 @@ interface AudioIconButtonProps {
   onClick: () => void;
 }
 
-function toKebabCase(value: string): string {
-  return value
-    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-    .replace(/[^a-zA-Z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .toLowerCase();
+function resolveCommonAudioPath(rawKey: string): string {
+  return resolveAudioPathFromKey(rawKey, 'common');
 }
 
 function stripCommonNamespace(rawKey: string): string {
   return rawKey.startsWith('common.') ? rawKey.slice('common.'.length) : rawKey;
-}
-
-function resolveCommonAudioPath(rawKey: string): string {
-  const pathSegments = stripCommonNamespace(rawKey).split('.').map(toKebabCase).filter(Boolean);
-  const fileSegment = pathSegments.at(-1);
-
-  if (!fileSegment) {
-    return '/audio/he/branding/app-name.mp3';
-  }
-
-  const directorySegments = pathSegments.slice(0, -1).join('/');
-  return directorySegments
-    ? `/audio/he/${directorySegments}/${fileSegment}.mp3`
-    : `/audio/he/${fileSegment}.mp3`;
 }
 
 function AudioIconButton({ label, onClick }: AudioIconButtonProps) {

@@ -1,5 +1,6 @@
 import type { Database } from '@dubiland/shared';
-import { isSupabaseConfigured, supabase } from '@/lib/supabase';
+import { loadSupabaseRuntime } from '@/lib/loadSupabaseRuntime';
+import { isSupabaseConfigured } from '@/lib/supabaseConfig';
 
 export type CatalogAgeBand = '3-4' | '4-5' | '5-6' | '6-7' | 'all';
 export type CatalogContentType = 'game' | 'video';
@@ -105,6 +106,11 @@ export async function listCatalogForChild(
   const { childId, contentTypes = ['game'], topicSlug = null, ageBand = null, limit = 50, offset = 0 } = options;
 
   if (!isSupabaseConfigured || !isUuid(childId)) {
+    return null;
+  }
+
+  const supabase = await loadSupabaseRuntime();
+  if (!supabase) {
     return null;
   }
 

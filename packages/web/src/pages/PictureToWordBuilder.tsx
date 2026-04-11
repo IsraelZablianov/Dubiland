@@ -3,6 +3,7 @@ import type { Child, Game, GameLevel } from '@dubiland/shared';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/design-system';
+import { ChildRouteHeader, ChildRouteScaffold } from '@/components/layout';
 import type { GameCompletionResult } from '@/games/engine';
 import { PictureToWordBuilderGame } from '@/games/reading/PictureToWordBuilderGame';
 import { useAudioManager } from '@/hooks/useAudioManager';
@@ -56,6 +57,16 @@ export default function PictureToWordBuilderPage() {
     }),
     [activeProfile?.emoji, activeProfile?.id, activeProfile?.name, t],
   );
+  const runtimeLevel = useMemo<GameLevel>(
+    () => ({
+      ...PICTURE_TO_WORD_BUILDER_LEVEL,
+      configJson: {
+        ...(PICTURE_TO_WORD_BUILDER_LEVEL.configJson as Record<string, unknown>),
+        ageBand: activeProfile?.ageBand ?? '5-6',
+      },
+    }),
+    [activeProfile?.ageBand],
+  );
 
   const [completionResult, setCompletionResult] = useState<GameCompletionResult | null>(null);
   const [syncState, setSyncState] = useState<SyncState>('idle');
@@ -75,42 +86,15 @@ export default function PictureToWordBuilderPage() {
   }, [audio, navigate]);
 
   return (
-    <main
-      style={{
-        flex: 1,
-        background: 'var(--color-theme-bg)',
-        padding: 'var(--space-lg)',
-        display: 'flex',
-        justifyContent: 'center',
-      }}
-    >
-      <section style={{ width: 'min(1180px, 100%)', display: 'grid', gap: 'var(--space-md)' }}>
-        <header
-          style={{
-            display: 'flex',
-            gap: 'var(--space-sm)',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-          }}
-        >
-          <div style={{ display: 'grid', gap: 'var(--space-xs)' }}>
-            <h1
-              style={{
-                fontSize: 'var(--font-size-2xl)',
-                color: 'var(--color-text-primary)',
-                fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
-              }}
-            >
-              {t('games.pictureToWordBuilder.title')}
-            </h1>
-            <p style={{ color: 'var(--color-text-secondary)' }}>{t('games.pictureToWordBuilder.subtitle')}</p>
-          </div>
-        </header>
+    <ChildRouteScaffold width="wide">
+      <ChildRouteHeader
+        title={t('games.pictureToWordBuilder.title')}
+        subtitle={t('games.pictureToWordBuilder.subtitle')}
+      />
 
         <PictureToWordBuilderGame
           game={PICTURE_TO_WORD_BUILDER_GAME}
-          level={PICTURE_TO_WORD_BUILDER_LEVEL}
+          level={runtimeLevel}
           child={child}
           onComplete={handleComplete}
           audio={audio}
@@ -128,7 +112,6 @@ export default function PictureToWordBuilderPage() {
             </p>
           </Card>
         )}
-      </section>
-    </main>
+    </ChildRouteScaffold>
   );
 }

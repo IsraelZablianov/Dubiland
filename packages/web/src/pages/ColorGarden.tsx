@@ -3,6 +3,7 @@ import type { Child, Game, GameLevel } from '@dubiland/shared';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button, Card } from '@/components/design-system';
+import { ChildRouteHeader, ChildRouteScaffold } from '@/components/layout';
 import type { GameCompletionResult } from '@/games/engine';
 import { ColorGardenGame } from '@/games/colors/ColorGardenGame';
 import { useAudioManager } from '@/hooks/useAudioManager';
@@ -70,42 +71,16 @@ export default function ColorGardenPage() {
   }, []);
 
   return (
-    <main
-      style={{
-        flex: 1,
-        background: 'var(--color-theme-bg)',
-        padding: 'var(--space-lg)',
-        display: 'flex',
-        justifyContent: 'center',
-      }}
-    >
-      <section style={{ width: 'min(1180px, 100%)', display: 'grid', gap: 'var(--space-md)' }}>
-        <header
-          style={{
-            display: 'flex',
-            gap: 'var(--space-sm)',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-          }}
-        >
-          <div style={{ display: 'grid', gap: 'var(--space-xs)' }}>
-            <h1
-              style={{
-                fontSize: 'var(--font-size-2xl)',
-                color: 'var(--color-text-primary)',
-                fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
-              }}
-            >
-              {t('games.colorGarden.title')}
-            </h1>
-            <p style={{ color: 'var(--color-text-secondary)' }}>{t('games.colorGarden.subtitle')}</p>
-          </div>
-
+    <ChildRouteScaffold width="wide">
+      <ChildRouteHeader
+        title={t('games.colorGarden.title')}
+        subtitle={t('games.colorGarden.subtitle')}
+        leading={
           <Button variant="ghost" size="md" onClick={() => navigate('/games')} aria-label={t('nav.back')}>
             {t('nav.back')}
           </Button>
-        </header>
+        }
+      />
 
         <ColorGardenGame
           game={COLOR_GARDEN_GAME}
@@ -122,7 +97,6 @@ export default function ColorGardenPage() {
             </p>
           </Card>
         )}
-      </section>
-    </main>
+    </ChildRouteScaffold>
   );
 }

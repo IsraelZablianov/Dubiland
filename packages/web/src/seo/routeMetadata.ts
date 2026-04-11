@@ -24,6 +24,7 @@ export type RouteMetadataKey =
   | 'sightWordSprintGame'
   | 'decodableMicroStoriesGame'
   | 'interactiveHandbookGame'
+  | 'letterStorybookGame'
   | 'rootFamilyStickersGame'
   | 'confusableLetterContrastGame'
   | 'notFound'
@@ -165,6 +166,11 @@ const ROUTE_METADATA_BY_PATH: Record<string, RouteMetadataDefinition> = {
   '/games/reading/interactive-handbook': {
     key: 'interactiveHandbookGame',
     canonicalPath: '/games/reading/interactive-handbook',
+    indexable: false,
+  },
+  '/games/reading/letter-storybook': {
+    key: 'letterStorybookGame',
+    canonicalPath: '/games/reading/letter-storybook',
     indexable: false,
   },
   '/games/reading/root-family-stickers': {

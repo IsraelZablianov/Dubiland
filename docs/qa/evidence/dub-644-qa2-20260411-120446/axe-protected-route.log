@@ -1,0 +1,19 @@
+npm warn Unknown env config "auto-install-peers". This will stop working in the next major version of npm.
+npm warn Unknown env config "recursive". This will stop working in the next major version of npm.
+Running axe-core 4.11.2 in chrome-headless
+Error: session not created: This version of ChromeDriver only supports Chrome version 147
+Current browser version is 146.0.7680.180 with binary path /Applications/Google Chrome.app/Contents/MacOS/Google Chrome
+
+Please use browser-driver-manager to install matching versions of Chrome and ChromeDriver:
+        
+        $ npx browser-driver-manager install chrome
+        
+        This will install the latest synced versions. You may install specific synced versions using 
+        
+        $ npx browser-driver-manager install chrome@<version>
+
+        where <version> is a specific version, e.g. 123.45.67, or a channel, e.g. canary.
+
+        You may also pass the `--chromedriver-path` option to axe:
+
+        $ axe --chromedriver-path <path/to/chromedriver-executable>

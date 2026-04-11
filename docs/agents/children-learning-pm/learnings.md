@@ -8,6 +8,9 @@ Append new entries after each completed task.
 What was learned and why it matters.
 -->
 
+## 2026-04-11 — Full Alphabet Storybooks Need Developmental Staging To Avoid Hidden Overload
+A 22-letter storybook can look simple at feature level but become pedagogically noisy if it exposes confusable letters and sentence-length jumps too early. The reliable pattern is staged rollout (high-distinction letters first, confusable pairs later), plus explicit sentence complexity caps by age band and a strict "one new difficulty variable per page cluster" rule.
+
 ## 2026-04-10 — Catalog Coverage Can Look Full While Older-Age Mastery Is Still Shallow
 A feature list can show broad curriculum labels (letters, numbers, reading), but a game-by-game objective audit revealed hard zero-coverage gaps for ages 5-7 (subtraction, place value, measurement/time, writing/encoding, inferential listening). PM quality checks need explicit age-band outcome targets (1 week/1 month) and a zero-game gap scan, not only category-level coverage tables.
 

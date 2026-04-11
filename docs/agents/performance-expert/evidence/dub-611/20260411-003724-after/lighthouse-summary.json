@@ -1,0 +1,12 @@
+{
+  "out_dir": "docs/agents/performance-expert/evidence/dub-611/20260411-003724-after",
+  "route": "/",
+  "performance": 83,
+  "fcp_ms": 3102.112,
+  "lcp_ms": 3802.107,
+  "tbt_ms": 0,
+  "max_potential_fid_ms": 19.034,
+  "cls": 0.032541,
+  "speed_index_ms": 2511,
+  "max_long_task_ms": 312.489
+}

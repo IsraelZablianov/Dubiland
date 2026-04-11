@@ -1,0 +1,256 @@
+{
+  "error": {
+    "message": "Protocol error: Connection closed.",
+    "stack": "Error: Protocol error: Connection closed.\n    at Connection._rawSend (/Users/israelz/.nvm/versions/node/v20.19.1/lib/node_modules/puppeteer/node_modules/puppeteer-core/lib/cjs/puppeteer/cdp/Connection.js:97:35)\n    at Connection.send (/Users/israelz/.nvm/versions/node/v20.19.1/lib/node_modules/puppeteer/node_modules/puppeteer-core/lib/cjs/puppeteer/cdp/Connection.js:90:21)\n    at CdpBrowser._disposeContext (/Users/israelz/.nvm/versions/node/v20.19.1/lib/node_modules/puppeteer/node_modules/puppeteer-core/lib/cjs/puppeteer/cdp/Browser.js:118:32)\n    at CdpBrowserContext.close (/Users/israelz/.nvm/versions/node/v20.19.1/lib/node_modules/puppeteer/node_modules/puppeteer-core/lib/cjs/puppeteer/cdp/BrowserContext.js:138:29)\n    at withPage (file:///private/tmp/dub578_qa_matrix.mjs:219:19)\n    at async run (file:///private/tmp/dub578_qa_matrix.mjs:552:25)",
+    "payload": null
+  },
+  "partial": {
+    "issue": "DUB-578",
+    "capturedAt": "2026-04-10T22:22:52.588Z",
+    "baseUrl": "http://127.0.0.1:4178",
+    "outDir": "/Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-578-qa2-2026-04-10T22-22-52-586Z",
+    "auth": {
+      "email": "qa2.dub578.1775859772588@proton.me",
+      "userId": "534502ae-db4c-43d9-b6fb-66fed870a948",
+      "familyId": "bb9252d9-4b4e-4a7c-b1a0-30c551266424",
+      "childId": "64782457-a7f1-4ad4-96b0-e129924acb85"
+    },
+    "ageBandDiscoverability": [
+      {
+        "ageBand": "3-4",
+        "expectedBookId": "book1",
+        "selectedBookId": "book1",
+        "pass": true,
+        "selectedClassName": "interactive-handbook__bookshelf-choice interactive-handbook__bookshelf-choice--featured interactive-handbook__bookshelf-choice--book1 interactive-handbook__bookshelf-choice--selected"
+      },
+      {
+        "ageBand": "5-6",
+        "expectedBookId": "book4",
+        "selectedBookId": "book4",
+        "pass": true,
+        "selectedClassName": "interactive-handbook__bookshelf-choice interactive-handbook__bookshelf-choice--featured interactive-handbook__bookshelf-choice--book4 interactive-handbook__bookshelf-choice--selected"
+      },
+      {
+        "ageBand": "6-7",
+        "expectedBookId": "book7",
+        "selectedBookId": "book7",
+        "pass": true,
+        "selectedClassName": "interactive-handbook__bookshelf-choice interactive-handbook__bookshelf-choice--featured interactive-handbook__bookshelf-choice--book7 interactive-handbook__bookshelf-choice--selected"
+      }
+    ],
+    "viewportMatrix": [
+      {
+        "viewport": "1024x768",
+        "screenshot": "/Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-578-qa2-2026-04-10T22-22-52-586Z/handbook-1024x768.png",
+        "audio": {
+          "autoPlayCountAfterLoad": 2,
+          "playCountAfterReplayClick": 5,
+          "replayIncrementsAudio": true
+        },
+        "htmlDir": "rtl",
+        "bodyDir": null,
+        "storyDir": "rtl",
+        "pageChipBefore": "עמוד 1 מתוך 10",
+        "pageChipAfterNextClick": "עמוד 2 מתוך 10",
+        "nextDisabledBefore": false,
+        "pageDidNotAdvanceOnDisabledNext": null,
+        "controls": {
+          "count": 6,
+          "minHeight": 72,
+          "minWidth": 114,
+          "tooSmallCount": 0,
+          "tooSmallSample": []
+        },
+        "choices": {
+          "count": 3,
+          "minHeight": 72,
+          "minWidth": 216,
+          "tooSmallCount": 0,
+          "tooSmallSample": []
+        },
+        "textReplay": {
+          "count": 3,
+          "minHeight": 0,
+          "minWidth": 0,
+          "tooSmallCount": 1,
+          "hasTriangleGlyph": false
+        },
+        "replayControl": {
+          "present": true,
+          "hasTriangleIconPath": true,
+          "pathD": "M10 9.1L14.7 12L10 14.9V9.1Z"
+        },
+        "hasCheckSubmitButton": false,
+        "nextIcon": {
+          "inlineStyle": "transform: scaleX(-1);",
+          "computedTransform": "matrix(-1, 0, 0, 1, 0, 0)"
+        },
+        "modeButtons": [
+          {
+            "text": "הקרא לי",
+            "width": 143.91,
+            "height": 72
+          },
+          {
+            "text": "קוראים ומשחקים",
+            "width": 143.91,
+            "height": 72
+          },
+          {
+            "text": "חזרה רגועה",
+            "width": 143.91,
+            "height": 72
+          }
+        ],
+        "selectedBooks": [
+          {
+            "className": "interactive-handbook__bookshelf-choice interactive-handbook__bookshelf-choice--featured interactive-handbook__bookshelf-choice--book4 interactive-handbook__bookshelf-choice--selected",
+            "bookId": "book4"
+          }
+        ]
+      },
+      {
+        "viewport": "768x1024",
+        "screenshot": "/Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-578-qa2-2026-04-10T22-22-52-586Z/handbook-768x1024.png",
+        "audio": {
+          "autoPlayCountAfterLoad": 2,
+          "playCountAfterReplayClick": 5,
+          "replayIncrementsAudio": true
+        },
+        "htmlDir": "rtl",
+        "bodyDir": null,
+        "storyDir": "rtl",
+        "pageChipBefore": "עמוד 1 מתוך 10",
+        "pageChipAfterNextClick": "עמוד 2 מתוך 10",
+        "nextDisabledBefore": false,
+        "pageDidNotAdvanceOnDisabledNext": null,
+        "controls": {
+          "count": 6,
+          "minHeight": 72,
+          "minWidth": 114,
+          "tooSmallCount": 0,
+          "tooSmallSample": []
+        },
+        "choices": {
+          "count": 3,
+          "minHeight": 72,
+          "minWidth": 216,
+          "tooSmallCount": 0,
+          "tooSmallSample": []
+        },
+        "textReplay": {
+          "count": 3,
+          "minHeight": 0,
+          "minWidth": 0,
+          "tooSmallCount": 1,
+          "hasTriangleGlyph": false
+        },
+        "replayControl": {
+          "present": true,
+          "hasTriangleIconPath": true,
+          "pathD": "M10 9.1L14.7 12L10 14.9V9.1Z"
+        },
+        "hasCheckSubmitButton": false,
+        "nextIcon": {
+          "inlineStyle": "transform: scaleX(-1);",
+          "computedTransform": "matrix(-1, 0, 0, 1, 0, 0)"
+        },
+        "modeButtons": [
+          {
+            "text": "הקרא לי",
+            "width": 143.91,
+            "height": 72
+          },
+          {
+            "text": "קוראים ומשחקים",
+            "width": 143.91,
+            "height": 72
+          },
+          {
+            "text": "חזרה רגועה",
+            "width": 143.91,
+            "height": 72
+          }
+        ],
+        "selectedBooks": [
+          {
+            "className": "interactive-handbook__bookshelf-choice interactive-handbook__bookshelf-choice--featured interactive-handbook__bookshelf-choice--book4 interactive-handbook__bookshelf-choice--selected",
+            "bookId": "book4"
+          }
+        ]
+      },
+      {
+        "viewport": "390x844",
+        "screenshot": "/Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-578-qa2-2026-04-10T22-22-52-586Z/handbook-390x844.png",
+        "audio": {
+          "autoPlayCountAfterLoad": 2,
+          "playCountAfterReplayClick": 5,
+          "replayIncrementsAudio": true
+        },
+        "htmlDir": "rtl",
+        "bodyDir": null,
+        "storyDir": "rtl",
+        "pageChipBefore": "עמוד 1 מתוך 10",
+        "pageChipAfterNextClick": "עמוד 2 מתוך 10",
+        "nextDisabledBefore": false,
+        "pageDidNotAdvanceOnDisabledNext": null,
+        "controls": {
+          "count": 6,
+          "minHeight": 72,
+          "minWidth": 114,
+          "tooSmallCount": 0,
+          "tooSmallSample": []
+        },
+        "choices": {
+          "count": 3,
+          "minHeight": 72,
+          "minWidth": 216,
+          "tooSmallCount": 0,
+          "tooSmallSample": []
+        },
+        "textReplay": {
+          "count": 3,
+          "minHeight": 0,
+          "minWidth": 0,
+          "tooSmallCount": 1,
+          "hasTriangleGlyph": false
+        },
+        "replayControl": {
+          "present": true,
+          "hasTriangleIconPath": true,
+          "pathD": "M10 9.1L14.7 12L10 14.9V9.1Z"
+        },
+        "hasCheckSubmitButton": false,
+        "nextIcon": {
+          "inlineStyle": "transform: scaleX(-1);",
+          "computedTransform": "matrix(-1, 0, 0, 1, 0, 0)"
+        },
+        "modeButtons": [
+          {
+            "text": "הקרא לי",
+            "width": 143.91,
+            "height": 72
+          },
+          {
+            "text": "קוראים ומשחקים",
+            "width": 143.91,
+            "height": 72
+          },
+          {
+            "text": "חזרה רגועה",
+            "width": 143.91,
+            "height": 72
+          }
+        ],
+        "selectedBooks": [
+          {
+            "className": "interactive-handbook__bookshelf-choice interactive-handbook__bookshelf-choice--featured interactive-handbook__bookshelf-choice--book4 interactive-handbook__bookshelf-choice--selected",
+            "bookId": "book4"
+          }
+        ]
+      }
+    ],
+    "progressionAndPersistence": {},
+    "assertions": {}
+  }
+}

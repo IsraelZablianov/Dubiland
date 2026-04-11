@@ -120,14 +120,19 @@ export default function Login() {
             >
               {t('onboarding:welcome')}
             </h1>
-            <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-md)' }}>
+            <p style={{ color: 'var(--color-text-primary)', fontSize: 'var(--font-size-md)' }}>
               {t('onboarding:subtitle')}
             </p>
           </header>
 
           {/* Primary CTA — try for free (guest mode) */}
           <div className="login-page__guest-cta">
-            <Button variant="primary" size="lg" onClick={handleGuestContinue} style={{ width: '100%' }}>
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={handleGuestContinue}
+              style={{ width: '100%', color: 'var(--color-text-primary)' }}
+            >
               {t('onboarding:continueAsGuest')}
             </Button>
             <FloatingElement className="login-page__guest-hint" delayMs={280}>
@@ -193,7 +198,7 @@ export default function Login() {
           )}
 
           {/* Hint for parents */}
-          <p style={{ color: 'var(--color-text-light)', fontSize: 'var(--font-size-xs)', textAlign: 'center' }}>
+          <p style={{ color: 'var(--color-text-primary)', fontSize: 'var(--font-size-xs)', textAlign: 'center' }}>
             {t('onboarding:formHint')}
           </p>
 
@@ -246,7 +251,7 @@ export default function Login() {
         }
 
         .login-page__divider span {
-          color: var(--color-text-light);
+          color: var(--color-text-primary);
           font-size: var(--font-size-xs);
           white-space: nowrap;
         }

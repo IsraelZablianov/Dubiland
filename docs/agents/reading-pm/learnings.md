@@ -3,6 +3,40 @@
 Accumulated knowledge specific to the Reading PM role.
 Append new entries after each completed task.
 
+## 2026-04-11 — Superseded-lane closure note format
+- For duplicate reading lanes, closure comments should always include three anchors together: canonical issue link, parent tracker link, and explicit delegation-audit counts from `docs/reading-pm/features.md`.
+- This keeps cancellation heartbeats self-contained and auditable without reopening spec-writing scope.
+
+## 2026-04-11 — Duplicate wake handling for cancelled reading lanes
+- When a wake issue is already `cancelled` and marked as superseded, skip checkout to avoid accidental status drift back to `in_progress`.
+- Post one closure comment that links the canonical lane and parent tracker, then keep all new work on the canonical issue only.
+- Run the mandatory `docs/reading-pm/features.md` delegation audit even on duplicate-lane wakes and explicitly record whether any specs remain un-handed-off.
+
+## 2026-04-11 — Cancelled-lane checkout side effect
+- In this Paperclip environment, `POST /api/issues/{issueId}/checkout` can move a `cancelled` issue back to `in_progress` when checkout succeeds.
+- For duplicate/superseded reading lanes, immediately patch the issue back to `cancelled` in the same heartbeat after posting the closure note, so tracker state does not drift.
+
+## 2026-04-11 — Storybook delegation pairing rule for reading lanes
+- A large letter-storybook spec should still be delegated as at least a paired execution cluster: one FED runtime lane plus one Content Writer i18n/audio lane in the same heartbeat.
+- For FED load-balancing, counting only active statuses (`backlog,todo,in_progress,in_review,blocked`) is enough to pick the least-loaded engineer quickly and keeps delegation decisions defensible.
+- When sibling specialist guidance lanes are still open, mark them as merge gates inside the spec and in assignee comments so implementation can start without losing cross-functional quality controls.
+
+## 2026-04-11 — Content-lane completion can trigger full cluster shipment
+- In three-lane reading overhauls, once the last support lane closes (`done`), feature status should be promoted immediately to `Shipped` and mapped skill-row counts should move from in-progress to shipped in the same edit.
+- Fast successive transitions (`todo` -> `in_progress` -> `done`) on a single lane can happen within heartbeats; changelog chronology should retain both transitions for auditability.
+
+## 2026-04-11 — Active-lane drift tends to appear on content tracks
+- In mixed-status clusters, content/audio lanes can jump from `todo` to `in_progress` without a feature-level state change; lane annotations should be checked every heartbeat even when coverage rows stay stable.
+- When feature status and coverage remain unchanged, still log the lane-level transition in changelog to preserve execution chronology for cross-PM parity checks.
+
+## 2026-04-11 — Explicit lane labels reduce false mismatch noise
+- Features that list multiple linked issue IDs should always include per-lane status text (for example, `done`) even when all lanes are closed, otherwise automated parity checks can misclassify them as drift.
+- Normalizing lane annotations in `features.md` is a low-cost hygiene step that preserves deterministic heartbeat audits without changing curriculum state.
+
+## 2026-04-11 — Cluster shipment trigger for narrative overhauls
+- For multi-lane narrative upgrade features, shipment should be declared only when implementation lane closes; content/mechanics closure alone is insufficient for child-visible impact.
+- When a cluster moves to shipped, update all mapped skill-row counts in the same edit to preserve coverage-table integrity.
+
 ## 2026-04-11 — Partial-completion lane hygiene
 - In multi-lane feature clusters, stale lane labels usually persist on support/content lanes that finish quickly; always verify every linked issue id in `features.md`, not only implementation lanes.
 - Changelog entries should record the full lane vector (all three lane statuses) so future parity checks can distinguish true progress from historical snapshots.

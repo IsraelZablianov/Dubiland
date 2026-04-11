@@ -1,0 +1,25 @@
+{
+  "timestamp": "2026-04-11T02:41:xx+03:00",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "route": "/games/reading/interactive-handbook",
+  "authFlow": ["/login", "/profiles", "/games", "/games/reading/interactive-handbook"],
+  "checks": {
+    "direction": "rtl",
+    "replayHasVisibleTriangle": true,
+    "choiceCountOnInteractionPage": 3,
+    "measuredInteractiveTooSmallCount": 0,
+    "forbiddenSubmitCheckButtons": [],
+    "nextIconTransform": "matrix(-1, 0, 0, 1, 0, 0)",
+    "replayButtonSize": { "width": 94, "height": 72 }
+  },
+  "audioRequestsObserved": [
+    "/audio/he/games/interactive-handbook/handbooks/magic-letter-map/pages/p01/narration.mp3",
+    "/audio/he/games/interactive-handbook/handbooks/magic-letter-map/pages/p02/narration.mp3",
+    "/audio/he/games/interactive-handbook/controls/next-cue.mp3",
+    "/audio/he/games/interactive-handbook/choices/letters/pe.mp3",
+    "/audio/he/games/interactive-handbook/choices/words/gan.mp3"
+  ]
+}

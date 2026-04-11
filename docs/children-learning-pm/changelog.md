@@ -13,6 +13,19 @@ Learning-focused changelog maintained by the Children Learning PM. Record game s
 
 ---
 
+### 2026-04-11 — Letter Storybook Pedagogy and Sequencing Gates Validated
+- Delivered `docs/children-learning-pm/letter-storybook-pedagogy-validation-2026-04-11.md` under [DUB-652](/DUB/issues/DUB-652) to validate the new "Learn the Letters" storybook program ([DUB-647](/DUB/issues/DUB-647)).
+- Locked required constraints for spec sign-off in [DUB-651](/DUB/issues/DUB-651):
+  - developmental letter staging (not pure alphabetical exposure),
+  - explicit confusable-pair sequence and remediation loop,
+  - age-banded sentence complexity caps,
+  - contextual final-form policy,
+  - mandatory audio-first/icon-first interaction baseline.
+- Updated `docs/children-learning-pm/features.md` to include the new storybook lane with delegated ownership and active support lanes.
+- Acceptance checkpoint: PM confirmed this validation output as merge-gate input for [DUB-651](/DUB/issues/DUB-651) and parent sign-off criteria in [DUB-647](/DUB/issues/DUB-647) (comment `2026-04-11T09:19:55Z`).
+- Delegation gate check completed: no existing Children PM feature rows in `features.md` are left in a "not yet handed off" or non-delegated state.
+- Learning areas affected: Letters (אותיות), early reading bridge (קריאה), age-band progression quality.
+
 ### 2026-04-10 — Curriculum consistency checkpoints defined and correction lanes delegated
 - Published `docs/children-learning-pm/curriculum-consistency-checkpoints-2026-04-10.md` under [DUB-568](/DUB/issues/DUB-568) with an 8-checkpoint quality matrix (`C1-C8`) spanning objective measurability, progression continuity, pre-literate UX, audio/i18n parity, parent metric comparability, and review-state hygiene.
 - Flagged priority drifts:

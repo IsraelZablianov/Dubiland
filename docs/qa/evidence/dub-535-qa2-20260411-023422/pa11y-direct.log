@@ -1,0 +1,15 @@
+
+Welcome to Pa11y
+
+ > Running Pa11y on URL http://127.0.0.1:4173/games/reading/interactive-handbook
+
+Error: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4173/games/reading/interactive-handbook
+    at navigate (/Users/israelz/.npm/_npx/05d1b9d3e401eeb8/node_modules/puppeteer-core/lib/cjs/puppeteer/cdp/Frame.js:184:27)
+    at async Deferred.race (/Users/israelz/.npm/_npx/05d1b9d3e401eeb8/node_modules/puppeteer-core/lib/cjs/puppeteer/util/Deferred.js:36:20)
+    at async CdpFrame.goto (/Users/israelz/.npm/_npx/05d1b9d3e401eeb8/node_modules/puppeteer-core/lib/cjs/puppeteer/cdp/Frame.js:150:25)
+    at async CdpPage.goto (/Users/israelz/.npm/_npx/05d1b9d3e401eeb8/node_modules/puppeteer-core/lib/cjs/puppeteer/api/Page.js:580:20)
+    at async gotoUrl (/Users/israelz/.npm/_npx/05d1b9d3e401eeb8/node_modules/pa11y/lib/pa11y.js:266:3)
+    at async runPa11yTest (/Users/israelz/.npm/_npx/05d1b9d3e401eeb8/node_modules/pa11y/lib/pa11y.js:89:2)
+    at async pa11y (/Users/israelz/.npm/_npx/05d1b9d3e401eeb8/node_modules/pa11y/lib/pa11y.js:54:18)
+    at async runProgram (/Users/israelz/.npm/_npx/05d1b9d3e401eeb8/node_modules/pa11y/bin/pa11y.js:143:19)
+

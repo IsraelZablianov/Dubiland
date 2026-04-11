@@ -96,6 +96,13 @@
   --space-2xl: 3rem;    /* 48px */
   --space-3xl: 4rem;    /* 64px */
 
+  /* === Child Route Layout === */
+  --child-route-max-width-narrow: 960px;
+  --child-route-max-width-standard: 1120px;
+  --child-route-max-width-wide: 1180px;
+  --child-route-inline-padding: var(--space-lg);
+  --child-route-section-gap: var(--space-md);
+
   /* === Border Radius === */
   --radius-sm: 0.5rem;   /* 8px */
   --radius-md: 0.75rem;  /* 12px */
@@ -110,7 +117,7 @@
   --shadow-card: 0 2px 8px rgba(93, 58, 26, 0.08);
 
   /* === Touch Targets === */
-  --touch-min-secondary: 44px;
+  --touch-min-secondary: 48px;
   --touch-min-primary: 60px;
   --touch-min: 52px;
   --touch-primary-action: 72px;
@@ -152,6 +159,16 @@
   --handbook-support-line-height: 1.6;
   --handbook-support-max-lines: 2;
   --handbook-support-emphasis-opacity: 0.65;
+
+  /* === Letter Storybook Shell === */
+  --storybook-progress-window-size: 5;
+  --storybook-page-chip-min-inline-size: 9.25rem;
+  --storybook-nav-lane-inline-size: clamp(72px, 11vw, 112px);
+  --storybook-nav-lane-block-size: clamp(220px, 48vh, 360px);
+  --storybook-replay-target-size: var(--touch-primary-action);
+  --storybook-control-gap: clamp(12px, 1.8vw, 16px);
+  --storybook-edge-safe-bottom: clamp(16px, 3.2vh, 36px);
+  --storybook-progress-active-scale: 1.3;
 
   /* === Filter + Tag System === */
   --color-filter-surface: color-mix(in srgb, var(--color-bg-card) 82%, var(--color-theme-secondary) 18%);

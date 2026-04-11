@@ -1,0 +1,23 @@
+{
+  "route": "/games/reading/interactive-handbook",
+  "books": ["book1", "book4", "book5"],
+  "viewports": ["mobile-375x812", "tablet-834x1112", "desktop-1440x900"],
+  "results": [
+    {"viewport":"mobile-375x812","bookId":"book1","maxPage":8,"page3DeadEnd":false,"deadEnd":false,"leakedTextCount":0,"leakedTexts":[]},
+    {"viewport":"mobile-375x812","bookId":"book4","maxPage":5,"page3DeadEnd":false,"deadEnd":false,"leakedTextCount":1,"leakedTexts":["games.interactiveHandbook.handbooks.magicLetterMap.interactions.chooseWordByNikud.prompt"]},
+    {"viewport":"mobile-375x812","bookId":"book5","maxPage":10,"page3DeadEnd":false,"deadEnd":false,"leakedTextCount":0,"leakedTexts":[]},
+    {"viewport":"tablet-834x1112","bookId":"book1","maxPage":8,"page3DeadEnd":false,"deadEnd":false,"leakedTextCount":0,"leakedTexts":[]},
+    {"viewport":"tablet-834x1112","bookId":"book4","maxPage":5,"page3DeadEnd":false,"deadEnd":false,"leakedTextCount":1,"leakedTexts":["games.interactiveHandbook.handbooks.magicLetterMap.interactions.chooseWordByNikud.prompt"]},
+    {"viewport":"tablet-834x1112","bookId":"book5","maxPage":10,"page3DeadEnd":false,"deadEnd":false,"leakedTextCount":0,"leakedTexts":[]},
+    {"viewport":"desktop-1440x900","bookId":"book1","maxPage":8,"page3DeadEnd":false,"deadEnd":false,"leakedTextCount":0,"leakedTexts":[]},
+    {"viewport":"desktop-1440x900","bookId":"book4","maxPage":5,"page3DeadEnd":false,"deadEnd":false,"leakedTextCount":1,"leakedTexts":["games.interactiveHandbook.handbooks.magicLetterMap.interactions.chooseWordByNikud.prompt"]},
+    {"viewport":"desktop-1440x900","bookId":"book5","maxPage":10,"page3DeadEnd":false,"deadEnd":false,"leakedTextCount":0,"leakedTexts":[]}
+  ],
+  "summary": {
+    "book4Page3DeadEnd": "resolved",
+    "touchTargetLt44Count": 0,
+    "rtlDirection": "rtl",
+    "replayTriangleVisible": true,
+    "blockingDefect": "book4 prompt i18n key leak on chooseWordByNikud surfaces"
+  }
+}

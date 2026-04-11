@@ -479,6 +479,7 @@ export function ColorGardenGame({ onComplete, audio }: GameProps) {
   const [scorePulse, setScorePulse] = useState(false);
   const [boardFeedback, setBoardFeedback] = useState<BoardFeedback>('idle');
   const [duplicatePulseItemId, setDuplicatePulseItemId] = useState<string | null>(null);
+  const [audioPlaybackFailed, setAudioPlaybackFailed] = useState(false);
 
   const completionReportedRef = useRef(false);
   const scorePulseTimeoutRef = useRef<number | null>(null);
@@ -517,13 +518,19 @@ export function ColorGardenGame({ onComplete, audio }: GameProps) {
 
   const playAudioKey = useCallback(
     (key: AudioKey) => {
+      if (audioPlaybackFailed) {
+        return;
+      }
+
       const audioPath = AUDIO_PATH_BY_KEY[key];
       if (!audioPath) {
         return;
       }
-      audio.play(audioPath);
+      void audio.play(audioPath).catch(() => {
+        setAudioPlaybackFailed(true);
+      });
     },
-    [audio],
+    [audio, audioPlaybackFailed],
   );
 
   const setMessageWithAudio = useCallback(
@@ -1017,6 +1024,7 @@ export function ColorGardenGame({ onComplete, audio }: GameProps) {
       : 'games.colorGarden.instructions.tapMatches';
   const showInRoundCoach = !sessionComplete && !midpointPaused && !gardenCelebrate;
   const nextArrowIcon = i18n.dir(i18n.language) === 'rtl' ? '←' : '→';
+  const replayIcon = i18n.dir(i18n.language) === 'rtl' ? '◀' : '▶';
 
   const playStatusAudio = useCallback(
     (key: StatusKey) => {
@@ -1071,7 +1079,7 @@ export function ColorGardenGame({ onComplete, audio }: GameProps) {
               onClick={() => playStatusAudio('feedback.greatEffort')}
               aria-label={replayButtonAriaLabel}
             >
-              <span aria-hidden="true">▶</span>
+              <span aria-hidden="true">{replayIcon}</span>
             </button>
           </div>
           <div className="color-garden__text-row color-garden__text-row--center">
@@ -1082,7 +1090,7 @@ export function ColorGardenGame({ onComplete, audio }: GameProps) {
               onClick={() => playStatusAudio('games.colorGarden.roundComplete.nextColor')}
               aria-label={replayButtonAriaLabel}
             >
-              <span aria-hidden="true">▶</span>
+              <span aria-hidden="true">{replayIcon}</span>
             </button>
           </div>
           <Button
@@ -1114,7 +1122,7 @@ export function ColorGardenGame({ onComplete, audio }: GameProps) {
                 onClick={() => playStatusAudio('games.colorGarden.title')}
                 aria-label={replayButtonAriaLabel}
               >
-                <span aria-hidden="true">▶</span>
+                <span aria-hidden="true">{replayIcon}</span>
               </button>
             </div>
             <div className="color-garden__text-row">
@@ -1125,7 +1133,7 @@ export function ColorGardenGame({ onComplete, audio }: GameProps) {
                 onClick={() => playStatusAudio('games.colorGarden.subtitle')}
                 aria-label={replayButtonAriaLabel}
               >
-                <span aria-hidden="true">▶</span>
+                <span aria-hidden="true">{replayIcon}</span>
               </button>
             </div>
           </div>
@@ -1139,7 +1147,7 @@ export function ColorGardenGame({ onComplete, audio }: GameProps) {
               className="color-garden__replay-btn"
             >
               <span className="color-garden__replay-icon" aria-hidden="true">
-                ▶
+                {replayIcon}
               </span>
             </Button>
           </div>
@@ -1191,9 +1199,14 @@ export function ColorGardenGame({ onComplete, audio }: GameProps) {
             onClick={() => playStatusAudio(roundMessage.key)}
             aria-label={replayButtonAriaLabel}
           >
-            <span aria-hidden="true">▶</span>
+            <span aria-hidden="true">{replayIcon}</span>
           </button>
         </div>
+        {audioPlaybackFailed && (
+          <p className="color-garden__audio-fallback" aria-live="polite">
+            🔇 {t('games.colorGarden.instructions.tapReplay')}
+          </p>
+        )}
 
         <section className="color-garden__board">
           <div className="color-garden__scene-props" aria-hidden="true">
@@ -1218,7 +1231,7 @@ export function ColorGardenGame({ onComplete, audio }: GameProps) {
                 onClick={() => playStatusAudio(round.instructionKey)}
                 aria-label={replayButtonAriaLabel}
               >
-                <span aria-hidden="true">▶</span>
+                <span aria-hidden="true">{replayIcon}</span>
               </button>
             </div>
             <div className="color-garden__swatch-grid">
@@ -1250,7 +1263,7 @@ export function ColorGardenGame({ onComplete, audio }: GameProps) {
                 onClick={() => playStatusAudio(boardHintKey)}
                 aria-label={replayButtonAriaLabel}
               >
-                <span aria-hidden="true">▶</span>
+                <span aria-hidden="true">{replayIcon}</span>
               </button>
             </div>
           </Card>
@@ -1292,7 +1305,7 @@ export function ColorGardenGame({ onComplete, audio }: GameProps) {
                           onClick={() => playStatusAudio(COLOR_NAME_KEY_BY_COLOR[item.color])}
                           aria-label={replayButtonAriaLabel}
                         >
-                          <span aria-hidden="true">▶</span>
+                          <span aria-hidden="true">{replayIcon}</span>
                         </button>
                       </div>
                     </div>
@@ -1332,7 +1345,7 @@ export function ColorGardenGame({ onComplete, audio }: GameProps) {
                           onClick={() => playStatusAudio(COLOR_NAME_KEY_BY_COLOR[item.color])}
                           aria-label={replayButtonAriaLabel}
                         >
-                          <span aria-hidden="true">▶</span>
+                          <span aria-hidden="true">{replayIcon}</span>
                         </button>
                       </div>
                     </div>
@@ -1379,7 +1392,7 @@ export function ColorGardenGame({ onComplete, audio }: GameProps) {
                           }}
                           aria-label={replayButtonAriaLabel}
                         >
-                          <span aria-hidden="true">▶</span>
+                          <span aria-hidden="true">{replayIcon}</span>
                         </button>
                       </div>
                       <div className="color-garden__basket-items">
@@ -1407,7 +1420,7 @@ export function ColorGardenGame({ onComplete, audio }: GameProps) {
                     onClick={() => playStatusAudio('games.colorGarden.prompts.sort.fruitsBlue')}
                     aria-label={replayButtonAriaLabel}
                   >
-                    <span aria-hidden="true">▶</span>
+                    <span aria-hidden="true">{replayIcon}</span>
                   </button>
                 </div>
                 <div className="color-garden__rule-grid">
@@ -1441,7 +1454,7 @@ export function ColorGardenGame({ onComplete, audio }: GameProps) {
                             onClick={() => playStatusAudio(COLOR_NAME_KEY_BY_COLOR[item.color])}
                             aria-label={replayButtonAriaLabel}
                           >
-                            <span aria-hidden="true">▶</span>
+                            <span aria-hidden="true">{replayIcon}</span>
                           </button>
                         </div>
                       </div>
@@ -1460,7 +1473,7 @@ export function ColorGardenGame({ onComplete, audio }: GameProps) {
                   onClick={() => playStatusAudio('games.colorGarden.hints.startWithOne')}
                   aria-label={replayButtonAriaLabel}
                 >
-                  <span aria-hidden="true">▶</span>
+                  <span aria-hidden="true">{replayIcon}</span>
                 </button>
               </div>
             )}
@@ -1473,7 +1486,7 @@ export function ColorGardenGame({ onComplete, audio }: GameProps) {
                   onClick={() => playStatusAudio('games.colorGarden.hints.gentleRetry')}
                   aria-label={replayButtonAriaLabel}
                 >
-                  <span aria-hidden="true">▶</span>
+                  <span aria-hidden="true">{replayIcon}</span>
                 </button>
               </div>
             )}
@@ -1704,6 +1717,12 @@ const colorGardenStyles = `
     background: color-mix(in srgb, var(--color-accent-success) 22%, white);
     color: var(--color-text-primary);
     border-color: color-mix(in srgb, var(--color-accent-success) 60%, transparent);
+  }
+
+  .color-garden__audio-fallback {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
   }
 
   .color-garden__board {

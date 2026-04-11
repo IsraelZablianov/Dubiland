@@ -3,6 +3,7 @@ import type { Child, Game, GameLevel } from '@dubiland/shared';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button, Card } from '@/components/design-system';
+import { ChildRouteHeader, ChildRouteScaffold } from '@/components/layout';
 import type { GameCompletionResult } from '@/games/engine';
 import { RootFamilyStickersGame } from '@/games/reading/RootFamilyStickersGame';
 import { useAudioManager } from '@/hooks/useAudioManager';
@@ -58,6 +59,16 @@ export default function RootFamilyStickersPage() {
     }),
     [activeProfile?.emoji, activeProfile?.id, activeProfile?.name, t],
   );
+  const runtimeLevel = useMemo<GameLevel>(
+    () => ({
+      ...ROOT_FAMILY_STICKERS_LEVEL,
+      configJson: {
+        ...(ROOT_FAMILY_STICKERS_LEVEL.configJson as Record<string, unknown>),
+        ageBand: activeProfile?.ageBand ?? '5-6',
+      },
+    }),
+    [activeProfile?.ageBand],
+  );
 
   const [completionResult, setCompletionResult] = useState<GameCompletionResult | null>(null);
   const [syncState, setSyncState] = useState<SyncState>('idle');
@@ -88,48 +99,26 @@ export default function RootFamilyStickersPage() {
   }, [completionResult?.summaryMetrics, t]);
 
   return (
-    <main
-      style={{
-        flex: 1,
+    <ChildRouteScaffold
+      width="wide"
+      mainStyle={{
         background:
           'radial-gradient(circle at 10% 14%, color-mix(in srgb, var(--color-theme-secondary) 20%, transparent), transparent 44%), linear-gradient(180deg, var(--color-theme-bg) 0%, color-mix(in srgb, var(--color-bg-card) 88%, white 12%) 100%)',
-        padding: 'var(--space-lg)',
-        display: 'flex',
-        justifyContent: 'center',
       }}
     >
-      <section style={{ width: 'min(1180px, 100%)', display: 'grid', gap: 'var(--space-md)' }}>
-        <header
-          style={{
-            display: 'flex',
-            gap: 'var(--space-sm)',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-          }}
-        >
-          <div style={{ display: 'grid', gap: 'var(--space-xs)' }}>
-            <h1
-              style={{
-                margin: 0,
-                color: 'var(--color-text-primary)',
-                fontSize: 'var(--font-size-2xl)',
-                fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
-              }}
-            >
-              {t('games.rootFamilyStickers.title')}
-            </h1>
-            <p style={{ margin: 0, color: 'var(--color-text-secondary)' }}>{t('games.rootFamilyStickers.subtitle')}</p>
-          </div>
-
+      <ChildRouteHeader
+        title={t('games.rootFamilyStickers.title')}
+        subtitle={t('games.rootFamilyStickers.subtitle')}
+        leading={
           <Button variant="ghost" size="md" onClick={() => navigate('/games')} aria-label={t('nav.back')}>
             {t('nav.back')}
           </Button>
-        </header>
+        }
+      />
 
         <RootFamilyStickersGame
           game={ROOT_FAMILY_STICKERS_GAME}
-          level={ROOT_FAMILY_STICKERS_LEVEL}
+          level={runtimeLevel}
           child={child}
           onComplete={handleComplete}
           audio={audio}
@@ -154,8 +143,6 @@ export default function RootFamilyStickersPage() {
             </p>
           </Card>
         )}
-      </section>
-    </main>
+    </ChildRouteScaffold>
   );
 }
-

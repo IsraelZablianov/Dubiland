@@ -1,0 +1,47 @@
+{
+  "persistence": {
+    "pageBeforeReload": "עמוד 2 מתוך 10",
+    "pageAfterReload": "עמוד 1 מתוך 10",
+    "progressRequests": [],
+    "screenshots": {
+      "beforeReload": "persistence-before-reload.png",
+      "afterReload": "persistence-after-reload.png"
+    }
+  },
+  "completion": {
+    "reached": false,
+    "replayFromCompletionPresent": false,
+    "finalPageChip": "עמוד 10 מתוך 10",
+    "steps": [
+      { "i": 0, "chip": "עמוד 1 מתוך 10" },
+      { "i": 1, "chip": "עמוד 2 מתוך 10" },
+      { "i": 2, "chip": "עמוד 3 מתוך 10" },
+      { "i": 3, "chip": "עמוד 4 מתוך 10" },
+      { "i": 4, "chip": "עמוד 5 מתוך 10" },
+      { "i": 5, "chip": "עמוד 6 מתוך 10" },
+      { "i": 6, "chip": "עמוד 7 מתוך 10" },
+      { "i": 7, "chip": "עמוד 8 מתוך 10" },
+      { "i": 8, "chip": "עמוד 9 מתוך 10" },
+      { "i": 9, "chip": "עמוד 10 מתוך 10" },
+      { "i": 10, "chip": "עמוד 10 מתוך 10" },
+      { "i": 11, "chip": "עמוד 10 מתוך 10" },
+      { "i": 12, "chip": "עמוד 10 מתוך 10" },
+      { "i": 13, "chip": "עמוד 10 מתוך 10" },
+      { "i": 14, "chip": "עמוד 10 מתוך 10" },
+      { "i": 15, "chip": "עמוד 10 מתוך 10" }
+    ],
+    "blocked": null,
+    "endState": {
+      "chip": "עמוד 10 מתוך 10",
+      "nextExists": true,
+      "nextDisabled": false,
+      "nextAriaLabel": "איזה יופי, סיימתם את הספרון.",
+      "status": "קודם קוראים את הטקסט של המשימה, ורק אחר כך בוחרים.",
+      "interactionCard": true,
+      "completion": false
+    },
+    "screenshots": {
+      "endState": "completion-rerun-end-state.png"
+    }
+  }
+}

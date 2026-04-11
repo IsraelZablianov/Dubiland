@@ -1,0 +1,39 @@
+{
+  "pageImageMatrix": [
+    { "index": 1, "pageChip": "עמוד 1 מתוך 10", "src": "/images/handbooks/magic-letter-map/page-01-960.webp" },
+    { "index": 2, "pageChip": "עמוד 2 מתוך 10", "src": "/images/handbooks/magic-letter-map/page-02-960.webp" },
+    { "index": 3, "pageChip": "עמוד 3 מתוך 10", "src": "/images/handbooks/magic-letter-map/page-03-960.webp" },
+    { "index": 4, "pageChip": "עמוד 4 מתוך 10", "src": "/images/handbooks/magic-letter-map/page-04-960.webp" },
+    { "index": 5, "pageChip": "עמוד 5 מתוך 10", "src": "/images/handbooks/magic-letter-map/page-05-960.webp" },
+    { "index": 6, "pageChip": "עמוד 6 מתוך 10", "src": "/images/handbooks/magic-letter-map/page-06-960.webp" },
+    { "index": 7, "pageChip": "עמוד 7 מתוך 10", "src": "/images/handbooks/magic-letter-map/page-07-960.webp" },
+    { "index": 8, "pageChip": "עמוד 8 מתוך 10", "src": "/images/handbooks/magic-letter-map/page-08-960.webp" },
+    { "index": 9, "pageChip": "עמוד 9 מתוך 10", "src": "/images/handbooks/magic-letter-map/page-09-960.webp" },
+    { "index": 10, "pageChip": "עמוד 10 מתוך 10", "src": "/images/handbooks/magic-letter-map/page-10-960.webp" }
+  ],
+  "blockedPages": [],
+  "fallbackProbe": {
+    "before": "/images/handbooks/magic-letter-map/page-10-960.webp",
+    "probe": "/images/handbooks/magic-letter-map/page-10-960-missing.webp",
+    "after": "/images/handbooks/magic-letter-map/page-10.png",
+    "fallbackApplied": true
+  },
+  "rtl": "rtl",
+  "nextIconTransform": "matrix(-1, 0, 0, 1, 0, 0)",
+  "handbookImageResponses": [
+    { "url": "http://127.0.0.1:4173/images/handbooks/magic-letter-map/page-01-960.webp", "status": 200 },
+    { "url": "http://127.0.0.1:4173/images/handbooks/magic-letter-map/page-02-960.webp", "status": 200 },
+    { "url": "http://127.0.0.1:4173/images/handbooks/magic-letter-map/page-03-960.webp", "status": 200 },
+    { "url": "http://127.0.0.1:4173/images/handbooks/magic-letter-map/page-04-960.webp", "status": 200 },
+    { "url": "http://127.0.0.1:4173/images/handbooks/magic-letter-map/page-05-960.webp", "status": 200 },
+    { "url": "http://127.0.0.1:4173/images/handbooks/magic-letter-map/page-06-960.webp", "status": 200 },
+    { "url": "http://127.0.0.1:4173/images/handbooks/magic-letter-map/page-07-960.webp", "status": 200 },
+    { "url": "http://127.0.0.1:4173/images/handbooks/magic-letter-map/page-08-960.webp", "status": 200 },
+    { "url": "http://127.0.0.1:4173/images/handbooks/magic-letter-map/page-09-960.webp", "status": 200 },
+    { "url": "http://127.0.0.1:4173/images/handbooks/magic-letter-map/page-10-960.webp", "status": 200 },
+    { "url": "http://127.0.0.1:4173/images/handbooks/magic-letter-map/page-10-960-missing.webp", "status": 200 },
+    { "url": "http://127.0.0.1:4173/images/handbooks/magic-letter-map/page-10.png", "status": 200 }
+  ],
+  "screenshots": ["handbook-1024x768.png", "handbook-768x1024.png"],
+  "endedReason": "captured-10-iterations"
+}

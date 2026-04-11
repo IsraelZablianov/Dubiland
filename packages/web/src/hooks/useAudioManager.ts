@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import type { AudioController } from '@/games/engine';
 import { assetUrl } from '@/lib/assetUrl';
+import { warmAudioManifestLookup } from '@/lib/audioPathResolver';
 import { createAudioPlaybackQueueController } from './audioPlaybackQueue';
 
 /**
@@ -19,6 +20,7 @@ let activeConsumerCount = 0;
 
 export function useAudioManager(): AudioController {
   useEffect(() => {
+    warmAudioManifestLookup();
     activeConsumerCount += 1;
 
     return () => {

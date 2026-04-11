@@ -591,9 +591,9 @@ export function HandbookPageRenderer({
                       alt={t(imageAltKey as any)}
                       width={1600}
                       height={1000}
-                      loading="eager"
+                      loading={blockIndex === 0 ? 'eager' : 'lazy'}
                       decoding="async"
-                      fetchPriority={blockIndex === 0 ? 'high' : 'auto'}
+                      fetchPriority={blockIndex === 0 ? 'high' : 'low'}
                       onError={(event) => {
                         if (!fallbackSource || event.currentTarget.src.endsWith(fallbackSource)) {
                           return;

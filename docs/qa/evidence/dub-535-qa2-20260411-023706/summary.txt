@@ -1,0 +1,17 @@
+PASS typecheck
+PASS touch-shell
+PASS handbook-runtime
+PASS protected-route-guard
+dev_pid=64109
+PASS dev-server-ready
+FAIL pa11y-direct (exit 2)
+PASS pa11y-flow
+FAIL axe-playwright (exit 1)
+[rerun] accessibility toolchain
+PASS dev-server-ready-rerun
+FAIL axe-playwright-rerun (exit 1)
+PASS pa11y-ci
+PASS dev-server-ready-axe-fallback
+PASS pa11y-axe-flow
+PASS runtime-playwright-mobile-rtl
+INFO axe-playwright-package-resolution-blocked (playwright module not resolvable via npx/npm-exec in this workspace); used pa11y-ci + pa11y --runner axe flow as automated axe-equivalent fallback.

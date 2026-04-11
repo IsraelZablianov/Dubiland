@@ -1,0 +1,7 @@
+## build log chunk lines
+50:dist/assets/InteractiveHandbook-KstpZa_1.js        122.71 kB │ gzip:  27.47 kB
+
+## dist assets
+-rw-r--r--  1 israelz  staff   120K Apr 11 00:50 InteractiveHandbook-KstpZa_1.js
+-rw-r--r--  1 israelz  staff   415K Apr 11 00:50 index-Zz054ceH.js
+-rw-r--r--  1 israelz  staff    14K Apr 11 00:50 index-ucZv3Xzd.css

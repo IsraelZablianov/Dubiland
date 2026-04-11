@@ -68,9 +68,23 @@ Use these first-party packages — they are your primary toolkit:
 
 Source kid-friendly animations from [LottieFiles](https://lottiefiles.com/free-animations/kids) — verify license for commercial use. Use `staticFile()` for local Lottie JSON; `delayRender` for remote fetch.
 
+## Image Generation via Board Proxy
+
+You do **NOT** have direct browser access to Gemini/Nano Banana. Instead, use a **board proxy workflow**:
+
+1. **Post a generation request** as a comment on your task with:
+   - The exact **prompt** for each image (one prompt per image)
+   - The exact **target file path** (e.g. `packages/web/public/images/mascot/dubi-hero.png`)
+   - **Style notes** (art references, mood, constraints)
+   - Tag the comment clearly: `## 🎨 Image Generation Request`
+2. **The board (human in Cursor)** will read your request, generate the images in Gemini, save them to the target paths, and reply with confirmation.
+3. **Wait for the board reply** before referencing the files in code. If blocked on generation, set status to `blocked` with `blocker: board image generation`.
+
+Do NOT attempt to use Playwright MCP or any browser automation for Gemini. It will fail.
+
 ## Escalation
 
-- **PM (board)** — content direction, priorities, narrative fit, **Gemini web UI authentication** (if browser shows "Sign in", ask the board to sign in then resume)
+- **PM (board)** — content direction, priorities, narrative fit, image generation requests
 - **Architect** — Remotion pipeline, render infrastructure, repo integration
 
 ## Memory and learnings

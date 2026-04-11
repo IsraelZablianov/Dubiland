@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, GameTopBar } from '@/components/design-system';
+import { MascotIllustration } from '@/components/illustrations';
 import { SuccessCelebration } from '@/components/motion';
 import type { GameProps, ParentSummaryMetrics, ReadingGateStatus, StableRange } from '@/games/engine';
 import { HandbookPageRenderer, type HandbookMediaAssetSlot } from '@/games/reading/HandbookPageRenderer';
@@ -14,10 +15,12 @@ import {
   READING_LADDER_BOOK_BY_AGE_BAND,
   READING_RUNTIME_MATRIX,
   isReadingAgeBand,
+  type ReadingAntiGuessGuard,
   type ReadingAgeBand,
   type ReadingLadderBookId,
 } from '@/games/reading/readingRuntimeMatrix';
 import { assetUrl } from '@/lib/assetUrl';
+import { resolveAudioPathFromKey } from '@/lib/audioPathResolver';
 
 type HandbookMode = 'readToMe' | 'readAndPlay' | 'calmReplay';
 type StatusTone = 'neutral' | 'hint' | 'success' | 'error';
@@ -243,6 +246,64 @@ function HandbookControlIcon({ kind, isRtl = false }: HandbookControlIconProps) 
         strokeLinecap="round"
         strokeLinejoin="round"
       />
+    </svg>
+  );
+}
+
+const HANDBOOK_CHOICE_ICON_VARIANTS = ['circle', 'diamond', 'triangle', 'square', 'star'] as const;
+type HandbookChoiceIconVariant = (typeof HANDBOOK_CHOICE_ICON_VARIANTS)[number];
+
+function resolveChoiceIconVariant(choiceId: string): HandbookChoiceIconVariant {
+  let hash = 0;
+
+  for (let index = 0; index < choiceId.length; index += 1) {
+    hash = (hash * 33 + choiceId.charCodeAt(index)) % 10_007;
+  }
+
+  return HANDBOOK_CHOICE_ICON_VARIANTS[Math.abs(hash) % HANDBOOK_CHOICE_ICON_VARIANTS.length] ?? 'circle';
+}
+
+function HandbookChoiceIcon({ choiceId }: { choiceId: string }) {
+  const variant = resolveChoiceIconVariant(choiceId);
+
+  if (variant === 'diamond') {
+    return (
+      <svg className="interactive-handbook__choice-icon-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 4.8L19.2 12L12 19.2L4.8 12L12 4.8Z" fill="currentColor" />
+      </svg>
+    );
+  }
+
+  if (variant === 'triangle') {
+    return (
+      <svg className="interactive-handbook__choice-icon-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 5.4L19 18H5L12 5.4Z" fill="currentColor" />
+      </svg>
+    );
+  }
+
+  if (variant === 'square') {
+    return (
+      <svg className="interactive-handbook__choice-icon-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <rect x="6.5" y="6.5" width="11" height="11" rx="2.3" fill="currentColor" />
+      </svg>
+    );
+  }
+
+  if (variant === 'star') {
+    return (
+      <svg className="interactive-handbook__choice-icon-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path
+          d="M12 4.9L14 9.1L18.6 9.7L15.2 12.9L16.1 17.5L12 15.2L7.9 17.5L8.8 12.9L5.4 9.7L10 9.1L12 4.9Z"
+          fill="currentColor"
+        />
+      </svg>
+    );
+  }
+
+  return (
+    <svg className="interactive-handbook__choice-icon-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <circle cx="12" cy="12" r="6.2" fill="currentColor" />
     </svg>
   );
 }
@@ -874,6 +935,20 @@ const CHOICE_PRESETS: Record<InteractionChoicePresetId, ChoiceDefinition[]> = {
   ],
 };
 
+const RUNTIME_INTERACTION_PRESET_FALLBACKS: Partial<
+  Record<HandbookSlug, Partial<Record<string, InteractionChoicePresetId>>>
+> = {
+  magicLetterMap: {
+    firstSound: 'letters_bet',
+    chooseLetter: 'letters_pe',
+    simpleAdd: 'numbers_four',
+    decodePointedWord: 'words_gan',
+    literalComprehension: 'words_dubi',
+    sortObjects: 'baskets_fruit',
+    recapSkill: 'recap_letters',
+  },
+};
+
 function isHandbookSlug(value: unknown): value is HandbookSlug {
   return (
     value === 'mikaSoundGarden' ||
@@ -1007,6 +1082,11 @@ const INTERACTION_KEY_ALIAS_BY_SLUG: Partial<Record<HandbookSlug, Record<string,
     bridgePhrase: 'decodeBridgePhrase',
     literalQuestion: 'textEvidenceTap',
   },
+  magicLetterMap: {
+    // Legacy ids still arrive from older flow/runtime payloads.
+    chooseWordByNikud: 'decodePointedWord',
+    literalAfterDecoding: 'literalComprehension',
+  },
 };
 
 function resolveInteractionKeyAlias(slug: HandbookSlug, interactionId: string): string {
@@ -1024,6 +1104,68 @@ function handbookInteractionKey(slug: HandbookSlug, interactionId: string, field
     return `games.interactiveHandbook.handbooks.magicLetterMap.interactions.${normalizedInteractionId}.${field}`;
   }
   return `handbooks.${slug}.interactions.${normalizedInteractionId}.${field}`;
+}
+
+function normalizeRuntimeInteractionTextKey(
+  slug: HandbookSlug,
+  interactionId: string,
+  field: 'prompt' | 'hint' | 'success' | 'retry',
+  rawKey: string | null | undefined,
+): string | null {
+  if (typeof rawKey !== 'string') {
+    return null;
+  }
+
+  const textKey = rawKey.trim();
+  if (textKey.length === 0) {
+    return null;
+  }
+
+  const normalizedInteractionId = resolveInteractionKeyAlias(slug, interactionId);
+  if (normalizedInteractionId === interactionId) {
+    return textKey;
+  }
+
+  const segments = textKey.split('.');
+  const interactionsIndex = segments.lastIndexOf('interactions');
+  if (interactionsIndex < 0 || interactionsIndex + 2 !== segments.length - 1) {
+    return textKey;
+  }
+
+  const keyInteractionId = segments[interactionsIndex + 1] ?? '';
+  const keyField = segments[interactionsIndex + 2] ?? '';
+  if (keyInteractionId !== interactionId || keyField !== field) {
+    return textKey;
+  }
+
+  segments[interactionsIndex + 1] = normalizedInteractionId;
+  return segments.join('.');
+}
+
+function normalizeRuntimePromptBlockKey(slug: HandbookSlug, rawKey: string | null): string | null {
+  if (!rawKey) {
+    return rawKey;
+  }
+
+  const segments = rawKey.split('.');
+  const interactionsIndex = segments.lastIndexOf('interactions');
+  if (interactionsIndex < 0 || interactionsIndex + 2 !== segments.length - 1) {
+    return rawKey;
+  }
+
+  const field = segments[interactionsIndex + 2] ?? '';
+  if (field !== 'prompt' && field !== 'hint' && field !== 'success' && field !== 'retry') {
+    return rawKey;
+  }
+
+  const interactionId = segments[interactionsIndex + 1] ?? '';
+  const normalizedInteractionId = resolveInteractionKeyAlias(slug, interactionId);
+  if (normalizedInteractionId === interactionId) {
+    return rawKey;
+  }
+
+  segments[interactionsIndex + 1] = normalizedInteractionId;
+  return segments.join('.');
 }
 
 function parentHandbookKey(
@@ -1223,51 +1365,108 @@ export function mergeRuntimePageDefinitions(
     return basePages;
   }
 
-  const runtimePageById = new Map(runtimeContent.pages.map((page) => [page.pageId, page]));
+  const basePageById = new Map(basePages.map((page) => [page.id, page]));
   const sharedMediaAssets = runtimeContent.mediaAssets.length > 0 ? runtimeContent.mediaAssets : undefined;
   const storyDepthSlug = resolveStoryDepthSlugForRuntime(handbookSlug);
-
-  return basePages.map((basePage) => {
-    const runtimePage = runtimePageById.get(basePage.id);
-    const runtimeInteraction = mergeRuntimeInteractionDefinition(
-      basePage.interaction,
-      runtimePage?.interactions,
-      storyDepthSlug ?? handbookSlug,
-    );
-    const runtimePromptKey = extractPromptKeyFromRuntimeBlocks(runtimePage?.blocks);
-
-    if (!runtimePage) {
-      if (!sharedMediaAssets) {
-        return basePage;
+  const interactionSlug = storyDepthSlug ?? handbookSlug;
+  const runtimeDrivenPages = runtimeContent.pages.reduce<HandbookPageDefinition[]>((acc, runtimePage) => {
+      const runtimePageId = PAGE_ID_SET.has(runtimePage.pageId as PageId)
+        ? (runtimePage.pageId as PageId)
+        : null;
+      if (!runtimePageId) {
+        return acc;
       }
 
-      return {
-        ...basePage,
-        interaction: runtimeInteraction,
+      const basePage = basePageById.get(runtimePageId);
+      const runtimeInteraction = mergeRuntimeInteractionDefinition(
+        basePage?.interaction,
+        runtimePage.interactions,
+        interactionSlug,
+      );
+      const normalizedRuntimeInteraction =
+        handbookSlug === 'magicLetterMap' &&
+        runtimeInteraction &&
+        runtimeInteraction.required &&
+        !basePage?.interaction &&
+        isFinalPageForHandbook(handbookSlug, runtimePageId)
+          ? {
+              ...runtimeInteraction,
+              required: false,
+            }
+          : runtimeInteraction;
+      const runtimePromptKey = normalizeRuntimePromptBlockKey(
+        interactionSlug,
+        extractPromptKeyFromRuntimeBlocks(runtimePage.blocks),
+      );
+      const hasRuntimeContractData =
+        Boolean(runtimePage.narrationKey) ||
+        Boolean(runtimePromptKey) ||
+        runtimePage.blocks.length > 0 ||
+        runtimePage.interactions.length > 0;
+
+      if (!hasRuntimeContractData && basePage) {
+        acc.push(
+          sharedMediaAssets
+            ? {
+                ...basePage,
+                interaction: normalizedRuntimeInteraction,
+                mediaAssets: sharedMediaAssets,
+              }
+            : {
+                ...basePage,
+                interaction: normalizedRuntimeInteraction,
+              },
+        );
+        return acc;
+      }
+
+      const narrationKey = storyDepthSlug
+        ? runtimePage.narrationKey && isStoryDepthPageKey(runtimePage.narrationKey, storyDepthSlug, 'narration')
+          ? runtimePage.narrationKey
+          : basePage?.narrationKey ?? null
+        : runtimePage.narrationKey ?? basePage?.narrationKey ?? null;
+      const promptKey = storyDepthSlug
+        ? runtimePromptKey && isStoryDepthPageKey(runtimePromptKey, storyDepthSlug, 'cta')
+          ? runtimePromptKey
+          : basePage?.promptKey ?? normalizedRuntimeInteraction?.promptKey ?? null
+        : runtimePromptKey ?? normalizedRuntimeInteraction?.promptKey ?? basePage?.promptKey ?? null;
+
+      if (!narrationKey || !promptKey) {
+        if (!basePage) {
+          return acc;
+        }
+
+        acc.push({
+          ...basePage,
+          interaction: normalizedRuntimeInteraction,
+          mediaAssets: sharedMediaAssets ?? basePage.mediaAssets,
+        });
+        return acc;
+      }
+
+      acc.push({
+        id: runtimePageId,
+        narrationKey,
+        promptKey,
+        blocks: runtimePage.blocks,
+        interaction: normalizedRuntimeInteraction,
         mediaAssets: sharedMediaAssets,
-      };
-    }
+      } satisfies HandbookPageDefinition);
+      return acc;
+    }, []);
 
-    const narrationKey = storyDepthSlug
-      ? runtimePage.narrationKey && isStoryDepthPageKey(runtimePage.narrationKey, storyDepthSlug, 'narration')
-        ? runtimePage.narrationKey
-        : basePage.narrationKey
-      : runtimePage.narrationKey ?? basePage.narrationKey;
-    const promptKey = storyDepthSlug
-      ? runtimePromptKey && isStoryDepthPageKey(runtimePromptKey, storyDepthSlug, 'cta')
-        ? runtimePromptKey
-        : basePage.promptKey
-      : runtimePromptKey ?? runtimeInteraction?.promptKey ?? basePage.promptKey;
+  if (runtimeDrivenPages.length === 0) {
+    return basePages;
+  }
 
-    return {
-      ...basePage,
-      narrationKey,
-      promptKey,
-      blocks: runtimePage.blocks,
-      interaction: runtimeInteraction,
-      mediaAssets: sharedMediaAssets,
-    };
-  });
+  const runtimePageIdSet = new Set(runtimeDrivenPages.map((page) => page.id));
+  const missingBasePages = basePages
+    .filter((basePage) => !runtimePageIdSet.has(basePage.id))
+    .map((basePage) => (sharedMediaAssets ? { ...basePage, mediaAssets: sharedMediaAssets } : basePage));
+
+  return [...runtimeDrivenPages, ...missingBasePages].sort(
+    (left, right) => pageIdToPageNumber(left.id) - pageIdToPageNumber(right.id),
+  );
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -1296,27 +1495,64 @@ function hasPolicyEntries(policy: AgeBandNumericPolicy | undefined): boolean {
   return Boolean(policy && Object.keys(policy).length > 0);
 }
 
+function resolveRuntimeFallbackChoices(handbookSlug: HandbookSlug, interactionId: string): ChoiceDefinition[] {
+  const presetId = RUNTIME_INTERACTION_PRESET_FALLBACKS[handbookSlug]?.[interactionId];
+  if (!presetId) {
+    return [];
+  }
+
+  return (CHOICE_PRESETS[presetId] ?? []).map((choice) => ({ ...choice }));
+}
+
 function buildRuntimeInteractionDefinition(
   runtimeInteraction: HandbookRuntimeInteraction,
   handbookSlug: HandbookSlug,
   baseInteraction: InteractionDefinition | undefined,
 ): InteractionDefinition {
   const fallbackInteractionId = baseInteraction?.id ?? runtimeInteraction.id;
+  const runtimePromptKey = normalizeRuntimeInteractionTextKey(
+    handbookSlug,
+    runtimeInteraction.id,
+    'prompt',
+    runtimeInteraction.promptKey,
+  );
+  const runtimeHintKey = normalizeRuntimeInteractionTextKey(
+    handbookSlug,
+    runtimeInteraction.id,
+    'hint',
+    runtimeInteraction.hintKey,
+  );
+  const runtimeSuccessKey = normalizeRuntimeInteractionTextKey(
+    handbookSlug,
+    runtimeInteraction.id,
+    'success',
+    runtimeInteraction.successKey,
+  );
+  const runtimeRetryKey = normalizeRuntimeInteractionTextKey(
+    handbookSlug,
+    runtimeInteraction.id,
+    'retry',
+    runtimeInteraction.retryKey,
+  );
   const choiceDefinitions = runtimeInteraction.choices.length > 0
     ? runtimeInteraction.choices.map(toChoiceDefinition)
-    : (baseInteraction?.choices ?? []);
+    : (
+      baseInteraction?.choices ??
+      resolveRuntimeFallbackChoices(handbookSlug, runtimeInteraction.id)
+    );
+  const hasActionableChoices = choiceDefinitions.length > 0;
 
   return {
     id: runtimeInteraction.id,
-    required: runtimeInteraction.required,
+    required: runtimeInteraction.required && hasActionableChoices,
     promptKey:
-      runtimeInteraction.promptKey ?? baseInteraction?.promptKey ?? handbookInteractionKey(handbookSlug, fallbackInteractionId, 'prompt'),
+      runtimePromptKey ?? baseInteraction?.promptKey ?? handbookInteractionKey(handbookSlug, fallbackInteractionId, 'prompt'),
     hintKey:
-      runtimeInteraction.hintKey ?? baseInteraction?.hintKey ?? handbookInteractionKey(handbookSlug, fallbackInteractionId, 'hint'),
+      runtimeHintKey ?? baseInteraction?.hintKey ?? handbookInteractionKey(handbookSlug, fallbackInteractionId, 'hint'),
     successKey:
-      runtimeInteraction.successKey ?? baseInteraction?.successKey ?? handbookInteractionKey(handbookSlug, fallbackInteractionId, 'success'),
+      runtimeSuccessKey ?? baseInteraction?.successKey ?? handbookInteractionKey(handbookSlug, fallbackInteractionId, 'success'),
     retryKey:
-      runtimeInteraction.retryKey ?? baseInteraction?.retryKey ?? handbookInteractionKey(handbookSlug, fallbackInteractionId, 'retry'),
+      runtimeRetryKey ?? baseInteraction?.retryKey ?? handbookInteractionKey(handbookSlug, fallbackInteractionId, 'retry'),
     isScored: runtimeInteraction.isScored ?? baseInteraction?.isScored ?? false,
     requiresTextActionBeforeChoice:
       runtimeInteraction.requiresTextActionBeforeChoice ?? baseInteraction?.requiresTextActionBeforeChoice ?? false,
@@ -1343,7 +1579,16 @@ function mergeRuntimeInteractionDefinition(
   }
 
   const runtimeMatch = baseInteraction
-    ? runtimeInteractions.find((candidate) => candidate.id === baseInteraction.id) ?? runtimeInteractions[0]
+    ? runtimeInteractions.find((candidate) => {
+      if (candidate.id === baseInteraction.id) {
+        return true;
+      }
+
+      return (
+        resolveInteractionKeyAlias(handbookSlug, candidate.id) ===
+        resolveInteractionKeyAlias(handbookSlug, baseInteraction.id)
+      );
+    }) ?? runtimeInteractions[0]
     : runtimeInteractions[0];
 
   if (!runtimeMatch) {
@@ -1351,6 +1596,12 @@ function mergeRuntimeInteractionDefinition(
   }
 
   return buildRuntimeInteractionDefinition(runtimeMatch, handbookSlug, baseInteraction);
+}
+
+function isFinalPageForHandbook(slug: HandbookSlug, pageId: PageId): boolean {
+  const bookId = HANDBOOK_SLUG_TO_BOOK[slug];
+  const pageIds = PAGE_IDS_BY_BOOK[bookId];
+  return pageIds[pageIds.length - 1] === pageId;
 }
 
 export function extractPromptKeyFromRuntimeBlocks(blocks: unknown[] | undefined): string | null {
@@ -1564,7 +1815,7 @@ function toKebabCase(value: string): string {
 }
 
 function keyToAudioPath(key: string): string {
-  return `/audio/he/${key.split('.').map(toKebabCase).join('/')}.mp3`;
+  return resolveAudioPathFromKey(key, 'common');
 }
 
 function normalizeAssetPath(path: string): string {
@@ -1702,6 +1953,100 @@ function resolveHintTriggerTimeoutMs(interaction: InteractionDefinition | undefi
 
   const interpretedMs = threshold <= 60 ? threshold * 1000 : threshold;
   return Math.round(interpretedMs);
+}
+
+interface HandbookAntiGuessTrackerState {
+  nonTargetTapTimes: number[];
+  quickResponseStreak: number;
+  lastResponseAt: number | null;
+}
+
+interface HandbookAntiGuessGuardEvaluation {
+  nextState: HandbookAntiGuessTrackerState;
+  rapidTapGuardTriggered: boolean;
+  quickResponseGuardTriggered: boolean;
+  shouldPauseAndReplay: boolean;
+  shouldForceScaffoldTrial: boolean;
+}
+
+function createInitialHandbookAntiGuessTrackerState(): HandbookAntiGuessTrackerState {
+  return {
+    nonTargetTapTimes: [],
+    quickResponseStreak: 0,
+    lastResponseAt: null,
+  };
+}
+
+export function evaluateHandbookAntiGuessGuard(
+  guardConfig: ReadingAntiGuessGuard,
+  previousState: HandbookAntiGuessTrackerState,
+  nowMs: number,
+): HandbookAntiGuessGuardEvaluation {
+  const rapidTapTimes = previousState.nonTargetTapTimes
+    .filter((timestamp) => nowMs - timestamp <= guardConfig.rapidTapWindowMs)
+    .concat(nowMs);
+
+  const hasShortResponseGuard = Boolean(
+    typeof guardConfig.shortResponseWindowMs === 'number' &&
+    guardConfig.shortResponseWindowMs > 0 &&
+    typeof guardConfig.shortResponseStreakThreshold === 'number' &&
+    guardConfig.shortResponseStreakThreshold > 0,
+  );
+
+  let quickResponseStreak = 0;
+  if (hasShortResponseGuard) {
+    const responseGapMs = previousState.lastResponseAt === null ? Number.POSITIVE_INFINITY : nowMs - previousState.lastResponseAt;
+    quickResponseStreak = responseGapMs < (guardConfig.shortResponseWindowMs as number)
+      ? previousState.quickResponseStreak + 1
+      : 1;
+  }
+
+  const rapidTapGuardTriggered = rapidTapTimes.length >= guardConfig.rapidTapCount;
+  const quickResponseGuardTriggered = Boolean(
+    hasShortResponseGuard &&
+    quickResponseStreak >= (guardConfig.shortResponseStreakThreshold as number),
+  );
+  const shouldPauseAndReplay = rapidTapGuardTriggered || quickResponseGuardTriggered;
+  const shouldForceScaffoldTrial = hasShortResponseGuard && shouldPauseAndReplay;
+
+  if (shouldPauseAndReplay) {
+    return {
+      nextState: createInitialHandbookAntiGuessTrackerState(),
+      rapidTapGuardTriggered,
+      quickResponseGuardTriggered,
+      shouldPauseAndReplay,
+      shouldForceScaffoldTrial,
+    };
+  }
+
+  return {
+    nextState: {
+      nonTargetTapTimes: rapidTapTimes,
+      quickResponseStreak,
+      lastResponseAt: nowMs,
+    },
+    rapidTapGuardTriggered,
+    quickResponseGuardTriggered,
+    shouldPauseAndReplay,
+    shouldForceScaffoldTrial,
+  };
+}
+
+export function reduceChoicesForRetryScaffold(choices: ChoiceDefinition[], reductionCount: number): ChoiceDefinition[] {
+  if (!Number.isFinite(reductionCount) || reductionCount <= 0 || choices.length <= 1) {
+    return choices;
+  }
+
+  const boundedReductionCount = Math.max(1, Math.floor(reductionCount));
+  const targetCount = Math.max(1, choices.length - boundedReductionCount);
+  const correctChoice = choices.find((choice) => choice.isCorrect);
+
+  if (!correctChoice) {
+    return choices.slice(0, targetCount);
+  }
+
+  const distractors = choices.filter((choice) => !choice.isCorrect);
+  return [correctChoice, ...distractors].slice(0, targetCount);
 }
 
 function applyChoiceCap(choices: ChoiceDefinition[], maxChoices: number): ChoiceDefinition[] {
@@ -1960,11 +2305,13 @@ export function InteractiveHandbookGame({
   const [pageHintUsage, setPageHintUsage] = useState<Record<string, number>>({});
   const [selectedChoiceByPage, setSelectedChoiceByPage] = useState<Record<string, string>>({});
   const [highlightChoiceByPage, setHighlightChoiceByPage] = useState<Record<string, string>>({});
+  const [retryScaffoldByPage, setRetryScaffoldByPage] = useState<Record<string, number>>({});
   const [textActionReadyByPage, setTextActionReadyByPage] = useState<Record<string, boolean>>({});
   const [statusKey, setStatusKey] = useState('games.interactiveHandbook.instructions.intro');
   const [statusTone, setStatusTone] = useState<StatusTone>('neutral');
   const [completionSummary, setCompletionSummary] = useState<CompletionSummary | null>(null);
   const [isNarrationPaused, setIsNarrationPaused] = useState(false);
+  const [isAntiGuessPaused, setIsAntiGuessPaused] = useState(false);
   const [isCompleted, setIsCompleted] = useState(Boolean(initialProgress?.completed));
   const [pageTurnDirection, setPageTurnDirection] = useState<PageTurnDirection | null>(null);
   const [readingHighlightState, setReadingHighlightState] = useState<ReadingHighlightState | null>(null);
@@ -1975,6 +2322,8 @@ export function InteractiveHandbookGame({
   const swipeStartRef = useRef<{ x: number; y: number } | null>(null);
   const hasPassedStartupNarrationGateRef = useRef(false);
   const chapterTransitionCueRef = useRef<string | null>(null);
+  const antiGuessTrackerRef = useRef<HandbookAntiGuessTrackerState>(createInitialHandbookAntiGuessTrackerState());
+  const antiGuessPauseTimerRef = useRef<number | null>(null);
 
   const qualityGate = useMemo(
     () => resolveQualityGate(level.configJson, activeLadderBookId),
@@ -1998,6 +2347,7 @@ export function InteractiveHandbookGame({
   );
   const isMagicLetterMapListenExploreMode = activeHandbookSlug === 'magicLetterMap' && activeAgeBand === '3-4';
   const isMagicLetterMapStretchMode = activeHandbookSlug === 'magicLetterMap' && activeAgeBand === '6-7';
+  const handbookAntiGuessGuard = READING_RUNTIME_MATRIX[activeAgeBand].handbook.antiGuessGuard;
 
   const currentPage = (pageDefinitions[currentPageIndex] ?? pageDefinitions[0]) as HandbookPageDefinition;
   const nextPage = (pageDefinitions[currentPageIndex + 1] ?? null) as HandbookPageDefinition | null;
@@ -2026,8 +2376,9 @@ export function InteractiveHandbookGame({
   const activeInteractionReplayTextKey = resolveInteractionReplayTextKey(activeInteraction);
   const activeInteractionReplayAudioKey = resolveInteractionReplayAudioKey(activeInteraction);
   const activeInteractionRequiresTextActionLock = shouldLockChoicesUntilTextAction(activeInteraction);
-  const isChoiceLocked =
+  const isDecodeFirstChoiceLocked =
     activeInteractionRequiresTextActionLock && !Boolean(textActionReadyByPage[currentPage.id]);
+  const isChoiceLocked = isDecodeFirstChoiceLocked || isAntiGuessPaused;
 
   const currentPromptPreloadPath = useMemo(
     () => {
@@ -2223,6 +2574,25 @@ export function InteractiveHandbookGame({
     },
     [audio, audioDegraded, handleAudioPlaybackFailure],
   );
+  const clearAntiGuessPauseTimer = useCallback(() => {
+    if (antiGuessPauseTimerRef.current !== null) {
+      window.clearTimeout(antiGuessPauseTimerRef.current);
+      antiGuessPauseTimerRef.current = null;
+    }
+  }, []);
+  const resetAntiGuessTracker = useCallback(() => {
+    antiGuessTrackerRef.current = createInitialHandbookAntiGuessTrackerState();
+  }, []);
+  useEffect(() => {
+    return () => {
+      clearAntiGuessPauseTimer();
+    };
+  }, [clearAntiGuessPauseTimer]);
+  useEffect(() => {
+    clearAntiGuessPauseTimer();
+    setIsAntiGuessPaused(false);
+    resetAntiGuessTracker();
+  }, [clearAntiGuessPauseTimer, currentPage.id, resetAntiGuessTracker]);
   const markTextActionReady = useCallback((pageId: PageId) => {
     setTextActionReadyByPage((previous) => {
       if (previous[pageId]) {
@@ -2403,6 +2773,18 @@ export function InteractiveHandbookGame({
       delete next[pageId];
       return next;
     });
+    setRetryScaffoldByPage((previous) => {
+      if (!(pageId in previous)) {
+        return previous;
+      }
+
+      const next = { ...previous };
+      delete next[pageId];
+      return next;
+    });
+    clearAntiGuessPauseTimer();
+    setIsAntiGuessPaused(false);
+    resetAntiGuessTracker();
 
     setStatusKey('games.interactiveHandbook.controls.retryCue');
     setStatusTone('neutral');
@@ -2416,7 +2798,15 @@ export function InteractiveHandbookGame({
       setReadingHighlightState({ pageId, mode: 'prompt' });
       playAudioKey(replayAudioKey);
     }, 180);
-  }, [activeInteraction, activeInteractionReplayAudioKey, activeInteractionReplayTextKey, currentPage.id, playAudioKey]);
+  }, [
+    activeInteraction,
+    activeInteractionReplayAudioKey,
+    activeInteractionReplayTextKey,
+    clearAntiGuessPauseTimer,
+    currentPage.id,
+    playAudioKey,
+    resetAntiGuessTracker,
+  ]);
 
   const resolveCompletion = useCallback(() => {
     if (completionSentRef.current) {
@@ -2515,6 +2905,10 @@ export function InteractiveHandbookGame({
         return;
       }
 
+      if (isAntiGuessPaused) {
+        return;
+      }
+
       if (isChoiceLocked) {
         setStatusKey(activeInteraction.hintKey);
         setStatusTone('hint');
@@ -2525,11 +2919,28 @@ export function InteractiveHandbookGame({
 
       const pageId = currentPage.id;
       const nextAttempts = (pageAttempts[pageId] ?? 0) + 1;
+      const hasRetryScaffold = (retryScaffoldByPage[pageId] ?? 0) > 0;
 
       setPageAttempts((previous) => ({
         ...previous,
         [pageId]: nextAttempts,
       }));
+      if (hasRetryScaffold) {
+        setRetryScaffoldByPage((previous) => {
+          const currentTrials = previous[pageId] ?? 0;
+          if (currentTrials <= 0) {
+            return previous;
+          }
+
+          const next = { ...previous };
+          if (currentTrials <= 1) {
+            delete next[pageId];
+          } else {
+            next[pageId] = currentTrials - 1;
+          }
+          return next;
+        });
+      }
 
       setSelectedChoiceByPage((previous) => ({
         ...previous,
@@ -2545,6 +2956,18 @@ export function InteractiveHandbookGame({
       playAudioKey(choice.audioKey ?? choice.labelKey);
 
       if (choice.isCorrect) {
+        clearAntiGuessPauseTimer();
+        setIsAntiGuessPaused(false);
+        resetAntiGuessTracker();
+        setRetryScaffoldByPage((previous) => {
+          if (!(pageId in previous)) {
+            return previous;
+          }
+
+          const next = { ...previous };
+          delete next[pageId];
+          return next;
+        });
         setSolvedPages((previous) => {
           if (previous.has(pageId)) {
             return previous;
@@ -2571,6 +2994,54 @@ export function InteractiveHandbookGame({
         return;
       }
 
+      const guardEvaluation = evaluateHandbookAntiGuessGuard(
+        handbookAntiGuessGuard,
+        antiGuessTrackerRef.current,
+        performance.now(),
+      );
+      antiGuessTrackerRef.current = guardEvaluation.nextState;
+
+      if (guardEvaluation.shouldPauseAndReplay) {
+        const shouldApplyRetryScaffold = activeAgeBand === '5-6' || guardEvaluation.shouldForceScaffoldTrial;
+        if (shouldApplyRetryScaffold) {
+          setRetryScaffoldByPage((previous) => ({
+            ...previous,
+            [pageId]: Math.max(previous[pageId] ?? 0, 1),
+          }));
+        }
+
+        clearAntiGuessPauseTimer();
+        setIsAntiGuessPaused(true);
+        setStatusKey(activeInteraction.hintKey);
+        setStatusTone('hint');
+        setReadingHighlightState({ pageId, mode: 'prompt' });
+        playAudioKey(activeInteraction.hintKey, true);
+
+        const replayTextKey = activeInteractionReplayTextKey ?? activeInteraction.promptKey;
+        const replayAudioKey = activeInteractionReplayAudioKey ?? activeInteraction.promptKey;
+
+        antiGuessPauseTimerRef.current = window.setTimeout(() => {
+          antiGuessPauseTimerRef.current = null;
+          setIsAntiGuessPaused(false);
+          setSelectedChoiceByPage((previous) => {
+            const next = { ...previous };
+            delete next[pageId];
+            return next;
+          });
+          setHighlightChoiceByPage((previous) => {
+            const next = { ...previous };
+            delete next[pageId];
+            return next;
+          });
+          setStatusKey(replayTextKey);
+          setStatusTone('neutral');
+          setReadingHighlightState({ pageId, mode: 'prompt' });
+          playAudioKey(replayAudioKey, true);
+        }, handbookAntiGuessGuard.pauseMs);
+
+        return;
+      }
+
       setStatusKey(activeInteraction.retryKey);
       setStatusTone(isMagicLetterMapListenExploreMode ? 'hint' : 'error');
       playAudioKey(activeInteraction.retryKey, true);
@@ -2584,11 +3055,17 @@ export function InteractiveHandbookGame({
       activeInteraction,
       activeInteractionReplayAudioKey,
       applyHint,
+      activeAgeBand,
+      clearAntiGuessPauseTimer,
       currentPage.id,
+      handbookAntiGuessGuard,
+      isAntiGuessPaused,
       isChoiceLocked,
       isMagicLetterMapListenExploreMode,
       pageAttempts,
       playAudioKey,
+      resetAntiGuessTracker,
+      retryScaffoldByPage,
     ],
   );
 
@@ -2713,6 +3190,10 @@ export function InteractiveHandbookGame({
       resolvePolicyValueByAgeBand(activeInteraction.maxChoicesByBand, activeAgeBand) ??
       READING_RUNTIME_MATRIX[activeAgeBand].handbook.maxChoiceCount;
     let choices = applyChoiceCap(activeInteraction.choices, policyChoiceCap);
+    const retryScaffoldReductionCount = retryScaffoldByPage[currentPage.id] ?? 0;
+    if (retryScaffoldReductionCount > 0) {
+      choices = reduceChoicesForRetryScaffold(choices, retryScaffoldReductionCount);
+    }
     const attempts = pageAttempts[currentPage.id] ?? 0;
     const shouldReduceChoices = isMagicLetterMapListenExploreMode || attempts >= 2;
     if (shouldReduceChoices && choices.length > 2) {
@@ -2722,7 +3203,7 @@ export function InteractiveHandbookGame({
     }
 
     return choices;
-  }, [activeAgeBand, activeInteraction, currentPage.id, isMagicLetterMapListenExploreMode, pageAttempts]);
+  }, [activeAgeBand, activeInteraction, currentPage.id, isMagicLetterMapListenExploreMode, pageAttempts, retryScaffoldByPage]);
 
   useEffect(() => {
     markPageVisited(currentPage.id);
@@ -2850,6 +3331,7 @@ export function InteractiveHandbookGame({
   const storyArcChaptersTotal = activeStoryDepthSlug ? 3 : 0;
   const storyArcChaptersCompleted = activeStoryDepthSlug ? countCompletedStoryArcChapters(activeLadderBookId, visitedPages) : 0;
   const independenceTrendLabel = summaryHintKey ? t(summaryHintKey as any) : '';
+  const coachVariant = completionSummary || statusTone === 'success' ? 'success' : 'hint';
 
   return (
     <Card padding="lg" className="interactive-handbook">
@@ -2947,6 +3429,9 @@ export function InteractiveHandbookGame({
         <div className={`interactive-handbook__status-row ${isPromptHighlightActive ? 'is-reading-prompt' : ''}`}>
           <p className={toneClassName(statusTone)}>{t(statusKey as any)}</p>
         </div>
+        <div className="interactive-handbook__coach" aria-hidden="true">
+          <MascotIllustration variant={coachVariant} size={50} />
+        </div>
 
         {audioDegraded ? (
           <p className="interactive-handbook__audio-fallback" aria-live="polite">
@@ -3023,6 +3508,7 @@ export function InteractiveHandbookGame({
               {visibleChoices.map((choice) => {
                 const selected = selectedChoiceByPage[currentPage.id] === choice.id;
                 const highlighted = highlightChoiceByPage[currentPage.id] === choice.id;
+                const choiceLabel = t(choice.labelKey as any);
 
                 return (
                   <button
@@ -3034,10 +3520,13 @@ export function InteractiveHandbookGame({
                       highlighted ? 'is-highlighted' : '',
                     ].join(' ')}
                     onClick={() => chooseInteractionOption(choice)}
-                    aria-label={t(choice.labelKey as any)}
+                    aria-label={choiceLabel}
                     disabled={isChoiceLocked}
                   >
-                    <span>{t(choice.labelKey as any)}</span>
+                    <span className="interactive-handbook__choice-icon" aria-hidden="true">
+                      <HandbookChoiceIcon choiceId={choice.id} />
+                    </span>
+                    <span className="interactive-handbook__choice-label">{choiceLabel}</span>
                   </button>
                 );
               })}
@@ -3407,19 +3896,25 @@ export function InteractiveHandbookGame({
           overflow: hidden;
         }
 
+        .interactive-handbook__text-strip.is-word-focus .interactive-handbook__text-replay.interactive-handbook__text-block--narration,
+        .interactive-handbook__text-strip.is-word-focus .interactive-handbook__text-replay.interactive-handbook__text-block--body {
+          opacity: 1;
+        }
+
         .interactive-handbook__text-strip.is-word-focus .interactive-handbook__text-block--prompt {
           font-size: 1.25rem;
           font-weight: var(--font-weight-semibold);
           line-height: 1.5;
-          color: color-mix(in srgb, var(--color-text-primary) 78%, var(--color-text-secondary));
+          color: var(--color-text-primary);
         }
 
         .interactive-handbook__text-replay {
           inline-size: 100%;
           min-height: var(--touch-min);
           border-radius: var(--radius-md);
-          border: 1px solid color-mix(in srgb, var(--color-border) 62%, transparent);
-          background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+          border: 2px solid var(--color-border);
+          background: var(--color-bg-card);
+          color: var(--color-text-primary);
           cursor: pointer;
           padding: var(--space-xs) var(--space-sm);
           transition: transform var(--motion-duration-quick) var(--motion-ease-standard);
@@ -3444,13 +3939,32 @@ export function InteractiveHandbookGame({
           background: color-mix(in srgb, var(--color-theme-secondary) 16%, var(--color-surface-muted));
         }
 
+        .interactive-handbook__coach {
+          justify-self: end;
+          inline-size: 66px;
+          block-size: 66px;
+          border-radius: var(--radius-full);
+          display: grid;
+          place-items: center;
+          pointer-events: none;
+          background: color-mix(in srgb, var(--color-bg-card) 90%, white);
+          border: 2px solid color-mix(in srgb, var(--color-theme-primary) 34%, transparent);
+          box-shadow: var(--shadow-sm);
+          animation: interactive-handbook-coach-float 1500ms ease-in-out infinite;
+        }
+
+        .interactive-handbook__coach,
+        .interactive-handbook__coach * {
+          pointer-events: none;
+        }
+
         .interactive-handbook__audio-fallback {
           margin: 0;
           min-height: var(--touch-min);
           border-radius: var(--radius-md);
           border: 1px dashed color-mix(in srgb, var(--color-accent-warning) 52%, transparent);
           background: color-mix(in srgb, var(--color-bg-card) 90%, var(--color-accent-warning) 10%);
-          color: var(--color-text-secondary);
+          color: var(--color-text-primary);
           display: inline-flex;
           align-items: center;
           gap: var(--space-2xs);
@@ -3545,14 +4059,47 @@ export function InteractiveHandbookGame({
 
         .interactive-handbook__choice {
           min-height: max(60px, var(--touch-primary-action));
+          display: grid;
+          grid-template-columns: auto 1fr;
+          align-items: center;
+          justify-items: start;
+          gap: var(--space-xs);
           border-radius: var(--radius-md);
           border: 1px solid color-mix(in srgb, var(--color-border) 72%, transparent);
           background: var(--color-bg-card);
           color: var(--color-text-primary);
           font-size: var(--font-size-md);
           font-weight: var(--font-weight-semibold);
+          line-height: 1.35;
+          text-align: start;
           cursor: pointer;
-          padding: 0 var(--space-sm);
+          padding: var(--space-xs) var(--space-sm);
+          transition:
+            transform var(--motion-duration-fast) var(--motion-ease-standard),
+            box-shadow var(--motion-duration-fast) var(--motion-ease-standard);
+          touch-action: manipulation;
+        }
+
+        .interactive-handbook__choice-icon {
+          inline-size: 34px;
+          block-size: 34px;
+          border-radius: var(--radius-full);
+          border: 1px solid color-mix(in srgb, var(--color-theme-primary) 32%, transparent);
+          background: color-mix(in srgb, var(--color-theme-primary) 14%, var(--color-bg-card));
+          color: color-mix(in srgb, var(--color-text-primary) 90%, black);
+          display: grid;
+          place-items: center;
+          flex-shrink: 0;
+        }
+
+        .interactive-handbook__choice-icon-svg {
+          inline-size: 18px;
+          block-size: 18px;
+          display: block;
+        }
+
+        .interactive-handbook__choice-label {
+          justify-self: start;
         }
 
         .interactive-handbook__choice.is-selected {
@@ -3560,8 +4107,17 @@ export function InteractiveHandbookGame({
           background: color-mix(in srgb, var(--color-theme-primary) 14%, var(--color-bg-card));
         }
 
+        .interactive-handbook__choice.is-selected .interactive-handbook__choice-icon {
+          border-color: color-mix(in srgb, var(--color-theme-primary) 68%, transparent);
+          background: color-mix(in srgb, var(--color-theme-primary) 22%, var(--color-bg-card));
+        }
+
         .interactive-handbook__choice.is-highlighted {
           box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent-warning) 40%, transparent);
+        }
+
+        .interactive-handbook__choice:active:not(:disabled) {
+          transform: scale(0.985);
         }
 
         .interactive-handbook__completion {
@@ -3581,7 +4137,7 @@ export function InteractiveHandbookGame({
 
         .interactive-handbook__completion-line {
           margin: 0;
-          color: var(--color-text-secondary);
+          color: var(--color-text-primary);
           font-size: var(--font-size-sm);
         }
 
@@ -3638,6 +4194,20 @@ export function InteractiveHandbookGame({
           }
         }
 
+        @keyframes interactive-handbook-coach-float {
+          0% {
+            transform: translateY(0);
+          }
+
+          50% {
+            transform: translateY(-4px);
+          }
+
+          100% {
+            transform: translateY(0);
+          }
+        }
+
         @media (prefers-reduced-motion: reduce) {
           .interactive-handbook__story-flip--forward.is-ltr,
           .interactive-handbook__story-flip--forward.is-rtl,
@@ -3657,6 +4227,10 @@ export function InteractiveHandbookGame({
           }
 
           .interactive-handbook__icon-button {
+            animation: none;
+          }
+
+          .interactive-handbook__coach {
             animation: none;
           }
         }

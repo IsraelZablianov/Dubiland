@@ -1,0 +1,16 @@
+# DUB-623 Batch C Evidence (2026-04-11)
+
+| Asset path | Size (bytes) | Dimensions | Before/After panel |
+|---|---:|---:|---|
+| `packages/web/public/images/handbooks/magic-letter-map/page-04.png` | 3415046 | 1600x1000 | `docs/agents/media-expert/evidence/dub-623/2026-04-11-batch-c/panels/packages__web__public__images__handbooks__magic-letter-map__page-04__ext__png--before-after.jpg` |
+| `packages/web/public/images/handbooks/magic-letter-map/page-04.webp` | 285648 | 1600x1000 | `docs/agents/media-expert/evidence/dub-623/2026-04-11-batch-c/panels/packages__web__public__images__handbooks__magic-letter-map__page-04__ext__webp--before-after.jpg` |
+| `packages/web/public/images/handbooks/magic-letter-map/page-04-960.webp` | 141440 | 960x600 | `docs/agents/media-expert/evidence/dub-623/2026-04-11-batch-c/panels/packages__web__public__images__handbooks__magic-letter-map__page-04-960__ext__webp--before-after.jpg` |
+| `packages/web/public/images/handbooks/magic-letter-map/page-05.png` | 3422051 | 1600x1000 | `docs/agents/media-expert/evidence/dub-623/2026-04-11-batch-c/panels/packages__web__public__images__handbooks__magic-letter-map__page-05__ext__png--before-after.jpg` |
+| `packages/web/public/images/handbooks/magic-letter-map/page-05.webp` | 286616 | 1600x1000 | `docs/agents/media-expert/evidence/dub-623/2026-04-11-batch-c/panels/packages__web__public__images__handbooks__magic-letter-map__page-05__ext__webp--before-after.jpg` |
+| `packages/web/public/images/handbooks/magic-letter-map/page-05-960.webp` | 141346 | 960x600 | `docs/agents/media-expert/evidence/dub-623/2026-04-11-batch-c/panels/packages__web__public__images__handbooks__magic-letter-map__page-05-960__ext__webp--before-after.jpg` |
+| `packages/web/public/images/handbooks/magic-letter-map/page-06.png` | 3430680 | 1600x1000 | `docs/agents/media-expert/evidence/dub-623/2026-04-11-batch-c/panels/packages__web__public__images__handbooks__magic-letter-map__page-06__ext__png--before-after.jpg` |
+| `packages/web/public/images/handbooks/magic-letter-map/page-06.webp` | 284228 | 1600x1000 | `docs/agents/media-expert/evidence/dub-623/2026-04-11-batch-c/panels/packages__web__public__images__handbooks__magic-letter-map__page-06__ext__webp--before-after.jpg` |
+| `packages/web/public/images/handbooks/magic-letter-map/page-06-960.webp` | 143934 | 960x600 | `docs/agents/media-expert/evidence/dub-623/2026-04-11-batch-c/panels/packages__web__public__images__handbooks__magic-letter-map__page-06-960__ext__webp--before-after.jpg` |
+| `packages/web/public/images/handbooks/magic-letter-map/page-07.png` | 3432149 | 1600x1000 | `docs/agents/media-expert/evidence/dub-623/2026-04-11-batch-c/panels/packages__web__public__images__handbooks__magic-letter-map__page-07__ext__png--before-after.jpg` |
+| `packages/web/public/images/handbooks/magic-letter-map/page-07.webp` | 288860 | 1600x1000 | `docs/agents/media-expert/evidence/dub-623/2026-04-11-batch-c/panels/packages__web__public__images__handbooks__magic-letter-map__page-07__ext__webp--before-after.jpg` |
+| `packages/web/public/images/handbooks/magic-letter-map/page-07-960.webp` | 146610 | 960x600 | `docs/agents/media-expert/evidence/dub-623/2026-04-11-batch-c/panels/packages__web__public__images__handbooks__magic-letter-map__page-07-960__ext__webp--before-after.jpg` |

@@ -1,0 +1,29 @@
+{
+  "generatedAt": "2026-04-10T22:45:03.364Z",
+  "companyId": "107038ed-546d-4c3f-afca-26feea951289",
+  "guardrailVersion": "manager_assignee_v2",
+  "selectionPolicy": "least_active_then_urlkey",
+  "summary": {
+    "activeStatusesScanned": [
+      "todo",
+      "in_progress",
+      "in_review",
+      "blocked"
+    ],
+    "backendAssigneeOpenIssuesNonBackendClassification": 0
+  },
+  "mismatches": [],
+  "dub441Replay": {
+    "issueIdentifier": "DUB-441",
+    "title": "Implement working handbook player in InteractiveHandbookGame",
+    "classification": "frontend",
+    "simulatedManagerAssigneeArchitect": {
+      "selectedAgentId": "aa97a097-c8e5-47e6-9075-e7f8fb5d3709",
+      "candidateAgentIdsOrdered": [
+        "afb1aaf8-04b5-45f7-80d1-fd401ae14510",
+        "0dad1b67-3702-4a03-b08b-3342247d371b",
+        "aa97a097-c8e5-47e6-9075-e7f8fb5d3709"
+      ]
+    }
+  }
+}

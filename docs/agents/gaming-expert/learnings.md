@@ -109,3 +109,6 @@ For multi-chapter reading handbooks, mechanics signoff should require explicit s
 
 ## 2026-04-10 — Cancelled Duplicate Wake Tasks Should Be Treated as No-Op After Assignment Check
 When a wake task is assigned to Gaming Expert but already `cancelled` as a duplicate (with a canonical replacement issue linked in thread comments), do not attempt checkout. Confirm inbox/fallback assignment queries still show no active tasks, then exit heartbeat without self-assignment.
+
+## 2026-04-11 — Storybook Gamification Should Reward Literacy Actions, Not Session Time
+For ages 3-7 letter storybooks, the most reliable low-complexity hooks are progress-visible rewards that trigger directly from solved literacy checkpoints (letter card reveal + story clue meter). Keep rewards non-punitive and grant progression after supported success so motivation remains tied to learning behavior instead of speed or daily streak pressure.

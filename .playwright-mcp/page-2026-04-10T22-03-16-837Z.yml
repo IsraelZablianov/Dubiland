@@ -1,0 +1,101 @@
+- generic [ref=e1]:
+  - link "Sign in" [ref=e6] [cursor=pointer]:
+    - /url: https://accounts.google.com/ServiceLogin?passive=1209600&continue=https://gemini.google.com/app&followup=https://gemini.google.com/app&ec=GAZAkgU
+  - main [ref=e8]:
+    - generic:
+      - button "Main menu" [ref=e30] [cursor=pointer]:
+        - img [ref=e31]: menu
+      - button "New chat" [ref=e35] [cursor=pointer]:
+        - generic [ref=e37]: Gemini
+    - generic [ref=e12]:
+      - link "About Gemini Opens in a new window" [ref=e13] [cursor=pointer]:
+        - /url: https://gemini.google/about/?utm_source=gemini&utm_medium=web&utm_campaign=gemini_zero_state_link_to_marketing_microsite
+        - text: About Gemini
+        - generic [ref=e14]: Opens in a new window
+      - link "Gemini App Opens in a new window" [ref=e15] [cursor=pointer]:
+        - /url: https://gemini.google.com/app/download
+        - text: Gemini App
+        - generic [ref=e16]: Opens in a new window
+      - link "Subscriptions Opens in a new window" [ref=e17] [cursor=pointer]:
+        - /url: https://one.google.com/ai
+        - text: Subscriptions
+        - generic [ref=e18]: Opens in a new window
+      - link "For Business Opens in a new window" [ref=e19] [cursor=pointer]:
+        - /url: https://workspace.google.com/solutions/ai/?utm_source=geminiforbusiness&utm_medium=et&utm_campaign=gemini-page-crosslink&utm_term=-&utm_content=forbusiness-2025Q3
+        - text: For Business
+        - generic [ref=e20]: Opens in a new window
+    - generic [ref=e22]:
+      - navigation [ref=e38]:
+        - generic [ref=e41]:
+          - group [ref=e42]:
+            - link "New chat" [ref=e155] [cursor=pointer]:
+              - /url: /app
+              - img [ref=e158]: edit_square
+          - group [ref=e44]:
+            - button "Settings & help" [ref=e46] [cursor=pointer]:
+              - img [ref=e49]: settings_2
+      - generic [ref=e53]:
+        - generic [ref=e54]:
+          - heading "Conversation with Gemini" [level=1] [ref=e55]
+          - generic [ref=e161]:
+            - generic [ref=e166]:
+              - button "Copy prompt" [ref=e168] [cursor=pointer]:
+                - img [ref=e169]: content_copy
+              - button "Edit" [ref=e173] [cursor=pointer]:
+                - img [ref=e174]: edit
+              - generic [ref=e178]:
+                - 'heading "You said Create one image only, 1600x1000. Premium children book illustration, painterly watercolor and soft gouache blend, warm cinematic light, high detail texture, clean silhouettes for tablet readability, RTL-aware composition, one clear focal point, no clutter, no text, no logos, no watermark, age 3-7 safe and friendly. Scene: cozy dawn valley near a small Hebrew-learning village, soft rolling hills, a storybook house, gentle trees, dreamy clouds, warm pastel sky, and calm negative space for UI overlays." [level=2] [ref=e179]':
+                  - generic [ref=e180]: You said
+                  - paragraph [ref=e181]: "Create one image only, 1600x1000. Premium children book illustration, painterly watercolor and soft gouache blend, warm cinematic light, high detail texture, clean silhouettes for tablet readability, RTL-aware composition, one clear focal point, no clutter, no text, no logos, no watermark, age 3-7 safe and friendly. Scene: cozy dawn valley near a small Hebrew-learning village, soft rolling hills, a storybook house, gentle trees, dreamy clouds, warm pastel sky, and calm negative space for UI overlays."
+                - button "Expand" [ref=e182] [cursor=pointer]:
+                  - img [ref=e183]: expand_more
+            - generic [ref=e189]:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - button "Listen":
+                          - img: volume_up
+                    - menu
+              - generic [ref=e190]:
+                - generic [ref=e195]:
+                  - generic:
+                    - generic:
+                      - img
+                - generic [ref=e197]:
+                  - heading "Gemini said" [level=2] [ref=e198]
+                  - paragraph [ref=e203]: I can search for images, but can't create any for you at the moment. You might be signed out or image creation may not be available in your location yet.
+              - generic [ref=e207]:
+                - button "Redo" [ref=e210] [cursor=pointer]:
+                  - img [ref=e211]: refresh
+                - button "Copy" [ref=e215]:
+                  - img [ref=e216]: content_copy
+                - button "Show more options" [ref=e222]:
+                  - img [ref=e223]: more_vert
+        - generic [ref=e89]:
+          - generic [ref=e226]:
+            - generic [ref=e227]: Sign in to connect to Google apps, create images, and more
+            - button "Sign in" [ref=e229]:
+              - generic [ref=e230]: Sign in
+          - group [ref=e90]:
+            - generic [ref=e93]:
+              - textbox "Enter a prompt for Gemini" [active] [ref=e98]:
+                - text: Ask Gemini
+                - paragraph [ref=e233]
+              - generic [ref=e100]:
+                - button "Open upload file menu" [ref=e105] [cursor=pointer]:
+                  - img [ref=e106]: add_2
+                - button "Tools" [ref=e112]:
+                  - img [ref=e113]: page_info
+                  - generic [ref=e116]: Tools
+              - generic [ref=e119]:
+                - button "Open mode picker" [ref=e122]:
+                  - generic [ref=e124]:
+                    - generic [ref=e125]: Fast
+                    - img [ref=e126]: keyboard_arrow_down
+                - generic [ref=e129]:
+                  - button "Microphone" [ref=e132] [cursor=pointer]:
+                    - img [ref=e134]: mic
+                  - text: send
+          - paragraph [ref=e234]: Gemini is AI and can make mistakes.

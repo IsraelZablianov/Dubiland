@@ -1,0 +1,285 @@
+{
+  "generated_at": "2026-04-10T22:54:19.363Z",
+  "tool": "scripts/dub-637-protected-route-matrix.mjs",
+  "base_url": "http://127.0.0.1:4196",
+  "cache_mode": "cold",
+  "route_entry_mode": "direct_document_navigation",
+  "profiles": [
+    "guest_shell",
+    "anonymous_redirect",
+    "authenticated"
+  ],
+  "routes": [
+    "/games",
+    "/profiles",
+    "/parent",
+    "/games/reading/interactive-handbook"
+  ],
+  "baseline_source": "/Users/israelz/Documents/dev/AI/Learning/docs/agents/performance-expert/evidence/dub-506/20260411-012316-final-matrix-post-dub-610/lighthouse-summary.json",
+  "results": [
+    {
+      "profile": "guest_shell",
+      "path": "/games",
+      "status": "ok",
+      "performance": 69,
+      "fcp_ms": 4641.503,
+      "lcp_ms": 5783.175,
+      "tbt_ms": 0,
+      "cls": 0.002636,
+      "speed_index_ms": 3646,
+      "max_potential_fid_ms": 22.739,
+      "max_long_task_ms": 373.065,
+      "total_transfer_bytes": 409214,
+      "login_chunk_requested": false,
+      "supabase_chunk_requested": true,
+      "final_url": "http://127.0.0.1:4196/games",
+      "metadata": {
+        "auth_profile": "guest_shell",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "guest_shell profile prepared: guest mode enabled with active child seed"
+      ]
+    },
+    {
+      "profile": "guest_shell",
+      "path": "/profiles",
+      "status": "ok",
+      "performance": 72,
+      "fcp_ms": 4477.073,
+      "lcp_ms": 5202.076,
+      "tbt_ms": 0,
+      "cls": 0,
+      "speed_index_ms": 2873,
+      "max_potential_fid_ms": 16,
+      "max_long_task_ms": 264.11,
+      "total_transfer_bytes": 284287,
+      "login_chunk_requested": false,
+      "supabase_chunk_requested": true,
+      "final_url": "http://127.0.0.1:4196/profiles",
+      "metadata": {
+        "auth_profile": "guest_shell",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "guest_shell profile prepared: guest mode enabled with active child seed"
+      ]
+    },
+    {
+      "profile": "guest_shell",
+      "path": "/parent",
+      "status": "ok",
+      "performance": 70,
+      "fcp_ms": 4454.754,
+      "lcp_ms": 5304.758,
+      "tbt_ms": 0,
+      "cls": 0.000084,
+      "speed_index_ms": 3986,
+      "max_potential_fid_ms": 16,
+      "max_long_task_ms": 226.207,
+      "total_transfer_bytes": 338228,
+      "login_chunk_requested": false,
+      "supabase_chunk_requested": true,
+      "final_url": "http://127.0.0.1:4196/parent",
+      "metadata": {
+        "auth_profile": "guest_shell",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "guest_shell profile prepared: guest mode enabled with active child seed"
+      ]
+    },
+    {
+      "profile": "guest_shell",
+      "path": "/games/reading/interactive-handbook",
+      "status": "ok",
+      "performance": 81,
+      "fcp_ms": 3756.687,
+      "lcp_ms": 3756.687,
+      "tbt_ms": 26.364000000000487,
+      "cls": 0.015585,
+      "speed_index_ms": 2972,
+      "max_potential_fid_ms": 76.364,
+      "max_long_task_ms": 303.429,
+      "total_transfer_bytes": 378949,
+      "login_chunk_requested": false,
+      "supabase_chunk_requested": true,
+      "final_url": "http://127.0.0.1:4196/games/reading/interactive-handbook",
+      "metadata": {
+        "auth_profile": "guest_shell",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "guest_shell profile prepared: guest mode enabled with active child seed"
+      ]
+    },
+    {
+      "profile": "anonymous_redirect",
+      "path": "/games",
+      "status": "ok",
+      "performance": 79,
+      "fcp_ms": 4025.358,
+      "lcp_ms": 4025.358,
+      "tbt_ms": 0,
+      "cls": 0.000786,
+      "speed_index_ms": 2990,
+      "max_potential_fid_ms": 23.557,
+      "max_long_task_ms": 291.07,
+      "total_transfer_bytes": 268496,
+      "login_chunk_requested": true,
+      "supabase_chunk_requested": true,
+      "final_url": "http://127.0.0.1:4196/games",
+      "metadata": {
+        "auth_profile": "anonymous_redirect",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "anonymous_redirect profile prepared: guest/session hints removed"
+      ],
+      "anonymous_resolved_href": "http://127.0.0.1:4196/login",
+      "anonymous_resolved_path": "/login"
+    },
+    {
+      "profile": "anonymous_redirect",
+      "path": "/profiles",
+      "status": "ok",
+      "performance": 79,
+      "fcp_ms": 4044.312,
+      "lcp_ms": 4044.313,
+      "tbt_ms": 0,
+      "cls": 0.000786,
+      "speed_index_ms": 2995,
+      "max_potential_fid_ms": 20.209,
+      "max_long_task_ms": 303.602,
+      "total_transfer_bytes": 268496,
+      "login_chunk_requested": true,
+      "supabase_chunk_requested": true,
+      "final_url": "http://127.0.0.1:4196/profiles",
+      "metadata": {
+        "auth_profile": "anonymous_redirect",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "anonymous_redirect profile prepared: guest/session hints removed"
+      ],
+      "anonymous_resolved_href": "http://127.0.0.1:4196/login",
+      "anonymous_resolved_path": "/login"
+    },
+    {
+      "profile": "anonymous_redirect",
+      "path": "/parent",
+      "status": "ok",
+      "performance": 79,
+      "fcp_ms": 4038.262,
+      "lcp_ms": 4038.262,
+      "tbt_ms": 0,
+      "cls": 0.000786,
+      "speed_index_ms": 2996,
+      "max_potential_fid_ms": 19.3,
+      "max_long_task_ms": 307.693,
+      "total_transfer_bytes": 268496,
+      "login_chunk_requested": true,
+      "supabase_chunk_requested": true,
+      "final_url": "http://127.0.0.1:4196/parent",
+      "metadata": {
+        "auth_profile": "anonymous_redirect",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "anonymous_redirect profile prepared: guest/session hints removed"
+      ],
+      "anonymous_resolved_href": "http://127.0.0.1:4196/login",
+      "anonymous_resolved_path": "/login"
+    },
+    {
+      "profile": "anonymous_redirect",
+      "path": "/games/reading/interactive-handbook",
+      "status": "ok",
+      "performance": 82,
+      "fcp_ms": 3645.731,
+      "lcp_ms": 3645.731,
+      "tbt_ms": 0,
+      "cls": 0.000786,
+      "speed_index_ms": 2700,
+      "max_potential_fid_ms": 16.364,
+      "max_long_task_ms": 274.7,
+      "total_transfer_bytes": 267481,
+      "login_chunk_requested": true,
+      "supabase_chunk_requested": true,
+      "final_url": "http://127.0.0.1:4196/games/reading/interactive-handbook",
+      "metadata": {
+        "auth_profile": "anonymous_redirect",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "anonymous_redirect profile prepared: guest/session hints removed"
+      ],
+      "anonymous_resolved_href": "http://127.0.0.1:4196/login",
+      "anonymous_resolved_path": "/login"
+    },
+    {
+      "profile": "authenticated",
+      "path": "/games",
+      "status": "skipped",
+      "reason": "missing_credentials",
+      "metadata": {
+        "auth_profile": "authenticated",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "authenticated profile skipped: missing DUBILAND_PERF_EMAIL/DUBILAND_PERF_PASSWORD or SUPABASE_PROJECT_REF"
+      ]
+    },
+    {
+      "profile": "authenticated",
+      "path": "/profiles",
+      "status": "skipped",
+      "reason": "missing_credentials",
+      "metadata": {
+        "auth_profile": "authenticated",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "authenticated profile skipped: missing DUBILAND_PERF_EMAIL/DUBILAND_PERF_PASSWORD or SUPABASE_PROJECT_REF"
+      ]
+    },
+    {
+      "profile": "authenticated",
+      "path": "/parent",
+      "status": "skipped",
+      "reason": "missing_credentials",
+      "metadata": {
+        "auth_profile": "authenticated",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "authenticated profile skipped: missing DUBILAND_PERF_EMAIL/DUBILAND_PERF_PASSWORD or SUPABASE_PROJECT_REF"
+      ]
+    },
+    {
+      "profile": "authenticated",
+      "path": "/games/reading/interactive-handbook",
+      "status": "skipped",
+      "reason": "missing_credentials",
+      "metadata": {
+        "auth_profile": "authenticated",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "authenticated profile skipped: missing DUBILAND_PERF_EMAIL/DUBILAND_PERF_PASSWORD or SUPABASE_PROJECT_REF"
+      ]
+    }
+  ]
+}

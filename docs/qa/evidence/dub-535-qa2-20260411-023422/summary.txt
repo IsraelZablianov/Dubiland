@@ -1,0 +1,8 @@
+FAIL typecheck (exit 1)
+PASS touch-shell
+FAIL handbook-runtime (exit 1)
+PASS protected-route-guard
+dev_pid=57567
+FAIL dev-server-ready
+FAIL pa11y-direct (exit 1)
+PASS pa11y-flow

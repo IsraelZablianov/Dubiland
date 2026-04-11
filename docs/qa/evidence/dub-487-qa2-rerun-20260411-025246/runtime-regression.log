@@ -1,0 +1,35 @@
+TAP version 13
+# Subtest: renderer normalizes target-word and question block aliases
+ok 1 - renderer normalizes target-word and question block aliases
+  ---
+  duration_ms: 0.776042
+  ...
+# Subtest: runtime interaction choices override while story-depth prompt stays on base CTA flow
+ok 2 - runtime interaction choices override while story-depth prompt stays on base CTA flow
+  ---
+  duration_ms: 0.361375
+  ...
+# Subtest: fallback renderer includes target-word text blocks for interaction choices
+ok 3 - fallback renderer includes target-word text blocks for interaction choices
+  ---
+  duration_ms: 0.151959
+  ...
+# Subtest: story-depth pages keep chaptered narration/cta keys when runtime rows still carry legacy narration keys
+ok 4 - story-depth pages keep chaptered narration/cta keys when runtime rows still carry legacy narration keys
+  ---
+  duration_ms: 0.491458
+  ...
+# Subtest: magic-letter-map runtime interactions with no choices use preset fallbacks
+ok 5 - magic-letter-map runtime interactions with no choices use preset fallbacks
+  ---
+  duration_ms: 0.1875
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7.37825

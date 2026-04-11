@@ -1,9 +1,9 @@
 import { lazy, Suspense, type ReactNode } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { ChildPlayShell, MarketingShell, ParentShell } from '@/components/layout';
-import { MascotIllustration } from '@/components/illustrations';
-import { AnimatedPage, FloatingElement, SuccessCelebration } from '@/components/motion';
+import { AppShell, MarketingShell } from '@/components/layout';
+import { AnimatedPage } from '@/components/motion';
 import { ScrollToTop } from '@/components/routing/ScrollToTop';
+import { RouteMetadataManager } from '@/seo/RouteMetadataManager';
 
 const Landing = lazy(() => import('@/pages/Landing'));
 const About = lazy(() => import('@/pages/About'));
@@ -30,25 +30,18 @@ const PictureToWordBuilder = lazy(() => import('@/pages/PictureToWordBuilder'));
 const SightWordSprint = lazy(() => import('@/pages/SightWordSprint'));
 const DecodableMicroStories = lazy(() => import('@/pages/DecodableMicroStories'));
 const InteractiveHandbook = lazy(() => import('@/pages/InteractiveHandbook'));
+const LetterStorybook = lazy(() => import('@/pages/LetterStorybook'));
 const RootFamilyStickers = lazy(() => import('@/pages/RootFamilyStickers'));
 const ConfusableLetterContrast = lazy(() => import('@/pages/ConfusableLetterContrast'));
 const LetterSoundMatch = lazy(() => import('@/pages/LetterSoundMatch'));
 const LetterTracingTrail = lazy(() => import('@/pages/LetterTracingTrail'));
 const LetterSkyCatcher = lazy(() => import('@/pages/LetterSkyCatcher'));
-const RouteMetadataManager = lazy(async () => {
-  const module = await import('@/seo/RouteMetadataManager');
-  return { default: module.RouteMetadataManager };
-});
 
 function RouteFallback() {
   return (
     <div className="route-fallback" aria-busy="true" aria-live="polite">
-      <span className="route-fallback__halo" aria-hidden="true" />
       <div className="route-fallback__panel">
-        <FloatingElement className="route-fallback__mascot-wrap" durationMs={2800}>
-          <MascotIllustration variant="loading" size={132} />
-        </FloatingElement>
-        <SuccessCelebration dense className="route-fallback__celebration" />
+        <span className="route-fallback__spinner" aria-hidden="true" />
         <div className="route-fallback__skeleton" aria-hidden="true">
           <span className="route-fallback__skeleton-pill route-fallback__skeleton-pill--title" />
           <span className="route-fallback__skeleton-pill route-fallback__skeleton-pill--line" />
@@ -73,9 +66,7 @@ export default function App() {
   return (
     <>
       <ScrollToTop />
-      <Suspense fallback={null}>
-        <RouteMetadataManager />
-      </Suspense>
+      <RouteMetadataManager />
 
       <Suspense fallback={<RouteFallback />}>
         <Routes>
@@ -93,12 +84,12 @@ export default function App() {
           {/* Login — public header/footer */}
           <Route path="/login" element={<MarketingShell>{withAnimatedPage(<Login />, 'public')}</MarketingShell>} />
 
-          {/* App pages — shared public shell with contextual child/parent controls */}
+          {/* App shell — authenticated profile + game routes */}
           <Route
             path="/profiles"
             element={
               <ProtectedRoute>
-                <ChildPlayShell>{withAnimatedPage(<ProfilePicker />, 'app')}</ChildPlayShell>
+                <AppShell>{withAnimatedPage(<ProfilePicker />, 'app')}</AppShell>
               </ProtectedRoute>
             }
           />
@@ -106,7 +97,7 @@ export default function App() {
             path="/games"
             element={
               <ProtectedRoute>
-                <ChildPlayShell>{withAnimatedPage(<Home />, 'app')}</ChildPlayShell>
+                <AppShell>{withAnimatedPage(<Home />, 'app')}</AppShell>
               </ProtectedRoute>
             }
           />
@@ -114,7 +105,7 @@ export default function App() {
             path="/parent"
             element={
               <ProtectedRoute>
-                <ParentShell>{withAnimatedPage(<ParentDashboard />, 'app')}</ParentShell>
+                <AppShell>{withAnimatedPage(<ParentDashboard />, 'app')}</AppShell>
               </ProtectedRoute>
             }
           />
@@ -122,7 +113,7 @@ export default function App() {
             path="/games/numbers/counting-picnic"
             element={
               <ProtectedRoute>
-                <ChildPlayShell>{withAnimatedPage(<CountingPicnic />, 'app')}</ChildPlayShell>
+                <AppShell>{withAnimatedPage(<CountingPicnic />, 'app')}</AppShell>
               </ProtectedRoute>
             }
           />
@@ -130,7 +121,7 @@ export default function App() {
             path="/games/numbers/more-or-less-market"
             element={
               <ProtectedRoute>
-                <ChildPlayShell>{withAnimatedPage(<MoreOrLessMarket />, 'app')}</ChildPlayShell>
+                <AppShell>{withAnimatedPage(<MoreOrLessMarket />, 'app')}</AppShell>
               </ProtectedRoute>
             }
           />
@@ -138,7 +129,7 @@ export default function App() {
             path="/games/numbers/shape-safari"
             element={
               <ProtectedRoute>
-                <ChildPlayShell>{withAnimatedPage(<ShapeSafari />, 'app')}</ChildPlayShell>
+                <AppShell>{withAnimatedPage(<ShapeSafari />, 'app')}</AppShell>
               </ProtectedRoute>
             }
           />
@@ -146,7 +137,7 @@ export default function App() {
             path="/games/numbers/number-line-jumps"
             element={
               <ProtectedRoute>
-                <ChildPlayShell>{withAnimatedPage(<NumberLineJumps />, 'app')}</ChildPlayShell>
+                <AppShell>{withAnimatedPage(<NumberLineJumps />, 'app')}</AppShell>
               </ProtectedRoute>
             }
           />
@@ -154,7 +145,7 @@ export default function App() {
             path="/games/colors/color-garden"
             element={
               <ProtectedRoute>
-                <ChildPlayShell>{withAnimatedPage(<ColorGarden />, 'app')}</ChildPlayShell>
+                <AppShell>{withAnimatedPage(<ColorGarden />, 'app')}</AppShell>
               </ProtectedRoute>
             }
           />
@@ -162,7 +153,7 @@ export default function App() {
             path="/games/reading/picture-to-word-builder"
             element={
               <ProtectedRoute>
-                <ChildPlayShell>{withAnimatedPage(<PictureToWordBuilder />, 'app')}</ChildPlayShell>
+                <AppShell>{withAnimatedPage(<PictureToWordBuilder />, 'app')}</AppShell>
               </ProtectedRoute>
             }
           />
@@ -170,7 +161,7 @@ export default function App() {
             path="/games/reading/sight-word-sprint"
             element={
               <ProtectedRoute>
-                <ChildPlayShell>{withAnimatedPage(<SightWordSprint />, 'app')}</ChildPlayShell>
+                <AppShell>{withAnimatedPage(<SightWordSprint />, 'app')}</AppShell>
               </ProtectedRoute>
             }
           />
@@ -178,7 +169,7 @@ export default function App() {
             path="/games/reading/decodable-micro-stories"
             element={
               <ProtectedRoute>
-                <ChildPlayShell>{withAnimatedPage(<DecodableMicroStories />, 'app')}</ChildPlayShell>
+                <AppShell>{withAnimatedPage(<DecodableMicroStories />, 'app')}</AppShell>
               </ProtectedRoute>
             }
           />
@@ -186,7 +177,15 @@ export default function App() {
             path="/games/reading/interactive-handbook"
             element={
               <ProtectedRoute>
-                <ChildPlayShell><InteractiveHandbook /></ChildPlayShell>
+                <AppShell><InteractiveHandbook /></AppShell>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/games/reading/letter-storybook"
+            element={
+              <ProtectedRoute>
+                <AppShell>{withAnimatedPage(<LetterStorybook />, 'app')}</AppShell>
               </ProtectedRoute>
             }
           />
@@ -194,7 +193,7 @@ export default function App() {
             path="/games/reading/root-family-stickers"
             element={
               <ProtectedRoute>
-                <ChildPlayShell>{withAnimatedPage(<RootFamilyStickers />, 'app')}</ChildPlayShell>
+                <AppShell>{withAnimatedPage(<RootFamilyStickers />, 'app')}</AppShell>
               </ProtectedRoute>
             }
           />
@@ -202,7 +201,7 @@ export default function App() {
             path="/games/reading/confusable-letter-contrast"
             element={
               <ProtectedRoute>
-                <ChildPlayShell>{withAnimatedPage(<ConfusableLetterContrast />, 'app')}</ChildPlayShell>
+                <AppShell>{withAnimatedPage(<ConfusableLetterContrast />, 'app')}</AppShell>
               </ProtectedRoute>
             }
           />
@@ -210,7 +209,7 @@ export default function App() {
             path="/games/letters/letter-sound-match"
             element={
               <ProtectedRoute>
-                <ChildPlayShell>{withAnimatedPage(<LetterSoundMatch />, 'app')}</ChildPlayShell>
+                <AppShell>{withAnimatedPage(<LetterSoundMatch />, 'app')}</AppShell>
               </ProtectedRoute>
             }
           />
@@ -218,7 +217,7 @@ export default function App() {
             path="/games/letters/letter-tracing-trail"
             element={
               <ProtectedRoute>
-                <ChildPlayShell>{withAnimatedPage(<LetterTracingTrail />, 'app')}</ChildPlayShell>
+                <AppShell>{withAnimatedPage(<LetterTracingTrail />, 'app')}</AppShell>
               </ProtectedRoute>
             }
           />
@@ -226,7 +225,7 @@ export default function App() {
             path="/games/letters/letter-sky-catcher"
             element={
               <ProtectedRoute>
-                <ChildPlayShell>{withAnimatedPage(<LetterSkyCatcher />, 'app')}</ChildPlayShell>
+                <AppShell>{withAnimatedPage(<LetterSkyCatcher />, 'app')}</AppShell>
               </ProtectedRoute>
             }
           />

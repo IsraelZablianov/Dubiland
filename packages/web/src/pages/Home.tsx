@@ -3,12 +3,17 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { AgeRangeFilterBar, Button, Card, GameCard } from '@/components/design-system';
 import { MascotIllustration } from '@/components/illustrations';
+import { ChildRouteHeader, ChildRouteScaffold } from '@/components/layout';
 import { FloatingElement, SuccessCelebration } from '@/components/motion';
 import { DAILY_LEARNING_GOAL_MINUTES } from '@/constants/learningGoals';
 import { useAudioManager } from '@/hooks/useAudioManager';
 import { useChildProgress } from '@/hooks/useChildProgress';
 import { getPersistedAgeBandOverride, persistAgeBandOverride } from '@/lib/ageFilterPreferences';
+import { resolveAudioPathFromKey } from '@/lib/audioPathResolver';
+import { assetUrl } from '@/lib/assetUrl';
 import { listCatalogForChild, type CatalogAgeBand, type CatalogItem } from '@/lib/catalogRepository';
+import { resolveConcurrentChoiceLimit } from '@/lib/concurrentChoiceLimit';
+import { isRtlDirection, rtlProgressGradient } from '@/lib/rtlChrome';
 import { getActiveChildProfile } from '@/lib/session';
 
 type TopicSlug = 'math' | 'letters' | 'reading';
@@ -28,6 +33,7 @@ type HomeGameSlug =
   | 'sightWordSprint'
   | 'decodableMicroStories'
   | 'interactiveHandbook'
+  | 'letterStorybook'
   | 'rootFamilyStickers'
   | 'confusableLetterContrast';
 
@@ -59,6 +65,7 @@ interface HomeGameCardItem {
 const AGE_BANDS: ProfileAgeBand[] = ['3-4', '4-5', '5-6', '6-7'];
 const NAVIGATION_AUDIO_LEAD_MS = 140;
 const DEFAULT_GAME_THUMBNAIL = '/images/games/thumbnails/interactiveHandbook/thumb-16x10.webp';
+const HOME_BACKGROUND_IMAGE_PATH = '/images/backgrounds/home/home-storybook.webp';
 
 const SECTION_ORDER: HomeSectionSlug[] = ['letters', 'reading', 'math', 'books'];
 
@@ -197,6 +204,16 @@ const HOME_GAME_OPTIONS: TopicGameOption[] = [
     section: 'books',
   },
   {
+    slug: 'letterStorybook',
+    route: '/games/reading/letter-storybook',
+    thumbnailUrl: '/images/games/thumbnails/interactiveHandbook/thumb-16x10.webp',
+    difficulty: 4,
+    primaryAgeBand: '5-6',
+    supportAgeBands: ['3-4', '6-7'],
+    topic: 'reading',
+    section: 'books',
+  },
+  {
     slug: 'rootFamilyStickers',
     route: '/games/reading/root-family-stickers',
     thumbnailUrl: DEFAULT_GAME_THUMBNAIL,
@@ -226,16 +243,8 @@ const GAME_OPTIONS_BY_SLUG: Record<HomeGameSlug, TopicGameOption> = HOME_GAME_OP
   {} as Record<HomeGameSlug, TopicGameOption>,
 );
 
-function toKebabCase(value: string): string {
-  return value
-    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-    .replace(/[^a-zA-Z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .toLowerCase();
-}
-
 function resolveCommonAudioPath(rawKey: string): string {
-  return `/audio/he/${rawKey.split('.').map(toKebabCase).join('/')}.mp3`;
+  return resolveAudioPathFromKey(rawKey, 'common');
 }
 
 function isProfileAgeBand(value: string | undefined): value is ProfileAgeBand {
@@ -376,28 +385,15 @@ function toStars(progressPercent: number): number {
   return 0;
 }
 
-function toConcurrentChoiceLimit(selectedAgeBand: AgeBand, profileAgeBand?: ProfileAgeBand): number {
-  const effectiveBand = selectedAgeBand === 'all' ? profileAgeBand : selectedAgeBand;
-
-  if (effectiveBand === '3-4' || effectiveBand === '4-5' || effectiveBand === '5-6') {
-    return 3;
-  }
-
-  if (effectiveBand === '6-7') {
-    return 5;
-  }
-
-  return 4;
-}
-
 interface ProgressPillsProps {
   percent: number;
   segments?: number;
   ariaLabel: string;
   ariaValueText: string;
+  isRtl: boolean;
 }
 
-function ProgressPills({ percent, segments = 6, ariaLabel, ariaValueText }: ProgressPillsProps) {
+function ProgressPills({ percent, segments = 6, ariaLabel, ariaValueText, isRtl }: ProgressPillsProps) {
   const normalized = Math.max(0, Math.min(100, Math.round(percent)));
   const completed = Math.round((normalized / 100) * segments);
 
@@ -429,7 +425,7 @@ function ProgressPills({ percent, segments = 6, ariaLabel, ariaValueText }: Prog
             border: '1px solid var(--color-border-subtle)',
             background:
               index < completed
-                ? 'linear-gradient(90deg, var(--color-accent-success), var(--color-accent-info))'
+                ? rtlProgressGradient(isRtl, 'var(--color-accent-success)', 'var(--color-accent-info)')
                 : 'color-mix(in srgb, var(--color-surface-muted) 72%, white 28%)',
           }}
         />
@@ -439,9 +435,10 @@ function ProgressPills({ percent, segments = 6, ariaLabel, ariaValueText }: Prog
 }
 
 export default function Home() {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const navigate = useNavigate();
   const audio = useAudioManager();
+  const isRtl = isRtlDirection(i18n.dir(i18n.language));
 
   const childProfile = getActiveChildProfile();
   const childName = childProfile?.name ?? t('profile.guestName');
@@ -477,7 +474,7 @@ export default function Home() {
   const lastDailyGoalProgressRef = useRef<number | null>(null);
 
   const maxConcurrentChoices = useMemo(
-    () => toConcurrentChoiceLimit(selectedAgeBand, profileAgeBand),
+    () => resolveConcurrentChoiceLimit(selectedAgeBand, profileAgeBand),
     [profileAgeBand, selectedAgeBand],
   );
   const requiresProgressiveReveal = maxConcurrentChoices <= 3;
@@ -728,20 +725,18 @@ export default function Home() {
   const remainingChoiceCount = Math.max(0, allVisibleGames.length - featuredGames.length);
 
   return (
-    <main
-      style={{
-        flex: 1,
+    <ChildRouteScaffold
+      width="standard"
+      gap="var(--space-lg)"
+      mainStyle={{
         backgroundImage:
-          'radial-gradient(120% 120% at 10% 0%, color-mix(in srgb, var(--color-theme-secondary) 18%, transparent) 0%, transparent 55%), radial-gradient(120% 120% at 90% 100%, color-mix(in srgb, var(--color-accent-warning) 16%, transparent) 0%, transparent 58%), linear-gradient(180deg, color-mix(in srgb, var(--color-bg-primary) 78%, white 22%) 0%, color-mix(in srgb, var(--color-bg-secondary) 80%, white 20%) 100%), url(/images/backgrounds/home/home-storybook.webp)',
+          `radial-gradient(120% 120% at 10% 0%, color-mix(in srgb, var(--color-theme-secondary) 18%, transparent) 0%, transparent 55%), radial-gradient(120% 120% at 90% 100%, color-mix(in srgb, var(--color-accent-warning) 16%, transparent) 0%, transparent 58%), linear-gradient(180deg, color-mix(in srgb, var(--color-bg-primary) 78%, white 22%) 0%, color-mix(in srgb, var(--color-bg-secondary) 80%, white 20%) 100%), url(${assetUrl(HOME_BACKGROUND_IMAGE_PATH)})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundBlendMode: 'screen, screen, soft-light, normal',
         padding: 'var(--space-xl)',
-        display: 'flex',
-        justifyContent: 'center',
       }}
     >
-      <section style={{ width: 'min(1120px, 100%)', display: 'grid', gap: 'var(--space-lg)' }}>
         <Card
           padding="lg"
           style={{
@@ -752,24 +747,25 @@ export default function Home() {
               'linear-gradient(138deg, color-mix(in srgb, var(--color-bg-card) 76%, var(--color-theme-secondary) 24%), color-mix(in srgb, var(--color-bg-card) 86%, white 14%))',
           }}
         >
-          <header className="home__hero-header">
-            <div className="home__hero-copy">
-              <h1
-                style={{
-                  fontSize: 'var(--font-size-2xl)',
-                  fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
-                  color: 'var(--color-text-primary)',
-                }}
-              >
-                {t('home.greeting', { name: childName })}
-              </h1>
-              <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-md)' }}>{t('home.dubiWelcome')}</p>
-            </div>
-
-            <FloatingElement className="home__hero-mascot" durationMs={3200}>
-              <MascotIllustration variant="hint" size="clamp(108px, 18vw, 132px)" />
-            </FloatingElement>
-          </header>
+          <ChildRouteHeader
+            title={t('home.greeting', { name: childName })}
+            subtitle={t('home.dubiWelcome')}
+            trailing={
+              <FloatingElement durationMs={3200}>
+                <MascotIllustration variant="hint" size="clamp(108px, 18vw, 132px)" />
+              </FloatingElement>
+            }
+            headingStyle={{ gap: 'var(--space-xs)' }}
+            titleStyle={{
+              fontSize: 'var(--font-size-2xl)',
+              fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
+              color: 'var(--color-text-primary)',
+            }}
+            subtitleStyle={{
+              color: 'var(--color-text-secondary)',
+              fontSize: 'var(--font-size-md)',
+            }}
+          />
 
           <div className="home__hero-stats">
             <div style={{ display: 'grid', gap: 'var(--space-2xs)' }}>
@@ -792,6 +788,7 @@ export default function Home() {
           <ProgressPills
             percent={dailyGoalProgress}
             segments={8}
+            isRtl={isRtl}
             ariaLabel={t('home.dailyGoal')}
             ariaValueText={t('home.progressValue', { count: dailyGoalProgress })}
           />
@@ -835,6 +832,7 @@ export default function Home() {
                     progressAriaLabel={t('home.progressLabel')}
                     progressValueLabel={t('home.progressValue', { count: progressPercent })}
                     playLabel={t('games.play')}
+                    isRtl={isRtl}
                     onClick={() => handleOpenGame(game.route, gameTitleKey)}
                     aria-label={t(gameTitleKey as any)}
                     style={{
@@ -931,6 +929,7 @@ export default function Home() {
                     <ProgressPills
                       percent={sectionProgress}
                       segments={5}
+                      isRtl={isRtl}
                       ariaLabel={t(`home.sections.${sectionSlug}.title` as any)}
                       ariaValueText={t('home.sectionProgressValue', { count: sectionProgress })}
                     />
@@ -960,6 +959,7 @@ export default function Home() {
                           progressAriaLabel={t('home.progressLabel')}
                           progressValueLabel={t('home.progressValue', { count: progressPercent })}
                           playLabel={t('games.play')}
+                          isRtl={isRtl}
                           onClick={() => handleOpenGame(game.route, gameTitleKey)}
                           aria-label={t(gameTitleKey as any)}
                           style={{
@@ -1001,25 +1001,9 @@ export default function Home() {
             </Button>
           </Card>
         )}
-      </section>
+      
 
       <style>{`
-        .home__hero-header {
-          display: grid;
-          grid-template-columns: 1fr auto;
-          align-items: center;
-          gap: var(--space-md);
-        }
-
-        .home__hero-copy {
-          display: grid;
-          gap: var(--space-xs);
-        }
-
-        .home__hero-mascot {
-          justify-self: end;
-        }
-
         .home__hero-stats {
           display: flex;
           flex-wrap: wrap;
@@ -1056,14 +1040,6 @@ export default function Home() {
         }
 
         @media (max-width: 640px) {
-          .home__hero-header {
-            grid-template-columns: 1fr;
-          }
-
-          .home__hero-mascot {
-            justify-self: center;
-          }
-
           .home__hero-stats {
             align-items: stretch;
           }
@@ -1074,6 +1050,6 @@ export default function Home() {
           }
         }
       `}</style>
-    </main>
+    </ChildRouteScaffold>
   );
 }

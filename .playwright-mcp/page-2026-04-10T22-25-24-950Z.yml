@@ -1,0 +1,96 @@
+- generic [ref=e10]:
+  - banner [ref=e11]:
+    - generic [ref=e12]:
+      - link "דובילנד" [ref=e13] [cursor=pointer]:
+        - /url: /games
+        - img
+        - generic [ref=e14]: דובילנד
+      - navigation "בחר נושא" [ref=e15]:
+        - button "דף הבית" [ref=e16] [cursor=pointer]:
+          - generic [ref=e17]: 🏠
+          - generic [ref=e18]: דף הבית
+        - button "בחירת ילד" [ref=e19] [cursor=pointer]:
+          - generic [ref=e20]: 🧒
+          - generic [ref=e21]: בחירת ילד
+        - button "אזור הורים" [ref=e22] [cursor=pointer]:
+          - generic [ref=e23]: 🔒
+          - generic [ref=e24]: אזור הורים
+      - generic "בדיקה" [ref=e25]:
+        - generic [ref=e26]: 🧸
+        - generic [ref=e27]: בדיקה
+  - main [ref=e28]:
+    - main [ref=e29]:
+      - generic [ref=e30]:
+        - generic [ref=e32]:
+          - heading "מיקה בגן הקולות" [level=1] [ref=e33]
+          - paragraph [ref=e34]: "זמן משוער: חמש דקות"
+        - generic [ref=e35]:
+          - generic [ref=e36]:
+            - heading "ספרונים אינטראקטיביים עם דובי" [level=2] [ref=e37]
+            - paragraph [ref=e38]: קוראים, מקשיבים ומשחקים יחד
+          - generic [ref=e39]:
+            - button "ספר 1 — מיקה בגן הקולות" [pressed] [ref=e40] [cursor=pointer]:
+              - generic [ref=e41]: 🌱
+              - generic [ref=e42]: ספר 1 — מיקה בגן הקולות
+              - generic [ref=e43]: "זמן משוער: חמש דקות"
+            - generic [ref=e44]:
+              - button "ספר 4 — יואב והמפה שמכבה את האור" [ref=e45] [cursor=pointer]:
+                - generic [ref=e46]: 🗺️
+                - generic [ref=e47]: ספר 4 — יואב והמפה שמכבה את האור
+                - generic [ref=e48]: "זמן משוער: 7–10 דקות"
+              - button "ספר 5 — נעמה וקופסת ההברות" [ref=e49] [cursor=pointer]:
+                - generic [ref=e50]: 🔤
+                - generic [ref=e51]: ספר 5 — נעמה וקופסת ההברות
+                - generic [ref=e52]: "זְמַן מְשׁוֹעָר: עֶשֶׂר דַּקּוֹת"
+        - generic [ref=e53]:
+          - generic [ref=e54]:
+            - generic [ref=e55]:
+              - button "חזרה" [ref=e56] [cursor=pointer]:
+                - img [ref=e57]
+              - paragraph [ref=e60]: ספרון התחלתי להקשבה, זיהוי צליל ראשון ומודעות לדפוס
+              - generic [ref=e61]:
+                - group "בחירת מצב ספרון" [ref=e62]:
+                  - button "הקרא לי" [ref=e63] [cursor=pointer]
+                  - button "קוראים ומשחקים" [ref=e64] [cursor=pointer]
+                  - button "חזרה רגועה" [ref=e65] [cursor=pointer]
+                - button "השמעה חוזרת" [ref=e66] [cursor=pointer]:
+                  - generic [ref=e67]: ▶
+            - progressbar "עמוד 2 מתוך 8" [ref=e116]:
+              - paragraph [ref=e69]: עמוד 2 מתוך 8
+          - generic [ref=e79]:
+            - 'group "דובי לוחש למיקה: הצליל הראשון הוא המפתח לרמז הראשון." [ref=e118]':
+              - paragraph [ref=e119]: עמוד 2 מתוך 8
+              - generic [ref=e121]:
+                - generic [ref=e122]:
+                  - figure [ref=e123]:
+                    - 'generic "דובי לוחש למיקה: הצליל הראשון הוא המפתח לרמז הראשון." [ref=e124]'
+                  - button "שומעים מילה ומחזירים למצעד את הצליל הראשון שלה." [ref=e125] [cursor=pointer]
+                - generic [ref=e127]:
+                  - button "ב" [ref=e128] [cursor=pointer]
+                  - 'button "דובי לוחש למיקה: הצליל הראשון הוא המפתח לרמז הראשון." [ref=e129] [cursor=pointer]'
+                  - button "שומעים מילה ומחזירים למצעד את הצליל הראשון שלה." [ref=e130] [cursor=pointer]
+            - paragraph [ref=e92]: "נתחיל יחד מההתחלה: צליל ראשון, ואז כל המילה."
+            - generic:
+              - img
+            - generic [ref=e93]:
+              - button "השמעה חוזרת" [ref=e94] [cursor=pointer]:
+                - img [ref=e95]
+              - button "עצירת קריינות" [ref=e99] [cursor=pointer]:
+                - img [ref=e100]
+              - button "ניסיון חוזר" [ref=e103] [cursor=pointer]:
+                - img [ref=e104]
+              - button "רמז" [ref=e106] [cursor=pointer]:
+                - img [ref=e107]
+              - button "חזרה" [disabled] [ref=e110]:
+                - img [ref=e111]
+              - button "המשך" [disabled] [ref=e113]:
+                - img [ref=e114]
+            - generic [ref=e131]:
+              - paragraph [ref=e132]: שומעים מילה ומחזירים למצעד את הצליל הראשון שלה.
+              - group "קודם קוראים את הטקסט, ואז מקישים על הבחירה." [ref=e133]:
+                - button "ב" [ref=e134] [cursor=pointer]:
+                  - img [ref=e136]
+                  - generic [ref=e138]: ב
+                - button "כ" [ref=e139] [cursor=pointer]:
+                  - img [ref=e141]
+                  - generic [ref=e143]: כ

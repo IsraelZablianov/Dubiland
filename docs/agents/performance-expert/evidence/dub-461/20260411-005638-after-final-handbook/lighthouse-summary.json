@@ -1,0 +1,69 @@
+{
+  "out_dir": "docs/agents/performance-expert/evidence/dub-461/20260411-005638-after-final-handbook",
+  "route": "/games/reading/interactive-handbook",
+  "performance": 82,
+  "fcp_ms": 3670.359,
+  "lcp_ms": 3670.359,
+  "tbt_ms": 0,
+  "max_potential_fid_ms": 27.585,
+  "cls": 0.000786,
+  "speed_index_ms": 2720,
+  "max_long_task_ms": 306.494,
+  "total_byte_weight": 264452,
+  "resource_summary": [
+    {
+      "resourceType": "total",
+      "label": "Total",
+      "requestCount": 18,
+      "transferSize": 264452
+    },
+    {
+      "resourceType": "script",
+      "label": "Script",
+      "requestCount": 9,
+      "transferSize": 208070
+    },
+    {
+      "resourceType": "font",
+      "label": "Font",
+      "requestCount": 2,
+      "transferSize": 45344
+    },
+    {
+      "resourceType": "stylesheet",
+      "label": "Stylesheet",
+      "requestCount": 2,
+      "transferSize": 6609
+    },
+    {
+      "resourceType": "image",
+      "label": "Image",
+      "requestCount": 2,
+      "transferSize": 2306
+    },
+    {
+      "resourceType": "document",
+      "label": "Document",
+      "requestCount": 1,
+      "transferSize": 1617
+    },
+    {
+      "resourceType": "other",
+      "label": "Other",
+      "requestCount": 2,
+      "transferSize": 506
+    },
+    {
+      "resourceType": "media",
+      "label": "Media",
+      "requestCount": 0,
+      "transferSize": 0
+    },
+    {
+      "resourceType": "third-party",
+      "label": "Third-party",
+      "requestCount": 3,
+      "transferSize": 47821
+    }
+  ]
+}

@@ -1,0 +1,224 @@
+- generic [ref=e10]:
+  - banner [ref=e11]:
+    - generic [ref=e12]:
+      - link "דובילנד" [ref=e13] [cursor=pointer]:
+        - /url: /games
+        - img
+        - generic [ref=e14]: דובילנד
+      - navigation "בחר נושא" [ref=e15]:
+        - button "דף הבית" [ref=e16] [cursor=pointer]:
+          - generic [ref=e17]: 🏠
+          - generic [ref=e18]: דף הבית
+        - button "בחירת ילד" [ref=e19] [cursor=pointer]:
+          - generic [ref=e20]: 🧒
+          - generic [ref=e21]: בחירת ילד
+        - button "אזור הורים" [ref=e22] [cursor=pointer]:
+          - generic [ref=e23]: 🔒
+          - generic [ref=e24]: אזור הורים
+      - generic "בדיקה" [ref=e25]:
+        - generic [ref=e26]: 🧸
+        - generic [ref=e27]: בדיקה
+  - main [ref=e28]:
+    - main [ref=e30]:
+      - generic [ref=e31]:
+        - generic [ref=e32]:
+          - generic [ref=e33]:
+            - generic [ref=e34]:
+              - heading "היי בדיקה, מה נלמד היום?" [level=1] [ref=e35]
+              - paragraph [ref=e36]: שלום! אני דובי, בואו נלמד ונשחק יחד
+            - generic [ref=e38]:
+              - img
+          - generic [ref=e39]:
+            - generic [ref=e40]:
+              - paragraph [ref=e41]: יעד יומי
+              - strong [ref=e42]: 0 דקות של למידה / 20 דקות של למידה
+            - button "התחל ללמוד" [ref=e43] [cursor=pointer]
+          - progressbar "יעד יומי" [ref=e44]
+        - generic [ref=e53]:
+          - generic [ref=e54]:
+            - heading "מומלץ עכשיו" [level=2] [ref=e55]
+            - paragraph [ref=e56]: בחירה חכמה לפי גיל, רמת קושי וקצב ההתקדמות
+            - paragraph [ref=e57]: מותאם אישית לילד או לילדה של היום
+          - generic [ref=e58]:
+            - button "פיקניק ספירה עם דובי" [ref=e59] [cursor=pointer]:
+              - generic [ref=e61]:
+                - generic [ref=e62]: פיקניק ספירה עם דובי
+                - generic "קושי" [ref=e63]:
+                  - generic [ref=e64]:
+                    - generic [ref=e65]: 🔢
+                    - generic [ref=e66]: מספרים
+                  - generic [ref=e67]:
+                    - generic [ref=e68]: ✨
+                    - generic [ref=e69]: 3-4 · +1
+                - progressbar "התקדמות" [ref=e70]:
+                  - generic [ref=e71]:
+                    - generic [ref=e72]: התקדמות
+                    - generic [ref=e73]: 0%
+                - generic [ref=e80]:
+                  - generic [ref=e81]:
+                    - generic [ref=e82]: ◀
+                    - text: שחקו עכשיו
+                  - img "0 out of 3 stars" [ref=e83]:
+                    - generic [ref=e84]: ★
+                    - generic [ref=e85]: ★
+                    - generic [ref=e86]: ★
+            - button "גינת הצבעים עם דובי" [ref=e87] [cursor=pointer]:
+              - generic [ref=e89]:
+                - generic [ref=e90]: גינת הצבעים עם דובי
+                - generic "קושי" [ref=e91]:
+                  - generic [ref=e92]:
+                    - generic [ref=e93]: 🔢
+                    - generic [ref=e94]: מספרים
+                  - generic [ref=e95]:
+                    - generic [ref=e96]: ✨
+                    - generic [ref=e97]: 3-4 · +1
+                - progressbar "התקדמות" [ref=e98]:
+                  - generic [ref=e99]:
+                    - generic [ref=e100]: התקדמות
+                    - generic [ref=e101]: 0%
+                - generic [ref=e108]:
+                  - generic [ref=e109]:
+                    - generic [ref=e110]: ◀
+                    - text: שחקו עכשיו
+                  - img "0 out of 3 stars" [ref=e111]:
+                    - generic [ref=e112]: ★
+                    - generic [ref=e113]: ★
+                    - generic [ref=e114]: ★
+            - button "ספארי צורות עם דובי" [ref=e115] [cursor=pointer]:
+              - generic [ref=e117]:
+                - generic [ref=e118]: ספארי צורות עם דובי
+                - generic "קושי" [ref=e119]:
+                  - generic [ref=e120]:
+                    - generic [ref=e121]: 🔢
+                    - generic [ref=e122]: מספרים
+                  - generic [ref=e123]:
+                    - generic [ref=e124]: ✨
+                    - generic [ref=e125]: 3-4 · +1
+                - progressbar "התקדמות" [ref=e126]:
+                  - generic [ref=e127]:
+                    - generic [ref=e128]: התקדמות
+                    - generic [ref=e129]: 0%
+                - generic [ref=e136]:
+                  - generic [ref=e137]:
+                    - generic [ref=e138]: ◀
+                    - text: שחקו עכשיו
+                  - img "0 out of 3 stars" [ref=e139]:
+                    - generic [ref=e140]: ★
+                    - generic [ref=e141]: ★
+                    - generic [ref=e142]: ★
+        - generic [ref=e143]:
+          - heading "סינון גיל" [level=3] [ref=e144]
+          - generic [ref=e145]:
+            - strong [ref=e147]: סינון גיל
+            - generic [ref=e148]:
+              - generic [ref=e149]:
+                - img
+              - button "3-4" [pressed] [ref=e150] [cursor=pointer]
+              - button "4-5" [ref=e151] [cursor=pointer]
+              - button "5-6" [ref=e152] [cursor=pointer]
+              - button "6-7" [ref=e153] [cursor=pointer]
+              - button "כל הגילים" [ref=e154] [cursor=pointer]
+        - generic [ref=e160]:
+          - generic [ref=e161]:
+            - generic [ref=e162]:
+              - heading "🔢 חשבון ומשחקי מספרים" [level=3] [ref=e163]
+              - paragraph [ref=e164]: ספירה, השוואה וסדר מספרי
+              - paragraph [ref=e165]: "התקדמות בקטגוריה: 0%"
+              - progressbar "חשבון ומשחקי מספרים" [ref=e166]
+              - paragraph [ref=e172]: 3 משחקים זמינים
+            - generic [ref=e173]:
+              - button "פיקניק ספירה עם דובי" [ref=e174] [cursor=pointer]:
+                - generic [ref=e176]:
+                  - generic [ref=e177]: פיקניק ספירה עם דובי
+                  - generic "קושי" [ref=e178]:
+                    - generic [ref=e179]:
+                      - generic [ref=e180]: 🔢
+                      - generic [ref=e181]: מספרים
+                    - generic [ref=e182]:
+                      - generic [ref=e183]: ✨
+                      - generic [ref=e184]: 3-4 · +1
+                  - progressbar "התקדמות" [ref=e185]:
+                    - generic [ref=e186]:
+                      - generic [ref=e187]: התקדמות
+                      - generic [ref=e188]: 0%
+                  - generic [ref=e195]:
+                    - generic [ref=e196]:
+                      - generic [ref=e197]: ◀
+                      - text: שחקו עכשיו
+                    - img "0 out of 3 stars" [ref=e198]:
+                      - generic [ref=e199]: ★
+                      - generic [ref=e200]: ★
+                      - generic [ref=e201]: ★
+              - button "גינת הצבעים עם דובי" [ref=e202] [cursor=pointer]:
+                - generic [ref=e204]:
+                  - generic [ref=e205]: גינת הצבעים עם דובי
+                  - generic "קושי" [ref=e206]:
+                    - generic [ref=e207]:
+                      - generic [ref=e208]: 🔢
+                      - generic [ref=e209]: מספרים
+                    - generic [ref=e210]:
+                      - generic [ref=e211]: ✨
+                      - generic [ref=e212]: 3-4 · +1
+                  - progressbar "התקדמות" [ref=e213]:
+                    - generic [ref=e214]:
+                      - generic [ref=e215]: התקדמות
+                      - generic [ref=e216]: 0%
+                  - generic [ref=e223]:
+                    - generic [ref=e224]:
+                      - generic [ref=e225]: ◀
+                      - text: שחקו עכשיו
+                    - img "0 out of 3 stars" [ref=e226]:
+                      - generic [ref=e227]: ★
+                      - generic [ref=e228]: ★
+                      - generic [ref=e229]: ★
+              - button "ספארי צורות עם דובי" [ref=e230] [cursor=pointer]:
+                - generic [ref=e232]:
+                  - generic [ref=e233]: ספארי צורות עם דובי
+                  - generic "קושי" [ref=e234]:
+                    - generic [ref=e235]:
+                      - generic [ref=e236]: 🔢
+                      - generic [ref=e237]: מספרים
+                    - generic [ref=e238]:
+                      - generic [ref=e239]: ✨
+                      - generic [ref=e240]: 3-4 · +1
+                  - progressbar "התקדמות" [ref=e241]:
+                    - generic [ref=e242]:
+                      - generic [ref=e243]: התקדמות
+                      - generic [ref=e244]: 0%
+                  - generic [ref=e251]:
+                    - generic [ref=e252]:
+                      - generic [ref=e253]: ◀
+                      - text: שחקו עכשיו
+                    - img "0 out of 3 stars" [ref=e254]:
+                      - generic [ref=e255]: ★
+                      - generic [ref=e256]: ★
+                      - generic [ref=e257]: ★
+          - generic [ref=e258]:
+            - generic [ref=e259]:
+              - heading "📚 ספרים אינטראקטיביים" [level=3] [ref=e260]
+              - paragraph [ref=e261]: מסלול ספרי הקריאה של דובילנד
+              - paragraph [ref=e262]: "התקדמות בקטגוריה: 0%"
+              - progressbar "ספרים אינטראקטיביים" [ref=e263]
+              - paragraph [ref=e269]: 1 משחקים זמינים
+            - button "ספרון אינטראקטיבי עם דובי" [ref=e271] [cursor=pointer]:
+              - generic [ref=e273]:
+                - generic [ref=e274]: ספרון אינטראקטיבי עם דובי
+                - generic "קושי" [ref=e275]:
+                  - generic [ref=e276]:
+                    - generic [ref=e277]: 📖
+                    - generic [ref=e278]: קריאה
+                  - generic [ref=e279]:
+                    - generic [ref=e280]: ✨
+                    - generic [ref=e281]: 3-4 · +3
+                - progressbar "התקדמות" [ref=e282]:
+                  - generic [ref=e283]:
+                    - generic [ref=e284]: התקדמות
+                    - generic [ref=e285]: 0%
+                - generic [ref=e292]:
+                  - generic [ref=e293]:
+                    - generic [ref=e294]: ◀
+                    - text: שחקו עכשיו
+                  - img "0 out of 3 stars" [ref=e295]:
+                    - generic [ref=e296]: ★
+                    - generic [ref=e297]: ★
+                    - generic [ref=e298]: ★

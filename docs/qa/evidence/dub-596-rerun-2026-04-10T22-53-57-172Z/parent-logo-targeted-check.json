@@ -1,0 +1,11 @@
+{
+  "issue": "DUB-596",
+  "route": "/parent",
+  "selector": "a.public-header__logo",
+  "capturedAt": "2026-04-10T22:56:35Z",
+  "results": [
+    { "viewport": "mobile-375x812", "found": true, "width": 151.09, "height": 60, "minSize": 60 },
+    { "viewport": "tablet-834x1112", "found": true, "width": 156.95, "height": 60, "minSize": 60 }
+  ],
+  "note": "Original sweep selector .app-header__logo no longer exists; public-header__logo is the current interactive logo control."
+}

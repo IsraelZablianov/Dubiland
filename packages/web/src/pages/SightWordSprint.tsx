@@ -3,6 +3,7 @@ import type { Child, Game, GameLevel } from '@dubiland/shared';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/design-system';
+import { ChildRouteHeader, ChildRouteScaffold } from '@/components/layout';
 import type { GameCompletionResult } from '@/games/engine';
 import { SightWordSprintGame } from '@/games/reading/SightWordSprintGame';
 import { useAudioManager } from '@/hooks/useAudioManager';
@@ -57,6 +58,16 @@ export default function SightWordSprintPage() {
     }),
     [activeProfile?.emoji, activeProfile?.id, activeProfile?.name, t],
   );
+  const runtimeLevel = useMemo<GameLevel>(
+    () => ({
+      ...SIGHT_WORD_SPRINT_LEVEL,
+      configJson: {
+        ...(SIGHT_WORD_SPRINT_LEVEL.configJson as Record<string, unknown>),
+        ageBand: activeProfile?.ageBand ?? '5-6',
+      },
+    }),
+    [activeProfile?.ageBand],
+  );
 
   const [completionResult, setCompletionResult] = useState<GameCompletionResult | null>(null);
   const [syncState, setSyncState] = useState<SyncState>('idle');
@@ -76,44 +87,21 @@ export default function SightWordSprintPage() {
   }, [audio, navigate]);
 
   return (
-    <main
-      style={{
-        flex: 1,
+    <ChildRouteScaffold
+      width="wide"
+      mainStyle={{
         background:
           'radial-gradient(circle at 14% 12%, color-mix(in srgb, var(--color-theme-secondary) 18%, transparent), transparent 44%), linear-gradient(180deg, var(--color-theme-bg) 0%, color-mix(in srgb, var(--color-bg-card) 88%, white 12%) 100%)',
-        padding: 'var(--space-lg)',
-        display: 'flex',
-        justifyContent: 'center',
       }}
     >
-      <section style={{ width: 'min(1180px, 100%)', display: 'grid', gap: 'var(--space-md)' }}>
-        <header
-          style={{
-            display: 'flex',
-            gap: 'var(--space-sm)',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-          }}
-        >
-          <div style={{ display: 'grid', gap: 'var(--space-xs)' }}>
-            <h1
-              style={{
-                margin: 0,
-                fontSize: 'var(--font-size-2xl)',
-                color: 'var(--color-text-primary)',
-                fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
-              }}
-            >
-              {t('games.sightWordSprint.title')}
-            </h1>
-            <p style={{ margin: 0, color: 'var(--color-text-secondary)' }}>{t('games.sightWordSprint.subtitle')}</p>
-          </div>
-        </header>
+      <ChildRouteHeader
+        title={t('games.sightWordSprint.title')}
+        subtitle={t('games.sightWordSprint.subtitle')}
+      />
 
         <SightWordSprintGame
           game={SIGHT_WORD_SPRINT_GAME}
-          level={SIGHT_WORD_SPRINT_LEVEL}
+          level={runtimeLevel}
           child={child}
           onComplete={handleComplete}
           audio={audio}
@@ -127,7 +115,6 @@ export default function SightWordSprintPage() {
             </p>
           </Card>
         )}
-      </section>
-    </main>
+    </ChildRouteScaffold>
   );
 }

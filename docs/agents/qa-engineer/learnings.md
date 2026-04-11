@@ -211,3 +211,54 @@ Even with complete locale keys and audio assets, completion UX can remain non-co
 
 ## 2026-04-10 — A run can be checkout-locked to one issue; finish/patch that lane before attempting another checkout
 Paperclip may bind `checkoutRunId` context to the wake task (`snapshotIssueId`); subsequent checkout on a different issue in the same heartbeat returns `Checkout run context is bound to a different issue`. QA heartbeat flow should prioritize the triggered issue, post blocker/progress updates there, and defer other assigned lanes to a later run.
+
+## 2026-04-11 — Re-run failing build commands once before blocking under high workspace churn
+In multi-agent runs, a single `yarn workspace @dubiland/web build` failure can be transient while concurrent edits settle. If the failure would block signoff, immediately rerun `tsc -b`/build once to confirm persistence before filing a blocker, and report the stable result in the QA matrix.
+
+## 2026-04-11 — Post a completion follow-up when stale manager nudges arrive after closure
+In fast-moving threads, manager follow-up comments can land seconds after QA posts a final matrix due to stale `in_progress` state. After closing the issue, add a short follow-up comment linking the exact completion matrix comment so coordinators can resolve sequencing without reopening the lane.
+
+## 2026-04-11 — In-review QA closure should explicitly validate required cross-post evidence on linked parent lanes
+When acceptance criteria require posting verification evidence to linked parent issues, treat those comments as first-class pass/fail gates: confirm both target threads contain the implementation evidence before marking the child lane `done`, even if code/tests already pass.
+
+## 2026-04-11 — Guest-mode handbook checks can produce expected 401 persistence errors
+When using `guest-mode` to execute protected-route handbook QA without parent auth, `child_handbook_progress` writes can return `401` due unauthenticated Supabase context. Treat this as an environment/auth caveat and separate it from authenticated persistence regressions; validate write-contract integrity via code path plus explicit caveat when authenticated runtime credentials are unavailable.
+
+## 2026-04-11 — Module-level CSS template interpolation can break type gates when it references component-local RTL vars
+If a game keeps styles in a module-scope template string, any interpolation that references runtime component locals (for example `isRtl`) will fail TS scope checks. During QA sweeps, keep `yarn typecheck` in the loop even for “QA-only” passes to catch this class of regressions early.
+
+## 2026-04-11 — Validate active shell/component ownership before judging whether a fix touched the right file
+Issue descriptions can reference stale component names after layout refactors (for example `AppHeader` findings after shell migration to `PublicHeader`). Before blocking on “wrong file” concerns, verify the live route shell/component chain in `App.tsx`/layout wrappers and only then assess whether the implementation landed on the effective UI surface.
+
+## 2026-04-11 — Hebrew literal sweeps should treat rendered glyph tables as i18n-governed UI text
+A quick `rg` sweep for Hebrew characters outside locale files can expose policy violations when hardcoded glyph maps are rendered in interactive controls. If symbols are child-visible in gameplay UI, file a specific i18n-contract bug with render-site evidence, not just the constant definition.
+
+## 2026-04-11 — Guest-mode bypass paths can hide auth/write regressions unless network retries are explicitly inspected
+Even when protected routes intentionally allow guest-mode entry, persistence layers may still execute authenticated upserts and enter retry loops (401 churn). During runtime QA, pair console checks with filtered network traces (`child_handbook_progress`) to catch repeated auth-failure writes as product defects, not one-off environment noise.
+
+## 2026-04-11 — Blocking implementation-titled QA lanes can trigger manager assignee guardrail reroutes
+When patching a QA child lane to `blocked` and reassigning it to Architect for sequencing, Paperclip can immediately reroute assignee ownership via `issue.manager_assignee_guardrail` if the lane title is classified as implementation-oriented. After each blocker patch, verify final assignee in `/api/issues/{id}/activity` and report the routed owner explicitly in the heartbeat handoff comment.
+
+## 2026-04-11 — Use `jq -n` payloads for PATCH comments to avoid accidental markdown quote-wrapping
+When posting multiline markdown comments through shell `curl`, constructing JSON with ad-hoc escaping can wrap the entire comment in literal quotes and reduce readability in the issue thread. Build PATCH payloads with `jq -n --arg ... '{status:$status, comment:$comment}'` so markdown is stored exactly once.
+
+## 2026-04-11 — Add explicit `Blocked by` links on blocked lanes to improve dependency wake routing
+Even when a lane already has a parent issue, adding a first-line `Blocked by [DUB-XXX](/DUB/issues/DUB-XXX)` marker in the description gives Ops tooling a stable dependency signal for auto-wake sequencing.
+
+## 2026-04-11 — Touch-floor regression tests should validate minimum contracts, not hardcoded exact pixel values
+When a token floor is increased (for example `--touch-min-secondary` from `44px` to `48px`), strict exact-match assertions can fail despite improved accessibility. QA regression checks should enforce `>=` contract intent or alias wiring rather than fixed historical values.
+
+## 2026-04-11 — Route-level shell split is not enough; verify child-shell internals against contract
+Even when `App.tsx` mounts child routes under `ChildPlayShell`, acceptance can still fail if that shell continues rendering shared public chrome. For shell-overhaul QA, always inspect the shell component internals (header/footer/nav behavior) and pair with the shell regression script result before signoff.
+
+## 2026-04-11 — Treat claimed regression-script passes as hard QA gates, not optional context
+If an implementation comment claims a verification command passed, re-run that exact command before signoff. A lane can appear visually correct yet still fail its own regression contract (for example, header touch-size CSS using `--touch-min-primary` while the guard test expects a `--public-header-logo-touch-min` alias), and should be returned for correction.
+
+## 2026-04-11 — `PAPERCLIP_TASK_ID` can be unset on routine heartbeats; prioritize inbox `in_progress` directly
+When a heartbeat has no wake task id, skip wake-task routing and immediately apply normal inbox priority (`in_progress` first, then `todo`). This avoids wasted API calls and keeps QA sweep lanes moving.
+
+## 2026-04-11 — Image pipeline steps can silently flip `build` from green to red after asset regeneration
+In this repo, `yarn workspace @dubiland/web build` runs `images:pipeline` before TS/Vite. A pass from earlier heartbeats does not guarantee current pass status after new image/contact-sheet outputs land; always re-run full build and capture exact `images:budgets` violations in QA comments when limits are exceeded.
+
+## 2026-04-11 — Use heredoc + `jq` for issue bodies containing backticks to avoid shell command expansion
+When creating Paperclip issues from shell, unescaped backticks in inline `--arg` strings can execute unintended commands and corrupt descriptions. Build markdown bodies via single-quoted heredoc and pass them through `jq -n --arg ...` to preserve literal code spans safely.

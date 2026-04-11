@@ -1,0 +1,92 @@
+{
+  "routes": [
+    {
+      "route": "root",
+      "path": "/",
+      "performance": 82,
+      "fcp_ms": 3225.095,
+      "lcp_ms": 3933.416,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 27.843,
+      "cls": 0.032541,
+      "speed_index_ms": 2530,
+      "max_long_task_ms": 390.727,
+      "total_transfer_bytes": 216594,
+      "login_chunk_requested": false,
+      "supabase_chunk_requested": false
+    },
+    {
+      "route": "games",
+      "path": "/games",
+      "performance": 79,
+      "fcp_ms": 4030.748,
+      "lcp_ms": 4030.748,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 21.92,
+      "cls": 0.000786,
+      "speed_index_ms": 2993,
+      "max_long_task_ms": 293.716,
+      "total_transfer_bytes": 268496,
+      "login_chunk_requested": true,
+      "supabase_chunk_requested": true
+    },
+    {
+      "route": "profiles",
+      "path": "/profiles",
+      "performance": 79,
+      "fcp_ms": 3988.87,
+      "lcp_ms": 3988.871,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 20.935,
+      "cls": 0.000786,
+      "speed_index_ms": 2960,
+      "max_long_task_ms": 277.616,
+      "total_transfer_bytes": 268496,
+      "login_chunk_requested": true,
+      "supabase_chunk_requested": true
+    },
+    {
+      "route": "parent",
+      "path": "/parent",
+      "performance": 79,
+      "fcp_ms": 4023.55,
+      "lcp_ms": 4023.55,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 21.344,
+      "cls": 0.000786,
+      "speed_index_ms": 2982,
+      "max_long_task_ms": 300.85,
+      "total_transfer_bytes": 268496,
+      "login_chunk_requested": true,
+      "supabase_chunk_requested": true
+    },
+    {
+      "route": "handbook",
+      "path": "/games/reading/interactive-handbook",
+      "performance": 82,
+      "fcp_ms": 3656.088,
+      "lcp_ms": 3656.089,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 22.01,
+      "cls": 0.000786,
+      "speed_index_ms": 2644,
+      "max_long_task_ms": 291.402,
+      "total_transfer_bytes": 267481,
+      "login_chunk_requested": true,
+      "supabase_chunk_requested": true
+    }
+  ],
+  "aggregate": {
+    "perf_median": 79,
+    "lcp_max_ms": 4030.748,
+    "lcp_median_ms": 3988.871,
+    "cls_max": 0.032541,
+    "long_task_max_ms": 390.727,
+    "contaminated_routes": [
+      "/games",
+      "/profiles",
+      "/parent",
+      "/games/reading/interactive-handbook"
+    ]
+  }
+}

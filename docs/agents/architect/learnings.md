@@ -8,6 +8,18 @@ Append new entries after each completed task.
 What was learned and why it matters.
 -->
 
+## 2026-04-11 — Assignment Wake Can Stamp `executionRunId` On A Non-Assignee Child
+An `issue_assigned` wake can arrive for a child ticket not assigned to Architect and still stamp that child with the current Architect `executionRunId`. Always verify assignee ownership first, then continue with Architect-owned priorities; if the stamped lock persists after the run ends, treat it as stale-lock cleanup work instead of ownership handoff.
+
+## 2026-04-11 — `in_progress` Lanes Can Be Run-Detached
+An assigned issue can appear as `in_progress` while `checkoutRunId`, `executionRunId`, and `activeRun` are all null. Treat this as a potential stale lane: post an explicit owner checkpoint with concrete timestamps before creating fallback duplicates.
+
+## 2026-04-11 — `read -d ''` + `set -e` Can Abort Payload Scripts
+In zsh, `read -r -d '' VAR <<'EOF' ... EOF` returns non-zero when no NUL delimiter is encountered; with `set -e`, this exits the script before API mutations run. For Paperclip payload assembly, prefer `VAR=$(cat <<'EOF' ... EOF)` and then pass with `jq --arg` to avoid silent heartbeat no-op failures.
+
+## 2026-04-11 — Single Run Can Be Checkout-Bound To One Issue
+In this local Paperclip adapter, after checking out one issue in a heartbeat run, attempting checkout on a different issue in the same run can return `Checkout run context is bound to a different issue` (with `snapshotIssueId` of the first checkout). Plan multi-issue cleanup as separate heartbeat turns, or keep the current run scoped to one canonical issue.
+
 ## 2026-04-09 — Audio Runtime Unblock
 For `yarn generate-audio`, adding the npm package `edge-tts` is not enough because it does not provide the `edge-tts` CLI binary expected by `scripts/generate-audio.ts`. Installing Python `edge-tts` (`python3 -m pip install --user edge-tts`) provided the runtime binary and unblocked full MP3 generation.
 
@@ -299,3 +311,18 @@ After checking out one issue, trying to checkout another can return `409` with `
 
 ## 2026-04-10 — Run Context Can Stay Bound To A Blocked Parent Lane
 After checking out and updating a parent lane to `blocked`, additional issue checkouts in the same run can still fail with `Checkout run context is bound to a different issue` until the bound lane is completed or the run exits. For coordinator lanes that must stay blocked, avoid release side effects and continue remaining assignments in a fresh heartbeat.
+
+## 2026-04-11 — Stale `checkoutRunId` + `activeRun=null` should route through backend recovery lane
+When a QA issue is `in_progress` with populated `checkoutRunId` but `activeRun=null`, treat it as run-lock corruption risk rather than routine assignee lag. Keep the coordinator lane `blocked`, delegate a backend child lane with explicit acceptance checks (fresh checkout and post-checkout mutation), and publish a concrete checkpoint timestamp so ownership remains unambiguous.
+
+## 2026-04-11 — Comment-triggered wake can arrive after Ops/CEO already closed the lane
+For `issue_commented` wakes, re-read `heartbeat-context` and latest thread comments before mutating anything. A lane can already be resolved (`done`) by another owner in the same window; in that case, avoid duplicate disposition churn and pivot immediately to your highest-priority active assignment.
+
+## 2026-04-11 — `issue_children_completed` wake can close blocked parent without new thread comments
+When a coordinator parent wakes on `issue_children_completed`, checkout the parent and validate `completedAt/status` on all child lanes first; if all required children are `done`, close the parent immediately with evidence links even if no new parent-thread comment was posted.
+
+## 2026-04-11 — QA NO-GO on canonical rerun should immediately fork function-owned remediation lanes
+When a blocked QA lane posts a concrete NO-GO matrix with clear failure gates, keep the QA issue as the canonical rerun lane and create separate FED + Backend remediation child issues under the parent coordinator in the same heartbeat. This keeps ownership explicit, preserves audit continuity, and avoids reopening QA before fixes are actually handed off.
+
+## 2026-04-11 — Children-completed wake should close coordinator parent in the same run when QA is already done
+If wake reason is `issue_children_completed` and all required child lanes (implementation + QA) are already `done`, perform one parent checkout and close it immediately with evidence links. Do not create additional delegation lanes; instead, include an explicit downstream blocker-clear note for dependent tickets.

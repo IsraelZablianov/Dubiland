@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
+import { assetUrl } from '@/lib/assetUrl';
 import { buildJsonLdScripts, isValidJsonLdPayload, runJsonLdSmokeChecks } from './jsonLd';
 import { getRouteMetadata, type RouteMetadataKey } from './routeMetadata';
 
@@ -124,6 +125,25 @@ function buildAbsoluteRouteUrl(pathname: string, canonicalBaseUrl: URL): string 
   return url.toString();
 }
 
+function buildAbsoluteAssetUrl(assetPath: string, canonicalBaseUrl: URL): string {
+  const basePath = normalizeBasePath(canonicalBaseUrl.pathname);
+  const routePath = normalizeRoutePath(assetUrl(assetPath));
+  const url = new URL(canonicalBaseUrl.origin);
+
+  if (basePath && (routePath === basePath || routePath.startsWith(`${basePath}/`))) {
+    url.pathname = routePath;
+    return url.toString();
+  }
+
+  if (!basePath) {
+    url.pathname = routePath;
+    return url.toString();
+  }
+
+  url.pathname = `${basePath}${routePath}`;
+  return url.toString();
+}
+
 function buildBreadcrumbItems(
   routeKey: RouteMetadataKey,
   labels: {
@@ -187,7 +207,7 @@ export function RouteMetadataManager() {
     const canonicalUrl = routeMetadata.canonicalPath
       ? buildAbsoluteRouteUrl(routeMetadata.canonicalPath, canonicalBaseUrl)
       : null;
-    const openGraphImageUrl = buildAbsoluteRouteUrl(DEFAULT_OPEN_GRAPH_IMAGE_PATH, canonicalBaseUrl);
+    const openGraphImageUrl = buildAbsoluteAssetUrl(DEFAULT_OPEN_GRAPH_IMAGE_PATH, canonicalBaseUrl);
 
     return {
       title: tSeo(`routes.${routeMetadata.key}.title`),

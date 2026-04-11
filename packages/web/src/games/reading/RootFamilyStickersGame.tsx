@@ -1,9 +1,12 @@
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Card } from '@/components/design-system';
 import { MascotIllustration } from '@/components/illustrations';
 import { SuccessCelebration } from '@/components/motion';
 import type { GameProps, ParentSummaryMetrics, StableRange } from '@/games/engine';
+import { resolveReadingRoutingContext, type ReadingRoutingAgeBand } from '@/games/reading/readingProgressionRouting';
+import { resolveAudioPathFromKey } from '@/lib/audioPathResolver';
+import { isRtlDirection, rtlNextGlyph, rtlReplayGlyph } from '@/lib/rtlChrome';
 
 type Stage = 'sorting' | 'building' | 'phraseRead' | 'complete';
 type StatusTone = 'neutral' | 'hint' | 'success' | 'error';
@@ -205,6 +208,39 @@ const PHRASE_ROUNDS: PhraseRoundDefinition[] = [
   { id: 'phrase-shomer', target: 'aniShomerAlHatik' },
 ];
 
+const EXTENSION_SORTING_ROUNDS_67: SortingRoundDefinition[] = [
+  {
+    id: 'transferBlend',
+    roots: ['ktv', 'smr'],
+    promptKey: 'games.rootFamilyStickers.prompts.sorting.textFirst',
+    showRootHighlight: false,
+    cards: [
+      { id: 'r4-katav', wordId: 'katav', expectedRootId: 'ktv', isDecoy: false },
+      { id: 'r4-kotev', wordId: 'kotev', expectedRootId: 'ktv', isDecoy: false },
+      { id: 'r4-mikhtav', wordId: 'mikhtav', expectedRootId: 'ktv', isDecoy: false },
+      { id: 'r4-shamar', wordId: 'shamar', expectedRootId: 'smr', isDecoy: false },
+      { id: 'r4-shomer', wordId: 'shomer', expectedRootId: 'smr', isDecoy: false },
+      { id: 'r4-mishmeret', wordId: 'mishmeret', expectedRootId: 'smr', isDecoy: false },
+      { id: 'r4-hatik-decoy', wordId: 'hatik', expectedRootId: null, isDecoy: true },
+      { id: 'r4-dubi-decoy', wordId: 'dubi', expectedRootId: null, isDecoy: true },
+    ],
+  },
+];
+
+const EXTENSION_BUILD_ROUNDS_67: BuildRoundDefinition[] = [
+  {
+    id: 'build-kra',
+    rootId: 'kra',
+    targetWordId: 'mikra',
+    options: ['mikra', 'mishmeret', 'limud'],
+    instructionKey: 'games.rootFamilyStickers.prompts.building.chooseAffix',
+  },
+];
+
+const EXTENSION_PHRASE_ROUNDS_67: PhraseRoundDefinition[] = [
+  { id: 'phrase-lomed', target: 'hayeledLomed' },
+];
+
 const PHRASE_KEY_BY_ID: Record<
   PhraseTargetId,
   `games.rootFamilyStickers.prompts.phraseRead.targets.${PhraseTargetId}`
@@ -220,7 +256,43 @@ const SORTING_SUCCESS_MESSAGES: Array<
   | 'games.rootFamilyStickers.feedback.success.sameRoot'
 > = ['games.rootFamilyStickers.feedback.success.wellDone', 'games.rootFamilyStickers.feedback.success.sameRoot'];
 
-const TOTAL_CHECKPOINTS = SORTING_ROUNDS.length + BUILD_ROUNDS.length + PHRASE_ROUNDS.length;
+interface RootFamilyRuntimeScenario {
+  sortingRounds: SortingRoundDefinition[];
+  buildRounds: BuildRoundDefinition[];
+  phraseRounds: PhraseRoundDefinition[];
+}
+
+function resolveRuntimeScenario(ageBand: ReadingRoutingAgeBand, inSupportMode: boolean): RootFamilyRuntimeScenario {
+  if (inSupportMode || ageBand === '3-4') {
+    return {
+      sortingRounds: SORTING_ROUNDS.slice(0, 1),
+      buildRounds: BUILD_ROUNDS.slice(0, 1),
+      phraseRounds: PHRASE_ROUNDS.slice(0, 1),
+    };
+  }
+
+  if (ageBand === '4-5') {
+    return {
+      sortingRounds: SORTING_ROUNDS.slice(0, 2),
+      buildRounds: BUILD_ROUNDS.slice(0, 1),
+      phraseRounds: PHRASE_ROUNDS.slice(0, 1),
+    };
+  }
+
+  if (ageBand === '6-7') {
+    return {
+      sortingRounds: [...SORTING_ROUNDS, ...EXTENSION_SORTING_ROUNDS_67],
+      buildRounds: [...BUILD_ROUNDS, ...EXTENSION_BUILD_ROUNDS_67],
+      phraseRounds: [...PHRASE_ROUNDS, ...EXTENSION_PHRASE_ROUNDS_67],
+    };
+  }
+
+  return {
+    sortingRounds: SORTING_ROUNDS,
+    buildRounds: BUILD_ROUNDS,
+    phraseRounds: PHRASE_ROUNDS,
+  };
+}
 
 function toKebabCase(value: string): string {
   return value
@@ -231,7 +303,7 @@ function toKebabCase(value: string): string {
 }
 
 function keyToAudioPath(key: string): string {
-  return `/audio/he/${key.split('.').map(toKebabCase).join('/')}.mp3`;
+  return resolveAudioPathFromKey(key, 'common');
 }
 
 function phraseAudioPath(target: PhraseTargetId): string {
@@ -275,11 +347,11 @@ function toStableRange(firstAttemptSuccessRate: number): StableRange {
   return '1-3';
 }
 
-function toneIcon(tone: StatusTone): string {
+function toneIcon(tone: StatusTone, replayIcon: string): string {
   if (tone === 'success') return '✅';
   if (tone === 'hint') return '💡';
   if (tone === 'error') return '🔁';
-  return '▶';
+  return replayIcon;
 }
 
 const visuallyHiddenStyle: CSSProperties = {
@@ -294,19 +366,46 @@ const visuallyHiddenStyle: CSSProperties = {
   whiteSpace: 'nowrap',
 };
 
-export function RootFamilyStickersGame({ onComplete, audio }: GameProps) {
-  const { t } = useTranslation('common');
+export function RootFamilyStickersGame({ level: runtimeLevel, onComplete, audio }: GameProps) {
+  const { t, i18n } = useTranslation('common');
+  const isRtl = isRtlDirection(i18n.dir(i18n.language));
+  const replayIcon = rtlReplayGlyph(isRtl);
+  const nextIcon = rtlNextGlyph(isRtl);
+  const levelConfig = useMemo(
+    () => (runtimeLevel.configJson as Record<string, unknown>) ?? {},
+    [runtimeLevel.configJson],
+  );
+  const routingContext = useMemo(
+    () =>
+      resolveReadingRoutingContext(levelConfig, 2, {
+        baseLevelByAgeBand: {
+          '3-4': 1,
+          '4-5': 1,
+          '5-6': 2,
+          '6-7': 3,
+        },
+      }),
+    [levelConfig],
+  );
+  const runtimeScenario = useMemo(
+    () => resolveRuntimeScenario(routingContext.ageBand, routingContext.inSupportMode),
+    [routingContext.ageBand, routingContext.inSupportMode],
+  );
+  const sortingRounds = runtimeScenario.sortingRounds;
+  const buildRounds = runtimeScenario.buildRounds;
+  const phraseRounds = runtimeScenario.phraseRounds;
+  const totalCheckpoints = sortingRounds.length + buildRounds.length + phraseRounds.length;
 
   const [stage, setStage] = useState<Stage>('sorting');
   const [status, setStatus] = useState<StatusMessage>({
     key: 'games.rootFamilyStickers.instructions.intro',
     tone: 'neutral',
   });
-  const [isSlowMode, setIsSlowMode] = useState(false);
+  const [isSlowMode, setIsSlowMode] = useState(routingContext.inSupportMode);
   const [sortingRoundIndex, setSortingRoundIndex] = useState(0);
-  const [sortingCards, setSortingCards] = useState<SortCard[]>(() => shuffle(SORTING_ROUNDS[0].cards));
+  const [sortingCards, setSortingCards] = useState<SortCard[]>(() => shuffle(sortingRounds[0].cards));
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
-  const [showRootHighlight, setShowRootHighlight] = useState(SORTING_ROUNDS[0].showRootHighlight);
+  const [showRootHighlight, setShowRootHighlight] = useState(sortingRounds[0].showRootHighlight);
 
   const [buildRoundIndex, setBuildRoundIndex] = useState(0);
   const [buildErrors, setBuildErrors] = useState(0);
@@ -318,12 +417,13 @@ export function RootFamilyStickersGame({ onComplete, audio }: GameProps) {
   const [checkpointHints, setCheckpointHints] = useState(0);
   const [hintStep, setHintStep] = useState(0);
   const [showCompletionCelebration, setShowCompletionCelebration] = useState(false);
+  const [audioPlaybackFailed, setAudioPlaybackFailed] = useState(false);
   const [boardFeedback, setBoardFeedback] = useState<BoardFeedback>('idle');
   const [scorePulse, setScorePulse] = useState(false);
 
-  const currentSortingRound = SORTING_ROUNDS[sortingRoundIndex] ?? SORTING_ROUNDS[0];
-  const currentBuildRound = BUILD_ROUNDS[buildRoundIndex] ?? BUILD_ROUNDS[0];
-  const currentPhraseRound = PHRASE_ROUNDS[phraseRoundIndex] ?? PHRASE_ROUNDS[0];
+  const currentSortingRound = sortingRounds[sortingRoundIndex] ?? sortingRounds[0];
+  const currentBuildRound = buildRounds[buildRoundIndex] ?? buildRounds[0];
+  const currentPhraseRound = phraseRounds[phraseRoundIndex] ?? phraseRounds[0];
 
   const dragCardIdRef = useRef<string | null>(null);
   const cardErrorsRef = useRef<Record<string, number>>({});
@@ -348,24 +448,66 @@ export function RootFamilyStickersGame({ onComplete, audio }: GameProps) {
     stage === 'sorting'
       ? sortingRoundIndex
       : stage === 'building'
-        ? SORTING_ROUNDS.length + buildRoundIndex
+        ? sortingRounds.length + buildRoundIndex
         : stage === 'phraseRead'
-          ? SORTING_ROUNDS.length + BUILD_ROUNDS.length + phraseRoundIndex
-          : TOTAL_CHECKPOINTS;
+          ? sortingRounds.length + buildRounds.length + phraseRoundIndex
+          : totalCheckpoints;
 
-  const progressDisplayStep = stage === 'complete' ? TOTAL_CHECKPOINTS : checkpointIndex + 1;
+  const progressDisplayStep = stage === 'complete' ? totalCheckpoints : checkpointIndex + 1;
+
+  const playAudioNow = useCallback(
+    async (audioPath: string) => {
+      if (audioPlaybackFailed) {
+        return;
+      }
+      try {
+        await audio.playNow(audioPath);
+      } catch {
+        setAudioPlaybackFailed((current) => current || true);
+      }
+    },
+    [audio, audioPlaybackFailed],
+  );
+
+  const playAudioQueued = useCallback(
+    async (audioPath: string) => {
+      if (audioPlaybackFailed) {
+        return;
+      }
+      try {
+        await audio.play(audioPath);
+      } catch {
+        setAudioPlaybackFailed((current) => current || true);
+      }
+    },
+    [audio, audioPlaybackFailed],
+  );
+
+  const playAudioSequence = useCallback(
+    async (paths: string[]) => {
+      if (audioPlaybackFailed) {
+        return;
+      }
+      try {
+        await audio.playSequence(paths);
+      } catch {
+        setAudioPlaybackFailed((current) => current || true);
+      }
+    },
+    [audio, audioPlaybackFailed],
+  );
 
   const updateStatus = useCallback(
     (message: StatusMessage, playMode: 'queued' | 'interrupt' = 'interrupt') => {
       setStatus(message);
       const audioPath = keyToAudioPath(message.key);
       if (playMode === 'interrupt') {
-        void audio.playNow(audioPath);
+        void playAudioNow(audioPath);
         return;
       }
-      void audio.play(audioPath);
+      void playAudioQueued(audioPath);
     },
-    [audio],
+    [playAudioNow, playAudioQueued],
   );
 
   const triggerScorePulse = useCallback(() => {
@@ -421,8 +563,8 @@ export function RootFamilyStickersGame({ onComplete, audio }: GameProps) {
     const [rootOne, rootTwo] = currentSortingRound.roots;
     const [anchorOne, anchorTwo] = ROOTS[rootOne].anchorWords;
 
-    await audio.playNow(keyToAudioPath('games.rootFamilyStickers.instructions.dragToBasket'));
-    await audio.playSequence([
+    await playAudioNow(keyToAudioPath('games.rootFamilyStickers.instructions.dragToBasket'));
+    await playAudioSequence([
       keyToAudioPath('games.rootFamilyStickers.prompts.rootIntro.listenForPattern'),
       rootAudioPath(rootOne),
       wordAudioPath(anchorOne),
@@ -430,28 +572,28 @@ export function RootFamilyStickersGame({ onComplete, audio }: GameProps) {
       wordAudioPath(anchorTwo),
       keyToAudioPath(currentSortingRound.promptKey),
     ]);
-  }, [audio, currentSortingRound]);
+  }, [currentSortingRound, playAudioNow, playAudioSequence]);
 
   const announceBuildRound = useCallback(async () => {
-    await audio.playNow(keyToAudioPath('games.rootFamilyStickers.instructions.buildWord'));
-    await audio.playSequence([
+    await playAudioNow(keyToAudioPath('games.rootFamilyStickers.instructions.buildWord'));
+    await playAudioSequence([
       keyToAudioPath('games.rootFamilyStickers.prompts.building.chooseAffix'),
       rootAudioPath(currentBuildRound.rootId),
       keyToAudioPath(currentBuildRound.instructionKey),
     ]);
-  }, [audio, currentBuildRound]);
+  }, [currentBuildRound, playAudioNow, playAudioSequence]);
 
   const announcePhraseRound = useCallback(async () => {
-    await audio.playNow(keyToAudioPath('games.rootFamilyStickers.instructions.readPhrase'));
-    await audio.playSequence([
+    await playAudioNow(keyToAudioPath('games.rootFamilyStickers.instructions.readPhrase'));
+    await playAudioSequence([
       keyToAudioPath('games.rootFamilyStickers.prompts.phraseRead.pointAndRead'),
       phraseAudioPath(currentPhraseRound.target),
     ]);
-  }, [audio, currentPhraseRound]);
+  }, [currentPhraseRound, playAudioNow, playAudioSequence]);
 
   const resetSortingRound = useCallback(
     (roundIndex: number) => {
-      const round = SORTING_ROUNDS[roundIndex] ?? SORTING_ROUNDS[0];
+      const round = sortingRounds[roundIndex] ?? sortingRounds[0];
       cardErrorsRef.current = {};
       setSortingCards(shuffle(round.cards));
       setSelectedCardId(null);
@@ -492,7 +634,7 @@ export function RootFamilyStickersGame({ onComplete, audio }: GameProps) {
 
       const modeledCard = sortingCards.find((card) => !card.isDecoy);
       if (modeledCard) {
-        await audio.playNow(keyToAudioPath('games.rootFamilyStickers.hints.solvedExample'));
+        await playAudioNow(keyToAudioPath('games.rootFamilyStickers.hints.solvedExample'));
         setSortingCards((cards) => cards.filter((card) => card.id !== modeledCard.id));
       }
       setSelectedCardId(null);
@@ -517,7 +659,7 @@ export function RootFamilyStickersGame({ onComplete, audio }: GameProps) {
       },
       'interrupt',
     );
-  }, [audio, hintStep, sortingCards, stage, updateStatus]);
+  }, [hintStep, playAudioNow, sortingCards, stage, updateStatus]);
 
   const handleRetry = useCallback(() => {
     updateStatus(
@@ -564,8 +706,8 @@ export function RootFamilyStickersGame({ onComplete, audio }: GameProps) {
       return;
     }
 
-    void audio.playNow(keyToAudioPath('games.rootFamilyStickers.feedback.success.familySticker'));
-  }, [announceBuildRound, announcePhraseRound, announceSortingRound, audio, stage]);
+    void playAudioNow(keyToAudioPath('games.rootFamilyStickers.feedback.success.familySticker'));
+  }, [announceBuildRound, announcePhraseRound, announceSortingRound, playAudioNow, stage]);
 
   const handlePlaceCard = useCallback(
     (cardId: string, rootId: RootId) => {
@@ -575,7 +717,7 @@ export function RootFamilyStickersGame({ onComplete, audio }: GameProps) {
       if (!card) return;
 
       if (isSlowMode) {
-        void audio.playNow(wordAudioPath(card.wordId));
+        void playAudioNow(wordAudioPath(card.wordId));
       }
 
       statsRef.current.totalActions += 1;
@@ -649,10 +791,10 @@ export function RootFamilyStickersGame({ onComplete, audio }: GameProps) {
       }
     },
     [
-      audio,
       checkpointHints,
       countSortingOutcome,
       isSlowMode,
+      playAudioNow,
       resetSortingRound,
       sortingCards,
       sortingRoundIndex,
@@ -693,7 +835,7 @@ export function RootFamilyStickersGame({ onComplete, audio }: GameProps) {
           },
           'interrupt',
         );
-        void audio.playSequence([wordAudioPath(wordId), keyToAudioPath('games.rootFamilyStickers.feedback.success.wellDone')]);
+        void playAudioSequence([wordAudioPath(wordId), keyToAudioPath('games.rootFamilyStickers.feedback.success.wellDone')]);
         triggerBoardFeedback('success');
         return;
       }
@@ -708,7 +850,7 @@ export function RootFamilyStickersGame({ onComplete, audio }: GameProps) {
         'interrupt',
       );
     },
-    [audio, buildErrors, buildSolved, currentBuildRound.targetWordId, stage, triggerBoardFeedback, triggerScorePulse, updateStatus],
+    [buildErrors, buildSolved, currentBuildRound.targetWordId, playAudioSequence, stage, triggerBoardFeedback, triggerScorePulse, updateStatus],
   );
 
   const handlePhraseReadComplete = useCallback(() => {
@@ -728,9 +870,9 @@ export function RootFamilyStickersGame({ onComplete, audio }: GameProps) {
       },
       'interrupt',
     );
-    void audio.playSequence([phraseAudioPath(currentPhraseRound.target), keyToAudioPath('games.rootFamilyStickers.prompts.phraseRead.finalRead')]);
+    void playAudioSequence([phraseAudioPath(currentPhraseRound.target), keyToAudioPath('games.rootFamilyStickers.prompts.phraseRead.finalRead')]);
     triggerBoardFeedback('success');
-  }, [audio, checkpointHints, currentPhraseRound.target, phraseCompleted, stage, triggerBoardFeedback, triggerScorePulse, updateStatus]);
+  }, [checkpointHints, currentPhraseRound.target, phraseCompleted, playAudioSequence, stage, triggerBoardFeedback, triggerScorePulse, updateStatus]);
 
   const handleNext = useCallback(() => {
     if (!canAdvance) return;
@@ -738,7 +880,7 @@ export function RootFamilyStickersGame({ onComplete, audio }: GameProps) {
     pushCheckpointHints();
 
     if (stage === 'sorting') {
-      const hasAnotherSortingRound = sortingRoundIndex < SORTING_ROUNDS.length - 1;
+      const hasAnotherSortingRound = sortingRoundIndex < sortingRounds.length - 1;
       if (hasAnotherSortingRound) {
         const nextRound = sortingRoundIndex + 1;
         setSortingRoundIndex(nextRound);
@@ -754,7 +896,7 @@ export function RootFamilyStickersGame({ onComplete, audio }: GameProps) {
     }
 
     if (stage === 'building') {
-      const hasAnotherBuildRound = buildRoundIndex < BUILD_ROUNDS.length - 1;
+      const hasAnotherBuildRound = buildRoundIndex < buildRounds.length - 1;
       if (hasAnotherBuildRound) {
         setBuildRoundIndex((value) => value + 1);
         setBuildSolved(false);
@@ -768,7 +910,7 @@ export function RootFamilyStickersGame({ onComplete, audio }: GameProps) {
       return;
     }
 
-    const hasAnotherPhraseRound = phraseRoundIndex < PHRASE_ROUNDS.length - 1;
+    const hasAnotherPhraseRound = phraseRoundIndex < phraseRounds.length - 1;
     if (hasAnotherPhraseRound) {
       setPhraseRoundIndex((value) => value + 1);
       setPhraseCompleted(false);
@@ -882,7 +1024,7 @@ export function RootFamilyStickersGame({ onComplete, audio }: GameProps) {
         title={t('games.rootFamilyStickers.instructions.tapReplay')}
         style={{ minInlineSize: '48px', paddingInline: 'var(--space-sm)' }}
       >
-        <span aria-hidden="true">▶</span>
+        <span aria-hidden="true">{replayIcon}</span>
       </Button>
       <Button
         variant="secondary"
@@ -913,7 +1055,7 @@ export function RootFamilyStickersGame({ onComplete, audio }: GameProps) {
         title={t('games.rootFamilyStickers.instructions.tapNext')}
         style={{ minInlineSize: '48px', paddingInline: 'var(--space-sm)' }}
       >
-        <span aria-hidden="true">→</span>
+        <span aria-hidden="true">{nextIcon}</span>
       </Button>
     </div>
   );
@@ -985,7 +1127,7 @@ export function RootFamilyStickersGame({ onComplete, audio }: GameProps) {
       </header>
 
       <div className="root-family-stickers__progress" aria-hidden="true">
-        {Array.from({ length: TOTAL_CHECKPOINTS }, (_, index) => (
+        {Array.from({ length: totalCheckpoints }, (_, index) => (
           <span
             key={`root-family-progress-${index + 1}`}
             className={[
@@ -1005,7 +1147,7 @@ export function RootFamilyStickersGame({ onComplete, audio }: GameProps) {
         <span className="root-family-stickers__score-pill">
           <span>🎯</span>
           <span>
-            {progressDisplayStep}/{TOTAL_CHECKPOINTS}
+            {progressDisplayStep}/{totalCheckpoints}
           </span>
         </span>
       </div>
@@ -1034,11 +1176,25 @@ export function RootFamilyStickersGame({ onComplete, audio }: GameProps) {
           <MascotIllustration variant={stage === 'complete' ? 'success' : 'hero'} size={78} />
           <div style={{ display: 'grid', gap: 'var(--space-2xs)' }}>
             <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
-              {toneIcon(status.tone)} {t(status.key)}
+              {toneIcon(status.tone, replayIcon)} {t(status.key)}
             </span>
             {isSlowMode && (
               <span style={{ color: 'var(--color-accent-info)', fontSize: 'var(--font-size-xs)' }}>
                 {t('games.rootFamilyStickers.instructions.slowMode')}
+              </span>
+            )}
+            {audioPlaybackFailed && (
+              <span
+                style={{
+                  border: '1px solid color-mix(in srgb, var(--color-accent-warning) 46%, transparent)',
+                  borderRadius: 'var(--radius-sm)',
+                  background: 'color-mix(in srgb, var(--color-accent-warning) 16%, transparent)',
+                  color: 'var(--color-text-primary)',
+                  fontSize: 'var(--font-size-sm)',
+                  padding: 'var(--space-2xs) var(--space-xs)',
+                }}
+              >
+                🔇 {t('games.rootFamilyStickers.instructions.dragToBasket')}
               </span>
             )}
           </div>
@@ -1080,7 +1236,7 @@ export function RootFamilyStickersGame({ onComplete, audio }: GameProps) {
                     }}
                     onClick={() => {
                       setSelectedCardId((activeId) => (activeId === card.id ? null : card.id));
-                      void audio.playNow(wordAudioPath(card.wordId));
+                      void playAudioNow(wordAudioPath(card.wordId));
                     }}
                     aria-label={wordLabel}
                     style={{
@@ -1202,11 +1358,11 @@ export function RootFamilyStickersGame({ onComplete, audio }: GameProps) {
             <Button
               variant="secondary"
               size="md"
-              onClick={() => void audio.playNow(phraseAudioPath(currentPhraseRound.target))}
+              onClick={() => void playAudioNow(phraseAudioPath(currentPhraseRound.target))}
               aria-label={t('games.rootFamilyStickers.instructions.tapReplay')}
               style={{ minInlineSize: '56px', paddingInline: 'var(--space-md)' }}
             >
-              <span aria-hidden="true">▶</span>
+              <span aria-hidden="true">{replayIcon}</span>
               <span style={visuallyHiddenStyle}>{t('games.rootFamilyStickers.instructions.tapReplay')}</span>
             </Button>
           </section>

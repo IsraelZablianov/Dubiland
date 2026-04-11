@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-10T21:04:27.316Z",
+  "generatedAt": "2026-04-11T10:00:15.152Z",
   "sourceRoot": "assets-src/images",
   "outputRoot": "public/images",
   "settings": {
@@ -9,16 +9,16 @@
   },
   "summary": {
     "totalAssets": 74,
-    "totalBytes": 1176977,
+    "totalBytes": 1663973,
     "byFormat": {
-      "webp": 582490,
+      "webp": 1069486,
       "avif": 169831,
       "png": 408723,
       "svg": 15933
     },
     "byClass": {
-      "background": 64144,
-      "thumbnail": 232206,
+      "background": 87856,
+      "thumbnail": 695490,
       "handbookCover": 59794,
       "handbookPageCompact": 163797,
       "handbookPage": 641103,
@@ -33,8 +33,8 @@
       "generated": false,
       "assetClass": "background",
       "format": "webp",
-      "bytes": 64144,
-      "sha256": "40e20002e81e47b94c82f8bad6649f3f79bf8ad8413874e883ec0d352c7ac46a",
+      "bytes": 87856,
+      "sha256": "c753e806a40f9bae54a6b2593a0faf5452416829541462ec0b67b360559fabd8",
       "width": 1600,
       "height": 1000
     },
@@ -44,8 +44,8 @@
       "generated": false,
       "assetClass": "thumbnail",
       "format": "webp",
-      "bytes": 10626,
-      "sha256": "8147ca0c5d159aea02a64eb6573d60691d0ce2f8214c3da854b8bb719a6411ff",
+      "bytes": 63782,
+      "sha256": "035229b45ba3e7b4f213c78be45fb54c2f693ceac0742c438fb96432d5394755",
       "width": 512,
       "height": 320
     },
@@ -55,10 +55,10 @@
       "generated": false,
       "assetClass": "thumbnail",
       "format": "webp",
-      "bytes": 16620,
-      "sha256": "f76a142f19d78cefd2d363f626ac5aaacbeb09f5fc3f8cb920fe10b169b53dc4",
-      "width": 1024,
-      "height": 640
+      "bytes": 63320,
+      "sha256": "9462db09e4b426597235f4a899524d64d2f08393698736cd3d6969b658b7d3bb",
+      "width": 960,
+      "height": 600
     },
     {
       "path": "images/games/thumbnails/contact-sheet-16x10.webp",
@@ -66,10 +66,10 @@
       "generated": false,
       "assetClass": "thumbnail",
       "format": "webp",
-      "bytes": 59912,
-      "sha256": "40942f3fdbccfb202d57956781474036d3a58e6e4ad6fe529e15b96e21cba647",
-      "width": 1632,
-      "height": 716
+      "bytes": 70322,
+      "sha256": "724a33cd1fddccaac476ef06fd785608bd81f31586a92ddcf968d3544a8de110",
+      "width": 1076,
+      "height": 470
     },
     {
       "path": "images/games/thumbnails/countingPicnic/thumb-16x10.webp",
@@ -77,8 +77,8 @@
       "generated": false,
       "assetClass": "thumbnail",
       "format": "webp",
-      "bytes": 12186,
-      "sha256": "c94d4066fdad13d873a570f9cc4f09ca59bb2e453ab7677393cd4d071c24fc6c",
+      "bytes": 51956,
+      "sha256": "6651da2d7aebbf40c3cbac4fd2cf5761c01fa4ad28d968e81a90d2ffa9d00e2f",
       "width": 512,
       "height": 320
     },
@@ -88,10 +88,10 @@
       "generated": false,
       "assetClass": "thumbnail",
       "format": "webp",
-      "bytes": 16916,
-      "sha256": "e55d3c6809ef063fc80b6c5269f75b78e2e93f098c628f6d77082f899e226da5",
-      "width": 1024,
-      "height": 640
+      "bytes": 50602,
+      "sha256": "3c7a94c489f3209e36a6214ffdaf8907a5c906a7fc1f86a77f2a24c22f48b3d6",
+      "width": 960,
+      "height": 600
     },
     {
       "path": "images/games/thumbnails/interactiveHandbook/thumb-16x10.webp",
@@ -99,8 +99,8 @@
       "generated": false,
       "assetClass": "thumbnail",
       "format": "webp",
-      "bytes": 6850,
-      "sha256": "1d3f53dd62406f606fdc88023e24874bbc2baf8787c8aa57f1ea5f73bc561154",
+      "bytes": 54972,
+      "sha256": "80168ce682f61d934234b65ece95491e70a530919e8ed86cd1a1831efa91476d",
       "width": 512,
       "height": 320
     },
@@ -110,10 +110,10 @@
       "generated": false,
       "assetClass": "thumbnail",
       "format": "webp",
-      "bytes": 15482,
-      "sha256": "9cfc6ba9c1e4fe231236d7073b892a814913d85cf54f7373e7b3f59fa4658427",
-      "width": 1024,
-      "height": 640
+      "bytes": 53370,
+      "sha256": "438dfab6b9385733d0180b20874bacbe484d4eacf65dfae6c78a6d0df16631f5",
+      "width": 960,
+      "height": 600
     },
     {
       "path": "images/games/thumbnails/letterSoundMatch/thumb-16x10.webp",
@@ -121,8 +121,8 @@
       "generated": false,
       "assetClass": "thumbnail",
       "format": "webp",
-      "bytes": 11696,
-      "sha256": "0fdefd046d9b410a7a5fa9554983b9d575e2bad9cdce5c1f5a0beb75619ab88a",
+      "bytes": 40584,
+      "sha256": "b26b755085de3f007ee84d16c4aaead8284787c54300bb990f438ed40c03874d",
       "width": 512,
       "height": 320
     },
@@ -132,10 +132,10 @@
       "generated": false,
       "assetClass": "thumbnail",
       "format": "webp",
-      "bytes": 25654,
-      "sha256": "5cf69777eadbaf44dde455dd07f77253153afcd847ff723cc8cc1fe3e837199a",
-      "width": 1024,
-      "height": 640
+      "bytes": 34330,
+      "sha256": "7527579670de3fbe95d1f318c2e96c8ff75ed0d31b7c3c0a1bfedc3d1cd96be4",
+      "width": 960,
+      "height": 600
     },
     {
       "path": "images/games/thumbnails/letterTracingTrail/thumb-16x10.webp",
@@ -143,8 +143,8 @@
       "generated": false,
       "assetClass": "thumbnail",
       "format": "webp",
-      "bytes": 11310,
-      "sha256": "3cd2fafc2cd3e39160e34e4a20a4b5210bc1057a887572df03d81d5b61e1f11a",
+      "bytes": 45478,
+      "sha256": "8d1a5ce3b0c008558db975f6a029ab3185a45ec8a30f2228aa5c35d9c47825f6",
       "width": 512,
       "height": 320
     },
@@ -154,10 +154,10 @@
       "generated": false,
       "assetClass": "thumbnail",
       "format": "webp",
-      "bytes": 17744,
-      "sha256": "f8f87649c270d2e400315ba3408bbc83f52c59cced2a69db4ccb07adfd2cdd5d",
-      "width": 1024,
-      "height": 640
+      "bytes": 38252,
+      "sha256": "b2ececc8e6e12bf16dc46f99faf3f64549b0c86c3a8cb5ec28d1c4eb0f7ee55f",
+      "width": 960,
+      "height": 600
     },
     {
       "path": "images/games/thumbnails/pictureToWordBuilder/thumb-16x10.webp",
@@ -165,8 +165,8 @@
       "generated": false,
       "assetClass": "thumbnail",
       "format": "webp",
-      "bytes": 9038,
-      "sha256": "d7a6b5059912e12c8bbe827da9485f383f3ccc7480e1a1cbe7ec39344ccc3e90",
+      "bytes": 65202,
+      "sha256": "552c7c3e42b58cb41a8e46e9afd67731d333866671aeb1eba91bb1f6786b308d",
       "width": 512,
       "height": 320
     },
@@ -176,10 +176,10 @@
       "generated": false,
       "assetClass": "thumbnail",
       "format": "webp",
-      "bytes": 18172,
-      "sha256": "a4c28d450f9b27dce5d49865b5ee90a0b07d3e88115fe53f90b95cbd93e82e10",
-      "width": 1024,
-      "height": 640
+      "bytes": 63320,
+      "sha256": "9462db09e4b426597235f4a899524d64d2f08393698736cd3d6969b658b7d3bb",
+      "width": 960,
+      "height": 600
     },
     {
       "path": "images/handbooks/magic-letter-map/cover.avif",

@@ -67,8 +67,8 @@ export function GameTopBar({
               minInlineSize: '60px',
               minBlockSize: '60px',
               borderRadius: 'var(--radius-md)',
-              border: '1px solid color-mix(in srgb, var(--color-border) 72%, transparent)',
-              background: 'var(--color-surface)',
+              border: '2px solid var(--color-border)',
+              background: 'var(--color-bg-card)',
               color: 'var(--color-text-primary)',
               fontSize: '1.25rem',
               fontWeight: 'var(--font-weight-semibold)' as unknown as number,
@@ -76,7 +76,27 @@ export function GameTopBar({
               touchAction: 'manipulation',
             }}
           >
-            <span aria-hidden="true">{isRtl ? '→' : '←'}</span>
+            <svg
+              aria-hidden="true"
+              focusable="false"
+              viewBox="0 0 24 24"
+              style={{
+                inlineSize: '20px',
+                blockSize: '20px',
+                display: 'block',
+                marginInline: 'auto',
+                transform: isRtl ? 'none' : 'scaleX(-1)',
+              }}
+            >
+              <path
+                d="M5.5 12H18.5M13.5 7L18.5 12L13.5 17"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </button>
         ) : (
           <span
@@ -114,7 +134,7 @@ export function GameTopBar({
               <p
                 style={{
                   margin: 0,
-                  color: 'var(--color-text-secondary)',
+                  color: 'var(--color-text-primary)',
                   fontSize: 'var(--font-size-sm)',
                 }}
               >
@@ -142,15 +162,18 @@ export function GameTopBar({
               minInlineSize: '52px',
               minBlockSize: '52px',
               borderRadius: 'var(--radius-md)',
-              border: '1px solid color-mix(in srgb, var(--color-border) 72%, transparent)',
-              background: 'var(--color-surface)',
+              border: '2px solid var(--color-border)',
+              background: 'var(--color-bg-card)',
               color: 'var(--color-text-primary)',
-              fontSize: '1.18rem',
+              fontSize: '1.2rem',
+              fontWeight: 'var(--font-weight-bold)' as unknown as number,
               cursor: 'pointer',
               touchAction: 'manipulation',
             }}
           >
-            <span aria-hidden="true">↻</span>
+            <span aria-hidden="true" style={{ display: 'inline-block', lineHeight: 1 }}>
+              ▶
+            </span>
           </button>
         </div>
       </div>
@@ -171,7 +194,7 @@ export function GameTopBar({
           aria-live="polite"
           style={{
             margin: 0,
-            color: 'var(--color-text-secondary)',
+            color: 'var(--color-text-primary)',
             fontSize: 'var(--font-size-sm)',
             fontWeight: 'var(--font-weight-semibold)' as unknown as number,
           }}

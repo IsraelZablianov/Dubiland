@@ -1,0 +1,99 @@
+{
+  "routes": [
+    {
+      "route": "/",
+      "performance": 94,
+      "fcp_ms": 2289.04655,
+      "lcp_ms": 2389.04725,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 43,
+      "cls": 0.083021,
+      "speed_index_ms": 2289.04655,
+      "max_long_task_ms": 193
+    },
+    {
+      "route": "/games",
+      "performance": 95,
+      "fcp_ms": 2197.96,
+      "lcp_ms": 2587.5519999999997,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 20.5,
+      "cls": 0.00077,
+      "speed_index_ms": 2197.96,
+      "max_long_task_ms": 164
+    },
+    {
+      "route": "/profiles",
+      "performance": 92,
+      "fcp_ms": 2487.348,
+      "lcp_ms": 2869.2176,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 16,
+      "cls": 0.002265,
+      "speed_index_ms": 2487.348,
+      "max_long_task_ms": 164
+    },
+    {
+      "route": "/parent",
+      "performance": 96,
+      "fcp_ms": 2033.4863750000002,
+      "lcp_ms": 2488.7836500000003,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 16,
+      "cls": 0.002265,
+      "speed_index_ms": 2033.4863750000002,
+      "max_long_task_ms": 155
+    },
+    {
+      "route": "/games/reading/interactive-handbook",
+      "performance": 95,
+      "fcp_ms": 2185.348125,
+      "lcp_ms": 2566.01775,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 16,
+      "cls": 0.002265,
+      "speed_index_ms": 2185.348125,
+      "max_long_task_ms": 148
+    }
+  ],
+  "aggregate": {
+    "count": 5,
+    "perf_median": 95,
+    "lcp_median_ms": 2566.01775,
+    "cls_max": 0.083021,
+    "tbt_p95_proxy_ms": 0,
+    "worst_lcp_route": {
+      "route": "/profiles",
+      "performance": 92,
+      "fcp_ms": 2487.348,
+      "lcp_ms": 2869.2176,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 16,
+      "cls": 0.002265,
+      "speed_index_ms": 2487.348,
+      "max_long_task_ms": 164
+    },
+    "worst_tbt_route": {
+      "route": "/",
+      "performance": 94,
+      "fcp_ms": 2289.04655,
+      "lcp_ms": 2389.04725,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 43,
+      "cls": 0.083021,
+      "speed_index_ms": 2289.04655,
+      "max_long_task_ms": 193
+    },
+    "worst_long_task_route": {
+      "route": "/",
+      "performance": 94,
+      "fcp_ms": 2289.04655,
+      "lcp_ms": 2389.04725,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 43,
+      "cls": 0.083021,
+      "speed_index_ms": 2289.04655,
+      "max_long_task_ms": 193
+    }
+  }
+}

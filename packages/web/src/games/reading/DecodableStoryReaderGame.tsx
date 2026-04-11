@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card } from '@/components/design-system';
+import { MascotIllustration } from '@/components/illustrations';
 import { SuccessCelebration } from '@/components/motion';
 import type { GameProps, ParentSummaryMetrics, StableRange } from '@/games/engine';
 import {
@@ -10,6 +11,8 @@ import {
   type ReadingAntiGuessGuard,
   type ReadingProfileAgeBand,
 } from '@/games/reading/readingRuntimeMatrix';
+import { resolveAudioPathFromKey } from '@/lib/audioPathResolver';
+import { isRtlDirection, rtlReplayGlyph } from '@/lib/rtlChrome';
 
 type HintTrend = ParentSummaryMetrics['hintTrend'];
 type DecodableAgeBand = ReadingAgeBand;
@@ -291,16 +294,8 @@ function toAgeBandSuffixFromFallbackKey(key: string): string {
   return key;
 }
 
-function toKebabCase(value: string): string {
-  return value
-    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-    .replace(/[^a-zA-Z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .toLowerCase();
-}
-
 function keyToAudioPath(key: string): string {
-  return `/audio/he/${key.split('.').map(toKebabCase).join('/')}.mp3`;
+  return resolveAudioPathFromKey(key, 'common');
 }
 
 function getHintTrend(hintUsageByPage: number[]): HintTrend {
@@ -340,6 +335,8 @@ function toMessageClassName(tone: MessageTone): string {
 
 export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps) {
   const { t, i18n } = useTranslation('common');
+  const isRtl = isRtlDirection(i18n.dir(i18n.language));
+  const replayIcon = rtlReplayGlyph(isRtl);
 
   const activeAgeBand = useMemo(() => {
     const config = level.configJson;
@@ -400,6 +397,7 @@ export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps
   const [showCelebration, setShowCelebration] = useState(false);
   const [scorePulse, setScorePulse] = useState(false);
   const [checkpointFeedback, setCheckpointFeedback] = useState<CheckpointFeedbackTone>('idle');
+  const [audioPlaybackFailed, setAudioPlaybackFailed] = useState(false);
 
   const completionSentRef = useRef(false);
   const timeoutIdsRef = useRef<number[]>([]);
@@ -516,14 +514,17 @@ export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps
 
   const playKey = useCallback(
     (key: string, interrupt = false) => {
-      const audioPath = keyToAudioPath(key);
-      if (interrupt) {
-        void audio.playNow(audioPath);
+      if (audioPlaybackFailed) {
         return;
       }
-      void audio.play(audioPath);
+
+      const audioPath = keyToAudioPath(key);
+      const playback = interrupt ? audio.playNow(audioPath) : audio.play(audioPath);
+      void playback.catch(() => {
+        setAudioPlaybackFailed(true);
+      });
     },
-    [audio],
+    [audio, audioPlaybackFailed],
   );
 
   const scheduleTimeout = useCallback((callback: () => void, delayMs: number) => {
@@ -614,6 +615,7 @@ export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps
     setShowCelebration(false);
     setScorePulse(false);
     setCheckpointFeedback('idle');
+    setAudioPlaybackFailed(false);
   }, [activeAgeBand, activeStoryPages, resolveAgeBandGameKey]);
 
   useEffect(() => {
@@ -1048,6 +1050,7 @@ export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps
     'parentDashboard.games.decodableMicroStories.progressSummary',
   );
   const parentNextStepKey = resolveAgeBandParentKey('nextStep', 'parentDashboard.games.decodableMicroStories.nextStep');
+  const coachVariant = completed || messageTone === 'success' || checkpointFeedback === 'success' ? 'success' : 'hint';
 
   return (
     <Card padding="lg" className="decodable-story__shell">
@@ -1057,6 +1060,9 @@ export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps
         <div className="decodable-story__title-wrap">
           <h2 className="decodable-story__title">{t('games.decodableMicroStories.title')}</h2>
           <p className="decodable-story__subtitle">{t('games.decodableMicroStories.subtitle')}</p>
+        </div>
+        <div className="decodable-story__coach" aria-hidden="true">
+          <MascotIllustration variant={coachVariant} size={48} />
         </div>
         {adaptiveBadgeKey && <p className="decodable-story__adaptive-badge">{t(adaptiveBadgeKey as any)}</p>}
       </header>
@@ -1089,6 +1095,11 @@ export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps
         </span>
         {!completed && supportMode && <span className="decodable-story__score-pill">💡 {hintCount}</span>}
       </div>
+      {audioPlaybackFailed && (
+        <p className="decodable-story__audio-fallback" aria-live="polite">
+          🔇 {t('games.decodableMicroStories.instructions.chooseAnswer')}
+        </p>
+      )}
 
       {!completed && (
         <>
@@ -1104,7 +1115,7 @@ export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps
                 onClick={handleReplayNarration}
                 aria-label={t('games.decodableMicroStories.controls.replay')}
               >
-                ▶
+                {replayIcon}
               </button>
             </div>
 
@@ -1116,7 +1127,7 @@ export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps
                 onClick={handleReplayDecodePrompt}
                 aria-label={t('games.decodableMicroStories.controls.replay')}
               >
-                ▶
+                {replayIcon}
               </button>
             </div>
 
@@ -1128,7 +1139,7 @@ export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps
                 onClick={handleReplayPhrase}
                 aria-label={t('games.decodableMicroStories.controls.replay')}
               >
-                ▶
+                {replayIcon}
               </button>
             </div>
 
@@ -1159,7 +1170,7 @@ export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps
                 onClick={handleReplayInstruction}
                 aria-label={t('games.decodableMicroStories.controls.replay')}
               >
-                ▶
+                {replayIcon}
               </button>
             </div>
 
@@ -1170,7 +1181,7 @@ export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps
                 onClick={handleReplayNarration}
                 aria-label={t('games.decodableMicroStories.controls.replay')}
               >
-                <span aria-hidden="true">▶</span>
+                <span aria-hidden="true">{replayIcon}</span>
               </button>
               <button
                 type="button"
@@ -1208,7 +1219,7 @@ export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps
                   onClick={handleReplayComprehensionPrompt}
                   aria-label={t('games.decodableMicroStories.controls.replay')}
                 >
-                  ▶
+                  {replayIcon}
                 </button>
               </div>
 
@@ -1300,6 +1311,24 @@ export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps
           flex-wrap: wrap;
         }
 
+        .decodable-story__coach {
+          inline-size: 64px;
+          block-size: 64px;
+          border-radius: var(--radius-full);
+          display: grid;
+          place-items: center;
+          pointer-events: none;
+          background: color-mix(in srgb, var(--color-bg-card) 90%, white);
+          border: 2px solid color-mix(in srgb, var(--color-theme-secondary) 36%, transparent);
+          box-shadow: var(--shadow-sm);
+          animation: decodable-story-coach-float 1500ms ease-in-out infinite;
+        }
+
+        .decodable-story__coach,
+        .decodable-story__coach * {
+          pointer-events: none;
+        }
+
         .decodable-story__title-wrap {
           display: grid;
           gap: var(--space-2xs);
@@ -1381,6 +1410,17 @@ export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps
 
         .decodable-story__score-pill--pulse {
           animation: decodable-story-score-pulse 320ms ease;
+        }
+
+        .decodable-story__audio-fallback {
+          margin: 0;
+          padding: var(--space-xs) var(--space-sm);
+          border-radius: var(--radius-md);
+          border: 1px dashed color-mix(in srgb, var(--color-accent-warning) 50%, transparent);
+          background: color-mix(in srgb, var(--color-accent-warning) 14%, white);
+          color: var(--color-text-primary);
+          font-size: var(--font-size-sm);
+          font-weight: var(--font-weight-medium);
         }
 
         .decodable-story__story-card {
@@ -1684,6 +1724,20 @@ export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps
           }
         }
 
+        @keyframes decodable-story-coach-float {
+          0% {
+            transform: translateY(0);
+          }
+
+          50% {
+            transform: translateY(-4px);
+          }
+
+          100% {
+            transform: translateY(0);
+          }
+        }
+
         @media (max-width: 860px) {
           .decodable-story__title {
             font-size: clamp(1.2rem, 1rem + 0.9vw, 1.5rem);
@@ -1711,6 +1765,10 @@ export function DecodableStoryReaderGame({ level, onComplete, audio }: GameProps
           .decodable-story__score-pill--pulse,
           .decodable-story__checkpoint-card--success,
           .decodable-story__checkpoint-card--error {
+            animation: none;
+          }
+
+          .decodable-story__coach {
             animation: none;
           }
         }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { isSupabaseConfigured, supabase } from '@/lib/supabase';
+import { loadSupabaseRuntime } from '@/lib/loadSupabaseRuntime';
+import { isSupabaseConfigured } from '@/lib/supabaseConfig';
 
 type TopicSlug = 'math' | 'letters' | 'reading';
 
@@ -39,6 +40,14 @@ export function useChildProgress(childId: string | null): ChildProgressData {
 
     async function fetch() {
       try {
+        const supabase = await loadSupabaseRuntime();
+        if (!supabase) {
+          if (!cancelled) {
+            setData(EMPTY);
+          }
+          return;
+        }
+
         const [topicsRes, gamesRes, summariesRes, sessionsRes] = await Promise.all([
           supabase.from('topics').select('id, slug'),
           supabase.from('games').select('id, slug, topic_id, is_published').eq('is_published', true),

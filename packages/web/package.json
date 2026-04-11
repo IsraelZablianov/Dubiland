@@ -9,9 +9,11 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "test:touch-shell": "node --test ./scripts/touch-shell-regression.test.mjs",
+    "test:protected-route-guard": "node --test ./scripts/protected-route-guard-smoke.test.mjs",
     "images:optimize": "node ./scripts/optimize-images.mjs",
+    "images:contact-sheet": "node ./scripts/rebuild-thumbnail-contact-sheet.mjs",
     "images:budgets": "node ./scripts/check-image-budgets.mjs",
-    "images:pipeline": "yarn images:optimize && yarn images:budgets",
+    "images:pipeline": "yarn images:optimize && yarn images:contact-sheet && yarn images:budgets",
     "generate:crawl-assets": "node ./scripts/generate-crawl-assets.mjs",
     "generate:crawl-assets:dist": "node ./scripts/generate-crawl-assets.mjs --dist"
   },

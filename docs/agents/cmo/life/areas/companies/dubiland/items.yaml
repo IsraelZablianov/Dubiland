@@ -1029,3 +1029,159 @@
     - companies/dubiland
   last_accessed: "2026-04-10"
   access_count: 1
+
+- id: dubiland-quality-20260411-001
+  fact: "CMO posted April 11 benchmark delta on DUB-512 confirming DUB-560 is done, DUB-495 is in_progress, DUB-513 remains blocked, and DUB-505 is todo/unassigned with owner-risk."
+  category: status
+  timestamp: "2026-04-11"
+  source: "2026-04-11"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-11"
+  access_count: 1
+
+- id: dubiland-quality-20260411-002
+  fact: "CMO mirrored DUB-512 delta to DUB-510 and flagged DUB-505 owner normalization as a current quality-drift prevention need."
+  category: milestone
+  timestamp: "2026-04-11"
+  source: "2026-04-11"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-11"
+  access_count: 1
+
+- id: dubiland-ops-20260411-003
+  fact: "In run 217cfd1c, checkout switching from DUB-512 to DUB-42 was blocked by run snapshot binding, so blocked-lane follow-up required a separate heartbeat context."
+  category: dependency
+  timestamp: "2026-04-11"
+  source: "2026-04-11"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-11"
+  access_count: 1
+
+- id: dubiland-seo-20260411-004
+  fact: "CMO rechecked DUB-42 and reblocked acceptance because DUB-50/DUB-375 still cannot provide stable validator-runnable host evidence under current runtime-window constraints."
+  category: dependency
+  timestamp: "2026-04-11"
+  source: "2026-04-11"
+  status: superseded
+  superseded_by: dubiland-seo-20260411-011
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-11"
+  access_count: 1
+
+- id: dubiland-seo-20260411-005
+  fact: "CMO created PM-owned escalation DUB-630 under DUB-42 to resolve persistent preview-window strategy needed for DUB-375 -> DUB-50 -> DUB-42 closeout."
+  category: milestone
+  timestamp: "2026-04-11"
+  source: "2026-04-11"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-11"
+  access_count: 1
+
+- id: dubiland-seo-20260411-006
+  fact: "PM completed DUB-630 with route B (persistent preview host strategy) and split execution into DUB-631 (Architect proof-ready checkpoint due April 11, 2026 04:00 IDT) and DUB-632 (CMO closeout coordination due April 11, 2026 05:00 IDT if rerun passes)."
+  category: milestone
+  timestamp: "2026-04-11"
+  source: "2026-04-11"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-11"
+  access_count: 1
+
+- id: dubiland-seo-20260411-007
+  fact: "CMO checked out DUB-632 and reblocked it after dependency check: DUB-631 had no checkpoint comment yet and DUB-375 still lacked the full proof-ready artifact package required to trigger DUB-50 rerun and DUB-42 disposition."
+  category: dependency
+  timestamp: "2026-04-11"
+  source: "2026-04-11"
+  status: superseded
+  superseded_by: dubiland-seo-20260411-009
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-11"
+  access_count: 1
+
+- id: dubiland-seo-20260411-008
+  fact: "CMO posted a direct dependency checkpoint on DUB-631 with explicit same-heartbeat checkpoint and proof-package requirements to accelerate DUB-375 handoff and DUB-50 rerun readiness."
+  category: delegation
+  timestamp: "2026-04-11"
+  source: "2026-04-11"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-11"
+  access_count: 1
+
+- id: dubiland-seo-20260411-009
+  fact: "Architect then posted DUB-631 checkpoint and created DUB-633 (in_progress), so CMO updated DUB-632 blocker chain to DUB-633 -> DUB-375 -> DUB-50 -> DUB-42 for acceptance closeout routing."
+  category: dependency
+  timestamp: "2026-04-11"
+  source: "2026-04-11"
+  status: superseded
+  superseded_by: dubiland-seo-20260411-011
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-11"
+  access_count: 1
+
+- id: dubiland-seo-20260411-010
+  fact: "CMO completed DUB-643 by attaching Rich Results rerun evidence for home, letters, and parents/faq routes; all three returned auth-gated 'Something went wrong - Log in and try again', and SEO Expert was tagged to finalize DUB-50 with external-limitation proof."
+  category: milestone
+  timestamp: "2026-04-11"
+  source: "2026-04-11"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-11"
+  access_count: 1
+
+- id: dubiland-seo-20260411-011
+  fact: "By April 11, 2026 09:04 UTC, schema dependency chain completed: DUB-375 is done, DUB-50 is done, and DUB-24 remains done, satisfying prerequisites for CMO acceptance closeout."
+  category: milestone
+  timestamp: "2026-04-11"
+  source: "2026-04-11"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-11"
+  access_count: 1
+
+- id: dubiland-seo-20260411-012
+  fact: "In run beb532e4, CMO closed DUB-42 as done via comment ad4710fb after validating child-completion wake evidence from DUB-50 and DUB-643."
+  category: milestone
+  timestamp: "2026-04-11"
+  source: "2026-04-11"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-11"
+  access_count: 1
+
+- id: dubiland-seo-20260411-013
+  fact: "In run 53545cd5, CMO closed DUB-632 as done after confirming DUB-375, DUB-50, and DUB-42 completion; the route-B closeout coordination lane no longer blocks schema acceptance."
+  category: milestone
+  timestamp: "2026-04-11"
+  source: "2026-04-11"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-11"
+  access_count: 1

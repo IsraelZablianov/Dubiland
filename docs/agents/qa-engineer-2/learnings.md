@@ -149,8 +149,17 @@ For game QA, treat checkpoint/midpoint overlays as first-class instruction state
 ## 2026-04-10 — Comment-triggered wakes can target stale thread state; compare against latest comment before acting
 When `PAPERCLIP_WAKE_COMMENT_ID` points to an older handoff but the thread already has a newer QA blocker update from you, apply blocked-dedup and skip checkout/comment noise unless there is newer external context after your latest blocker note.
 
+## 2026-04-11 — `release` can reset blocked QA lanes to `todo`/unassigned
+When using `POST /api/issues/{issueId}/release` to switch run context to another assigned issue, the released lane may be reset to `todo` with assignee cleared. Always re-fetch the released issue immediately and normalize back to intended `blocked` + assignee state if this happens.
+
 ## 2026-04-10 — Word-first handbook refactors can silently invalidate regression assertions
 After handbook word-first changes, rerun the dedicated runtime regression script before signoff. If behavior intent changes (for example, single target-word hero), require tests to be updated to encode the new contract explicitly; treat stale failing assertions as a blocker with a FED follow-up issue.
+
+## 2026-04-11 — Dependency verification should use `blockedBy` relation snapshot
+When Ops asks to hard-link blockers for auto-wake, verify the issue's `blockedBy` relation (identifier/status/id) after checkout/patch cycles; `blockedByIssueIds` may be absent even when the effective dependency link is present.
+
+## 2026-04-11 — `issue_children_completed` wake should trigger immediate rerun on former blocker gates
+When a blocked QA lane wakes on `issue_children_completed`, treat it as a rerun signal: checkout, confirm dependency child is `done`, rerun core verification commands (`regression tests`, `typecheck`, `dev boot`), and close the lane in the same heartbeat if green.
 
 ## 2026-04-10 — SVG replay-icon refactors can still fail the mandatory `▶` gate
 When toolbar controls are migrated from literal glyphs to semantic SVG icons, verify the replay affordance still reads as explicit play (`▶`) for child-facing use. A speaker-style replay icon should remain a blocker until the visible play cue is restored.
@@ -172,3 +181,69 @@ When child fix tickets land on a critical blocked QA lane, rerun only the previo
 
 ## 2026-04-10 — Secondary consistency sweeps must include shell-logo hit-target measurement
 Even when game routes are fully touch-safe, shared shell controls can still violate the 44px floor. In this sweep, `/parent` failed only on `.app-header__logo` (34px height). Always include explicit header/logo measurement in mobile+tablet matrices and open a focused FED child lane when this fails.
+
+## 2026-04-11 — CEO mirror requests require explicit dual-thread verification before heartbeat exit
+When a checkpoint comment requests mirrored status in multiple parent lanes (for example [DUB-505](/DUB/issues/DUB-505) and [DUB-510](/DUB/issues/DUB-510)), verify both threads have fresh QA mirror comments in the same heartbeat. Do not assume prior parent updates satisfy a newer mirrored-thread requirement.
+
+## 2026-04-11 — Protected-route a11y audits should use pa11y action flows with route-local root scoping
+For protected game routes, direct pa11y URL checks can silently audit `/login` instead of the target screen. Use a pa11y config with action flow (guest continue -> profiles continue -> navigate target route) and then run two passes on the target root (`.interactive-handbook`): htmlcs + axe. This removes auth-shell noise and exposes route-local blockers (in this run: top-bar subtitle/progress contrast plus icon/text contrast failures).
+
+## 2026-04-11 — QA must block and escalate when acceptance criteria conflict with newer architecture decisions
+If an assigned review issue’s acceptance text conflicts with a newer documented architecture contract (for example legacy shell-split requirements vs single-shell mandate), do not force-approve either interpretation. Mark the issue `blocked`, cite exact code lines plus both issue links, and request Architect scope normalization (supersede/update) before FED rework.
+
+## 2026-04-11 — Reading parity reruns should route shared handbook blockers through canonical lane
+When [DUB-590](/DUB/issues/DUB-590)-style reading parity reruns surface the same `InteractiveHandbookGame`/`GameTopBar` failures already owned by [DUB-441](/DUB/issues/DUB-441), keep the parity lane `blocked` with explicit pass/fail evidence and link [DUB-441](/DUB/issues/DUB-441) as the implementation owner instead of creating duplicate FED defect lanes. Include any newly observed gap (for example anti-guess guard wiring) in that same canonical lane and mirror state to parent coordination lanes (for example [DUB-505](/DUB/issues/DUB-505), [DUB-510](/DUB/issues/DUB-510)).
+
+## 2026-04-11 — Re-check latest thread comment before checkout on comment-triggered blocked wakes
+If `PAPERCLIP_WAKE_COMMENT_ID` points to an older manager ping but your own newer blocker/rerun comment is already the latest thread item, do not checkout first. Compare wake comment timestamp vs latest thread comment before checkout to avoid unnecessary `in_progress` churn.
+
+## 2026-04-11 — Run-bound checkout conflicts can block direct mutation on an `in_progress` sibling issue
+When a run stays snapshot-bound to another issue, `checkout` on the target lane can fail with `Checkout run context is bound to a different issue` and the target may then reject `PATCH`/comment writes with `Issue run ownership conflict` (`status=in_progress`, `checkoutRunId=null`). In this case, escalate via a linked child lock-normalization issue (assigned to Architect) and mirror status on the bound issue thread, since direct updates on the target lane may be impossible in that heartbeat.
+
+## 2026-04-11 — Perf QA reruns should enforce preview-process liveness before Lighthouse
+If the preview port is already occupied, Lighthouse may run against the wrong service and fail with Chrome interstitial errors, producing invalid evidence. For route-matrix perf QA, always use a fresh port and verify the spawned preview PID is still alive before starting Lighthouse captures.
+
+## 2026-04-11 — Handbook illustration QA must hard-gate on FED handoff and media-source readiness
+For handbook replacement lanes (for example [DUB-629](/DUB/issues/DUB-629)), do not start visual/RTL verification until both dependencies are true: FED handbook integration lane has a ready-for-QA evidence comment (for example [DUB-626](/DUB/issues/DUB-626)) and upstream illustration generation is unblocked (for example [DUB-623](/DUB/issues/DUB-623)). If either is missing, immediately set the QA lane to `blocked` with linked owners/actions and keep the page-matrix checklist queued for post-unblock execution.
+
+## 2026-04-11 — For handbook persistence gates, compare DB `furthest_page_number` against post-reload page chip (same child/session)
+When validating `child_handbook_progress`, capture both sides in the same run: (1) persisted row (`handbook_id`, `furthest_page_number`) and (2) UI resume state after reload. A mismatch (`furthest_page_number > currentPage`) is a release blocker even when upsert itself succeeds, because it indicates hydration/resume drift rather than storage failure.
+
+## 2026-04-11 — Shared-header touch-target checks should bind to stable semantic logo anchors, not stale class names
+When shared shell/header refactors rename classes (`.app-header__logo` -> `.public-header__logo`), selector drift can hide real pass/fail state in automated matrices. For touch-target gating, re-resolve the active interactive logo anchor (`a[aria-label*="דובילנד"]` or current `a.public-header__logo`) and measure the clickable container, not inner icon/text nodes.
+
+## 2026-04-11 — Handbook QA must validate actionable progression, not just prompt rendering
+For interactive handbook pages, a visible prompt alone is insufficient. In this run, `book4` page 3 rendered a prompt while exposing no choices and leaving `next` disabled (`עמוד 3 מתוך 10`). QA for word/question alignment must explicitly assert that each required interaction state has an actionable path to progression.
+
+## 2026-04-11 — Paperclip checkout now enforces explicit body contract
+`POST /api/issues/{issueId}/checkout` can reject empty payloads with validation errors. Use the explicit contract every time: `{ \"agentId\": \"$PAPERCLIP_AGENT_ID\", \"expectedStatuses\": [\"todo\",\"backlog\",\"blocked\",\"in_review\"] }` plus `X-Paperclip-Run-Id`.
+
+## 2026-04-11 — Run snapshot pinning can persist after release; use direct PATCH to leave explicit blocker context
+Even after releasing the bound issue and restoring its state, checkout for another task can still fail with `snapshotIssueId` pinned to the released issue. In this condition, avoid repeated checkout retries; if direct PATCH/comment on the target issue is allowed, mark it `blocked` with the exact lock diagnostics so the next heartbeat has clear context.
+
+## 2026-04-11 — Handbook closure gate can be proven with a compact 4-artifact pack
+For handbook reruns like [DUB-441](/DUB/issues/DUB-441), close fastest with: (1) `yarn typecheck`, (2) pa11y htmlcs flow scoped to `.interactive-handbook`, (3) pa11y axe flow on the same config, and (4) one manual Playwright JSON capturing replay `▶`, icon-first choices, >=44px controls, RTL next-direction transform, and narration request evidence. This gives auditable blocker/pass coverage without duplicating full E2E suites.
+
+## 2026-04-11 — Handbook page traversal automation must trigger text replay before locked choices
+In `InteractiveHandbookGame` word-first flows, required interactions can keep choices locked until a text-audio action is fired (`.interactive-handbook__text-replay`). QA automation that only taps hotspots/choices can produce false blocker results. For reliable page-by-page matrices, trigger text replay first, then evaluate choice progression.
+
+## 2026-04-11 — Handbook completion gate must assert celebration surface, not just final page chip
+For handbook end-to-end gates, reaching `עמוד 10 מתוך 10` is not sufficient proof of completion. In the latest rerun, the flow stayed on page 10 with active interaction UI and never rendered completion/celebration controls. QA should explicitly assert completion-surface presence and replay-from-completion control availability.
+
+## 2026-04-11 — Protected-route a11y reruns should separate authenticated target verdict from unauthenticated shell fallout
+Direct pa11y hits on protected routes can silently audit `/login` after redirect and surface shared shell/footer regressions unrelated to the route-local acceptance scope. For closure decisions, run authenticated flow-scoped checks (`rootElement` on target route) and treat unauthenticated findings as a separate FED follow-up lane linked to the relevant shell ticket.
+
+## 2026-04-11 — Handbook reruns need explicit raw-key leakage scan even after progression bugs are fixed
+When a progression blocker (for example book4 dead-end) is resolved, rerun matrices should still scan visible prompt/choice/target text for raw i18n keys (`games.*`, `handbooks.*`, etc.). Functional flow can pass while child-facing copy leaks translation keys, which remains a release-blocking QA defect.
+
+## 2026-04-11 — Assignment-bound blocked lanes can flip to `in_progress`; re-block with canonical-gate proof
+If an `issue_assigned` wake is snapshot-bound to a blocked QA lane, checkout may auto-promote it to `in_progress` even when canonical blockers are still unresolved. Revalidate the canonical gate thread immediately and patch back to `blocked` with explicit timestamped blocker evidence + unblock criteria to avoid false active status and duplicate rerun pressure.
+
+## 2026-04-11 — Public-shell contrast QA must run pa11y with explicit `axe` runner
+For login/public-shell contrast lanes, `pa11y` default output can report clean while `pa11y --runner axe` still flags AA failures (in this run: `.public-header__nav-link` on `/login`). Close only when both htmlcs/default and axe-runner passes are clean for direct `/login` and protected-route redirect paths.
+
+## 2026-04-11 — Header/footer unification QA should assert shell classes, not semantic tag counts
+For shared-shell verification lanes (for example [DUB-609](/DUB/issues/DUB-609)), do not gate on raw `header`/`footer` element counts because page-level sections can legitimately add extra semantic tags. Use `.public-header` and `.public-footer` singleton checks per route/viewport, then pair with RTL/overflow/touch-floor metrics to avoid false regressions.
+
+## 2026-04-11 — DUB-590 parity can stay blocked after UI fixes if handbook anti-guess wiring is still missing
+Even when replay `▶`, icon-first choices, decode-first lock, and touch/audio gates pass, keep DUB-590 blocked if `InteractiveHandbookGame` still does not consume `READING_RUNTIME_MATRIX.handbook.antiGuessGuard`. Open a dedicated FED follow-up and include owner + rerun ETA in the same comment.

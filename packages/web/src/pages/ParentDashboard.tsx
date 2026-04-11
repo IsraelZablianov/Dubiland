@@ -5,10 +5,105 @@ import { Avatar, Button, Card, StarRating } from '@/components/design-system';
 import { FeatureIllustration, MascotIllustration } from '@/components/illustrations';
 import { FloatingElement } from '@/components/motion';
 import { DAILY_LEARNING_GOAL_MINUTES } from '@/constants/learningGoals';
+import type { HintTrend, StableRange } from '@/games/engine';
 import { useAuth } from '@/hooks/useAuth';
 import { childAvatarToEmoji } from '@/lib/childAvatarEmoji';
-import { isSupabaseConfigured, supabase } from '@/lib/supabase';
+import { loadSupabaseRuntime } from '@/lib/loadSupabaseRuntime';
 import { clearActiveChildProfile, disableGuestMode, isGuestModeEnabled } from '@/lib/session';
+import { isSupabaseConfigured } from '@/lib/supabaseConfig';
+
+type CurriculumDomain = 'math' | 'letters' | 'reading';
+type CurriculumTrend = HintTrend;
+
+interface CurriculumDomainMetrics {
+  avgAccuracyPct14d: number | null;
+  hintTrendLatest: CurriculumTrend | null;
+  independenceTrendLatest: CurriculumTrend | null;
+  progressionBandLatest: StableRange | null;
+  lastSkillKey: string | null;
+}
+
+type ChildCurriculumMetrics = Record<CurriculumDomain, CurriculumDomainMetrics | null>;
+
+const CURRICULUM_DOMAINS: CurriculumDomain[] = ['math', 'letters', 'reading'];
+
+const DOMAIN_LABEL_KEY: Record<CurriculumDomain, 'topics.math' | 'topics.letters' | 'topics.reading'> = {
+  math: 'topics.math',
+  letters: 'topics.letters',
+  reading: 'topics.reading',
+};
+
+const DOMAIN_EMOJI_BY_KEY: Record<CurriculumDomain, string> = {
+  math: '🔢',
+  letters: '🔤',
+  reading: '📖',
+};
+
+const TREND_LABEL_KEY: Record<
+  CurriculumTrend,
+  | 'parentDashboard.curriculum.trends.improving'
+  | 'parentDashboard.curriculum.trends.steady'
+  | 'parentDashboard.curriculum.trends.needs_support'
+> = {
+  improving: 'parentDashboard.curriculum.trends.improving',
+  steady: 'parentDashboard.curriculum.trends.steady',
+  needs_support: 'parentDashboard.curriculum.trends.needs_support',
+};
+
+function createEmptyCurriculumMetrics(): ChildCurriculumMetrics {
+  return { math: null, letters: null, reading: null };
+}
+
+function toCurriculumDomain(value: string | null | undefined): CurriculumDomain | null {
+  if (!value) {
+    return null;
+  }
+
+  if (value === 'math' || value === 'letters' || value === 'reading') {
+    return value;
+  }
+
+  return null;
+}
+
+function toCurriculumTrend(value: string | null | undefined): CurriculumTrend | null {
+  if (!value) {
+    return null;
+  }
+
+  if (value === 'improving' || value === 'steady' || value === 'needs_support') {
+    return value;
+  }
+
+  return null;
+}
+
+function toStableRange(value: string | null | undefined): StableRange | null {
+  if (!value) {
+    return null;
+  }
+
+  if (value === '1-3' || value === '1-5' || value === '1-10') {
+    return value;
+  }
+
+  return null;
+}
+
+function formatAccuracy(value: number | null): string | null {
+  if (value == null || !Number.isFinite(value)) {
+    return null;
+  }
+
+  return `${Math.round(value)}%`;
+}
+
+function formatSkillLabel(skillKey: string): string {
+  return skillKey
+    .trim()
+    .replace(/[_-]+/g, ' ')
+    .slice(0, 96);
+}
 
 interface ChildProgressRow {
   id: string;
@@ -21,6 +116,7 @@ interface ChildProgressRow {
   rolling7dLearningMinutes: number;
   streak: number;
   stars: number;
+  curriculum: ChildCurriculumMetrics;
 }
 
 export default function ParentDashboard() {
@@ -45,14 +141,23 @@ export default function ParentDashboard() {
     async function fetchDashboard() {
       try {
         const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Jerusalem';
+        const supabase = await loadSupabaseRuntime();
+        if (!supabase) {
+          throw new Error('Supabase runtime is unavailable.');
+        }
 
-        const [{ data: dbChildren, error: childrenError }, { data: metricsRows, error: metricsError }] =
+        const [
+          { data: dbChildren, error: childrenError },
+          { data: metricsRows, error: metricsError },
+          { data: curriculumRows, error: curriculumError },
+        ] =
           await Promise.all([
             supabase
               .from('children')
               .select('id, name, avatar')
               .order('created_at', { ascending: true }),
             supabase.rpc('dubiland_parent_dashboard_metrics', { p_timezone: timezone }),
+            supabase.rpc('dubiland_parent_dashboard_curriculum_metrics', { p_timezone: timezone }),
           ]);
 
         if (childrenError || metricsError) {
@@ -65,9 +170,30 @@ export default function ParentDashboard() {
         }
 
         const metricsByChildId = new Map((metricsRows ?? []).map((metric) => [metric.child_id, metric]));
+        const curriculumByChildId = new Map<string, ChildCurriculumMetrics>();
+
+        if (!curriculumError) {
+          for (const row of curriculumRows ?? []) {
+            const domain = toCurriculumDomain(row.domain);
+            if (!domain) {
+              continue;
+            }
+
+            const existing = curriculumByChildId.get(row.child_id) ?? createEmptyCurriculumMetrics();
+            existing[domain] = {
+              avgAccuracyPct14d: row.avg_accuracy_pct_14d ?? null,
+              hintTrendLatest: toCurriculumTrend(row.hint_trend_latest),
+              independenceTrendLatest: toCurriculumTrend(row.independence_trend_latest),
+              progressionBandLatest: toStableRange(row.progression_band_latest),
+              lastSkillKey: row.last_skill_key ?? null,
+            };
+            curriculumByChildId.set(row.child_id, existing);
+          }
+        }
 
         const rows: ChildProgressRow[] = dbChildren.map((child) => {
           const childMetrics = metricsByChildId.get(child.id);
+          const childCurriculum = curriculumByChildId.get(child.id) ?? createEmptyCurriculumMetrics();
 
           return {
             id: child.id,
@@ -80,6 +206,7 @@ export default function ParentDashboard() {
             rolling7dLearningMinutes: childMetrics?.rolling_7d_learning_minutes ?? 0,
             streak: childMetrics?.consecutive_play_streak_days ?? 0,
             stars: childMetrics?.best_stars_across_games ?? 0,
+            curriculum: childCurriculum,
           };
         });
 
@@ -262,28 +389,110 @@ export default function ParentDashboard() {
                         </div>
                       </div>
 
-                      <div className="parent-dashboard__child-metrics-grid">
-                        <div className="parent-dashboard__child-metric">
-                          <span className="parent-dashboard__child-metric-label">{t('parentDashboard.gamesPlayed')}</span>
-                          <strong className="parent-dashboard__child-metric-value">{child.rolling7dGamesPlayed}</strong>
+                      <div className="parent-dashboard__child-details">
+                        <div className="parent-dashboard__child-metrics-grid">
+                          <div className="parent-dashboard__child-metric">
+                            <span className="parent-dashboard__child-metric-label">{t('parentDashboard.gamesPlayed')}</span>
+                            <strong className="parent-dashboard__child-metric-value">{child.rolling7dGamesPlayed}</strong>
+                          </div>
+
+                          <div className="parent-dashboard__child-metric">
+                            <span className="parent-dashboard__child-metric-label">{t('parentDashboard.learningMinutes')}</span>
+                            <strong className="parent-dashboard__child-metric-value">{child.rolling7dLearningMinutes}</strong>
+                          </div>
+
+                          <div className="parent-dashboard__child-metric">
+                            <span className="parent-dashboard__child-metric-label">{t('parentDashboard.todayActivity')}</span>
+                            <strong className="parent-dashboard__child-metric-value">
+                              {Math.min(100, Math.round((child.todayLearningMinutes / DAILY_LEARNING_GOAL_MINUTES) * 100))}%
+                            </strong>
+                          </div>
+
+                          <div className="parent-dashboard__child-metric">
+                            <span className="parent-dashboard__child-metric-label">{t('parentDashboard.streak')}</span>
+                            <strong className="parent-dashboard__child-metric-value">{child.streak}</strong>
+                          </div>
                         </div>
 
-                        <div className="parent-dashboard__child-metric">
-                          <span className="parent-dashboard__child-metric-label">{t('parentDashboard.learningMinutes')}</span>
-                          <strong className="parent-dashboard__child-metric-value">{child.rolling7dLearningMinutes}</strong>
-                        </div>
+                        <section
+                          className="parent-dashboard__curriculum-section"
+                          aria-label={t('parentDashboard.curriculum.sectionTitle')}
+                        >
+                          <header className="parent-dashboard__curriculum-header">
+                            <h3 className="parent-dashboard__curriculum-title">{t('parentDashboard.curriculum.sectionTitle')}</h3>
+                            <p className="parent-dashboard__curriculum-subtitle">{t('parentDashboard.curriculum.sectionSubtitle')}</p>
+                          </header>
 
-                        <div className="parent-dashboard__child-metric">
-                          <span className="parent-dashboard__child-metric-label">{t('parentDashboard.todayActivity')}</span>
-                          <strong className="parent-dashboard__child-metric-value">
-                            {Math.min(100, Math.round((child.todayLearningMinutes / DAILY_LEARNING_GOAL_MINUTES) * 100))}%
-                          </strong>
-                        </div>
+                          <div className="parent-dashboard__curriculum-grid">
+                            {CURRICULUM_DOMAINS.map((domain) => {
+                              const domainMetrics = child.curriculum[domain];
+                              const unavailable = t('parentDashboard.curriculum.unavailable');
+                              const avgAccuracyLabel = formatAccuracy(domainMetrics?.avgAccuracyPct14d ?? null) ?? unavailable;
+                              const hintTrendLabel = domainMetrics?.hintTrendLatest
+                                ? t(TREND_LABEL_KEY[domainMetrics.hintTrendLatest])
+                                : unavailable;
+                              const independenceTrendLabel = domainMetrics?.independenceTrendLatest
+                                ? t(TREND_LABEL_KEY[domainMetrics.independenceTrendLatest])
+                                : unavailable;
+                              const progressionBandLabel = domainMetrics?.progressionBandLatest ?? unavailable;
+                              const lastSkillLabel = domainMetrics?.lastSkillKey
+                                ? formatSkillLabel(domainMetrics.lastSkillKey)
+                                : unavailable;
 
-                        <div className="parent-dashboard__child-metric">
-                          <span className="parent-dashboard__child-metric-label">{t('parentDashboard.streak')}</span>
-                          <strong className="parent-dashboard__child-metric-value">{child.streak}</strong>
-                        </div>
+                              return (
+                                <article key={domain} className="parent-dashboard__curriculum-card">
+                                  <header className="parent-dashboard__curriculum-card-header">
+                                    <span className="parent-dashboard__curriculum-domain-icon" aria-hidden="true">
+                                      {DOMAIN_EMOJI_BY_KEY[domain]}
+                                    </span>
+                                    <strong className="parent-dashboard__curriculum-domain-name">{t(DOMAIN_LABEL_KEY[domain])}</strong>
+                                  </header>
+
+                                  {domainMetrics ? (
+                                    <dl className="parent-dashboard__curriculum-metric-list">
+                                      <div className="parent-dashboard__curriculum-metric-row">
+                                        <dt className="parent-dashboard__curriculum-metric-label">
+                                          {t('parentDashboard.curriculum.labels.accuracy14d')}
+                                        </dt>
+                                        <dd className="parent-dashboard__curriculum-metric-value">{avgAccuracyLabel}</dd>
+                                      </div>
+
+                                      <div className="parent-dashboard__curriculum-metric-row">
+                                        <dt className="parent-dashboard__curriculum-metric-label">
+                                          {t('parentDashboard.curriculum.labels.hintTrend')}
+                                        </dt>
+                                        <dd className="parent-dashboard__curriculum-metric-value">{hintTrendLabel}</dd>
+                                      </div>
+
+                                      <div className="parent-dashboard__curriculum-metric-row">
+                                        <dt className="parent-dashboard__curriculum-metric-label">
+                                          {t('parentDashboard.curriculum.labels.independenceTrend')}
+                                        </dt>
+                                        <dd className="parent-dashboard__curriculum-metric-value">{independenceTrendLabel}</dd>
+                                      </div>
+
+                                      <div className="parent-dashboard__curriculum-metric-row">
+                                        <dt className="parent-dashboard__curriculum-metric-label">
+                                          {t('parentDashboard.curriculum.labels.progressionBand')}
+                                        </dt>
+                                        <dd className="parent-dashboard__curriculum-metric-value">{progressionBandLabel}</dd>
+                                      </div>
+
+                                      <div className="parent-dashboard__curriculum-metric-row">
+                                        <dt className="parent-dashboard__curriculum-metric-label">
+                                          {t('parentDashboard.curriculum.labels.lastSkill')}
+                                        </dt>
+                                        <dd className="parent-dashboard__curriculum-metric-value">{lastSkillLabel}</dd>
+                                      </div>
+                                    </dl>
+                                  ) : (
+                                    <p className="parent-dashboard__curriculum-empty">{t('parentDashboard.curriculum.noData')}</p>
+                                  )}
+                                </article>
+                              );
+                            })}
+                          </div>
+                        </section>
                       </div>
                     </div>
                   </Card>
@@ -405,6 +614,11 @@ export default function ParentDashboard() {
           line-height: var(--line-height-tight);
         }
 
+        .parent-dashboard__child-details {
+          display: grid;
+          gap: var(--space-sm);
+        }
+
         .parent-dashboard__child-metrics-grid {
           display: grid;
           grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -431,6 +645,103 @@ export default function ParentDashboard() {
           font-size: var(--font-size-xl);
           color: var(--color-text-primary);
           line-height: var(--line-height-tight);
+        }
+
+        .parent-dashboard__curriculum-section {
+          display: grid;
+          gap: var(--space-sm);
+        }
+
+        .parent-dashboard__curriculum-header {
+          display: grid;
+          gap: var(--space-xs);
+        }
+
+        .parent-dashboard__curriculum-title {
+          margin: 0;
+          color: var(--color-text-primary);
+          font-size: var(--font-size-sm);
+        }
+
+        .parent-dashboard__curriculum-subtitle {
+          margin: 0;
+          color: var(--color-text-secondary);
+          font-size: var(--font-size-xs);
+        }
+
+        .parent-dashboard__curriculum-grid {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: var(--space-sm);
+        }
+
+        .parent-dashboard__curriculum-card {
+          display: grid;
+          gap: var(--space-sm);
+          border-radius: var(--radius-md);
+          padding: var(--space-sm);
+          border: 1px solid color-mix(in srgb, var(--color-theme-primary) 16%, transparent);
+          background: color-mix(in srgb, var(--color-bg-card) 90%, var(--color-theme-secondary) 10%);
+        }
+
+        .parent-dashboard__curriculum-card-header {
+          display: flex;
+          align-items: center;
+          gap: var(--space-xs);
+        }
+
+        .parent-dashboard__curriculum-domain-icon {
+          inline-size: 24px;
+          block-size: 24px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          font-size: var(--font-size-md);
+          line-height: 1;
+        }
+
+        .parent-dashboard__curriculum-domain-name {
+          color: var(--color-text-primary);
+          font-size: var(--font-size-sm);
+          line-height: var(--line-height-tight);
+        }
+
+        .parent-dashboard__curriculum-metric-list {
+          margin: 0;
+          display: grid;
+          gap: var(--space-xs);
+        }
+
+        .parent-dashboard__curriculum-metric-row {
+          margin: 0;
+          min-block-size: 44px;
+          display: grid;
+          align-content: center;
+          gap: 2px;
+        }
+
+        .parent-dashboard__curriculum-metric-label {
+          margin: 0;
+          color: var(--color-text-secondary);
+          font-size: var(--font-size-xs);
+        }
+
+        .parent-dashboard__curriculum-metric-value {
+          margin: 0;
+          color: var(--color-text-primary);
+          font-size: var(--font-size-sm);
+          line-height: var(--line-height-tight);
+          font-weight: var(--font-weight-semibold);
+        }
+
+        .parent-dashboard__curriculum-empty {
+          margin: 0;
+          min-block-size: 44px;
+          display: grid;
+          align-content: center;
+          color: var(--color-text-secondary);
+          font-size: var(--font-size-xs);
+          line-height: var(--line-height-relaxed);
         }
 
         .parent-dashboard__empty-state {
@@ -506,10 +817,18 @@ export default function ParentDashboard() {
           .parent-dashboard__child-layout {
             grid-template-columns: 1fr;
           }
+
+          .parent-dashboard__curriculum-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
         }
 
         @media (max-width: 520px) {
           .parent-dashboard__child-metrics-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .parent-dashboard__curriculum-grid {
             grid-template-columns: 1fr;
           }
         }

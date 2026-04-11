@@ -4,6 +4,9 @@ import { Button, Card, GameTopBar } from '@/components/design-system';
 import { MascotIllustration } from '@/components/illustrations';
 import { SuccessCelebration } from '@/components/motion';
 import type { GameProps, ParentSummaryMetrics, StableRange } from '@/games/engine';
+import { resolveReadingRoutingContext, type ReadingRoutingAgeBand } from '@/games/reading/readingProgressionRouting';
+import { resolveAudioPathFromKey } from '@/lib/audioPathResolver';
+import { isRtlDirection, rtlReplayGlyph } from '@/lib/rtlChrome';
 
 type GameLevelId = 1 | 2 | 3;
 type HintTone = 'neutral' | 'hint' | 'success';
@@ -110,6 +113,7 @@ interface RoundState {
   prefilledSlotIndexes: number[];
   fallbackMode: boolean;
   contrastLetter: LetterId | null;
+  transferChallenge: boolean;
 }
 
 interface RoundMessage {
@@ -136,8 +140,7 @@ interface PictureToWordBuilderGameProps extends GameProps {
   onRequestBack?: () => void;
 }
 
-const TOTAL_ROUNDS = 8;
-const MIDPOINT_ROUND = 4;
+const DEFAULT_TOTAL_ROUNDS = 8;
 
 const BASE_DISTRACTOR_COUNT_BY_LEVEL: Record<GameLevelId, number> = {
   1: 1,
@@ -369,23 +372,59 @@ function buildSummaryReport(stats: SessionStats): SummaryReport {
   };
 }
 
-function toKebabCase(value: string): string {
-  return value
-    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-    .replace(/[^a-zA-Z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .toLowerCase();
-}
-
 function getAudioPathForKey(key: StatusKey): string {
-  return `/audio/he/${key.split('.').map((segment) => toKebabCase(segment)).join('/')}.mp3`;
+  return resolveAudioPathFromKey(key, 'common');
 }
 
-function pickWord(level: GameLevelId, previousWordId: WordId | null): WordEntry {
-  const basePool = WORD_IDS_BY_LEVEL[level];
-  const withoutPrevious = previousWordId
-    ? basePool.filter((wordId) => wordId !== previousWordId)
-    : basePool;
+function toPositiveInt(value: unknown): number | null {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    const normalized = Math.floor(value);
+    return normalized > 0 ? normalized : null;
+  }
+  if (typeof value === 'string') {
+    const parsed = Number.parseInt(value, 10);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+  }
+  return null;
+}
+
+function resolveSessionRoundTarget(ageBand: ReadingRoutingAgeBand): number {
+  if (ageBand === '3-4') {
+    return 6;
+  }
+  if (ageBand === '4-5') {
+    return 7;
+  }
+  if (ageBand === '6-7') {
+    return 9;
+  }
+  return DEFAULT_TOTAL_ROUNDS;
+}
+
+function resolveMidpointRound(totalRounds: number): number {
+  return Math.max(2, Math.floor(totalRounds / 2));
+}
+
+function isTransferChallengeRound(
+  ageBand: ReadingRoutingAgeBand,
+  roundNumber: number,
+  totalRounds: number,
+): boolean {
+  if (ageBand !== '6-7') {
+    return false;
+  }
+  return roundNumber >= Math.max(1, totalRounds - 1);
+}
+
+function pickWord(
+  level: GameLevelId,
+  previousWordId: WordId | null,
+  transferChallenge: boolean,
+): WordEntry {
+  const levelPool = WORD_IDS_BY_LEVEL[level];
+  const transferPool = WORD_IDS_BY_LEVEL[3].filter((wordId) => WORDS[wordId].letters.length >= 4);
+  const basePool = transferChallenge ? transferPool : levelPool;
+  const withoutPrevious = previousWordId ? basePool.filter((wordId) => wordId !== previousWordId) : basePool;
   const selectedPool = withoutPrevious.length > 0 ? withoutPrevious : basePool;
   return WORDS[pickRandom(selectedPool)];
 }
@@ -396,19 +435,21 @@ function createRound(options: {
   previousWordId: WordId | null;
   fallbackMode: boolean;
   contrastLetter: LetterId | null;
+  transferChallenge: boolean;
 }): RoundState {
-  const { level, roundNumber, previousWordId, fallbackMode, contrastLetter } = options;
-  const word = pickWord(level, previousWordId);
-  const prefillFirstLetter = level === 1 || fallbackMode;
+  const { level, roundNumber, previousWordId, fallbackMode, contrastLetter, transferChallenge } = options;
+  const word = pickWord(level, previousWordId, transferChallenge);
+  const prefillFirstLetter = !transferChallenge && (level === 1 || fallbackMode);
 
   const letterPool = [...word.letters];
   if (prefillFirstLetter) {
     letterPool.shift();
   }
 
-  const desiredDistractors = fallbackMode
+  const baseDistractors = fallbackMode
     ? Math.max(1, BASE_DISTRACTOR_COUNT_BY_LEVEL[level] - 1)
     : BASE_DISTRACTOR_COUNT_BY_LEVEL[level];
+  const desiredDistractors = transferChallenge ? baseDistractors + 1 : baseDistractors;
 
   const distractorCandidates = new Set<LetterId>();
   if (contrastLetter && !word.letters.includes(contrastLetter)) {
@@ -435,7 +476,7 @@ function createRound(options: {
   }));
 
   return {
-    id: `round-${roundNumber}-${word.id}-${level}-${fallbackMode ? 'fallback' : 'core'}`,
+    id: `round-${roundNumber}-${word.id}-${level}-${fallbackMode ? 'fallback' : 'core'}-${transferChallenge ? 'transfer' : 'standard'}`,
     roundNumber,
     level,
     word,
@@ -443,6 +484,7 @@ function createRound(options: {
     prefilledSlotIndexes: prefillFirstLetter ? [0] : [],
     fallbackMode,
     contrastLetter,
+    transferChallenge,
   };
 }
 
@@ -459,16 +501,49 @@ function createInitialSlots(round: RoundState): Array<SlotState | null> {
   });
 }
 
-export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: PictureToWordBuilderGameProps) {
-  const { t } = useTranslation('common');
+export function PictureToWordBuilderGame({ level: runtimeLevel, onComplete, audio, onRequestBack }: PictureToWordBuilderGameProps) {
+  const { t, i18n } = useTranslation('common');
+  const isRtl = isRtlDirection(i18n.dir(i18n.language));
+  const replayIcon = rtlReplayGlyph(isRtl);
   const boardFeedbackTimeoutRef = useRef<number | null>(null);
   const scorePulseTimeoutRef = useRef<number | null>(null);
+  const levelConfig = useMemo(
+    () => (runtimeLevel.configJson as Record<string, unknown>) ?? {},
+    [runtimeLevel.configJson],
+  );
+  const routingContext = useMemo(
+    () =>
+      resolveReadingRoutingContext(levelConfig, 1, {
+        baseLevelByAgeBand: {
+          '3-4': 1,
+          '4-5': 1,
+          '5-6': 2,
+          '6-7': 3,
+        },
+      }),
+    [levelConfig],
+  );
+  const totalRounds = useMemo(() => {
+    const configuredRoundCount =
+      toPositiveInt(levelConfig.rounds) ??
+      toPositiveInt(levelConfig.totalRounds) ??
+      toPositiveInt(levelConfig.sessionRounds) ??
+      toPositiveInt(levelConfig.roundCount) ??
+      (typeof levelConfig.progression === 'object' && levelConfig.progression && !Array.isArray(levelConfig.progression)
+        ? toPositiveInt((levelConfig.progression as Record<string, unknown>).rounds) ??
+          toPositiveInt((levelConfig.progression as Record<string, unknown>).totalRounds)
+        : null);
 
-  const [level, setLevel] = useState<GameLevelId>(1);
+    return configuredRoundCount ?? resolveSessionRoundTarget(routingContext.ageBand);
+  }, [levelConfig, routingContext.ageBand]);
+  const midpointRound = useMemo(() => resolveMidpointRound(totalRounds), [totalRounds]);
+  const initialFallbackRounds = routingContext.inSupportMode || routingContext.masteryOutcome === 'needs_support' ? 2 : 0;
+
+  const [level, setLevel] = useState<GameLevelId>(routingContext.initialLevelId);
   const [roundNumber, setRoundNumber] = useState(1);
   const [cleanRoundsInRow, setCleanRoundsInRow] = useState(0);
   const [struggleRoundsInRow, setStruggleRoundsInRow] = useState(0);
-  const [fallbackRoundsRemaining, setFallbackRoundsRemaining] = useState(0);
+  const [fallbackRoundsRemaining, setFallbackRoundsRemaining] = useState(initialFallbackRounds);
   const [pendingContrastLetter, setPendingContrastLetter] = useState<LetterId | null>(null);
   const [sessionComplete, setSessionComplete] = useState(false);
   const [midpointPaused, setMidpointPaused] = useState(false);
@@ -478,11 +553,12 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
 
   const [round, setRound] = useState<RoundState>(() =>
     createRound({
-      level: 1,
+      level: routingContext.initialLevelId,
       roundNumber: 1,
       previousWordId: null,
-      fallbackMode: false,
+      fallbackMode: initialFallbackRounds > 0,
       contrastLetter: null,
+      transferChallenge: isTransferChallengeRound(routingContext.ageBand, 1, totalRounds),
     }),
   );
   const [slots, setSlots] = useState<Array<SlotState | null>>(() => createInitialSlots(round));
@@ -499,6 +575,7 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
   });
   const [scorePulse, setScorePulse] = useState(false);
   const [boardFeedback, setBoardFeedback] = useState<BoardFeedback>('idle');
+  const [audioPlaybackFailed, setAudioPlaybackFailed] = useState(false);
 
   const completionReportedRef = useRef(false);
   const previousWordIdRef = useRef<WordId | null>(round.word.id);
@@ -532,12 +609,25 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
     [round.tiles, usedTileIds],
   );
 
+  const playAudioPath = useCallback(
+    (audioPath: string) => {
+      if (audioPlaybackFailed) {
+        return;
+      }
+
+      void audio.play(audioPath).catch(() => {
+        setAudioPlaybackFailed(true);
+      });
+    },
+    [audio, audioPlaybackFailed],
+  );
+
   const setMessageWithAudio = useCallback(
     (key: StatusKey, tone: HintTone = 'neutral') => {
       setRoundMessage({ key, tone });
-      audio.play(getAudioPathForKey(key));
+      playAudioPath(getAudioPathForKey(key));
     },
-    [audio],
+    [playAudioPath],
   );
 
   const triggerBoardFeedback = useCallback((nextState: Exclude<BoardFeedback, 'idle'>) => {
@@ -611,7 +701,7 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
         key: 'feedback.youDidIt',
         tone: 'success',
       });
-      audio.play(getAudioPathForKey('games.pictureToWordBuilder.feedback.success.celebrate'));
+      playAudioPath(getAudioPathForKey('games.pictureToWordBuilder.feedback.success.celebrate'));
 
       if (completionReportedRef.current) {
         return;
@@ -626,7 +716,7 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
         summaryMetrics: metrics,
       });
     },
-    [audio, onComplete],
+    [onComplete, playAudioPath],
   );
 
   const finalizeRoundSuccess = useCallback(() => {
@@ -660,9 +750,9 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
       key: successKey,
       tone: 'success',
     });
-    audio.play(getAudioPathForKey(`reading.wordAudio.${round.word.id}`));
+    playAudioPath(getAudioPathForKey(`reading.wordAudio.${round.word.id}`));
     window.setTimeout(() => {
-      audio.play(getAudioPathForKey(feedbackKey));
+      playAudioPath(getAudioPathForKey(feedbackKey));
     }, 260);
 
     const earnedSticker = nextStats.successfulBuilds % 3 === 0;
@@ -670,7 +760,7 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
       setStickerCount((value) => value + 1);
     }
 
-    if (nextStats.hintUsageByRound.length >= TOTAL_ROUNDS) {
+    if (nextStats.hintUsageByRound.length >= totalRounds) {
       window.setTimeout(() => {
         applySessionCompletion(nextStats);
       }, 620);
@@ -694,7 +784,7 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
     }
 
     const nextRoundNumber = round.roundNumber + 1;
-    const shouldPauseAtMidpoint = nextRoundNumber === MIDPOINT_ROUND + 1;
+    const shouldPauseAtMidpoint = nextRoundNumber === midpointRound + 1;
 
     setCleanRoundsInRow(nextCleanRounds);
     setStruggleRoundsInRow(nextStruggleRounds);
@@ -715,24 +805,28 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
           previousWordId: previousWordIdRef.current,
           fallbackMode: nextFallbackRounds > 0,
           contrastLetter: pendingContrastLetter,
+          transferChallenge: isTransferChallengeRound(routingContext.ageBand, nextRoundNumber, totalRounds),
         }),
       );
     }, 640);
   }, [
     applySessionCompletion,
     attemptsThisRound,
-    audio,
     cleanRoundsInRow,
     fallbackRoundsRemaining,
     level,
     loadRound,
     midpointPaused,
+    midpointRound,
     pendingContrastLetter,
     round.roundNumber,
     round.word.id,
     round.word.letters.length,
+    routingContext.ageBand,
     sessionComplete,
     struggleRoundsInRow,
+    totalRounds,
+    playAudioPath,
     triggerBoardFeedback,
     triggerScorePulse,
     usedHintThisRound,
@@ -792,9 +886,9 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
 
       setInvalidSlotIndexes([]);
       setSelectedTileId(null);
-      audio.play(getAudioPathForKey(`letters.pronunciation.${targetTile.letter}`));
+      playAudioPath(getAudioPathForKey(`letters.pronunciation.${targetTile.letter}`));
     },
-    [audio, midpointPaused, sessionComplete, tileById],
+    [midpointPaused, playAudioPath, sessionComplete, tileById],
   );
 
   const removeTileFromSlot = useCallback((slotIndex: number) => {
@@ -830,12 +924,12 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
           : 'games.pictureToWordBuilder.hints.segmented.listenByParts';
 
       setMessageWithAudio(hintKey, 'hint');
-      audio.play(getAudioPathForKey(`letters.pronunciation.${round.word.letters[0]}`));
+      playAudioPath(getAudioPathForKey(`letters.pronunciation.${round.word.letters[0]}`));
       window.setTimeout(() => {
-        audio.play(getAudioPathForKey(`reading.wordAudio.${round.word.id}`));
+        playAudioPath(getAudioPathForKey(`reading.wordAudio.${round.word.id}`));
       }, 280);
     },
-    [audio, hintCountThisRound, midpointPaused, round.word.id, round.word.letters, sessionComplete, setMessageWithAudio],
+    [hintCountThisRound, midpointPaused, playAudioPath, round.word.id, round.word.letters, sessionComplete, setMessageWithAudio],
   );
 
   const validateCurrentWord = useCallback(() => {
@@ -852,7 +946,7 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
         key: 'games.pictureToWordBuilder.instructions.completeWord',
         tone: 'hint',
       });
-      audio.play(getAudioPathForKey('games.pictureToWordBuilder.instructions.completeWord'));
+      playAudioPath(getAudioPathForKey('games.pictureToWordBuilder.instructions.completeWord'));
       setInvalidSlotIndexes(missingSlotIndexes);
       return;
     }
@@ -892,10 +986,10 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
     }
   }, [
     attemptsThisRound,
-    audio,
     finalizeRoundSuccess,
     handleSegmentedHint,
     midpointPaused,
+    playAudioPath,
     registerConfusionPair,
     round.word.id,
     round.word.letters,
@@ -952,7 +1046,7 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
 
       const currentSlot = slots[slotIndex];
       if (currentSlot?.locked) {
-        audio.play(getAudioPathForKey(`letters.pronunciation.${currentSlot.letter}`));
+        playAudioPath(getAudioPathForKey(`letters.pronunciation.${currentSlot.letter}`));
         return;
       }
 
@@ -967,7 +1061,7 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
 
       placeTileInSlot(selectedTileId, slotIndex);
     },
-    [audio, midpointPaused, placeTileInSlot, removeTileFromSlot, selectedTileId, sessionComplete, slots],
+    [midpointPaused, placeTileInSlot, playAudioPath, removeTileFromSlot, selectedTileId, sessionComplete, slots],
   );
 
   const handleReplayWord = useCallback(() => {
@@ -978,14 +1072,14 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
       key: 'games.pictureToWordBuilder.instructions.tapReplayWord',
       tone: 'neutral',
     });
-    audio.play(getAudioPathForKey(`reading.wordAudio.${round.word.id}`));
-  }, [audio, midpointPaused, round.word.id, sessionComplete]);
+    playAudioPath(getAudioPathForKey(`reading.wordAudio.${round.word.id}`));
+  }, [midpointPaused, playAudioPath, round.word.id, sessionComplete]);
 
   const playStatusAudio = useCallback(
     (key: StatusKey) => {
-      audio.play(getAudioPathForKey(key));
+      playAudioPath(getAudioPathForKey(key));
     },
-    [audio],
+    [playAudioPath],
   );
 
   const handleContinueAfterMidpoint = useCallback(() => {
@@ -997,9 +1091,10 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
         previousWordId: previousWordIdRef.current,
         fallbackMode: fallbackRoundsRemaining > 0,
         contrastLetter: pendingContrastLetter,
+        transferChallenge: isTransferChallengeRound(routingContext.ageBand, roundNumber, totalRounds),
       }),
     );
-  }, [fallbackRoundsRemaining, level, loadRound, pendingContrastLetter, roundNumber]);
+  }, [fallbackRoundsRemaining, level, loadRound, pendingContrastLetter, roundNumber, routingContext.ageBand, totalRounds]);
 
   useEffect(() => {
     if (sessionComplete || midpointPaused) {
@@ -1009,26 +1104,29 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
     const promptKey = `games.pictureToWordBuilder.prompts.word.${round.word.id}` as WordPromptKey;
     setRoundMessage({
       key: promptKey,
-      tone: round.contrastLetter ? 'hint' : 'neutral',
+      tone: round.contrastLetter || round.transferChallenge ? 'hint' : 'neutral',
     });
 
     const introTimer = window.setTimeout(() => {
-      audio.play(getAudioPathForKey('games.pictureToWordBuilder.instructions.intro'));
+      playAudioPath(getAudioPathForKey('games.pictureToWordBuilder.instructions.intro'));
     }, 60);
     const promptTimer = window.setTimeout(() => {
-      audio.play(getAudioPathForKey(promptKey));
+      playAudioPath(getAudioPathForKey(promptKey));
     }, 340);
     const wordTimer = window.setTimeout(() => {
-      audio.play(getAudioPathForKey(`reading.wordAudio.${round.word.id}`));
+      playAudioPath(getAudioPathForKey(`reading.wordAudio.${round.word.id}`));
     }, 700);
 
-    if (round.contrastLetter) {
+    if (round.contrastLetter || round.transferChallenge) {
       const contrastTimer = window.setTimeout(() => {
+        const transferOrContrastKey: StatusKey = round.transferChallenge
+          ? 'games.pictureToWordBuilder.instructions.tapCheckWord'
+          : 'games.pictureToWordBuilder.hints.segmented.contrastPair';
         setRoundMessage({
-          key: 'games.pictureToWordBuilder.hints.segmented.contrastPair',
+          key: transferOrContrastKey,
           tone: 'hint',
         });
-        audio.play(getAudioPathForKey('games.pictureToWordBuilder.hints.segmented.contrastPair'));
+        playAudioPath(getAudioPathForKey(transferOrContrastKey));
       }, 1080);
       return () => {
         window.clearTimeout(introTimer);
@@ -1043,7 +1141,7 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
       window.clearTimeout(promptTimer);
       window.clearTimeout(wordTimer);
     };
-  }, [audio, midpointPaused, round.contrastLetter, round.id, round.word.id, sessionComplete]);
+  }, [midpointPaused, playAudioPath, round.contrastLetter, round.id, round.transferChallenge, round.word.id, sessionComplete]);
 
   useEffect(() => {
     if (sessionComplete || midpointPaused || roundMessage.tone === 'success' || draggedTileId) {
@@ -1100,7 +1198,7 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
               onClick={() => playStatusAudio('feedback.youDidIt')}
               aria-label={replayButtonAriaLabel}
             >
-              <span aria-hidden="true">▶</span>
+              <span aria-hidden="true">{replayIcon}</span>
             </button>
           </div>
           <div className="picture-word-builder__text-row picture-word-builder__text-row--center">
@@ -1111,7 +1209,7 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
               onClick={() => playStatusAudio('games.pictureToWordBuilder.roundComplete.wordBuilt')}
               aria-label={replayButtonAriaLabel}
             >
-              <span aria-hidden="true">▶</span>
+              <span aria-hidden="true">{replayIcon}</span>
             </button>
           </div>
 
@@ -1139,7 +1237,7 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
                 onClick={() => playStatusAudio('parentDashboard.games.pictureToWordBuilder.progressSummary')}
                 aria-label={replayButtonAriaLabel}
               >
-                <span aria-hidden="true">▶</span>
+                <span aria-hidden="true">{replayIcon}</span>
               </button>
             </div>
             <div className="picture-word-builder__text-row">
@@ -1150,7 +1248,7 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
                 onClick={() => playStatusAudio('parentDashboard.games.pictureToWordBuilder.nextStep')}
                 aria-label={replayButtonAriaLabel}
               >
-                <span aria-hidden="true">▶</span>
+                <span aria-hidden="true">{replayIcon}</span>
               </button>
             </div>
           </Card>
@@ -1163,7 +1261,7 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
               onClick={() => playStatusAudio(getHintTrendLabelKey(summaryMetrics.hintTrend))}
               aria-label={replayButtonAriaLabel}
             >
-              <span aria-hidden="true">▶</span>
+              <span aria-hidden="true">{replayIcon}</span>
             </button>
           </div>
         </Card>
@@ -1184,7 +1282,7 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
               onClick={() => playStatusAudio('feedback.greatEffort')}
               aria-label={replayButtonAriaLabel}
             >
-              <span aria-hidden="true">▶</span>
+              <span aria-hidden="true">{replayIcon}</span>
             </button>
           </div>
           <div className="picture-word-builder__text-row picture-word-builder__text-row--center">
@@ -1195,7 +1293,7 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
               onClick={() => playStatusAudio('games.pictureToWordBuilder.roundComplete.nextWord')}
               aria-label={replayButtonAriaLabel}
             >
-              <span aria-hidden="true">▶</span>
+              <span aria-hidden="true">{replayIcon}</span>
             </button>
           </div>
           <Button
@@ -1219,10 +1317,10 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
         <GameTopBar
           title={t('games.pictureToWordBuilder.title')}
           subtitle={t('games.pictureToWordBuilder.subtitle')}
-          progressLabel={`${round.roundNumber}/${TOTAL_ROUNDS}`}
+          progressLabel={`${round.roundNumber}/${totalRounds}`}
           progressAriaLabel={t('games.pictureToWordBuilder.instructions.completeWord')}
           currentStep={round.roundNumber}
-          totalSteps={TOTAL_ROUNDS}
+          totalSteps={totalRounds}
           onReplayInstruction={() => playStatusAudio(roundMessage.key)}
           replayAriaLabel={replayButtonAriaLabel}
           onBack={onRequestBack}
@@ -1236,7 +1334,7 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
                 aria-label={t('games.pictureToWordBuilder.instructions.tapReplayWord')}
                 style={{ minWidth: 'var(--touch-min)', paddingInline: 'var(--space-md)' }}
               >
-                <span aria-hidden="true">▶</span>
+                <span aria-hidden="true">{replayIcon}</span>
               </Button>
               <Button
                 variant="secondary"
@@ -1264,7 +1362,7 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
           <span className="picture-word-builder__score-pill">
             <span>🎯</span>
             <span>
-              {resolvedRounds}/{TOTAL_ROUNDS}
+              {resolvedRounds}/{totalRounds}
             </span>
           </span>
         </div>
@@ -1279,9 +1377,14 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
             onClick={() => playStatusAudio(roundMessage.key)}
             aria-label={replayButtonAriaLabel}
           >
-            <span aria-hidden="true">▶</span>
+            <span aria-hidden="true">{replayIcon}</span>
           </button>
         </div>
+        {audioPlaybackFailed && (
+          <p className="picture-word-builder__audio-fallback" aria-live="polite">
+            🔇 {t('games.pictureToWordBuilder.instructions.dragLetters')}
+          </p>
+        )}
 
         <section
           className={[
@@ -1368,7 +1471,7 @@ export function PictureToWordBuilderGame({ onComplete, audio, onRequestBack }: P
                 onClick={() => playStatusAudio('games.pictureToWordBuilder.instructions.dragLetters')}
                 aria-label={replayButtonAriaLabel}
               >
-                <span aria-hidden="true">▶</span>
+                <span aria-hidden="true">{replayIcon}</span>
               </button>
             </div>
 
@@ -1561,6 +1664,19 @@ const pictureWordBuilderStyles = `
 
   .picture-word-builder__message--success {
     border: 2px solid color-mix(in srgb, var(--color-accent-success) 58%, #ffffff);
+  }
+
+  .picture-word-builder__audio-fallback {
+    margin: 0;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-md);
+    border: 1px dashed color-mix(in srgb, var(--color-accent-warning) 52%, #ffffff);
+    background: color-mix(in srgb, var(--color-accent-warning) 14%, #ffffff);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    position: relative;
+    z-index: 2;
   }
 
   .picture-word-builder__board {

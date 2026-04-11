@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Card } from '@/components/design-system';
+import { MascotIllustration } from '@/components/illustrations';
+import { SuccessCelebration } from '@/components/motion';
 import type { GameCompletionResult, GameProps, ParentSummaryMetrics, StableRange } from '@/games/engine';
+import { resolveAudioPathFromKey } from '@/lib/audioPathResolver';
+import { resolveGameConcurrentChoiceLimit } from '@/lib/concurrentChoiceLimit';
+import { isRtlDirection, rtlNextGlyph, rtlReplayGlyph } from '@/lib/rtlChrome';
 
 type GameConcept = 'within_ten' | 'bridge_to_10' | 'missing_addend';
 type RoundFlow = 'prompt' | 'input' | 'validate' | 'feedback' | 'remediation' | 'next';
@@ -113,6 +118,7 @@ interface BuildRoundOptions {
   simplify: boolean;
   remediation: boolean;
   lockToTwoChoices: boolean;
+  maxConcurrentChoices: number;
 }
 
 interface SessionSummary {
@@ -154,12 +160,8 @@ function pickRandom<T>(items: readonly T[]): T {
   return items[randomInt(0, items.length - 1)] as T;
 }
 
-function toKebabCase(segment: string): string {
-  return segment.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
-}
-
 function getAudioPathForKey(key: StatusKey): string {
-  return `/audio/he/${key.split('.').map(toKebabCase).join('/')}.mp3`;
+  return resolveAudioPathFromKey(key, 'common');
 }
 
 function getBaseConcept(roundNumber: number): GameConcept {
@@ -218,7 +220,13 @@ function getInstructionKey(roundNumber: number, concept: GameConcept): Instructi
   return 'games.numberLineJumps.instructions.listenAndPlanJump';
 }
 
-function getStepChoices(requiredJump: number, concept: GameConcept, simplify: boolean, lockToTwoChoices: boolean): number[] {
+function getStepChoices(
+  requiredJump: number,
+  concept: GameConcept,
+  simplify: boolean,
+  lockToTwoChoices: boolean,
+  maxConcurrentChoices: number,
+): number[] {
   if (lockToTwoChoices) {
     const reduced = new Set<number>([1, Math.min(3, Math.max(1, requiredJump))]);
     return Array.from(reduced).sort((left, right) => left - right);
@@ -242,7 +250,23 @@ function getStepChoices(requiredJump: number, concept: GameConcept, simplify: bo
     choices.add(6);
   }
 
-  return Array.from(choices).sort((left, right) => left - right);
+  const orderedChoices = Array.from(choices).sort((left, right) => left - right);
+  const cap = Math.max(2, maxConcurrentChoices);
+  if (orderedChoices.length <= cap) {
+    return orderedChoices;
+  }
+
+  const preferred = new Set<number>([1]);
+  if (requiredJump <= 6) {
+    preferred.add(requiredJump);
+  }
+
+  const prioritized = [
+    ...orderedChoices.filter((value) => preferred.has(value)),
+    ...orderedChoices.filter((value) => !preferred.has(value)),
+  ];
+
+  return prioritized.slice(0, cap).sort((left, right) => left - right);
 }
 
 function buildRound(options: BuildRoundOptions): RoundState {
@@ -277,7 +301,13 @@ function buildRound(options: BuildRoundOptions): RoundState {
   }
 
   const requiredJump = Math.max(1, target - start);
-  const stepChoices = getStepChoices(requiredJump, concept, options.simplify, options.lockToTwoChoices);
+  const stepChoices = getStepChoices(
+    requiredJump,
+    concept,
+    options.simplify,
+    options.lockToTwoChoices,
+    options.maxConcurrentChoices,
+  );
 
   const promptKey: PromptKey =
     concept === 'missing_addend'
@@ -371,8 +401,15 @@ function buildSummary(stats: SessionStats): { metrics: ParentSummaryMetrics; sum
   };
 }
 
-export function NumberLineJumpsGame({ onComplete, audio }: GameProps) {
-  const { t } = useTranslation('common');
+export function NumberLineJumpsGame({ level, child, onComplete, audio }: GameProps) {
+  const { t, i18n } = useTranslation('common');
+  const isRtl = isRtlDirection(i18n.dir(i18n.language));
+  const replayIcon = rtlReplayGlyph(isRtl);
+  const nextIcon = rtlNextGlyph(isRtl);
+  const maxConcurrentChoices = useMemo(
+    () => resolveGameConcurrentChoiceLimit(level.configJson, child.birthDate),
+    [child.birthDate, level.configJson],
+  );
 
   const consecutiveMissesRef = useRef(0);
   const conceptMissHistoryRef = useRef<Array<{ concept: GameConcept; solvedRound: number }>>([]);
@@ -389,6 +426,7 @@ export function NumberLineJumpsGame({ onComplete, audio }: GameProps) {
       simplify: false,
       remediation: false,
       lockToTwoChoices: false,
+      maxConcurrentChoices,
     }),
   );
   const [roundFlow, setRoundFlow] = useState<RoundFlow>('prompt');
@@ -417,6 +455,7 @@ export function NumberLineJumpsGame({ onComplete, audio }: GameProps) {
   const [firstAttemptStars, setFirstAttemptStars] = useState(0);
   const [starPulse, setStarPulse] = useState(false);
   const [boardFeedback, setBoardFeedback] = useState<BoardFeedback>('idle');
+  const [audioPlaybackFailed, setAudioPlaybackFailed] = useState(false);
 
   const totalJump = useMemo(() => selectedSteps.reduce((sum, value) => sum + value, 0), [selectedSteps]);
   const previewValue = round.start + totalJump;
@@ -426,9 +465,15 @@ export function NumberLineJumpsGame({ onComplete, audio }: GameProps) {
 
   const playAudioKey = useCallback(
     (key: StatusKey) => {
-      audio.play(getAudioPathForKey(key));
+      if (audioPlaybackFailed) {
+        return;
+      }
+
+      void audio.play(getAudioPathForKey(key)).catch(() => {
+        setAudioPlaybackFailed(true);
+      });
     },
-    [audio],
+    [audio, audioPlaybackFailed],
   );
 
   const setMessageWithAudio = useCallback(
@@ -463,6 +508,7 @@ export function NumberLineJumpsGame({ onComplete, audio }: GameProps) {
         simplify: simplifyNextRoundRef.current,
         remediation: remediationNextRoundRef.current,
         lockToTwoChoices: lockChoicesNextRoundRef.current,
+        maxConcurrentChoices,
       });
 
       simplifyNextRoundRef.current = false;
@@ -479,7 +525,7 @@ export function NumberLineJumpsGame({ onComplete, audio }: GameProps) {
       setInactivityPulse(false);
       setBoardFeedback('idle');
     },
-    [],
+    [maxConcurrentChoices],
   );
 
   const finalizeSession = useCallback(() => {
@@ -873,12 +919,16 @@ export function NumberLineJumpsGame({ onComplete, audio }: GameProps) {
   }, [audio]);
 
   const messageText = t(roundMessage.key, round.promptValues);
+  const coachVariant = sessionComplete || roundMessage.tone === 'success' ? 'success' : 'hint';
 
   if (sessionComplete && sessionSummary) {
     return (
       <div className="number-line-jumps number-line-jumps--summary">
         <Card padding="lg" className="number-line-jumps__shell">
           <h2 className="number-line-jumps__title">{t('feedback.youDidIt')}</h2>
+          <div className="number-line-jumps__summary-celebration">
+            <SuccessCelebration />
+          </div>
           <p className="number-line-jumps__message number-line-jumps__message--success" aria-live="polite">
             {t('parentDashboard.games.numberLineJumps.progressSummary', {
               accuracy: `${sessionSummary.accuracy}%`,
@@ -907,7 +957,7 @@ export function NumberLineJumpsGame({ onComplete, audio }: GameProps) {
               aria-label={t('games.numberLineJumps.instructions.tapReplay')}
               style={{ minWidth: 'var(--touch-min)' }}
             >
-              ▶
+              {replayIcon}
             </Button>
           </div>
           <Button
@@ -917,7 +967,7 @@ export function NumberLineJumpsGame({ onComplete, audio }: GameProps) {
             aria-label={t('nav.next')}
             style={{ minWidth: 'var(--touch-min)' }}
           >
-            →
+            {nextIcon}
           </Button>
         </Card>
         <style>{numberLineJumpsStyles}</style>
@@ -942,7 +992,7 @@ export function NumberLineJumpsGame({ onComplete, audio }: GameProps) {
               aria-label={t('games.numberLineJumps.instructions.tapReplay')}
               style={{ minWidth: 'var(--touch-min)' }}
             >
-              ▶
+              {replayIcon}
             </Button>
             <Button
               variant="secondary"
@@ -970,7 +1020,7 @@ export function NumberLineJumpsGame({ onComplete, audio }: GameProps) {
               disabled={!showNextAction}
               style={{ minWidth: 'var(--touch-min)' }}
             >
-              →
+              {nextIcon}
             </Button>
           </div>
         </header>
@@ -1015,6 +1065,14 @@ export function NumberLineJumpsGame({ onComplete, audio }: GameProps) {
         <p className={`number-line-jumps__message number-line-jumps__message--${roundMessage.tone}`} aria-live="polite">
           {messageText}
         </p>
+        <div className="number-line-jumps__coach" aria-hidden="true">
+          <MascotIllustration variant={coachVariant} size={52} />
+        </div>
+        {audioPlaybackFailed && (
+          <p className="number-line-jumps__audio-fallback" aria-live="polite">
+            🔇 {t('games.numberLineJumps.instructions.dragOrTapJumps')}
+          </p>
+        )}
 
         <Card padding="md" className="number-line-jumps__prompt-card">
           <p className="number-line-jumps__prompt">{t(round.promptKey, round.promptValues)}</p>
@@ -1229,6 +1287,36 @@ const numberLineJumpsStyles = `
     border-color: color-mix(in srgb, var(--color-accent-success) 40%, white);
   }
 
+  .number-line-jumps__coach {
+    justify-self: end;
+    inline-size: 68px;
+    block-size: 68px;
+    border-radius: var(--radius-full);
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+    background: color-mix(in srgb, var(--color-bg-card) 88%, white);
+    border: 2px solid color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+    box-shadow: var(--shadow-sm);
+    animation: number-line-jumps-coach-float 1500ms ease-in-out infinite;
+  }
+
+  .number-line-jumps__coach,
+  .number-line-jumps__coach * {
+    pointer-events: none;
+  }
+
+  .number-line-jumps__audio-fallback {
+    margin: 0;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-md);
+    border: 1px dashed color-mix(in srgb, var(--color-warning) 48%, white);
+    background: color-mix(in srgb, var(--color-warning) 16%, white);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+  }
+
   .number-line-jumps__prompt-card {
     border: 1px dashed color-mix(in srgb, var(--color-theme-primary) 36%, white);
     background: color-mix(in srgb, var(--color-bg-card) 70%, var(--color-theme-primary) 30%);
@@ -1406,6 +1494,11 @@ const numberLineJumpsStyles = `
     color: var(--color-text-secondary);
   }
 
+  .number-line-jumps__summary-celebration {
+    display: flex;
+    justify-content: center;
+  }
+
   .number-line-jumps__checkpoint-note {
     display: flex;
     align-items: center;
@@ -1452,6 +1545,20 @@ const numberLineJumpsStyles = `
 
     100% {
       transform: scale(1);
+    }
+  }
+
+  @keyframes number-line-jumps-coach-float {
+    0% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-4px);
+    }
+
+    100% {
+      transform: translateY(0);
     }
   }
 
@@ -1523,6 +1630,10 @@ const numberLineJumpsStyles = `
       transition: none;
       animation: none;
       transform: none;
+    }
+
+    .number-line-jumps__coach {
+      animation: none;
     }
   }
 `;

@@ -1,0 +1,6 @@
+src/games/reading/ConfusableLetterContrastGame.tsx(1189,23): error TS2322: Type '{}' is not assignable to type 'ReactI18NextChildren | Iterable<ReactI18NextChildren>'.
+src/games/reading/ConfusableLetterContrastGame.tsx(1220,19): error TS2322: Type '{}' is not assignable to type 'string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<...> | null | undefined'.
+src/games/reading/ConfusableLetterContrastGame.tsx(1240,19): error TS2322: Type '{}' is not assignable to type 'string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<...> | null | undefined'.
+src/games/reading/ConfusableLetterContrastGame.tsx(1269,21): error TS2322: Type '{}' is not assignable to type 'ReactI18NextChildren | Iterable<ReactI18NextChildren>'.
+The command failed in workspace @dubiland/web@workspace:packages/web with exit code 2
+Failed with errors in 7s 546ms

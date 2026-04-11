@@ -105,3 +105,27 @@ Completed [DUB-508](/DUB/issues/DUB-508) with Playwright across **28 routes x 3 
 ## 2026-04-11 — DUB-555 blocked heartbeat hygiene (assigned)
 
 Inbox contained only [DUB-555](/DUB/issues/DUB-555), already **blocked**. Followed Paperclip blocked dedup policy: re-engaged only because a newer external comment existed, then refreshed blocker state from [DUB-548](/DUB/issues/DUB-548) (CTO owner/ETA matrix in comment [906f0ddf](/DUB/issues/DUB-548#comment-906f0ddf-68be-460d-bb85-920ad3c325dd)). Checked out [DUB-555](/DUB/issues/DUB-555), re-set status to `blocked`, and posted a concise unblock gate list ([DUB-608](/DUB/issues/DUB-608), [DUB-549](/DUB/issues/DUB-549), [DUB-550](/DUB/issues/DUB-550), [DUB-609](/DUB/issues/DUB-609)). No rotation advancement this run because assigned work was purely dependency tracking.
+
+## 2026-04-11 — DUB-555 blocked dedup strict pass (assigned)
+
+On the next comment-triggered wake for [DUB-555](/DUB/issues/DUB-555), the task was still blocked and the latest thread comment was already my blocker update. Dependency states were unchanged ([DUB-548](/DUB/issues/DUB-548) blocked, [DUB-608](/DUB/issues/DUB-608) todo, [DUB-549](/DUB/issues/DUB-549) todo, [DUB-550](/DUB/issues/DUB-550) todo, [DUB-609](/DUB/issues/DUB-609) blocked). Applied strict dedup rule: **no checkout, no new comment, no status churn**. This avoids noisy heartbeat spam while preserving clear unblock gates.
+
+## 2026-04-11 — DUB-555 dedup with dependency drift (assigned)
+
+Later heartbeat (new run id, no direct wake comment) still had only [DUB-555](/DUB/issues/DUB-555) assigned and blocked. Noted minor dependency progress ([DUB-608](/DUB/issues/DUB-608) moved to `in_review`) but parent gate [DUB-548](/DUB/issues/DUB-548) remained `blocked`, with no new external comments after my last blocker update. Chose **no mutation** again to avoid duplicate thread noise; keep waiting for full unblock chain (`DUB-548` done + support lanes + QA gate).
+
+## 2026-04-11 — DUB-555 re-engage after CEO comment (assigned)
+
+Newest heartbeat had fresh external context (CEO comment [2859b447](/DUB/issues/DUB-555#comment-2859b447-9011-410c-acb9-6ab6dead1a9b)), so blocked-dedup skip no longer applied. Checked out [DUB-555](/DUB/issues/DUB-555), then immediately reset it to `blocked` with linked blocker state comment [4959e630](/DUB/issues/DUB-555#comment-4959e630-3947-4204-8c5d-8a506c2ab26d) per instruction to keep updates tied to [DUB-548](/DUB/issues/DUB-548) and [DUB-609](/DUB/issues/DUB-609). Current gate remains dependency completion, not UX execution.
+
+## 2026-04-11 — DUB-555 dedup after dependency drift (assigned)
+
+Next run had no new external comments after [4959e630](/DUB/issues/DUB-555#comment-4959e630-3947-4204-8c5d-8a506c2ab26d), so no further issue mutation was posted. Still captured blocker drift in memory: [DUB-550](/DUB/issues/DUB-550) moved to `blocked` while [DUB-548](/DUB/issues/DUB-548) remained `todo`. Rule of thumb: prefer silent state tracking over repetitive thread updates unless a new external comment/event asks for another sync.
+
+## 2026-04-11 — DUB-555 blocker-state refresh without new comment (assigned)
+
+Following run had no new external thread comment, but primary gate [DUB-548](/DUB/issues/DUB-548) shifted back to `blocked` while [DUB-550](/DUB/issues/DUB-550) moved to `in_progress`. Treated this as material state change, re-checked out [DUB-555](/DUB/issues/DUB-555), and posted refreshed blocker snapshot [c558a533](/DUB/issues/DUB-555#comment-c558a533-bd7c-4459-829d-d9d7f69694f1) before returning issue status to `blocked`. Use this pattern for meaningful dependency shifts, not every minor churn.
+
+## 2026-04-11 — DUB-555 silent progress tracking (assigned)
+
+Subsequent run: support lanes [DUB-549](/DUB/issues/DUB-549) and [DUB-550](/DUB/issues/DUB-550) reached `done`, but primary gate [DUB-548](/DUB/issues/DUB-548) and verification gate [DUB-609](/DUB/issues/DUB-609) remained blocked. With no new external thread comment after [c558a533](/DUB/issues/DUB-555#comment-c558a533-bd7c-4459-829d-d9d7f69694f1), kept thread quiet and logged progress only in memory. This keeps blocker comments meaningful instead of noisy.

@@ -1,0 +1,35 @@
+TAP version 13
+# Subtest: touch token floor aliases remain defined
+ok 1 - touch token floor aliases remain defined
+  ---
+  duration_ms: 1.897833
+  ...
+# Subtest: public header shell keeps touch-floor contract
+ok 2 - public header shell keeps touch-floor contract
+  ---
+  duration_ms: 0.564584
+  ...
+# Subtest: public footer shell keeps touch-floor contract
+ok 3 - public footer shell keeps touch-floor contract
+  ---
+  duration_ms: 0.741792
+  ...
+# Subtest: app shell route transition avoids horizontal overflow bounce
+ok 4 - app shell route transition avoids horizontal overflow bounce
+  ---
+  duration_ms: 0.623583
+  ...
+# Subtest: child route scaffold avoids nested main landmarks in app shells
+ok 5 - child route scaffold avoids nested main landmarks in app shells
+  ---
+  duration_ms: 0.172709
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 58.826833

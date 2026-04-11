@@ -1,0 +1,193 @@
+{
+  "before": [
+    {
+      "route": "/",
+      "performance": 82,
+      "fcp_ms": 3212.19,
+      "lcp_ms": 3920.523,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 32.412,
+      "cls": 0.020351,
+      "speed_index_ms": 2534,
+      "max_long_task_ms": 404.262,
+      "final_url": "http://127.0.0.1:4175/"
+    },
+    {
+      "route": "/games",
+      "performance": 78,
+      "fcp_ms": 4065.17,
+      "lcp_ms": 4065.17,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 23.837,
+      "cls": 0.002025,
+      "speed_index_ms": 3143,
+      "max_long_task_ms": 342.996,
+      "final_url": "http://127.0.0.1:4175/games"
+    },
+    {
+      "route": "/profiles",
+      "performance": 79,
+      "fcp_ms": 3967.776,
+      "lcp_ms": 3967.776,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 17.884,
+      "cls": 0.002025,
+      "speed_index_ms": 3092,
+      "max_long_task_ms": 278.17,
+      "final_url": "http://127.0.0.1:4175/profiles"
+    },
+    {
+      "route": "/parent",
+      "performance": 78,
+      "fcp_ms": 4049.015,
+      "lcp_ms": 4049.015,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 28.603,
+      "cls": 0.002025,
+      "speed_index_ms": 3139,
+      "max_long_task_ms": 339.191,
+      "final_url": "http://127.0.0.1:4175/parent"
+    },
+    {
+      "route": "/games/reading/interactive-handbook",
+      "performance": 82,
+      "fcp_ms": 3660.484,
+      "lcp_ms": 3660.484,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 21.223,
+      "cls": 0.002025,
+      "speed_index_ms": 2865,
+      "max_long_task_ms": 316.99,
+      "final_url": "http://127.0.0.1:4175/games/reading/interactive-handbook"
+    }
+  ],
+  "current": [
+    {
+      "route": "/",
+      "performance": 94,
+      "fcp_ms": 2289.04655,
+      "lcp_ms": 2389.04725,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 43,
+      "cls": 0.083021,
+      "speed_index_ms": 2289.04655,
+      "max_long_task_ms": 193,
+      "final_url": "http://127.0.0.1:4191/"
+    },
+    {
+      "route": "/games",
+      "performance": 95,
+      "fcp_ms": 2197.96,
+      "lcp_ms": 2587.5519999999997,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 20.5,
+      "cls": 0.00077,
+      "speed_index_ms": 2197.96,
+      "max_long_task_ms": 164,
+      "final_url": "http://127.0.0.1:4191/games"
+    },
+    {
+      "route": "/profiles",
+      "performance": 92,
+      "fcp_ms": 2487.348,
+      "lcp_ms": 2869.2176,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 16,
+      "cls": 0.002265,
+      "speed_index_ms": 2487.348,
+      "max_long_task_ms": 164,
+      "final_url": "http://127.0.0.1:4191/profiles"
+    },
+    {
+      "route": "/parent",
+      "performance": 96,
+      "fcp_ms": 2033.4863750000002,
+      "lcp_ms": 2488.7836500000003,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 16,
+      "cls": 0.002265,
+      "speed_index_ms": 2033.4863750000002,
+      "max_long_task_ms": 155,
+      "final_url": "http://127.0.0.1:4191/parent"
+    },
+    {
+      "route": "/games/reading/interactive-handbook",
+      "performance": 95,
+      "fcp_ms": 2185.348125,
+      "lcp_ms": 2566.01775,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 16,
+      "cls": 0.002265,
+      "speed_index_ms": 2185.348125,
+      "max_long_task_ms": 148,
+      "final_url": "http://127.0.0.1:4191/games/reading/interactive-handbook"
+    }
+  ],
+  "deltas": [
+    {
+      "route": "/",
+      "perf_delta": 12,
+      "fcp_delta_ms": -923.143,
+      "lcp_delta_ms": -1531.476,
+      "tbt_delta_ms": 0,
+      "max_potential_fid_delta_ms": 10.588,
+      "cls_delta": 0.06267,
+      "speed_index_delta_ms": -244.953,
+      "max_long_task_delta_ms": -211.262,
+      "baseline_final_url": "http://127.0.0.1:4175/",
+      "current_final_url": "http://127.0.0.1:4191/"
+    },
+    {
+      "route": "/games",
+      "perf_delta": 17,
+      "fcp_delta_ms": -1867.21,
+      "lcp_delta_ms": -1477.618,
+      "tbt_delta_ms": 0,
+      "max_potential_fid_delta_ms": -3.337,
+      "cls_delta": -0.001255,
+      "speed_index_delta_ms": -945.04,
+      "max_long_task_delta_ms": -178.996,
+      "baseline_final_url": "http://127.0.0.1:4175/games",
+      "current_final_url": "http://127.0.0.1:4191/games"
+    },
+    {
+      "route": "/profiles",
+      "perf_delta": 13,
+      "fcp_delta_ms": -1480.428,
+      "lcp_delta_ms": -1098.558,
+      "tbt_delta_ms": 0,
+      "max_potential_fid_delta_ms": -1.884,
+      "cls_delta": 0.00024,
+      "speed_index_delta_ms": -604.652,
+      "max_long_task_delta_ms": -114.17,
+      "baseline_final_url": "http://127.0.0.1:4175/profiles",
+      "current_final_url": "http://127.0.0.1:4191/profiles"
+    },
+    {
+      "route": "/parent",
+      "perf_delta": 18,
+      "fcp_delta_ms": -2015.529,
+      "lcp_delta_ms": -1560.231,
+      "tbt_delta_ms": 0,
+      "max_potential_fid_delta_ms": -12.603,
+      "cls_delta": 0.00024,
+      "speed_index_delta_ms": -1105.514,
+      "max_long_task_delta_ms": -184.191,
+      "baseline_final_url": "http://127.0.0.1:4175/parent",
+      "current_final_url": "http://127.0.0.1:4191/parent"
+    },
+    {
+      "route": "/games/reading/interactive-handbook",
+      "perf_delta": 13,
+      "fcp_delta_ms": -1475.136,
+      "lcp_delta_ms": -1094.466,
+      "tbt_delta_ms": 0,
+      "max_potential_fid_delta_ms": -5.223,
+      "cls_delta": 0.00024,
+      "speed_index_delta_ms": -679.652,
+      "max_long_task_delta_ms": -168.99,
+      "baseline_final_url": "http://127.0.0.1:4175/games/reading/interactive-handbook",
+      "current_final_url": "http://127.0.0.1:4191/games/reading/interactive-handbook"
+    }
+  ]
+}

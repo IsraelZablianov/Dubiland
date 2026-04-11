@@ -3,12 +3,14 @@ import type { Child, Game, GameLevel } from '@dubiland/shared';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button, Card } from '@/components/design-system';
+import { ChildRouteHeader, ChildRouteScaffold } from '@/components/layout';
 import type { GameCompletionResult } from '@/games/engine';
 import { LetterTracingTrailGame } from '@/games/letters/LetterTracingTrailGame';
 import { useAudioManager } from '@/hooks/useAudioManager';
 import { getActiveChildProfile } from '@/lib/session';
 
 type SyncState = 'idle' | 'syncing' | 'synced';
+type ProfileAgeBand = '3-4' | '4-5' | '5-6' | '6-7';
 
 const LETTER_TRACING_TRAIL_GAME: Game = {
   id: 'local-letter-tracing-trail',
@@ -38,12 +40,25 @@ const LETTER_TRACING_TRAIL_LEVEL: GameLevel = {
   sortOrder: 1,
 };
 
+function resolveAgeBand(value: unknown): ProfileAgeBand {
+  return value === '3-4' || value === '4-5' || value === '5-6' || value === '6-7'
+    ? value
+    : '5-6';
+}
+
+function levelNumberByAgeBand(ageBand: ProfileAgeBand): 1 | 2 | 3 {
+  if (ageBand === '3-4' || ageBand === '4-5') return 1;
+  if (ageBand === '5-6') return 2;
+  return 3;
+}
+
 export default function LetterTracingTrailPage() {
   const { t } = useTranslation('common');
   const navigate = useNavigate();
   const audio = useAudioManager();
 
   const activeProfile = getActiveChildProfile();
+  const profileAgeBand = resolveAgeBand(activeProfile?.ageBand);
   const child = useMemo<Child>(
     () => ({
       id: activeProfile?.id ?? 'guest',
@@ -55,6 +70,18 @@ export default function LetterTracingTrailPage() {
       createdAt: '2026-04-10T00:00:00.000Z',
     }),
     [activeProfile?.emoji, activeProfile?.id, activeProfile?.name, t],
+  );
+  const runtimeLevel = useMemo<GameLevel>(
+    () => ({
+      ...LETTER_TRACING_TRAIL_LEVEL,
+      levelNumber: levelNumberByAgeBand(profileAgeBand),
+      configJson: {
+        ...(LETTER_TRACING_TRAIL_LEVEL.configJson as Record<string, unknown>),
+        defaultBand: profileAgeBand,
+        profileAgeBand,
+      },
+    }),
+    [profileAgeBand],
   );
 
   const [completionResult, setCompletionResult] = useState<GameCompletionResult | null>(null);
@@ -80,46 +107,20 @@ export default function LetterTracingTrailPage() {
   }, [completionResult, roundsCompleted]);
 
   return (
-    <main
-      style={{
-        flex: 1,
-        background: 'var(--color-theme-bg)',
-        padding: 'var(--space-lg)',
-        display: 'flex',
-        justifyContent: 'center',
-      }}
-    >
-      <section style={{ width: 'min(1180px, 100%)', display: 'grid', gap: 'var(--space-md)' }}>
-        <header
-          style={{
-            display: 'flex',
-            gap: 'var(--space-sm)',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-          }}
-        >
-          <div style={{ display: 'grid', gap: 'var(--space-xs)' }}>
-            <h1
-              style={{
-                fontSize: 'var(--font-size-2xl)',
-                color: 'var(--color-text-primary)',
-                fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
-              }}
-            >
-              {t('games.letterTracingTrail.title')}
-            </h1>
-            <p style={{ color: 'var(--color-text-secondary)' }}>{t('games.letterTracingTrail.subtitle')}</p>
-          </div>
-
+    <ChildRouteScaffold width="wide">
+      <ChildRouteHeader
+        title={t('games.letterTracingTrail.title')}
+        subtitle={t('games.letterTracingTrail.subtitle')}
+        leading={
           <Button variant="ghost" size="md" onClick={() => navigate('/games')} aria-label={t('nav.back')}>
             {t('nav.back')}
           </Button>
-        </header>
+        }
+      />
 
         <LetterTracingTrailGame
           game={LETTER_TRACING_TRAIL_GAME}
-          level={LETTER_TRACING_TRAIL_LEVEL}
+          level={runtimeLevel}
           child={child}
           onComplete={handleComplete}
           audio={audio}
@@ -138,7 +139,6 @@ export default function LetterTracingTrailPage() {
             </p>
           </Card>
         )}
-      </section>
-    </main>
+    </ChildRouteScaffold>
   );
 }

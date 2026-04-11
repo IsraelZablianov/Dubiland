@@ -1,0 +1,57 @@
+{
+  "compared_profile": "guest_shell",
+  "deltas": [
+    {
+      "path": "/games",
+      "baseline_present": true,
+      "performance_delta": -10,
+      "fcp_ms_delta": 610.755,
+      "lcp_ms_delta": 1752.427,
+      "max_long_task_ms_delta": 79.349,
+      "total_transfer_bytes_delta": 140718,
+      "login_chunk_requested_before": true,
+      "login_chunk_requested_after": false,
+      "supabase_chunk_requested_before": true,
+      "supabase_chunk_requested_after": true
+    },
+    {
+      "path": "/profiles",
+      "baseline_present": true,
+      "performance_delta": -7,
+      "fcp_ms_delta": 488.203,
+      "lcp_ms_delta": 1213.205,
+      "max_long_task_ms_delta": -13.506,
+      "total_transfer_bytes_delta": 15791,
+      "login_chunk_requested_before": true,
+      "login_chunk_requested_after": false,
+      "supabase_chunk_requested_before": true,
+      "supabase_chunk_requested_after": true
+    },
+    {
+      "path": "/parent",
+      "baseline_present": true,
+      "performance_delta": -9,
+      "fcp_ms_delta": 431.204,
+      "lcp_ms_delta": 1281.208,
+      "max_long_task_ms_delta": -74.643,
+      "total_transfer_bytes_delta": 69732,
+      "login_chunk_requested_before": true,
+      "login_chunk_requested_after": false,
+      "supabase_chunk_requested_before": true,
+      "supabase_chunk_requested_after": true
+    },
+    {
+      "path": "/games/reading/interactive-handbook",
+      "baseline_present": true,
+      "performance_delta": -1,
+      "fcp_ms_delta": 100.599,
+      "lcp_ms_delta": 100.598,
+      "max_long_task_ms_delta": 12.027,
+      "total_transfer_bytes_delta": 111468,
+      "login_chunk_requested_before": true,
+      "login_chunk_requested_after": false,
+      "supabase_chunk_requested_before": true,
+      "supabase_chunk_requested_after": true
+    }
+  ]
+}

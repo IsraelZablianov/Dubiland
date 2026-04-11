@@ -10,6 +10,8 @@ import {
 } from 'react';
 import { useLocation } from 'react-router-dom';
 import type { AuthChangeEvent, Session, User } from '@supabase/supabase-js';
+import { hasPersistedSupabaseSessionHint } from '@/lib/authSessionHints';
+import { loadSupabaseRuntime } from '@/lib/loadSupabaseRuntime';
 import { isSupabaseConfigured } from '@/lib/supabaseConfig';
 import { disableGuestMode, isGuestModeEnabled } from '@/lib/session';
 
@@ -32,26 +34,6 @@ function isRenderFirstAuthPath(pathname: string): boolean {
   return pathname === HANDBOOK_RENDER_FIRST_ROUTE;
 }
 
-function hasPersistedSupabaseSessionHint(): boolean {
-  if (typeof window === 'undefined' || !window.localStorage) {
-    return false;
-  }
-
-  try {
-    const keys = Object.keys(window.localStorage);
-    return keys.some((key) => {
-      if (!key.startsWith('sb-') || !key.endsWith('-auth-token')) {
-        return false;
-      }
-
-      const token = window.localStorage.getItem(key);
-      return typeof token === 'string' && token.length > 0;
-    });
-  } catch {
-    return false;
-  }
-}
-
 function shouldBootstrapAuthForPath(pathname: string): boolean {
   if (pathname === '/login' || pathname === '/profiles') {
     return true;
@@ -71,8 +53,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const subscriptionRef = useRef<(() => void) | null>(null);
 
   const loadSupabase = useCallback(async () => {
-    const module = await import('@/lib/supabase');
-    return module.supabase;
+    const supabase = await loadSupabaseRuntime();
+    if (!supabase) {
+      throw new Error('Supabase runtime is unavailable.');
+    }
+
+    return supabase;
   }, []);
 
   useEffect(() => {

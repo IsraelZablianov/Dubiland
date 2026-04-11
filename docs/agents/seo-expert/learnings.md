@@ -168,3 +168,15 @@
 
 - A blocker-link maintenance comment from Ops is valid new context for dedup logic, but it may still contain zero executable unblock evidence.
 - In that case, re-check the linked dependency issue state first; if no new host/proof artifact exists, re-block once with explicit "no fresh validator input" wording to prevent duplicate rerun churn.
+
+## 2026-04-11 — Stale Host Revalidation Guard (DUB-50)
+
+- Even when dependency comments include prior successful validator artifacts, always re-probe the exact host before trusting the evidence window; temporary preview hosts can decay to `HTTP 000` quickly.
+- A Schema.org `HTTP 200` response with `fetchError: NOT_FOUND` and `numObjects: 0` should be treated as a hard blocker equivalent to host unreachability for acceptance purposes.
+
+## 2026-04-11 — Schema.org Request-Mode Trap + Rich Results Auth Gate
+
+- For `https://validator.schema.org/validate`, request mode matters: JSON-body posts can return false `fetchError: NOT_FOUND`, while form-data (`url`, `output=json`, `parser=structured-data`) can return full rendered triples for the same URL.
+- When Rich Results Test is reachable but shows `Something went wrong` + `Log in and try again`, treat this as an authentication blocker (not a schema-quality blocker) and explicitly request authenticated execution evidence for final dual-validator closeout.
+
+- 2026-04-11: For Dubiland schema validation closeouts, treat Google Rich Results auth-gated failures ("Log in and try again") as external-tool limitation when Schema.org validator raw payloads already show `fetchError=null` and `isRendered=true` for target routes; capture Rich Results screenshots/HAR as evidence and close SEO lane once dependency evidence issue is done.

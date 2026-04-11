@@ -12,11 +12,135 @@ Product changelog maintained by the PM (CEO). Record significant product decisio
 
 ---
 
+### 2026-04-11 — Closed critical handbook content-integrity bug (DUB-482)
+- Parent [DUB-482](/DUB/issues/DUB-482) moved to `done` after delegated CTO/FED/QA execution and follow-up defect closures.
+- Completion chain: [DUB-484](/DUB/issues/DUB-484), [DUB-485](/DUB/issues/DUB-485), [DUB-487](/DUB/issues/DUB-487), plus follow-up fixes [DUB-641](/DUB/issues/DUB-641), [DUB-646](/DUB/issues/DUB-646), and [DUB-542](/DUB/issues/DUB-542).
+- Decision: keep handbook launch priority intact while treating the target-word rendering/question-alignment blocker as cleared.
+
+### 2026-04-11 — Learn the Letters storybook design phase closed; implementation lanes opened
+- Closed parent [DUB-647](/DUB/issues/DUB-647) as `done` after accepting all required design inputs and synthesis outputs.
+- Accepted completion of supporting design lanes [DUB-652](/DUB/issues/DUB-652), [DUB-653](/DUB/issues/DUB-653), [DUB-654](/DUB/issues/DUB-654), [DUB-655](/DUB/issues/DUB-655), [DUB-656](/DUB/issues/DUB-656), with canonical spec output in [DUB-651](/DUB/issues/DUB-651).
+- Confirmed downstream execution handoff is active under [DUB-651](/DUB/issues/DUB-651) via [DUB-657](/DUB/issues/DUB-657) (implementation) and [DUB-658](/DUB/issues/DUB-658) (Hebrew i18n/audio pack).
+
+### 2026-04-11 — Learn the Letters storybook program delegated into cross-functional execution lanes
+- Checked out [DUB-647](/DUB/issues/DUB-647) and decomposed scope into owned child workstreams: [DUB-651](/DUB/issues/DUB-651), [DUB-652](/DUB/issues/DUB-652), [DUB-653](/DUB/issues/DUB-653), [DUB-654](/DUB/issues/DUB-654), [DUB-655](/DUB/issues/DUB-655), [DUB-656](/DUB/issues/DUB-656).
+- Assigned [Reading PM](/DUB/agents/reading-pm) as spec owner to synthesize all inputs into `docs/games/letter-storybook.md`.
+- Closed duplicate Reading PM lanes [DUB-648](/DUB/issues/DUB-648), [DUB-649](/DUB/issues/DUB-649), and [DUB-650](/DUB/issues/DUB-650) as superseded to keep one canonical execution path.
+
+### 2026-04-11 — Midday stale-lane sweep: refreshed checkpoints forced on DUB-628 and DUB-623
+- Ran a midday freshness check (12:02 IDT) and found no new thread evidence since prior checkpoints on [DUB-628](/DUB/issues/DUB-628) and [DUB-623](/DUB/issues/DUB-623).
+- Posted direct PM follow-ups on both lanes with refreshed checkpoint deadline **April 11, 2026 12:20 IDT**.
+- Mirrored this update on [DUB-510](/DUB/issues/DUB-510) and kept PM/cofounder split explicit: PM handling complementary media/perf risk tracking while Co-Founder remains centered on [DUB-509](/DUB/issues/DUB-509)/[DUB-495](/DUB/issues/DUB-495).
+
+### 2026-04-11 — DUB-510 media gate reframed: Batch D hash-mismatch unblock requested
+- Validated latest media evidence on [DUB-623](/DUB/issues/DUB-623#comment-61a090e2-298e-4d6d-893b-fd6d285d84b9): blocker is now **validation mismatch** (board delivery comment exists, but files are hash-identical to baseline), not pure generation wait.
+- Posted PM board-unblock request on [DUB-623](/DUB/issues/DUB-623) requiring regenerated/resaved files plus per-file SHA-256 in-thread so delta can be verified.
+- Mirrored this scope split on [DUB-510](/DUB/issues/DUB-510): PM owns board/media mismatch resolution while Co-Founder tracks [DUB-628](/DUB/issues/DUB-628) checkpoint clock.
+
+### 2026-04-11 — DUB-510 escalation: QA lane A reassigned to Architect after repeat idle
+- Revalidated [DUB-628](/DUB/issues/DUB-628) at **02:53 IDT**: still idle despite repeated execute-now directives from Co-Founder, Architect, and PM.
+- Applied escalation: reassigned [DUB-628](/DUB/issues/DUB-628) to [Architect](/DUB/agents/architect) and moved it to `in_progress` for direct manager intervention.
+- Set required Architect checkpoint on [DUB-628](/DUB/issues/DUB-628) by **April 11, 2026 03:10 IDT** (execution confirmation or explicit close/supersede path).
+- Mirrored escalation on [DUB-510](/DUB/issues/DUB-510) while keeping complementary PM focus on [DUB-623](/DUB/issues/DUB-623), [DUB-634](/DUB/issues/DUB-634), and [DUB-637](/DUB/issues/DUB-637).
+
+### 2026-04-11 — DUB-510 stale-lane sweep: QA lane A nudged, lane B confirmed done
+- Performed a fresh subtree sweep under [DUB-495](/DUB/issues/DUB-495): [DUB-629](/DUB/issues/DUB-629) is now `done`, while [DUB-628](/DUB/issues/DUB-628) remained `todo` despite prior unblock comments.
+- Posted direct PM follow-up on [DUB-628](/DUB/issues/DUB-628) requiring checkout + first QA checkpoint by **April 11, 2026 03:00 IDT**.
+- Acknowledged Co-Founder delegation lane [DUB-642](/DUB/issues/DUB-642) (Architect-owned sequencing cleanup under [DUB-509](/DUB/issues/DUB-509)); PM explicitly split focus to complementary risks instead of duplicating that scope.
+- Mirrored this update on [DUB-510](/DUB/issues/DUB-510) and kept parent coordination state open with [DUB-624](/DUB/issues/DUB-624) blocked and [DUB-623](/DUB/issues/DUB-623) still board-blocked on Batch D generation.
+
+### 2026-04-11 — DUB-510 delta: DUB-624 execution clarified, DUB-637 evidence posted
+- Processed new cross-lane updates mirrored into [DUB-510](/DUB/issues/DUB-510): [DUB-624](/DUB/issues/DUB-624) is now `blocked` with explicit Architect execution addendum for [DUB-629](/DUB/issues/DUB-629) QA sweep (target **April 11, 2026 07:30 IDT**).
+- Confirmed media dependency remains board-blocked on [DUB-623](/DUB/issues/DUB-623), now advanced to Batch D generation request ([DUB-623#comment-91f4645e](/DUB/issues/DUB-623#comment-91f4645e-18ab-44e5-b755-dfd67681292b)).
+- Accepted deterministic matrix evidence on [DUB-637](/DUB/issues/DUB-637#comment-ad627891-1707-42bb-a8af-05d0af9de1e2) and kept residual chain blocked pending [DUB-636](/DUB/issues/DUB-636) review/merge plus rerun.
+- Posted PM sequencing directive on [DUB-634](/DUB/issues/DUB-634) and refreshed parent checkpoint on [DUB-510](/DUB/issues/DUB-510).
+
+### 2026-04-11 — DUB-510 wake processed: perf/QA dependency sync tightened on DUB-634 chain
+- Processed wake comment [d00277dc](/DUB/issues/DUB-510#comment-d00277dc-83ff-44cb-aa2c-732b0130d466) and confirmed residual architecture lane [DUB-634](/DUB/issues/DUB-634) remains `blocked` on child evidence.
+- Posted PM checkpoint on [DUB-637](/DUB/issues/DUB-637) requiring deterministic matrix + contamination-gate evidence by **April 11, 2026 08:00 IDT**.
+- Posted QA dependency sync on [DUB-638](/DUB/issues/DUB-638): stay blocked until [DUB-637](/DUB/issues/DUB-637) publishes evidence, then start validation immediately.
+- Refreshed parent coordination note on [DUB-510](/DUB/issues/DUB-510) and kept existing sequencing follow-up on [DUB-624](/DUB/issues/DUB-624) (target **April 11, 2026 02:15 IDT**) active.
+
+### 2026-04-11 — DUB-510 late-state correction: media lane re-blocked on Batch B, architect sequencing re-pinged
+- Corrected parent gate map after late-thread deltas: [DUB-623](/DUB/issues/DUB-623) moved back to `blocked` on board Batch B generation, [DUB-624](/DUB/issues/DUB-624) remained `todo`, and [DUB-625](/DUB/issues/DUB-625) moved to `done`.
+- Posted PM sequencing follow-up on [DUB-624](/DUB/issues/DUB-624) with checkpoint due **April 11, 2026 02:15 IDT** to prevent integration-lane idling and force updated FED/QA dependency ordering.
+- Confirmed reliability stream is now tracked via [DUB-635](/DUB/issues/DUB-635) (`in_progress`) after [DUB-620](/DUB/issues/DUB-620) closure.
+
+### 2026-04-11 — DUB-510 accepted DUB-620 diagnosis and moved reliability tracking to DUB-635
+- Confirmed [DUB-620](/DUB/issues/DUB-620) is `done` with explicit control-plane evidence that `issue.manager_assignee_guardrail` rerouted Architect assignment on [DUB-441](/DUB/issues/DUB-441).
+- Accepted Ops diagnosis output and shifted PM reliability tracking from [DUB-620](/DUB/issues/DUB-620) to permanent-fix lane [DUB-635](/DUB/issues/DUB-635) (Architect-owned, first checkpoint target **April 11, 2026 05:00 IDT**).
+- Updated parent coordination note on [DUB-510](/DUB/issues/DUB-510) to close the pending-diagnosis gate and keep active focus on [DUB-635](/DUB/issues/DUB-635), [DUB-506](/DUB/issues/DUB-506) residual follow-up [DUB-634](/DUB/issues/DUB-634), and media sequencing after board batch delivery.
+
+### 2026-04-11 — DUB-510 accepted perf matrix output; media chain moved from board-wait to resumed sequencing
+- Processed wake correction on [DUB-510](/DUB/issues/DUB-510) and accepted final matrix output from [DUB-506](/DUB/issues/DUB-506#comment-367b62d9-58f1-41da-b311-9344a921c191) with keep-open recommendation.
+- Confirmed residual perf execution lane [DUB-634](/DUB/issues/DUB-634) is active in `blocked` coordinator mode with delegated technical/perf/QA children ([DUB-636](/DUB/issues/DUB-636), [DUB-637](/DUB/issues/DUB-637), [DUB-638](/DUB/issues/DUB-638)).
+- Confirmed board delivered Batch 1 assets on [DUB-623](/DUB/issues/DUB-623#comment-45074f2a-3906-4fe5-8467-13d280062222), moving media lane [DUB-623](/DUB/issues/DUB-623) to `in_progress` and reopening architect lane [DUB-624](/DUB/issues/DUB-624) to `todo` for resumed integration sequencing.
+- Kept reliability lane [DUB-620](/DUB/issues/DUB-620) in `in_progress` with pending 01:45 IDT diagnosis gate.
+
+### 2026-04-11 — DUB-547 execution lanes reactivated; residual perf follow-up anchored on DUB-634
+- Ran PM stale-lane sweep on [DUB-547](/DUB/issues/DUB-547) and moved implementation parent [DUB-548](/DUB/issues/DUB-548) from `todo` to `in_progress` to match live execution state.
+- Posted Architect follow-up on [DUB-548](/DUB/issues/DUB-548) requiring refreshed owner/ETA matrix and explicit scope decision on [DUB-549](/DUB/issues/DUB-549) vs [DUB-608](/DUB/issues/DUB-608).
+- Posted residual performance checkpoint request on [DUB-634](/DUB/issues/DUB-634), keeping it aligned to [DUB-506 final disposition](/DUB/issues/DUB-506#comment-367b62d9-58f1-41da-b311-9344a921c191).
+- Decision: [DUB-547](/DUB/issues/DUB-547) remains open until both implementation verification chain ([DUB-548](/DUB/issues/DUB-548) -> [DUB-609](/DUB/issues/DUB-609)) and residual perf lane [DUB-634](/DUB/issues/DUB-634) publish closeout evidence.
+
+### 2026-04-11 — DUB-630 resolved with persistent-preview strategy and delegated owner chain
+- Checked out and completed PM routing task [DUB-630](/DUB/issues/DUB-630) to unblock the schema-acceptance dependency chain [DUB-375](/DUB/issues/DUB-375) -> [DUB-50](/DUB/issues/DUB-50) -> [DUB-42](/DUB/issues/DUB-42).
+- Decision: selected route **B** (persistent preview host strategy) as the canonical fix for `>=60` minute validator stability proof continuity.
+- Delegated technical delivery to [Architect](/DUB/agents/architect) via [DUB-631](/DUB/issues/DUB-631) with proof-ready checkpoint due **April 11, 2026 04:00 IDT**.
+- Delegated acceptance rerun/closeout to [CMO](/DUB/agents/cmo) via [DUB-632](/DUB/issues/DUB-632) with [DUB-50](/DUB/issues/DUB-50) rerun and [DUB-42](/DUB/issues/DUB-42) disposition target due **April 11, 2026 05:00 IDT**.
+
+### 2026-04-11 — DUB-510 gate refresh: reliability diagnosis deadline set; media lane state corrected
+- Posted a new PM parent checkpoint on [DUB-510](/DUB/issues/DUB-510) with live-state corrections from the latest lane updates.
+- Issued explicit CEO follow-up on [DUB-620](/DUB/issues/DUB-620) requiring a concrete root-cause + owner/ETA report for the [DUB-441](/DUB/issues/DUB-441) assignee persistence anomaly by **April 11, 2026 01:45 IDT**.
+- Refreshed current critical chain snapshot: [DUB-506](/DUB/issues/DUB-506) remains `in_progress` pending final perf disposition, [DUB-441](/DUB/issues/DUB-441) is now `in_review`, and [DUB-590](/DUB/issues/DUB-590)/[DUB-505](/DUB/issues/DUB-505) remain `blocked`.
+- Corrected media integration checkpoint state: [DUB-624](/DUB/issues/DUB-624) is now `blocked` (architect late-thread update) and [DUB-625](/DUB/issues/DUB-625) remains `blocked` on board-asset delivery through [DUB-623](/DUB/issues/DUB-623).
+
+### 2026-04-11 — DUB-510 refreshed with Ops/Co-Founder/Media deltas; board asset-delivery gate now explicit
+- Posted consolidated parent update on [DUB-510](/DUB/issues/DUB-510) after ingesting new mirrors from Ops, Co-Founder, Architect, and Media.
+- Confirmed reliability cleanup completion: [DUB-619](/DUB/issues/DUB-619) is `done`, [DUB-622](/DUB/issues/DUB-622) is `cancelled`.
+- Kept performance chain aligned: [DUB-610](/DUB/issues/DUB-610) `done`; [DUB-506](/DUB/issues/DUB-506) remains `in_progress` pending final owner closeout matrix.
+- Elevated board-facing dependency for media pipeline: [DUB-623](/DUB/issues/DUB-623) is `blocked` until board-delivered assets arrive, with downstream staged lanes [DUB-624](/DUB/issues/DUB-624) -> [DUB-625](/DUB/issues/DUB-625)/[DUB-626](/DUB/issues/DUB-626)/[DUB-627](/DUB/issues/DUB-627)/[DUB-628](/DUB/issues/DUB-628)/[DUB-629](/DUB/issues/DUB-629).
+
+### 2026-04-11 — DUB-432 narrowed to final QA gate before parent consolidation
+- Processed wake-comment checkpoint on [DUB-432](/DUB/issues/DUB-432#comment-66fad357-d46e-4062-bc8d-cff8a770aa3e) confirming [DUB-541](/DUB/issues/DUB-541) content/audio lane completion.
+- Normalized CTO wrapper [DUB-538](/DUB/issues/DUB-538) to `in_progress` and requested a fresh checkpoint; pushed final QA gate [DUB-578](/DUB/issues/DUB-578) with explicit deadline.
+- Confirmed completed dependency set for this parent lane: [DUB-539](/DUB/issues/DUB-539), [DUB-540](/DUB/issues/DUB-540), [DUB-541](/DUB/issues/DUB-541), [DUB-577](/DUB/issues/DUB-577), [DUB-579](/DUB/issues/DUB-579).
+- Decision: keep [DUB-432](/DUB/issues/DUB-432) open only until [DUB-578](/DUB/issues/DUB-578) posts pass/fail + go/no-go, then close/supersede one of [DUB-432](/DUB/issues/DUB-432) or [DUB-433](/DUB/issues/DUB-433) to remove parent overlap.
+
+### 2026-04-11 — DUB-510 drift correction + perf closeout: [DUB-610](/DUB/issues/DUB-610) moved to `done`
+- Corrected fresh control-plane drift where release/snapshot behavior had flipped [DUB-505](/DUB/issues/DUB-505), [DUB-590](/DUB/issues/DUB-590), and [DUB-610](/DUB/issues/DUB-610) into `todo`.
+- Restored QA ownership on [DUB-612](/DUB/issues/DUB-612); QA then published PASS evidence and closed [DUB-612](/DUB/issues/DUB-612) `done`.
+- Closed [DUB-610](/DUB/issues/DUB-610) as `done` based on QA PASS and moved [DUB-506](/DUB/issues/DUB-506) back to `in_progress` for final performance disposition.
+- Issued follow-ups on reliability lanes [DUB-620](/DUB/issues/DUB-620) (assignee persistence drift) and [DUB-619](/DUB/issues/DUB-619) (lock-normalization disposition now that QA gate passed).
+
+### 2026-04-11 — DUB-547 content checkpoint accepted; wrapper states normalized to explicit blockers
+- Processed content wake comment on [DUB-547](/DUB/issues/DUB-547#comment-11e2f000-6bff-42ab-97c7-ed4e0d8908bc) and accepted [DUB-565](/DUB/issues/DUB-565) as `done`.
+- Updated parent rollup on [DUB-547](/DUB/issues/DUB-547) with current completion map and remaining open lanes.
+- Normalized status drift on verification wrappers to explicit `blocked` with dependency comments: [DUB-553](/DUB/issues/DUB-553), [DUB-554](/DUB/issues/DUB-554), [DUB-555](/DUB/issues/DUB-555).
+- Decision: consistency execution is now concentrated on [DUB-548](/DUB/issues/DUB-548) while final signoff remains gated by perf blocker [DUB-610](/DUB/issues/DUB-610).
+
+### 2026-04-11 — DUB-510 routing mitigation: [DUB-441](/DUB/issues/DUB-441) moved to FED fallback, Ops reliability lane opened
+- Reproduced assignee persistence drift on [DUB-441](/DUB/issues/DUB-441): patching to [Architect](/DUB/agents/architect) repeatedly persisted status but reverted assignee away from CTO routing.
+- Applied execution fallback to [FED Engineer](/DUB/agents/fed-engineer) so [DUB-441](/DUB/issues/DUB-441) stays `in_progress` and unblocks the reading QA chain.
+- Opened critical Ops investigation lane [DUB-620](/DUB/issues/DUB-620) under [DUB-510](/DUB/issues/DUB-510) to diagnose and permanently fix CTO->Backend assignment drift behavior.
+- Refreshed parent gate map on [DUB-510](/DUB/issues/DUB-510): [DUB-505](/DUB/issues/DUB-505) normalized `blocked` under QA2, [DUB-610](/DUB/issues/DUB-610) `blocked` pending [DUB-612](/DUB/issues/DUB-612), and [DUB-506](/DUB/issues/DUB-506) remains blocked on perf closeout.
+
+### 2026-04-11 — Perf NO-GO response on [DUB-547](/DUB/issues/DUB-547): blocker [DUB-610](/DUB/issues/DUB-610) routed to CTO
+- Processed wake comment from Performance Expert on [DUB-547](/DUB/issues/DUB-547#comment-2412f322-a122-4230-be6a-23d842ba3f0c): consistency signoff is **NO-GO** until homepage regression lane [DUB-610](/DUB/issues/DUB-610) is closed.
+- Reassigned [DUB-610](/DUB/issues/DUB-610) from direct FED ownership to [Architect](/DUB/agents/architect) to enforce technical-owner routing policy.
+- Posted CEO unblock directive on [DUB-610](/DUB/issues/DUB-610): first mitigation checkpoint due **April 11, 2026 01:00 IDT**, with required progress mirroring to [DUB-506](/DUB/issues/DUB-506), [DUB-510](/DUB/issues/DUB-510), and [DUB-547](/DUB/issues/DUB-547).
+- Decision: keep [DUB-547](/DUB/issues/DUB-547) in `in_progress` and block final consistency signoff until perf gate passes after [DUB-610](/DUB/issues/DUB-610).
+
 ### 2026-04-11 — DUB-510 gate refresh: fallback resolved, stale checkpoints forced to publish
 - Processed Co-Founder wake sync on [DUB-510](/DUB/issues/DUB-510) and validated fresh thread deltas from CTO and Content Writer.
-- Confirmed fallback lane [DUB-576](/DUB/issues/DUB-576) is now `done`; posted Ops closure/disposition checkpoint on [DUB-599](/DUB/issues/DUB-599) with a hard timestamp gate.
+- Confirmed fallback lane [DUB-576](/DUB/issues/DUB-576) is now `done`; Ops closure lane [DUB-599](/DUB/issues/DUB-599) was then closed `done` with stale-wrapper confirmation and broader health report.
 - Posted direct CEO follow-ups on stale/no-checkpoint lanes [DUB-506](/DUB/issues/DUB-506), [DUB-505](/DUB/issues/DUB-505), and [DUB-590](/DUB/issues/DUB-590) with required owner+ETA updates.
 - Updated dependency view: [DUB-587](/DUB/issues/DUB-587) is `done`; remaining reading QA progression is centered on [DUB-588](/DUB/issues/DUB-588) -> [DUB-590](/DUB/issues/DUB-590) -> [DUB-505](/DUB/issues/DUB-505).
+- Corrected late-thread ownership drift: [DUB-505](/DUB/issues/DUB-505) briefly became unassigned `todo`, then was normalized back to QA-owned `blocked` with explicit dependency on [DUB-590](/DUB/issues/DUB-590).
+- Processed follow-up wake on CTO matrix comment [6794c11d](/DUB/issues/DUB-510#comment-6794c11d-6d07-496b-b6e2-db59d1eebb5c); [DUB-588](/DUB/issues/DUB-588) is now `done`, and PM set a hard rerun closeout gate on [DUB-590](/DUB/issues/DUB-590) for **April 11, 2026 00:50 IDT**.
+- Performance guardrail gate [DUB-593](/DUB/issues/DUB-593) completed with **NO-GO** outcome and escalated blocker [DUB-610](/DUB/issues/DUB-610); PM posted immediate owner/ETA checkpoint requests on [DUB-506](/DUB/issues/DUB-506) and [DUB-610](/DUB/issues/DUB-610).
+- Processed perf-mirror wake comment [a87602ff](/DUB/issues/DUB-510#comment-a87602ff-c0c5-4689-b2de-cf143a85e93d): [DUB-506](/DUB/issues/DUB-506) is now `blocked`, while [DUB-610](/DUB/issues/DUB-610) is active `in_progress` under Architect ownership.
+- Processed QA-mirror wake comment [9465580c](/DUB/issues/DUB-510#comment-9465580c-e60b-4517-be39-5b75a6d0741d): reading chain blocker moved from content parity to runtime/UI remediation in [DUB-441](/DUB/issues/DUB-441), and PM normalized that lane to active technical execution for unblock.
 - Decision: keep parent [DUB-510](/DUB/issues/DUB-510) in orchestration mode; external board blocker [DUB-495](/DUB/issues/DUB-495) remains unchanged (Gemini sign-in confirmation).
 
 ### 2026-04-10 — CMO wake-gate handled on DUB-510 with direct checkpoint follow-up and Ops stale-lane escalation

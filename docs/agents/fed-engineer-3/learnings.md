@@ -121,3 +121,66 @@ If a wake targets a FED-owned issue in `in_review`, running checkout can move it
 
 ## 2026-04-10 — Single-shell parity can preserve child context by demoting custom headers
 For global shell-unification directives, keep `ChildPlayShell` as a secondary context strip (child badge + game nav) and mount `PublicHeader`/`PublicFooter` inside both child and parent shells. This satisfies canonical route parity without rewriting every app route wrapper.
+
+## 2026-04-11 — Style lanes close faster with computed-style evidence
+For touch/readability tasks, verify rendered `min-height` and `font-size` directly in Playwright (`page.evaluate`) on real routes (for example `/games` and `/games/reading/interactive-handbook`) and post those numeric values in the task comment. This turns “looks bigger” into auditable proof.
+
+## 2026-04-11 — Reading age-band rollouts need page-level config wiring, not only in-game routing
+Adding age/mastery routing logic inside reading game components is insufficient if route wrappers still pass static `levelNumber` defaults. Push `activeProfile.ageBand` into `level.configJson` on each page shell and let games consume normalized routing context, so local/demo runs and DB-backed lanes both exercise the same progression behavior.
+
+## 2026-04-11 — Delight parity can be added safely at session-summary layer
+For games that already have rich round feedback but lack shared motion reward, adding `SuccessCelebration` in the `sessionComplete` summary branch provides immediate UX parity without touching per-round state transitions, hint logic, or audio sequencing.
+
+## 2026-04-11 — App-shell route transitions should stay block-axis to avoid horizontal bounce
+For authenticated app routes wrapped by `.animated-page--shell-app`, use Y/scale/opacity entry (no `translateX`) and clip `overflow-x` during entry. Keep RTL/LTR inline slide behavior only on public-shell transitions so route motion stays polished without transient `scrollWidth > clientWidth` spikes.
+
+## 2026-04-11 — RTL chrome fixes scale best with one shared glyph/gradient primitive
+For cross-game RTL parity work, centralize directional replay/next glyph selection and horizontal progress-gradient direction in a shared helper (`rtlChrome`) and consume it from each game shell/card/home surface. This prevents per-file drift and makes static verification (`rg` for hardcoded glyphs/`90deg`) straightforward.
+
+## 2026-04-11 — Protected-route pa11y checks need guest-entry actions plus route-root scope
+For `/games/*` accessibility checks, direct pa11y URL runs can audit `/login` after auth redirects and report unrelated failures. Use a pa11y action flow (guest CTA -> profile continue -> navigate target route) and set `rootElement` to the route container (for handbook: `.interactive-handbook`) so contrast results map to the intended game surface.
+
+## 2026-04-11 — OG asset URLs should resolve through `assetUrl` with base-path dedupe
+For metadata images on project-subpath deploys, build absolute OG URLs from `assetUrl('/images/...')` and guard against double-prefixing when canonical base already includes the same subpath. This keeps `/images/games/thumbnails/contact-sheet-16x10.webp` path-stable while avoiding `/Dubiland/Dubiland/...` regressions.
+
+## 2026-04-11 — In-place illustration lanes should ship evidence, not unnecessary refactors
+When mascot/topic replacement tickets use stable path contracts, keep component mappings unchanged and validate with representative-route runtime checks (`complete` + non-zero natural dimensions) plus direct asset `200 image/svg+xml` probes. Closing with auditable evidence avoids risky no-op code churn in shared frontend lanes.
+
+## 2026-04-11 — Paperclip release can reset task status without freeing same-run checkout snapshot
+Using issue `release` mid-heartbeat can clear assignment/status unexpectedly (for example reverting `blocked` back to `todo`) while the run remains bound to the same snapshot issue for checkout. Prefer finishing one issue per run and avoid `release` unless the intent is explicit reassignment semantics.
+
+## 2026-04-11 — Media-unblock follow-ups should prioritize deterministic revalidation before edits
+When an illustration/media lane is reopened from upstream validation, rerun deterministic checks first (contact-sheet rebuild/hash, static path-contract grep, runtime 200 matrix). If hashes and paths are stable, close with evidence-only QA handoff instead of unnecessary file churn.
+
+## 2026-04-11 — Shell-unification QA should combine static remnant scans with route-matrix runtime audits
+For header/footer unification lanes, fastest safe closure is a two-step gate: (1) static scan of owned pages for custom header/footer remnants, then (2) runtime matrix over owned routes validating single shared header/footer, RTL dir, no horizontal overflow, and tablet touch floor. This catches real regressions without editing stable pages.
+
+## 2026-04-11 — Manifest-first audio resolution should be centralized with deterministic fallback
+When multiple games/pages build `/audio/he/...` paths locally, drift and namespace mismatches creep in. A shared `resolveAudioPathFromKey` utility (manifest lookup first, deterministic key-derived fallback second) plus early warm-up in `useAudioManager` keeps narration resilient across handbook/game flows without per-component manifest fetch logic.
+
+## 2026-04-11 — Unified shell migrations should remove nested page-level `<main>` landmarks
+When app shells render the canonical `<main>` around route content, page scaffolds like `ChildRouteScaffold` must use neutral containers (`div`/`section`) instead of another `<main>`. A quick route-matrix check (`header=1`, `footer=1`, `mainCount=1`, `no horizontal overflow`) catches this regression reliably.
+
+## 2026-04-11 — Sparse runtime interaction payloads need frontend choice fallbacks to avoid dead-ends
+Interactive handbook runtime rows can legally ship only `{ id, required }` in `interactions_json` (no `choices`). If base flow IDs differ (e.g., `magicLetterMap` `chooseLetter`), merge logic can produce `required=true` with zero choices, locking `next`. In `buildRuntimeInteractionDefinition`, resolve book-specific preset fallbacks by runtime interaction id, and downgrade `required` to `false` when no actionable choices exist.
+
+## 2026-04-11 — Touch-floor regressions should validate contract plus runtime pass, not force one CSS alias
+For shell touch-floor lanes, keep regression checks compatible with either stable alias usage (`--public-header-logo-touch-min`) or direct token wiring (`--touch-min-primary`) and require green runtime gates (`test:touch-shell`, typecheck, dev boot smoke) before closing an in-review pickup.
+
+## 2026-04-11 — Wake-bound checkout conflicts can require explicit blocked-state lock reset before re-checkout
+When a heartbeat wake is snapshot-bound to an assigned issue but `POST /checkout` returns `409` with stale `executionRunId`, patching the same issue to `blocked` with a precise lock-conflict comment can clear the stale execution lock and allow a clean checkout in the same run; after checkout, continue implementation and move status forward normally.
+
+## 2026-04-11 — Public-shell AA fixes can pair contrast and touch evidence in one pass
+For `/login` a11y regressions after shell unification, pairing pa11y checks on the protected-route redirect target with Playwright computed-style evidence (`dir=rtl`, CTA `min-height: 72px`, footer link `min-height: 44px`) closes contrast tickets without reopening touch-floor concerns.
+
+## 2026-04-11 — Normalize legacy runtime interaction keys before UI/audio binding
+Interactive handbook runtime payloads can still emit legacy Book4 interaction ids (`chooseWordByNikud`, `literalAfterDecoding`) in `promptKey`/`hintKey`/`successKey`/`retryKey` and block-level prompt keys. Normalize `interactions.<legacyId>.<field>` to canonical ids (`decodePointedWord`, `literalComprehension`) before render/audio resolution, and make runtime interaction matching alias-aware, to prevent raw i18n key leakage and missing-audio fallbacks.
+
+## 2026-04-11 — Runtime-only final-page interactions should not hard-block handbook completion
+For `magicLetterMap`, runtime content can inject a page-10 interaction not present in base flow. If treated as `required`, users can hit `עמוד 10 מתוך 10` and still fail completion transition (`completeInteractionFirst`). In runtime merge, demote runtime-only final-page interaction rows to optional so celebration + replay handoff remains deterministic.
+
+## 2026-04-11 — Runtime regression tests importing `.tsx` need explicit TSX loader
+`node --test` fails on handbook regression scripts that import `.tsx` modules directly. Run them as `node --import tsx --test <script>` (or equivalent package script) so process-lost retry heartbeats can revalidate quickly without false negatives.
+
+## 2026-04-11 — Handbook runtime regression should execute from `packages/web` cwd for path aliases
+Even with `node --import tsx --test`, running `interactive-handbook-runtime-regression.test.mjs` from repo root can fail resolving `@/...` imports. Run it from `packages/web` (or set equivalent tsconfig path context) so alias resolution stays deterministic in heartbeat revalidation passes.

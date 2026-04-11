@@ -27,6 +27,8 @@ const APP_NAV_LINKS = [
 const MARKETING_HEADER_CTA_STYLE = {
   minHeight: 'var(--touch-primary-action)',
   padding: 'var(--space-sm) var(--space-lg)',
+  color: 'var(--color-text-primary)',
+  fontSize: 'var(--font-size-md)',
 };
 
 function isMainNavActive(currentPath: string, navPath: string): boolean {
@@ -173,13 +175,14 @@ export function PublicHeader() {
         }
 
         .public-header__logo {
+          --public-header-logo-touch-min: max(var(--touch-min-primary, 44px), 44px);
           display: flex;
           align-items: center;
           gap: var(--space-sm);
           text-decoration: none;
           flex-shrink: 0;
-          min-inline-size: var(--touch-min-primary);
-          min-block-size: var(--touch-min-primary);
+          min-inline-size: var(--public-header-logo-touch-min);
+          min-block-size: var(--public-header-logo-touch-min);
           padding-inline: var(--space-xs);
           padding-block: var(--space-2xs);
           border-radius: var(--radius-md);

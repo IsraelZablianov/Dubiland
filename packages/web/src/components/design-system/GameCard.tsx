@@ -1,6 +1,7 @@
 import type { ButtonHTMLAttributes } from 'react';
 import { MascotIllustration } from '@/components/illustrations';
 import { assetUrl } from '@/lib/assetUrl';
+import { rtlProgressGradient, rtlReplayGlyph } from '@/lib/rtlChrome';
 import { StarRating } from './StarRating';
 
 interface GameCardProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'type'> {
@@ -18,6 +19,7 @@ interface GameCardProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'c
   progressAriaLabel?: string;
   progressValueLabel?: string;
   playLabel?: string;
+  isRtl?: boolean;
 }
 
 interface TagChipProps {
@@ -39,6 +41,13 @@ function meterDots(value: number): string {
 function clampProgress(value: number): number {
   if (!Number.isFinite(value)) return 0;
   return Math.max(0, Math.min(100, Math.round(value)));
+}
+
+function toRetinaThumbnailPath(path: string): string | null {
+  if (!/\.webp$/i.test(path) || /@2x\.webp$/i.test(path)) {
+    return null;
+  }
+  return path.replace(/\.webp$/i, '@2x.webp');
 }
 
 function tagChipBackground(tone: TagChipProps['tone']): string {
@@ -98,6 +107,7 @@ export function GameCard({
   progressAriaLabel,
   progressValueLabel,
   playLabel,
+  isRtl = true,
   style,
   ...props
 }: GameCardProps) {
@@ -114,7 +124,16 @@ export function GameCard({
   const normalizedProgress = clampProgress(progressPercent ?? 0);
   const progressSegments = 5;
   const completedSegments = Math.round((normalizedProgress / 100) * progressSegments);
-  const playCueLabel = playLabel?.trim() || '▶';
+  const replayGlyph = rtlReplayGlyph(isRtl);
+  const playCueLabel = playLabel?.trim() || replayGlyph;
+  const thumbnailSrc = thumbnailUrl ? assetUrl(thumbnailUrl) : null;
+  const retinaThumbnailPath = thumbnailUrl ? toRetinaThumbnailPath(thumbnailUrl) : null;
+  const retinaThumbnailSrc = retinaThumbnailPath ? assetUrl(retinaThumbnailPath) : null;
+  const thumbnailBackgroundImage = thumbnailSrc
+    ? retinaThumbnailSrc
+      ? `image-set(url("${thumbnailSrc}") 1x, url("${retinaThumbnailSrc}") 2x)`
+      : `url("${thumbnailSrc}")`
+    : undefined;
 
   return (
     <button
@@ -141,9 +160,11 @@ export function GameCard({
         style={{
           width: '100%',
           aspectRatio: '16 / 10',
-          background: thumbnailUrl
-            ? `url(${assetUrl(thumbnailUrl)}) center / cover no-repeat`
-            : 'var(--color-bg-secondary)',
+          backgroundColor: 'var(--color-bg-secondary)',
+          backgroundImage: thumbnailBackgroundImage,
+          backgroundPosition: 'center',
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -254,7 +275,11 @@ export function GameCard({
                   border: '1px solid var(--color-border-subtle)',
                   background:
                     index < completedSegments
-                      ? 'linear-gradient(90deg, var(--color-accent-success), color-mix(in srgb, var(--color-accent-info) 70%, var(--color-accent-success) 30%))'
+                      ? rtlProgressGradient(
+                        isRtl,
+                        'var(--color-accent-success)',
+                        'color-mix(in srgb, var(--color-accent-info) 70%, var(--color-accent-success) 30%)',
+                      )
                       : 'color-mix(in srgb, var(--color-surface-muted) 72%, white 28%)',
                 }}
               />
@@ -298,7 +323,7 @@ export function GameCard({
                 animation: 'var(--motion-gentle-float)',
               }}
             >
-              ▶
+              {replayGlyph}
             </span>
             {playCueLabel}
           </span>

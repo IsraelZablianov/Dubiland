@@ -3,9 +3,11 @@ import type { Child, Game, GameLevel } from '@dubiland/shared';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button, Card } from '@/components/design-system';
+import { ChildRouteHeader, ChildRouteScaffold } from '@/components/layout';
 import type { GameCompletionResult } from '@/games/engine';
 import { NumberLineJumpsGame } from '@/games/numbers/NumberLineJumpsGame';
 import { useAudioManager } from '@/hooks/useAudioManager';
+import { toChildAgeBand } from '@/lib/concurrentChoiceLimit';
 import { createGameAttemptId, createGameSessionId, persistGameAttempt } from '@/lib/gameAttemptPersistence';
 import { getActiveChildProfile } from '@/lib/session';
 
@@ -45,6 +47,7 @@ export default function NumberLineJumpsPage() {
   const audio = useAudioManager();
 
   const activeProfile = getActiveChildProfile();
+  const profileAgeBand = toChildAgeBand(activeProfile?.ageBand) ?? undefined;
   const child = useMemo<Child>(
     () => ({
       id: activeProfile?.id ?? 'guest',
@@ -56,6 +59,16 @@ export default function NumberLineJumpsPage() {
       createdAt: '2026-04-10T00:00:00.000Z',
     }),
     [activeProfile?.emoji, activeProfile?.id, activeProfile?.name, t],
+  );
+  const runtimeLevel = useMemo<GameLevel>(
+    () => ({
+      ...NUMBER_LINE_JUMPS_LEVEL,
+      configJson: {
+        ...(NUMBER_LINE_JUMPS_LEVEL.configJson as Record<string, unknown>),
+        profileAgeBand,
+      },
+    }),
+    [profileAgeBand],
   );
 
   const [completionResult, setCompletionResult] = useState<GameCompletionResult | null>(null);
@@ -121,46 +134,20 @@ export default function NumberLineJumpsPage() {
   }, [completionResult, syncCompletion]);
 
   return (
-    <main
-      style={{
-        flex: 1,
-        background: 'var(--color-theme-bg)',
-        padding: 'var(--space-lg)',
-        display: 'flex',
-        justifyContent: 'center',
-      }}
-    >
-      <section style={{ width: 'min(1180px, 100%)', display: 'grid', gap: 'var(--space-md)' }}>
-        <header
-          style={{
-            display: 'flex',
-            gap: 'var(--space-sm)',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-          }}
-        >
-          <div style={{ display: 'grid', gap: 'var(--space-xs)' }}>
-            <h1
-              style={{
-                fontSize: 'var(--font-size-2xl)',
-                color: 'var(--color-text-primary)',
-                fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
-              }}
-            >
-              {t('games.numberLineJumps.title')}
-            </h1>
-            <p style={{ color: 'var(--color-text-secondary)' }}>{t('games.numberLineJumps.subtitle')}</p>
-          </div>
-
+    <ChildRouteScaffold width="wide">
+      <ChildRouteHeader
+        title={t('games.numberLineJumps.title')}
+        subtitle={t('games.numberLineJumps.subtitle')}
+        leading={
           <Button variant="secondary" size="lg" onClick={() => navigate('/games')} aria-label={t('nav.back')}>
             {t('nav.back')}
           </Button>
-        </header>
+        }
+      />
 
         <NumberLineJumpsGame
           game={NUMBER_LINE_JUMPS_GAME}
-          level={NUMBER_LINE_JUMPS_LEVEL}
+          level={runtimeLevel}
           child={child}
           onComplete={handleComplete}
           audio={audio}
@@ -196,7 +183,6 @@ export default function NumberLineJumpsPage() {
             )}
           </Card>
         )}
-      </section>
-    </main>
+    </ChildRouteScaffold>
   );
 }

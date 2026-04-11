@@ -1,0 +1,81 @@
+{
+  "routes": [
+    {
+      "route": "/",
+      "performance": 82,
+      "fcp_ms": 3212.19,
+      "lcp_ms": 3920.523,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 32.412,
+      "cls": 0.020351,
+      "speed_index_ms": 2534
+    },
+    {
+      "route": "/games",
+      "performance": 78,
+      "fcp_ms": 4065.17,
+      "lcp_ms": 4065.17,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 23.837,
+      "cls": 0.002025,
+      "speed_index_ms": 3143
+    },
+    {
+      "route": "/profiles",
+      "performance": 79,
+      "fcp_ms": 3967.776,
+      "lcp_ms": 3967.776,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 17.884,
+      "cls": 0.002025,
+      "speed_index_ms": 3092
+    },
+    {
+      "route": "/parent",
+      "performance": 78,
+      "fcp_ms": 4049.015,
+      "lcp_ms": 4049.015,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 28.603,
+      "cls": 0.002025,
+      "speed_index_ms": 3139
+    },
+    {
+      "route": "/games/reading/interactive-handbook",
+      "performance": 82,
+      "fcp_ms": 3660.484,
+      "lcp_ms": 3660.484,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 21.223,
+      "cls": 0.002025,
+      "speed_index_ms": 2865
+    }
+  ],
+  "aggregate": {
+    "count": 5,
+    "perf_median": 79,
+    "lcp_median_ms": 3967.776,
+    "cls_max": 0.020351,
+    "tbt_p95_proxy_ms": 0,
+    "worst_lcp_route": {
+      "route": "/games",
+      "performance": 78,
+      "fcp_ms": 4065.17,
+      "lcp_ms": 4065.17,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 23.837,
+      "cls": 0.002025,
+      "speed_index_ms": 3143
+    },
+    "worst_tbt_route": {
+      "route": "/games/reading/interactive-handbook",
+      "performance": 82,
+      "fcp_ms": 3660.484,
+      "lcp_ms": 3660.484,
+      "tbt_ms": 0,
+      "max_potential_fid_ms": 21.223,
+      "cls": 0.002025,
+      "speed_index_ms": 2865
+    }
+  }
+}

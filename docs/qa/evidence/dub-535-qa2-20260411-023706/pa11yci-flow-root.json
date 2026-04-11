@@ -1,0 +1,24 @@
+{
+  "defaults": {
+    "standard": "WCAG2AA",
+    "timeout": 120000,
+    "wait": 250,
+    "rootElement": ".interactive-handbook",
+    "actions": [
+      "navigate to http://127.0.0.1:4184/login",
+      "wait for path to be /login",
+      "wait for element .login-page__guest-cta button to be visible",
+      "click element .login-page__guest-cta button",
+      "wait for path to be /profiles",
+      "wait for element footer button:last-child to be visible",
+      "click element footer button:last-child",
+      "wait for path to be /games",
+      "navigate to http://127.0.0.1:4184/games/reading/interactive-handbook",
+      "wait for path to be /games/reading/interactive-handbook",
+      "wait for element .interactive-handbook to be visible"
+    ]
+  },
+  "urls": [
+    "http://127.0.0.1:4184/login"
+  ]
+}

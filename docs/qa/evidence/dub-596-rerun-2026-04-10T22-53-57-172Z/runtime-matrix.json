@@ -1,0 +1,166 @@
+{
+  "issue": "DUB-596",
+  "capturedAt": "2026-04-10T22:53:57.352Z",
+  "baseUrl": "http://127.0.0.1:4180",
+  "viewports": [
+    {
+      "name": "mobile-375x812",
+      "width": 375,
+      "height": 812
+    },
+    {
+      "name": "tablet-834x1112",
+      "width": 834,
+      "height": 1112
+    }
+  ],
+  "routes": [
+    {
+      "viewport": "mobile-375x812",
+      "route": "/games",
+      "htmlDir": "rtl",
+      "bodyDir": null,
+      "interactiveCount": 26,
+      "tooSmallCount": 0,
+      "tooSmallSample": [],
+      "hasCheckSubmitTextButton": false,
+      "hasReplayTriangleText": false,
+      "logoMeasurement": null
+    },
+    {
+      "viewport": "mobile-375x812",
+      "route": "/games/numbers/more-or-less-market",
+      "htmlDir": "rtl",
+      "bodyDir": null,
+      "interactiveCount": 24,
+      "tooSmallCount": 0,
+      "tooSmallSample": [],
+      "hasCheckSubmitTextButton": false,
+      "hasReplayTriangleText": false,
+      "logoMeasurement": null
+    },
+    {
+      "viewport": "mobile-375x812",
+      "route": "/games/letters/letter-sky-catcher",
+      "htmlDir": "rtl",
+      "bodyDir": null,
+      "interactiveCount": 25,
+      "tooSmallCount": 0,
+      "tooSmallSample": [],
+      "hasCheckSubmitTextButton": false,
+      "hasReplayTriangleText": false,
+      "logoMeasurement": null
+    },
+    {
+      "viewport": "mobile-375x812",
+      "route": "/games/reading/interactive-handbook",
+      "htmlDir": "rtl",
+      "bodyDir": null,
+      "interactiveCount": 32,
+      "tooSmallCount": 0,
+      "tooSmallSample": [],
+      "hasCheckSubmitTextButton": false,
+      "hasReplayTriangleText": true,
+      "logoMeasurement": null
+    },
+    {
+      "viewport": "mobile-375x812",
+      "route": "/profiles",
+      "htmlDir": "rtl",
+      "bodyDir": null,
+      "interactiveCount": 20,
+      "tooSmallCount": 0,
+      "tooSmallSample": [],
+      "hasCheckSubmitTextButton": false,
+      "hasReplayTriangleText": false,
+      "logoMeasurement": null
+    },
+    {
+      "viewport": "mobile-375x812",
+      "route": "/parent",
+      "htmlDir": "rtl",
+      "bodyDir": null,
+      "interactiveCount": 19,
+      "tooSmallCount": 0,
+      "tooSmallSample": [],
+      "hasCheckSubmitTextButton": false,
+      "hasReplayTriangleText": false,
+      "logoMeasurement": null
+    },
+    {
+      "viewport": "tablet-834x1112",
+      "route": "/games",
+      "htmlDir": "rtl",
+      "bodyDir": null,
+      "interactiveCount": 26,
+      "tooSmallCount": 0,
+      "tooSmallSample": [],
+      "hasCheckSubmitTextButton": false,
+      "hasReplayTriangleText": false,
+      "logoMeasurement": null
+    },
+    {
+      "viewport": "tablet-834x1112",
+      "route": "/games/numbers/more-or-less-market",
+      "htmlDir": "rtl",
+      "bodyDir": null,
+      "interactiveCount": 24,
+      "tooSmallCount": 0,
+      "tooSmallSample": [],
+      "hasCheckSubmitTextButton": false,
+      "hasReplayTriangleText": false,
+      "logoMeasurement": null
+    },
+    {
+      "viewport": "tablet-834x1112",
+      "route": "/games/letters/letter-sky-catcher",
+      "htmlDir": "rtl",
+      "bodyDir": null,
+      "interactiveCount": 26,
+      "tooSmallCount": 0,
+      "tooSmallSample": [],
+      "hasCheckSubmitTextButton": false,
+      "hasReplayTriangleText": false,
+      "logoMeasurement": null
+    },
+    {
+      "viewport": "tablet-834x1112",
+      "route": "/games/reading/interactive-handbook",
+      "htmlDir": "rtl",
+      "bodyDir": null,
+      "interactiveCount": 32,
+      "tooSmallCount": 0,
+      "tooSmallSample": [],
+      "hasCheckSubmitTextButton": false,
+      "hasReplayTriangleText": true,
+      "logoMeasurement": null
+    },
+    {
+      "viewport": "tablet-834x1112",
+      "route": "/profiles",
+      "htmlDir": "rtl",
+      "bodyDir": null,
+      "interactiveCount": 20,
+      "tooSmallCount": 0,
+      "tooSmallSample": [],
+      "hasCheckSubmitTextButton": false,
+      "hasReplayTriangleText": false,
+      "logoMeasurement": null
+    },
+    {
+      "viewport": "tablet-834x1112",
+      "route": "/parent",
+      "htmlDir": "rtl",
+      "bodyDir": null,
+      "interactiveCount": 19,
+      "tooSmallCount": 0,
+      "tooSmallSample": [],
+      "hasCheckSubmitTextButton": false,
+      "hasReplayTriangleText": false,
+      "logoMeasurement": null
+    }
+  ],
+  "targetedMeasurements": {
+    "parentLogoLink": []
+  }
+}

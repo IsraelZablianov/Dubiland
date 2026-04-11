@@ -4,6 +4,8 @@ import { Button, Card } from '@/components/design-system';
 import { MascotIllustration } from '@/components/illustrations';
 import { SuccessCelebration } from '@/components/motion';
 import type { GameProps, ParentSummaryMetrics, StableRange } from '@/games/engine';
+import { resolveLettersRoutingContext, type LettersAgeBand } from '@/games/letters/lettersProgressionRouting';
+import { isRtlDirection, rtlNextGlyph, rtlReplayGlyph } from '@/lib/rtlChrome';
 
 type GameLevelId = 1 | 2 | 3;
 type RoundMode = 'listen' | 'wordBridge' | 'remediationListen' | 'remediationWord' | 'remediationTransfer';
@@ -117,8 +119,6 @@ interface SessionStats {
   roundsCompleted: number;
 }
 
-const TOTAL_ROUNDS = 6;
-const MIDPOINT_ROUND = 3;
 const INACTIVITY_MS = 7000;
 const RAPID_TAP_WINDOW_MS = 2400;
 const MIDPOINT_CONTINUE_CUE_DELAY_MS = 520;
@@ -250,11 +250,31 @@ function getPairByLetter(letter: LetterId): [LetterId, LetterId] | null {
   return matched ? [...matched] as [LetterId, LetterId] : null;
 }
 
-function getMaxOptionCount(level: GameLevelId): number {
-  if (level === 1) {
+function getMaxOptionCount(level: GameLevelId, ageBand: LettersAgeBand): number {
+  if (ageBand === '3-4') {
+    return 2;
+  }
+  if (ageBand === '4-5') {
     return 3;
   }
+  if (ageBand === '5-6') {
+    return level === 1 ? 3 : 4;
+  }
   return 4;
+}
+
+function resolveSessionRoundTarget(ageBand: LettersAgeBand): number {
+  if (ageBand === '3-4') return 5;
+  if (ageBand === '4-5') return 6;
+  if (ageBand === '5-6') return 8;
+  return 8;
+}
+
+function resolveInitialOptionCount(ageBand: LettersAgeBand, level: GameLevelId): number {
+  if (ageBand === '3-4') return 2;
+  if (ageBand === '4-5') return 3;
+  if (ageBand === '5-6') return level >= 2 ? 3 : 2;
+  return level >= 3 ? 4 : 3;
 }
 
 function getStableRange(level: GameLevelId): StableRange {
@@ -337,11 +357,12 @@ function pickPromptKey(mode: RoundMode, roundNumber: number): PromptKey {
 function buildOptionLetters(options: {
   targetLetter: LetterId;
   level: GameLevelId;
+  ageBand: LettersAgeBand;
   optionCount: number;
   forceTwoChoice: boolean;
   remediation: RemediationState | null;
 }): LetterId[] {
-  const { targetLetter, level, optionCount, forceTwoChoice, remediation } = options;
+  const { targetLetter, level, ageBand, optionCount, forceTwoChoice, remediation } = options;
 
   if (remediation) {
     const [first, second] = remediation.pair;
@@ -357,7 +378,9 @@ function buildOptionLetters(options: {
     return shuffle([first, second, neutral]);
   }
 
-  const desiredOptionCount = forceTwoChoice ? 2 : Math.max(2, Math.min(getMaxOptionCount(level), optionCount));
+  const desiredOptionCount = forceTwoChoice
+    ? 2
+    : Math.max(2, Math.min(getMaxOptionCount(level, ageBand), optionCount));
 
   const pool = LEVEL_POOL[level].filter((letter) => letter !== targetLetter);
   const selected = new Set<LetterId>([targetLetter]);
@@ -403,6 +426,7 @@ function pickTargetLetter(options: {
 function buildRound(options: {
   roundNumber: number;
   level: GameLevelId;
+  ageBand: LettersAgeBand;
   optionCount: number;
   repeatTarget: LetterId | null;
   previousTarget: LetterId | null;
@@ -414,6 +438,7 @@ function buildRound(options: {
   const {
     roundNumber,
     level,
+    ageBand,
     optionCount,
     repeatTarget,
     previousTarget,
@@ -443,6 +468,7 @@ function buildRound(options: {
   const optionLetters = buildOptionLetters({
     targetLetter,
     level,
+    ageBand,
     optionCount,
     forceTwoChoice,
     remediation,
@@ -471,15 +497,38 @@ function toSampleWordAudioKey(letter: LetterId): SampleWordAudioKey {
   return `letters.sampleWords.${letter}`;
 }
 
-export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
-  const { t } = useTranslation('common');
+export function LetterSoundMatchGame({ level: runtimeLevel, onComplete, audio }: GameProps) {
+  const { t, i18n } = useTranslation('common');
+  const isRtl = isRtlDirection(i18n.dir(i18n.language));
+  const replayIcon = rtlReplayGlyph(isRtl);
+  const nextIcon = rtlNextGlyph(isRtl);
   const choiceGridFeedbackTimeoutRef = useRef<number | null>(null);
   const scorePulseTimeoutRef = useRef<number | null>(null);
   const midpointContinueTimeoutRef = useRef<number | null>(null);
+  const levelConfig = useMemo(
+    () => (runtimeLevel.configJson as Record<string, unknown>) ?? {},
+    [runtimeLevel.configJson],
+  );
+  const routingContext = useMemo(
+    () => resolveLettersRoutingContext(levelConfig, 1),
+    [levelConfig],
+  );
+  const sessionRoundTarget = useMemo(
+    () => resolveSessionRoundTarget(routingContext.ageBand),
+    [routingContext.ageBand],
+  );
+  const midpointRound = useMemo(
+    () => Math.max(2, Math.floor(sessionRoundTarget / 2)),
+    [sessionRoundTarget],
+  );
+  const initialOptionCount = useMemo(
+    () => resolveInitialOptionCount(routingContext.ageBand, routingContext.initialLevelId),
+    [routingContext.ageBand, routingContext.initialLevelId],
+  );
 
   const [roundNumber, setRoundNumber] = useState(1);
-  const [level, setLevel] = useState<GameLevelId>(1);
-  const [optionCount, setOptionCount] = useState(2);
+  const [level, setLevel] = useState<GameLevelId>(routingContext.initialLevelId);
+  const [optionCount, setOptionCount] = useState(initialOptionCount);
   const [previousTarget, setPreviousTarget] = useState<LetterId | null>(null);
 
   const [repeatTarget, setRepeatTarget] = useState<LetterId | null>(null);
@@ -507,8 +556,9 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
   const [round, setRound] = useState<RoundState>(() =>
     buildRound({
       roundNumber: 1,
-      level: 1,
-      optionCount: 2,
+      level: routingContext.initialLevelId,
+      ageBand: routingContext.ageBand,
+      optionCount: initialOptionCount,
       repeatTarget: null,
       previousTarget: null,
       remediation: null,
@@ -540,8 +590,8 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
   const completionReportedRef = useRef(false);
 
   const roundProgressSegments = useMemo(
-    () => Array.from({ length: TOTAL_ROUNDS }, (_, index) => index + 1),
-    [],
+    () => Array.from({ length: sessionRoundTarget }, (_, index) => index + 1),
+    [sessionRoundTarget],
   );
 
   const currentLetterAudioKey = toLetterAudioKey(round.targetLetter);
@@ -717,7 +767,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
         nextStats,
       } = options;
 
-      if (nextStats.roundsCompleted >= TOTAL_ROUNDS) {
+      if (nextStats.roundsCompleted >= sessionRoundTarget) {
         completeSession(nextStats, nextLevel);
         return;
       }
@@ -726,6 +776,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
       const nextRound = buildRound({
         roundNumber: nextRoundNumber,
         level: nextLevel,
+        ageBand: routingContext.ageBand,
         optionCount: nextOptionCount,
         repeatTarget: repeatTargetNextRound,
         previousTarget: round.targetLetter,
@@ -749,7 +800,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
       setConsecutiveSuccesses(nextConsecutiveSuccesses);
       setConsecutiveMisses(nextConsecutiveMisses);
 
-      if (nextRoundNumber === MIDPOINT_ROUND + 1) {
+      if (nextRoundNumber === midpointRound + 1) {
         setPendingRoundState(nextRound);
         setMidpointPaused(true);
         return;
@@ -760,7 +811,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
         resetRoundInteraction(nextRound);
       }, 520);
     },
-    [completeSession, resetRoundInteraction, round.roundNumber, round.targetLetter],
+    [completeSession, midpointRound, resetRoundInteraction, round.roundNumber, round.targetLetter, routingContext.ageBand, sessionRoundTarget],
   );
 
   const completeRound = useCallback(
@@ -840,11 +891,11 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
       let nextForceReplayGateRounds = forceReplayGateRoundsRemaining;
 
       if (nextConsecutiveSuccesses >= 3) {
-        if (nextOptionCount < getMaxOptionCount(nextLevel)) {
+        if (nextOptionCount < getMaxOptionCount(nextLevel, routingContext.ageBand)) {
           nextOptionCount += 1;
         } else if (nextLevel < 3) {
           nextLevel = (nextLevel + 1) as GameLevelId;
-          nextOptionCount = Math.min(getMaxOptionCount(nextLevel), Math.max(3, nextOptionCount));
+          nextOptionCount = Math.min(getMaxOptionCount(nextLevel, routingContext.ageBand), Math.max(3, nextOptionCount));
         }
         nextConsecutiveSuccesses = 0;
       }
@@ -883,6 +934,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
       midpointPaused,
       moveToNextRound,
       optionCount,
+      routingContext.ageBand,
       remediation,
       round.level,
       round.roundNumber,
@@ -1236,7 +1288,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
               onClick={() => playAudioKey('feedback.youDidIt')}
               aria-label={replayButtonAriaLabel}
             >
-              <span aria-hidden="true">▶</span>
+              <span aria-hidden="true">{replayIcon}</span>
             </button>
           </div>
           <div className="letter-sound-match__text-row letter-sound-match__text-row--center">
@@ -1247,7 +1299,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
               onClick={() => playAudioKey('games.letterSoundMatch.feedback.success.amazing')}
               aria-label={replayButtonAriaLabel}
             >
-              <span aria-hidden="true">▶</span>
+              <span aria-hidden="true">{replayIcon}</span>
             </button>
           </div>
 
@@ -1273,7 +1325,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
                 onClick={() => playAudioKey('parentDashboard.games.letterSoundMatch.progressSummary')}
                 aria-label={replayButtonAriaLabel}
               >
-                <span aria-hidden="true">▶</span>
+                <span aria-hidden="true">{replayIcon}</span>
               </button>
             </div>
             <div className="letter-sound-match__text-row">
@@ -1284,7 +1336,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
                 onClick={() => playAudioKey('parentDashboard.games.letterSoundMatch.nextStep')}
                 aria-label={replayButtonAriaLabel}
               >
-                <span aria-hidden="true">▶</span>
+                <span aria-hidden="true">{replayIcon}</span>
               </button>
             </div>
           </Card>
@@ -1297,7 +1349,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
               onClick={() => playAudioKey(getFeedbackKeyFromHintTrend(hintTrend))}
               aria-label={replayButtonAriaLabel}
             >
-              <span aria-hidden="true">▶</span>
+              <span aria-hidden="true">{replayIcon}</span>
             </button>
           </div>
         </Card>
@@ -1319,7 +1371,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
               onClick={() => playAudioKey('feedback.greatEffort')}
               aria-label={replayButtonAriaLabel}
             >
-              <span aria-hidden="true">▶</span>
+              <span aria-hidden="true">{replayIcon}</span>
             </button>
           </div>
           <div className="letter-sound-match__text-row">
@@ -1330,7 +1382,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
               onClick={() => playAudioKey('games.letterSoundMatch.success.greatListening')}
               aria-label={replayButtonAriaLabel}
             >
-              <span aria-hidden="true">▶</span>
+              <span aria-hidden="true">{replayIcon}</span>
             </button>
           </div>
 
@@ -1342,7 +1394,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
             aria-label={t('nav.next')}
             style={{ minWidth: '56px', paddingInline: 'var(--space-lg)' }}
           >
-            <span aria-hidden="true">→</span>
+            <span aria-hidden="true">{nextIcon}</span>
           </Button>
         </Card>
 
@@ -1364,7 +1416,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
                 onClick={() => playAudioKey('games.letterSoundMatch.title')}
                 aria-label={replayButtonAriaLabel}
               >
-                <span aria-hidden="true">▶</span>
+                <span aria-hidden="true">{replayIcon}</span>
               </button>
             </div>
             <div className="letter-sound-match__text-row">
@@ -1375,7 +1427,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
                 onClick={() => playAudioKey('games.letterSoundMatch.subtitle')}
                 aria-label={replayButtonAriaLabel}
               >
-                <span aria-hidden="true">▶</span>
+                <span aria-hidden="true">{replayIcon}</span>
               </button>
             </div>
           </div>
@@ -1388,7 +1440,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
               aria-label={t('games.letterSoundMatch.instructions.useReplay')}
               style={{ minWidth: 'var(--touch-min)', paddingInline: 'var(--space-md)' }}
             >
-              <span aria-hidden="true">▶</span>
+              <span aria-hidden="true">{replayIcon}</span>
             </Button>
             <Button
               variant="secondary"
@@ -1447,7 +1499,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
           <span className="letter-sound-match__score-pill">
             <span>🎯</span>
             <span>
-              {sessionStats.roundsCompleted}/{TOTAL_ROUNDS}
+              {sessionStats.roundsCompleted}/{sessionRoundTarget}
             </span>
           </span>
         </div>
@@ -1462,7 +1514,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
             onClick={() => playAudioKey(roundMessage.key as AudioKey)}
             aria-label={replayButtonAriaLabel}
           >
-            <span aria-hidden="true">▶</span>
+            <span aria-hidden="true">{replayIcon}</span>
           </button>
         </div>
 
@@ -1498,7 +1550,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
                   🎯 {round.level}
                 </span>
                 <span className="letter-sound-match__metric-pill" aria-label={t('nav.next')}>
-                  {round.roundNumber}/{TOTAL_ROUNDS}
+                  {round.roundNumber}/{sessionRoundTarget}
                 </span>
                 <span className="letter-sound-match__metric-pill" aria-label={t('feedback.keepGoing')}>
                   {sessionAccuracy}%
@@ -1514,7 +1566,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
                 onClick={() => playAudioKey(round.instructionKey as AudioKey)}
                 aria-label={replayButtonAriaLabel}
               >
-                <span aria-hidden="true">▶</span>
+                <span aria-hidden="true">{replayIcon}</span>
               </button>
             </div>
 
@@ -1527,7 +1579,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
                   onClick={() => playAudioKey(currentSampleWordAudioKey)}
                   aria-label={replayButtonAriaLabel}
                 >
-                  <span aria-hidden="true">▶</span>
+                  <span aria-hidden="true">{replayIcon}</span>
                 </button>
               </div>
             ) : null}
@@ -1541,7 +1593,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
                   onClick={() => playAudioKey('games.letterSoundMatch.hints.replaySlowly')}
                   aria-label={replayButtonAriaLabel}
                 >
-                  <span aria-hidden="true">▶</span>
+                  <span aria-hidden="true">{replayIcon}</span>
                 </button>
               </div>
             ) : null}
@@ -1592,7 +1644,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
                     onClick={() => playAudioKey(letterKey)}
                     aria-label={`${replayButtonAriaLabel} ${letterLabel}`}
                   >
-                    <span aria-hidden="true">▶</span>
+                    <span aria-hidden="true">{replayIcon}</span>
                   </button>
                 </div>
               );
@@ -1608,7 +1660,7 @@ export function LetterSoundMatchGame({ onComplete, audio }: GameProps) {
                 onClick={() => playAudioKey('games.letterSoundMatch.hints.lookAndListen')}
                 aria-label={replayButtonAriaLabel}
               >
-                <span aria-hidden="true">▶</span>
+                <span aria-hidden="true">{replayIcon}</span>
               </button>
             </div>
           ) : null}

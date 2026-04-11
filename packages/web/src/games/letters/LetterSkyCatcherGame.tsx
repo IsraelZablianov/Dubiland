@@ -4,6 +4,9 @@ import { Card } from '@/components/design-system';
 import { MascotIllustration } from '@/components/illustrations';
 import { SuccessCelebration } from '@/components/motion';
 import type { GameCompletionResult, GameProps, ParentSummaryMetrics, StableRange } from '@/games/engine';
+import { resolveLettersRoutingContext } from '@/games/letters/lettersProgressionRouting';
+import { resolveAudioPathFromKey } from '@/lib/audioPathResolver';
+import { isRtlDirection, rtlNextGlyph, rtlProgressGradient, rtlReplayGlyph } from '@/lib/rtlChrome';
 
 type GameLevelId = 1 | 2 | 3;
 type MessageTone = 'neutral' | 'hint' | 'success';
@@ -278,27 +281,8 @@ function shuffle<T>(items: readonly T[]): T[] {
   return next;
 }
 
-function toKebabCase(segment: string): string {
-  return segment.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
-}
-
 function getAudioPathForKey(key: StatusKey): string {
-  if (key.startsWith('letters.pronunciation.')) {
-    const letter = key.replace('letters.pronunciation.', '') as LetterId;
-    return `/audio/he/letters/pronunciation/${letter}.mp3`;
-  }
-
-  if (key.startsWith('letters.anchorWords.')) {
-    const letter = key.replace('letters.anchorWords.', '') as LetterId;
-    return `/audio/he/letters/anchor-words/${letter}.mp3`;
-  }
-
-  if (key.startsWith('objects.names.')) {
-    const objectId = key.replace('objects.names.', '') as ObjectId;
-    return `/audio/he/objects/names/${objectId}.mp3`;
-  }
-
-  return `/audio/he/${key.split('.').map(toKebabCase).join('/')}.mp3`;
+  return resolveAudioPathFromKey(key, 'common');
 }
 
 function normalizePair(a: LetterId, b: LetterId): string {
@@ -390,11 +374,59 @@ function buildSpawnIntervalMs(levelId: GameLevelId, speedScale: number): number 
   return Math.max(320, randomInt(620, 980) / Math.max(0.9, speedScale));
 }
 
-export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
-  const { t } = useTranslation('common');
+function resolveDifficultyProfile(levelId: GameLevelId, ageBand: '3-4' | '4-5' | '5-6' | '6-7'): DifficultyConfig {
+  const base = LEVEL_DIFFICULTY[levelId];
 
-  const levelId = useMemo(() => resolveLevelId(level.levelNumber), [level.levelNumber]);
-  const levelConfig = useMemo(() => LEVEL_DIFFICULTY[levelId], [levelId]);
+  if (ageBand === '3-4') {
+    return {
+      targetRatio: Math.max(base.targetRatio, 0.72),
+      maxActiveObjects: 2,
+      minFallDurationSec: Math.max(base.minFallDurationSec, 2.2),
+      maxFallDurationSec: Math.max(base.maxFallDurationSec, 3.0),
+    };
+  }
+
+  if (ageBand === '4-5') {
+    return {
+      targetRatio: Math.max(base.targetRatio, 0.62),
+      maxActiveObjects: Math.min(3, Math.max(2, base.maxActiveObjects)),
+      minFallDurationSec: Math.max(base.minFallDurationSec, 1.9),
+      maxFallDurationSec: Math.max(base.maxFallDurationSec, 2.6),
+    };
+  }
+
+  if (ageBand === '6-7') {
+    return {
+      targetRatio: Math.min(base.targetRatio, 0.34),
+      maxActiveObjects: Math.min(LANE_COUNT, Math.max(base.maxActiveObjects, 5)),
+      minFallDurationSec: Math.min(base.minFallDurationSec, 1.0),
+      maxFallDurationSec: Math.min(base.maxFallDurationSec, 1.6),
+    };
+  }
+
+  return base;
+}
+
+export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
+  const { t, i18n } = useTranslation('common');
+  const isRtl = isRtlDirection(i18n.dir(i18n.language));
+  const replayIcon = rtlReplayGlyph(isRtl);
+  const nextIcon = rtlNextGlyph(isRtl);
+
+  const fallbackLevelId = useMemo(() => resolveLevelId(level.levelNumber), [level.levelNumber]);
+  const levelConfigJson = useMemo(
+    () => (level.configJson as Record<string, unknown>) ?? {},
+    [level.configJson],
+  );
+  const routingContext = useMemo(
+    () => resolveLettersRoutingContext(levelConfigJson, fallbackLevelId),
+    [fallbackLevelId, levelConfigJson],
+  );
+  const levelId = useMemo(() => routingContext.initialLevelId, [routingContext.initialLevelId]);
+  const levelConfig = useMemo(
+    () => resolveDifficultyProfile(levelId, routingContext.ageBand),
+    [levelId, routingContext.ageBand],
+  );
   const letterSequence = useMemo(() => buildLetterSequence(levelId), [levelId]);
 
   const [blockIndex, setBlockIndex] = useState(0);
@@ -406,6 +438,7 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
     tone: 'neutral',
   });
   const [sessionComplete, setSessionComplete] = useState(false);
+  const [audioPlaybackFailed, setAudioPlaybackFailed] = useState(false);
   const [promptPulse, setPromptPulse] = useState(false);
   const [fieldFeedback, setFieldFeedback] = useState<'idle' | 'success' | 'miss'>('idle');
   const [scorePulse, setScorePulse] = useState(false);
@@ -511,6 +544,9 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
 
   const playAudio = useCallback(
     async (key: StatusKey, mode: 'queue' | 'interrupt' = 'queue') => {
+      if (audioPlaybackFailed) {
+        return;
+      }
       try {
         const path = getAudioPathForKey(key);
         if (mode === 'interrupt') {
@@ -519,10 +555,10 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
         }
         await audio.play(path);
       } catch {
-        // Missing optional audio should not block gameplay.
+        setAudioPlaybackFailed((current) => current || true);
       }
     },
-    [audio],
+    [audio, audioPlaybackFailed],
   );
 
   const setMessageWithAudio = useCallback(
@@ -1174,6 +1210,12 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
         <p className={`letter-sky-catcher__message letter-sky-catcher__message--${message.tone}`}>{t(message.key)}</p>
       </div>
 
+      {audioPlaybackFailed && !sessionComplete && (
+        <p className="letter-sky-catcher__audio-fallback">
+          🔇 {t('games.letterSkyCatcher.instructions.catchTargets')}
+        </p>
+      )}
+
       {!sessionComplete && (
         <div className="letter-sky-catcher__icon-controls">
           <button
@@ -1182,7 +1224,7 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
             onClick={handleReplay}
             aria-label={t('games.letterSkyCatcher.instructions.tapReplay')}
           >
-            ▶
+            {replayIcon}
           </button>
           <button
             type="button"
@@ -1201,7 +1243,7 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
             💡
           </button>
           <button type="button" className="letter-sky-catcher__icon-button" onClick={handleNext} aria-label={t('nav.next')}>
-            →
+            {nextIcon}
           </button>
         </div>
       )}
@@ -1215,7 +1257,7 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
               onClick={handleReplay}
               aria-label={t('games.letterSkyCatcher.instructions.tapReplay')}
             >
-              ▶
+              {replayIcon}
             </button>
             <span className="letter-sky-catcher__letter-symbol">{activeLetterSymbol}</span>
             <span className="letter-sky-catcher__letter-word">{t(`letters.anchorWords.${currentLetter}` as const)}</span>
@@ -1471,6 +1513,17 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
           color: color-mix(in srgb, var(--color-accent-success) 84%, var(--color-text-primary));
         }
 
+        .letter-sky-catcher__audio-fallback {
+          margin: 0;
+          padding: var(--space-xs) var(--space-sm);
+          border-radius: var(--radius-sm);
+          border: 1px solid color-mix(in srgb, var(--color-accent-warning) 46%, transparent);
+          background: color-mix(in srgb, var(--color-accent-warning) 16%, transparent);
+          color: var(--color-text-primary);
+          font-size: var(--font-size-sm);
+          text-align: center;
+        }
+
         .letter-sky-catcher__icon-controls {
           display: grid;
           grid-template-columns: repeat(4, minmax(48px, 1fr));
@@ -1671,7 +1724,7 @@ export function LetterSkyCatcherGame({ level, onComplete, audio }: GameProps) {
           display: block;
           block-size: 100%;
           border-radius: var(--radius-full);
-          background: linear-gradient(90deg, var(--color-accent-success), var(--color-accent-primary));
+          background: ${rtlProgressGradient(isRtl, 'var(--color-accent-success)', 'var(--color-accent-primary)')};
           transition: inline-size 140ms linear;
         }
 

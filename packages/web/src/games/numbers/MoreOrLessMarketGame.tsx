@@ -1,7 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Card } from '@/components/design-system';
+import { MascotIllustration } from '@/components/illustrations';
+import { SuccessCelebration } from '@/components/motion';
 import type { GameProps, ParentSummaryMetrics, StableRange } from '@/games/engine';
+import { resolveAudioPathFromKey } from '@/lib/audioPathResolver';
+import { isRtlDirection, rtlReplayGlyph } from '@/lib/rtlChrome';
 
 type GameLevelId = 1 | 2 | 3;
 type ComparisonKind = 'more' | 'less' | 'equal';
@@ -148,33 +152,8 @@ function pickRandom<T>(items: readonly T[]): T {
   return items[randomInt(0, items.length - 1)] as T;
 }
 
-function toKebabCase(segment: string): string {
-  return segment.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
-}
-
 function keyToAudioPath(key: StatusKey): string | null {
-  const segments = key.split('.');
-
-  if (segments[0] === 'games' && segments[1] === 'moreOrLessMarket') {
-    return `/audio/he/games/more-or-less-market/${segments.slice(2).map(toKebabCase).join('/')}.mp3`;
-  }
-
-  if (segments[0] === 'feedback') {
-    return `/audio/he/feedback/${segments.slice(1).map(toKebabCase).join('/')}.mp3`;
-  }
-
-  if (segments[0] === 'parentDashboard' && segments[1] === 'games' && segments[2] === 'moreOrLessMarket') {
-    return `/audio/he/parent-dashboard/games/more-or-less-market/${segments
-      .slice(3)
-      .map(toKebabCase)
-      .join('/')}.mp3`;
-  }
-
-  if (segments[0] === 'nav') {
-    return `/audio/he/nav/${segments.slice(1).map(toKebabCase).join('/')}.mp3`;
-  }
-
-  return null;
+  return resolveAudioPathFromKey(key, 'common');
 }
 
 function getLevelByRound(roundNumber: number): GameLevelId {
@@ -399,7 +378,13 @@ function buildSummaryReport(stats: SessionStats): SummaryReport {
 }
 
 export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
+  const isRtl = isRtlDirection(i18n.dir(i18n.language));
+  const replayIcon = rtlReplayGlyph(isRtl);
+  const rtlProgressCssVar = useMemo(
+    () => ({ ['--more-less-progress-angle' as string]: isRtl ? '270deg' : '90deg' }) as CSSProperties,
+    [isRtl],
+  );
 
   const [roundConfig, setRoundConfig] = useState<RoundConfig>({
     roundNumber: 1,
@@ -442,6 +427,7 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
   const [summary, setSummary] = useState<SummaryReport | null>(null);
   const [scorePulse, setScorePulse] = useState(false);
   const [nonCriticalAudioReady, setNonCriticalAudioReady] = useState(false);
+  const [audioPlaybackFailed, setAudioPlaybackFailed] = useState(false);
 
   const [roundMessage, setRoundMessage] = useState<RoundMessage>({
     key: 'games.moreOrLessMarket.instructions.intro',
@@ -465,13 +451,19 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
 
   const playAudioKey = useCallback(
     (key: StatusKey) => {
+      if (audioPlaybackFailed) {
+        return;
+      }
+
       const audioPath = keyToAudioPath(key);
       if (!audioPath) {
         return;
       }
-      audio.play(audioPath);
+      void audio.play(audioPath).catch(() => {
+        setAudioPlaybackFailed(true);
+      });
     },
-    [audio],
+    [audio, audioPlaybackFailed],
   );
 
   const setMessageWithAudio = useCallback(
@@ -910,6 +902,7 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
     accuracy: summary ? `${summary.firstAttemptAccuracy}%` : '0%',
     hintLevel: summary?.averageHintLevel ?? '0.0',
   });
+  const coachVariant = roundMessage.tone === 'success' ? 'success' : 'hint';
   const hasRoundInteraction = selectedSide !== null || selectedBadge !== null || hintStep > 0 || mistakesThisRound > 0;
 
   useEffect(() => {
@@ -1016,9 +1009,12 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
 
   if (sessionComplete && summary) {
     return (
-      <div className="more-less-market more-less-market--summary">
+      <div className="more-less-market more-less-market--summary" style={rtlProgressCssVar}>
         <Card padding="lg" className="more-less-market__shell">
           <h2 className="more-less-market__title">{t('feedback.youDidIt')}</h2>
+          <div className="more-less-market__summary-celebration">
+            <SuccessCelebration />
+          </div>
           <p className="more-less-market__message more-less-market__message--success" aria-live="polite">
             {t('parentDashboard.games.moreOrLessMarket.progressSummary', {
               comparisonType: '> / < / =',
@@ -1036,7 +1032,7 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
 
   if (checkpointPaused) {
     return (
-      <div className="more-less-market more-less-market--checkpoint">
+      <div className="more-less-market more-less-market--checkpoint" style={rtlProgressCssVar}>
         <Card padding="lg" className="more-less-market__shell">
           <h2 className="more-less-market__title">{t('feedback.greatEffort')}</h2>
           <p className="more-less-market__summary-note">{t(CHECKPOINT_INSTRUCTION_KEY)}</p>
@@ -1048,7 +1044,7 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
               aria-label={t('games.moreOrLessMarket.hints.useReplay')}
               style={{ minWidth: 'var(--touch-min)' }}
             >
-              ▶
+              {replayIcon}
             </Button>
             <Button
               variant="primary"
@@ -1067,7 +1063,7 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
   }
 
   return (
-    <div className="more-less-market">
+    <div className="more-less-market" style={rtlProgressCssVar}>
       <Card padding="lg" className="more-less-market__shell">
         <header className="more-less-market__header">
           <div className="more-less-market__heading">
@@ -1083,7 +1079,7 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
               aria-label={t('games.moreOrLessMarket.hints.useReplay')}
               style={{ minWidth: 'var(--touch-min)' }}
             >
-              ▶
+              {replayIcon}
             </Button>
             <Button
               variant="secondary"
@@ -1147,12 +1143,21 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
         <p className={`more-less-market__message more-less-market__message--${roundMessage.tone}`} aria-live="polite">
           {messageText}
         </p>
+        {audioPlaybackFailed && (
+          <p className="more-less-market__audio-fallback" aria-live="polite">
+            🔇 {t('games.moreOrLessMarket.instructions.listenAndCompare')}
+          </p>
+        )}
 
         <Card padding="md" className="more-less-market__prompt-card">
           <p className="more-less-market__prompt">{t(round.promptKey)}</p>
         </Card>
 
         <section className="more-less-market__board" dir="rtl">
+          <div className="more-less-market__coach" aria-hidden="true">
+            <MascotIllustration variant={coachVariant} size={54} />
+          </div>
+
           <div
             className={[
               'more-less-market__basket',
@@ -1399,7 +1404,7 @@ const moreLessMarketStyles = `
   }
 
   .more-less-market__progress-dot--active {
-    background: linear-gradient(90deg, var(--color-accent-info), var(--color-accent-success));
+    background: linear-gradient(var(--more-less-progress-angle, 90deg), var(--color-accent-info), var(--color-accent-success));
     box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-accent-info) 28%, transparent);
     animation: more-less-progress-breathe 1.2s ease-in-out infinite;
   }
@@ -1452,6 +1457,12 @@ const moreLessMarketStyles = `
     background: color-mix(in srgb, var(--color-accent-success) 14%, white);
   }
 
+  .more-less-market__audio-fallback {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+  }
+
   .more-less-market__prompt-card {
     border: 2px dashed color-mix(in srgb, var(--color-theme-primary) 25%, transparent);
   }
@@ -1468,6 +1479,30 @@ const moreLessMarketStyles = `
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     gap: var(--space-sm);
     align-items: stretch;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .more-less-market__coach {
+    position: absolute;
+    inset-inline-end: var(--space-sm);
+    inset-block-start: var(--space-sm);
+    inline-size: 68px;
+    block-size: 68px;
+    border-radius: var(--radius-full);
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+    z-index: 2;
+    background: color-mix(in srgb, var(--color-bg-card) 90%, white);
+    border: 2px solid color-mix(in srgb, var(--color-accent-primary) 28%, transparent);
+    box-shadow: var(--shadow-sm);
+    animation: more-less-coach-float 1500ms ease-in-out infinite;
+  }
+
+  .more-less-market__coach,
+  .more-less-market__coach * {
+    pointer-events: none;
   }
 
   .more-less-market__basket {
@@ -1638,6 +1673,11 @@ const moreLessMarketStyles = `
     color: var(--color-text-secondary);
   }
 
+  .more-less-market__summary-celebration {
+    display: flex;
+    justify-content: center;
+  }
+
   .more-less-market__checkpoint-actions {
     display: flex;
     gap: var(--space-sm);
@@ -1697,11 +1737,29 @@ const moreLessMarketStyles = `
     }
   }
 
+  @keyframes more-less-coach-float {
+    0% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-4px);
+    }
+
+    100% {
+      transform: translateY(0);
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .more-less-market__progress-dot--active,
     .more-less-market__badge-slot--accept,
     .more-less-market__badge-slot--reject,
     .more-less-market__score-pill--pulse {
+      animation: none;
+    }
+
+    .more-less-market__coach {
       animation: none;
     }
   }

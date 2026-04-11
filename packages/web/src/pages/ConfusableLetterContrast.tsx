@@ -3,6 +3,7 @@ import type { Child, Game, GameLevel } from '@dubiland/shared';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button, Card } from '@/components/design-system';
+import { ChildRouteHeader, ChildRouteScaffold } from '@/components/layout';
 import type { GameCompletionResult } from '@/games/engine';
 import { ConfusableLetterContrastGame } from '@/games/reading/ConfusableLetterContrastGame';
 import { useAudioManager } from '@/hooks/useAudioManager';
@@ -74,6 +75,16 @@ export default function ConfusableLetterContrastPage() {
     }),
     [activeProfile?.emoji, activeProfile?.id, activeProfile?.name, t],
   );
+  const runtimeLevel = useMemo<GameLevel>(
+    () => ({
+      ...CONFUSABLE_LETTER_CONTRAST_LEVEL,
+      configJson: {
+        ...(CONFUSABLE_LETTER_CONTRAST_LEVEL.configJson as Record<string, unknown>),
+        ageBand: activeProfile?.ageBand ?? '5-6',
+      },
+    }),
+    [activeProfile?.ageBand],
+  );
 
   const [completionResult, setCompletionResult] = useState<ConfusableCompletionResult | null>(null);
   const [syncState, setSyncState] = useState<SyncState>('idle');
@@ -104,48 +115,26 @@ export default function ConfusableLetterContrastPage() {
   }, []);
 
   return (
-    <main
-      style={{
-        flex: 1,
+    <ChildRouteScaffold
+      width="wide"
+      mainStyle={{
         background:
           'radial-gradient(circle at 14% 12%, color-mix(in srgb, var(--color-theme-secondary) 18%, transparent), transparent 44%), linear-gradient(180deg, var(--color-theme-bg) 0%, color-mix(in srgb, var(--color-bg-card) 88%, white 12%) 100%)',
-        padding: 'var(--space-lg)',
-        display: 'flex',
-        justifyContent: 'center',
       }}
     >
-      <section style={{ width: 'min(1180px, 100%)', display: 'grid', gap: 'var(--space-md)' }}>
-        <header
-          style={{
-            display: 'flex',
-            gap: 'var(--space-sm)',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-          }}
-        >
-          <div style={{ display: 'grid', gap: 'var(--space-xs)' }}>
-            <h1
-              style={{
-                margin: 0,
-                fontSize: 'var(--font-size-2xl)',
-                color: 'var(--color-text-primary)',
-                fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
-              }}
-            >
-              {t('games.confusableLetterContrast.title')}
-            </h1>
-            <p style={{ margin: 0, color: 'var(--color-text-secondary)' }}>{t('games.confusableLetterContrast.subtitle')}</p>
-          </div>
-
+      <ChildRouteHeader
+        title={t('games.confusableLetterContrast.title')}
+        subtitle={t('games.confusableLetterContrast.subtitle')}
+        leading={
           <Button variant="ghost" size="md" onClick={() => navigate('/games')} aria-label={t('nav.back')}>
             {t('nav.back')}
           </Button>
-        </header>
+        }
+      />
 
         <ConfusableLetterContrastGame
           game={CONFUSABLE_LETTER_CONTRAST_GAME}
-          level={CONFUSABLE_LETTER_CONTRAST_LEVEL}
+          level={runtimeLevel}
           child={child}
           onComplete={handleComplete}
           audio={audio}
@@ -169,7 +158,6 @@ export default function ConfusableLetterContrastPage() {
             </p>
           </Card>
         )}
-      </section>
-    </main>
+    </ChildRouteScaffold>
   );
 }

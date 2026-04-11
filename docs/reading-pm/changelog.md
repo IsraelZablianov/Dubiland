@@ -2,6 +2,76 @@
 
 Record every completed reading spec, curriculum decision, or reading milestone in reverse chronological order.
 
+## 2026-04-11 — Duplicate storybook lane acknowledged (DUB-650 superseded)
+- Confirmed duplicate execution lane [DUB-650](/DUB/issues/DUB-650) is superseded by canonical lane [DUB-651](/DUB/issues/DUB-651); no parallel spec work was created.
+- Posted closure note on [DUB-650](/DUB/issues/DUB-650) and re-applied `cancelled` status after checkout reopened the lane to `in_progress`.
+- Parent tracking remains on [DUB-647](/DUB/issues/DUB-647).
+- Ran mandatory delegation audit on `docs/reading-pm/features.md`: `non_delegated=0`, `not_yet_handed_off=0`; no new handoff issues required.
+
+## 2026-04-11 — Storybook execution cluster moved to in progress
+- Synced live execution state for `Learn the Letters Storybook`:
+  - [DUB-657](/DUB/issues/DUB-657) `in_progress` (implementation)
+  - [DUB-658](/DUB/issues/DUB-658) `in_progress` (Hebrew i18n/audio)
+- Updated `docs/reading-pm/features.md`:
+  - Feature status moved from `Planned` to `In Progress`.
+  - Letter Recognition coverage row updated `1/1/4` -> `0/2/4` (planned/in progress/shipped).
+- Mandatory delegation audit on `docs/reading-pm/features.md`: all tracked reading specs remain delegated; no new handoff issues required.
+
+## 2026-04-11 — Duplicate storybook lane acknowledged (DUB-648 superseded)
+- Confirmed duplicate execution lane [DUB-648](/DUB/issues/DUB-648) is superseded by canonical lane [DUB-651](/DUB/issues/DUB-651); no parallel spec work was created.
+- Re-validated canonical artifacts remain in place:
+  - Spec: `docs/games/letter-storybook.md`
+  - Delegated implementation/content lanes: [DUB-657](/DUB/issues/DUB-657), [DUB-658](/DUB/issues/DUB-658)
+- Ran mandatory delegation audit on `docs/reading-pm/features.md`: all tracked reading specs already show delegated status; no new handoff issues required.
+
+## 2026-04-11 — Learn the Letters storybook spec authored and delegated
+- Authored full reading spec: `docs/games/letter-storybook.md` for the new storybook lane covering all `22` Hebrew letters plus integrated final-forms bridge.
+- Locked curriculum placement: after letter tracing/sound matching, before confusable transfer and scaled decodable tracks.
+- Created direct execution lanes under [DUB-651](/DUB/issues/DUB-651):
+  - [DUB-657](/DUB/issues/DUB-657) — FED Engineer 2 implementation lane (`todo`)
+  - [DUB-658](/DUB/issues/DUB-658) — Content Writer Hebrew i18n/audio lane (`todo`)
+- Updated `docs/reading-pm/features.md`:
+  - Added `Learn the Letters Storybook` with delegated status and issue links.
+  - Updated curriculum coverage row: Letter Recognition `0/1/4` -> `1/1/4` (planned/in progress/shipped).
+- Mandatory delegation audit on `docs/reading-pm/features.md`: no un-handed-off specs remain.
+
+## 2026-04-11 — Decodable age-band scaling moved to shipped
+- Synced `Decodable Micro Stories Age-Band Scaling Overhaul` after [DUB-528](/DUB/issues/DUB-528) moved to `done` (with [DUB-527](/DUB/issues/DUB-527) and [DUB-529](/DUB/issues/DUB-529) already `done`).
+- Updated `docs/reading-pm/features.md`:
+  - Feature status moved from In Progress to Shipped.
+  - Lane annotation updated: [DUB-528](/DUB/issues/DUB-528) `in_progress` -> `done`.
+  - Coverage rows updated:
+    - Phrase & Sentence Reading `0/1/3` -> `0/0/4`
+    - Reading Comprehension `0/1/3` -> `0/0/4`
+    - Decodable Stories `0/1/3` -> `0/0/4`
+- Mandatory delegation audit on `docs/reading-pm/features.md`: no un-handed-off specs found (`non_delegated=0`, `not_yet_handed_off=0`).
+
+## 2026-04-11 — Decodable age-band content lane moved to in progress
+- Synced live issue state for `Decodable Micro Stories Age-Band Scaling Overhaul` in `docs/reading-pm/features.md`:
+  - [DUB-527](/DUB/issues/DUB-527) `done`
+  - [DUB-528](/DUB/issues/DUB-528) `in_progress` (updated from `todo` in tracker)
+  - [DUB-529](/DUB/issues/DUB-529) `done`
+- Feature status remains `In Progress`; no curriculum coverage row changes were required.
+- Mandatory delegation audit on `docs/reading-pm/features.md`: no un-handed-off specs found (`non_delegated=0`, `not_yet_handed_off=0`).
+
+## 2026-04-11 — Hebrew letters video lane status normalization
+- Updated `Hebrew Letters Video Pedagogy` delegated lane annotation in `docs/reading-pm/features.md` to include explicit status labels for:
+  - [DUB-115](/DUB/issues/DUB-115) (category scope, done)
+  - [DUB-119](/DUB/issues/DUB-119) (Hebrew script/TTS package, done)
+  - [DUB-120](/DUB/issues/DUB-120) (Remotion composition, done)
+- Mandatory delegation audit on `docs/reading-pm/features.md`: 17/17 status lines are delegated; no un-handed-off specs found.
+
+## 2026-04-11 — Handbook Story Depth Overhaul moved to shipped
+- Synced `Handbook Story Depth Overhaul (Books 1/4/7)` after [DUB-524](/DUB/issues/DUB-524) moved to `done` (with [DUB-525](/DUB/issues/DUB-525) and [DUB-526](/DUB/issues/DUB-526) already `done`).
+- Updated `docs/reading-pm/features.md`:
+  - Feature status moved from In Progress to Shipped.
+  - Lane annotation updated: [DUB-524](/DUB/issues/DUB-524) `in_progress` -> `done`.
+  - Coverage rows updated:
+    - Phrase & Sentence Reading `0/2/2` -> `0/1/3`
+    - Reading Comprehension `0/2/2` -> `0/1/3`
+    - Decodable Stories `0/2/2` -> `0/1/3`
+- Mandatory delegation audit on `docs/reading-pm/features.md`: no un-handed-off specs found (all entries remain delegated).
+
 ## 2026-04-11 — Parity lane status refresh (handbook + decodable overhauls)
 - Synced live issue states for the two active parity clusters in `docs/reading-pm/features.md`:
   - `Handbook Story Depth Overhaul (Books 1/4/7)`: [DUB-524](/DUB/issues/DUB-524) `in_progress`, [DUB-525](/DUB/issues/DUB-525) `done`, [DUB-526](/DUB/issues/DUB-526) `done`.

@@ -1,0 +1,26 @@
+{
+  "checks": {
+    "homepage_lcp_guardrail_pass": true,
+    "homepage_long_task_guardrail_pass": true,
+    "non_home_no_new_regressions_pass": true
+  },
+  "thresholds": {
+    "lcp_delta_ms_max": 250,
+    "max_long_task_delta_ms_max": 50
+  },
+  "root_delta": {
+    "route": "/",
+    "perf_delta": 12,
+    "fcp_delta_ms": -923.143,
+    "lcp_delta_ms": -1531.476,
+    "tbt_delta_ms": 0,
+    "max_potential_fid_delta_ms": 10.588,
+    "cls_delta": 0.06267,
+    "speed_index_delta_ms": -244.953,
+    "max_long_task_delta_ms": -211.262,
+    "baseline_final_url": "http://127.0.0.1:4175/",
+    "current_final_url": "http://127.0.0.1:4191/"
+  },
+  "non_home_regressions": [],
+  "pass": true
+}

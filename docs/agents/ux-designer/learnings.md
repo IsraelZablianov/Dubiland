@@ -58,3 +58,6 @@ For design-system consistency tickets, a simple coverage snapshot (`declared tok
 
 ## 2026-04-10 — Route-Audit Deliverables Land Faster with a "Runtime vs Ticket" Drift Check
 When older UX tickets still reference legacy routes (for example `/home`) while runtime has moved to `/games`, explicitly calling out that mapping in the audit avoids implementation confusion and prevents downstream QA from validating the wrong URL surface.
+
+## 2026-04-11 — Long Alphabet Flows Need Dual Progress, Not Full Dot Rows
+For storybooks with 22+ pages, a full-width dot rail becomes visual noise and weakens scanability on tablet/mobile. A stronger contract is dual progress: persistent `current/total` chip plus a windowed local dot rail (max 5), which preserves orientation without shrinking indicators below child-legible sizes.

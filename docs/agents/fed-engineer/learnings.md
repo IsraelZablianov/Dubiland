@@ -218,6 +218,9 @@ When QA requires an empty-state CTA "instead of" zero metrics, treat the whole d
 ## 2026-04-10 — RTL reader controls should derive direction once and mirror navigation glyphs
 For Hebrew storybook controls, compute `isRtl` from `i18n.dir()` in the component and use it for forward-arrow glyphs (`←` in RTL, `→` in LTR); pair this with stronger text contrast (not near-threshold secondary tones) on small labels/buttons to avoid QA contrast failures around 4.49:1.
 
+## 2026-04-11 — Shell-unification lanes should collapse duplicate wrappers into one app shell
+When header/footer consistency issues target protected routes, replacing multiple wrapper variants (`ChildPlayShell`, `ParentShell`) with one `AppShell` reduces drift risk while preserving route-level content ownership; keep `PublicHeader` + `PublicFooter` composition fixed in that single shell path.
+
 ## 2026-04-10 — Shell touch-floor fixes are safest with explicit floor aliases plus source-level regression checks
 For shared marketing/app shells, define dedicated floor tokens (`--touch-min-secondary: 44px`, `--touch-min-primary: 60px`) and enforce them directly on logo/nav/footer selectors, then add a lightweight node:test guard that inspects those selector blocks in source to catch accidental regressions even when runtime Playwright coverage is intermittent.
 
@@ -265,3 +268,48 @@ When controls are symmetric in layout (left/right movement, left/right basket/co
 
 ## 2026-04-10 — Fast touch-target audits across games are easiest with one literal scan pass
 When a quality lane asks for child tap target enforcement across many game files, scanning `packages/web/src/games/**` for literal `44px` tokens and normalizing to `48px` in one patch is a reliable first sweep; then verify with `rg "44px"` returning empty plus `yarn typecheck` and a Vite boot check.
+
+## 2026-04-11 — Header logo touch targets should include logical + physical min-size fallbacks
+For shared shell logo links, enforce target floor with both logical and physical min dimensions (`min-inline-size`/`min-block-size` plus `min-width`/`min-height`) and token fallback (`max(var(--touch-min-primary, 44px), 44px)`) so QA still measures compliant targets even if a token or logical property path fails.
+
+## 2026-04-11 — Parent metrics rollout should happen in persistence adapters, not game UIs
+When adding canonical analytics contracts like `parentMetricsV1`, emit them in the shared `persistGameAttempt` path from `GameCompletionResult` and keep legacy `summaryMetrics` unchanged; this avoids per-game UI churn, preserves parent summary UX, and gives backend validation one stable write shape.
+
+## 2026-04-11 — Safe-audio wrappers should short-circuit replay storms after first failure
+For audio-heavy games, use one `playAudioPath`/`playAudioKey` wrapper that catches `audio.play` once, flips a persistent `audioPlaybackFailed` flag, and no-ops subsequent playback calls; pair it with a compact visible fallback hint row so kids still get clear non-audio guidance without repeated promise rejection noise.
+
+## 2026-04-11 — Queue-based narration loops also need the same single-failure audio circuit breaker
+In story-reader flows that chain `playNow` + queued `play` calls, guard the shared `playKey` helper (not each caller) so all replay, hint, and sequence paths respect one `audioPlaybackFailed` switch and degrade consistently.
+
+## 2026-04-11 — Axe contrast checks are stricter than htmlcs on handbook controls
+When validating handbook UI with `pa11y --runner axe`, glyph-based control icons can still fail even if htmlcs passes; using non-text SVG arrows for nav controls and avoiding `color-mix(...)` on critical replay/back and replay-text surfaces (fallback to solid token colors) produced stable `[]` results for both runners.
+
+## 2026-04-11 — Child shell safety should be enforced at route wrapper level
+For navigation-contract tickets like shell split + protected parent exit, the reliable closure is routing `/profiles` and all `/games/**` through a dedicated child shell (with icon-first controls and arm/confirm parent handoff) while isolating `/parent` in its own shell; patching only shared headers leaves footer leakage and QA contract mismatches unresolved.
+
+## 2026-04-11 — Silent-mode fallback should be explicit even in non-story math/color games
+For interaction-first games like ColorGarden, MoreOrLessMarket, and CountingPicnic, guard `playAudioKey` with a persistent `audioPlaybackFailed` circuit breaker and render a dedicated `🔇` fallback note tied to an existing instruction i18n key; this keeps gameplay guidance clear when narration drops out, not just in reading/story flows.
+
+## 2026-04-11 — Protected-route Supabase hygiene works best through one cached runtime loader
+For protected-shell perf lanes, replacing static `@/lib/supabase` imports with a shared `loadSupabaseRuntime()` helper (promise-cached dynamic import) keeps route entry graphs cleaner while preserving existing async data/auth behavior inside effects and actions.
+
+## 2026-04-11 — Keep child-nav contract inside `ChildPlayShell`, not `PublicHeader`
+For `/profiles` + `/games/**` lanes, putting icon-first nav and the arm/confirm parent handoff directly in `ChildPlayShell` prevents regressions when shared marketing header logic changes; pair that with the `--public-header-logo-touch-min` alias so touch-shell source tests keep catching token-floor drift early.
+
+## 2026-04-11 — Assignment-triggered runs may be checkout-bound to one issue snapshot
+When a heartbeat is triggered by `issue_assigned`, checkout can be locked to that run's `snapshotIssueId`; if checkout on another assigned issue returns `Checkout run context is bound to a different issue`, finish the bound issue and pick up the other lane on a new heartbeat instead of forcing cross-issue mutations in the same run.
+
+## 2026-04-11 — Circuit-breaker audio fallback should be visible per game shell, not only silent in catch blocks
+For game-level narration loops, catching `audio.play` errors without state still causes repeated retries and unclear UX; add an `audioPlaybackFailed` flag that short-circuits future playback attempts and render one compact `🔇` fallback instruction row (using existing i18n keys) while the session remains interactive.
+
+## 2026-04-11 — Reading games with mixed `playNow` + `playSequence` flows need one shared safe-audio triad
+For complex reading loops (prompt, model, transfer, anti-random guard), introducing three shared helpers (`playAudioNow`, `playAudioQueued`, `playAudioSequence`) around one `audioPlaybackFailed` state is the fastest way to eliminate unguarded playback paths and keep UI guidance visible with a single `🔇` fallback line.
+
+## 2026-04-11 — Letter glyphs in reading games should come from pronunciation i18n keys, not literals
+For Hebrew letter-selection UIs, avoid hardcoded glyph maps (`'ב'`, `'כ'`, etc.). Derive the display glyph from the localized pronunciation key (first grapheme of `letters.pronunciation.*`) so the component stays inside i18n-only contracts and remains consistent with audio/language packs.
+
+## 2026-04-11 — Touch-floor regression tests should assert minimums, not frozen px literals
+When touch tokens are intentionally raised (e.g., `--touch-min-secondary` from 44px to 48px), source-based shell regression tests should parse the token and assert a floor (`>= 48`) instead of pinning one exact legacy value, so quality hardening does not cause false red regressions.
+
+## 2026-04-11 — Final-form glyph choices in storybook should be resolved from i18n symbol keys
+In `LetterStorybookGame`, final/decoy letter options should come from `games.letterStorybook.finalForms.*.symbol` and `games.letterStorybook.letters.*.symbol` keys, not inline Hebrew glyph literals. This removes remaining hardcoded Hebrew text and keeps symbol/audio/localization contracts aligned.

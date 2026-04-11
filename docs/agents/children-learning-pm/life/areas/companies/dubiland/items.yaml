@@ -177,3 +177,27 @@
     - companies/dubiland
   last_accessed: "2026-04-10"
   access_count: 1
+
+- id: clpm-dubiland-016
+  fact: "Children Learning PM validated pedagogy for the Learn the Letters storybook (DUB-652) and locked required gates: staged letter sequencing, confusable-pair remediation order, age-banded sentence complexity caps, and contextual final-form handling."
+  category: milestone
+  timestamp: "2026-04-11"
+  source: "docs/children-learning-pm/letter-storybook-pedagogy-validation-2026-04-11.md"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-11"
+  access_count: 1
+
+- id: clpm-dubiland-017
+  fact: "PM accepted the letter-storybook pedagogy validation output as a merge-gate criterion for DUB-651 and as parent sign-off criteria under DUB-647."
+  category: relationship
+  timestamp: "2026-04-11"
+  source: "DUB-652 comment 4be923a2-9b2a-4a6b-a3e3-799a0a6e51f7"
+  status: active
+  superseded_by: null
+  related_entities:
+    - companies/dubiland
+  last_accessed: "2026-04-11"
+  access_count: 1

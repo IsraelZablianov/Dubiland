@@ -1,6 +1,8 @@
 import type { Game, GameLevel } from '@dubiland/shared';
 import type { GameCompletionResult } from '@/games/engine';
-import { isSupabaseConfigured, supabase } from '@/lib/supabase';
+import { loadSupabaseRuntime } from '@/lib/loadSupabaseRuntime';
+import { buildParentMetricsV1 } from '@/lib/parentMetricsAdapter';
+import { isSupabaseConfigured } from '@/lib/supabaseConfig';
 
 type PersistableAgeBand = '3-4' | '4-5' | '5-6' | '6-7';
 type PersistSkipReason = 'supabase_not_configured' | 'child_not_persistable';
@@ -8,7 +10,7 @@ type PersistSkipReason = 'supabase_not_configured' | 'child_not_persistable';
 interface PersistGameAttemptParams {
   childId: string;
   childAgeBand?: PersistableAgeBand;
-  game: Pick<Game, 'id' | 'slug'>;
+  game: Pick<Game, 'id' | 'slug'> & Partial<Pick<Game, 'topicId'>>;
   level?: Pick<GameLevel, 'id' | 'levelNumber'> | null;
   completion: GameCompletionResult;
   clientSessionId: string;
@@ -38,6 +40,8 @@ interface SubmitGameAttemptResponse {
   attemptId?: string;
   error?: string;
 }
+
+type SupabaseRuntime = NonNullable<Awaited<ReturnType<typeof loadSupabaseRuntime>>>;
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const gameIdBySlugCache = new Map<string, string>();
@@ -87,7 +91,10 @@ export function createGameAttemptId(): string {
   return generateUuidV4();
 }
 
-async function resolvePersistedGameId(game: Pick<Game, 'id' | 'slug'>): Promise<string | null> {
+async function resolvePersistedGameId(
+  supabase: SupabaseRuntime,
+  game: Pick<Game, 'id' | 'slug'>,
+): Promise<string | null> {
   if (isUuid(game.id)) {
     return game.id;
   }
@@ -113,6 +120,7 @@ async function resolvePersistedGameId(game: Pick<Game, 'id' | 'slug'>): Promise<
 }
 
 async function resolvePersistedLevelId(
+  supabase: SupabaseRuntime,
   gameId: string,
   level: Pick<GameLevel, 'id' | 'levelNumber'> | null | undefined,
 ): Promise<string | null> {
@@ -163,7 +171,12 @@ export async function persistGameAttempt(params: PersistGameAttemptParams): Prom
   }
 
   try {
-    const gameId = await resolvePersistedGameId(params.game);
+    const supabase = await loadSupabaseRuntime();
+    if (!supabase) {
+      return { status: 'skipped', reason: 'supabase_not_configured' };
+    }
+
+    const gameId = await resolvePersistedGameId(supabase, params.game);
     if (!gameId) {
       return {
         status: 'failed',
@@ -171,8 +184,13 @@ export async function persistGameAttempt(params: PersistGameAttemptParams): Prom
       };
     }
 
-    const levelId = await resolvePersistedLevelId(gameId, params.level);
+    const levelId = await resolvePersistedLevelId(supabase, gameId, params.level);
     const attemptId = isUuid(params.attemptId) ? params.attemptId : createGameAttemptId();
+    const parentMetricsV1 = buildParentMetricsV1({
+      game: params.game,
+      completion: params.completion,
+      childAgeBand: params.childAgeBand,
+    });
 
     const { data, error } = await supabase.functions.invoke<SubmitGameAttemptResponse>('submit-game-attempt', {
       body: {
@@ -195,6 +213,7 @@ export async function persistGameAttempt(params: PersistGameAttemptParams): Prom
             completed: params.completion.completed,
             roundsCompleted: params.completion.roundsCompleted ?? null,
             summaryMetrics: params.completion.summaryMetrics ?? null,
+            parentMetricsV1,
           },
         },
       },

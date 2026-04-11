@@ -3,6 +3,7 @@ import type { Child, Game, GameLevel } from '@dubiland/shared';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button, Card } from '@/components/design-system';
+import { ChildRouteHeader, ChildRouteScaffold } from '@/components/layout';
 import type { GameCompletionResult } from '@/games/engine';
 import { CountingPicnicGame } from '@/games/numbers/CountingPicnicGame';
 import { useAudioManager } from '@/hooks/useAudioManager';
@@ -70,25 +71,9 @@ export default function CountingPicnicPage() {
   }, []);
 
   return (
-    <main
-      style={{
-        flex: 1,
-        background: 'var(--color-theme-bg)',
-        padding: 'var(--space-lg)',
-        display: 'flex',
-        justifyContent: 'center',
-      }}
-    >
-      <section style={{ width: 'min(1180px, 100%)', display: 'grid', gap: 'var(--space-md)' }}>
-        <header
-          style={{
-            display: 'flex',
-            gap: 'var(--space-sm)',
-            justifyContent: 'flex-start',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-          }}
-        >
+    <ChildRouteScaffold width="wide">
+      <ChildRouteHeader
+        leading={
           <Button
             variant="secondary"
             size="lg"
@@ -97,7 +82,8 @@ export default function CountingPicnicPage() {
           >
             {t('nav.back')}
           </Button>
-        </header>
+        }
+      />
 
         <CountingPicnicGame
           game={COUNTING_PICNIC_GAME}
@@ -120,7 +106,6 @@ export default function CountingPicnicPage() {
             </p>
           </Card>
         )}
-      </section>
-    </main>
+    </ChildRouteScaffold>
   );
 }

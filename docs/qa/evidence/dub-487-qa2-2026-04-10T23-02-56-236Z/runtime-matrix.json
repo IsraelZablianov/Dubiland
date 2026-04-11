@@ -1,0 +1,6099 @@
+{
+  "issue": "DUB-487",
+  "capturedAt": "2026-04-10T23:02:56.527Z",
+  "baseUrl": "http://127.0.0.1:4182/games/reading/interactive-handbook",
+  "outDir": "docs/qa/evidence/dub-487-qa2-2026-04-10T23-02-56-236Z",
+  "viewports": [
+    {
+      "name": "mobile-375x812",
+      "width": 375,
+      "height": 812
+    },
+    {
+      "name": "tablet-834x1112",
+      "width": 834,
+      "height": 1112
+    },
+    {
+      "name": "desktop-1440x900",
+      "width": 1440,
+      "height": 900
+    }
+  ],
+  "books": [
+    "book1",
+    "book4",
+    "book5"
+  ],
+  "checks": [
+    {
+      "viewport": "mobile-375x812",
+      "bookId": "book1",
+      "selected": {
+        "clicked": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "chip": "עמוד 1 מתוך 8",
+          "targetTexts": [],
+          "promptTexts": [
+            "בואו נקשיב יחד לצליל הראשון שיעזור לנו."
+          ],
+          "interactionTitle": "",
+          "choiceLabels": [],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 137.73,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 137.73,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 137.73,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 2,
+          "chip": "עמוד 2 מתוך 8",
+          "targetTexts": [
+            "ב"
+          ],
+          "promptTexts": [
+            "שומעים מילה ומחזירים למצעד את הצליל הראשון שלה."
+          ],
+          "interactionTitle": "שומעים מילה ומחזירים למצעד את הצליל הראשון שלה.",
+          "choiceLabels": [
+            "ב",
+            "כ",
+            "פ"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 144.23,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 144.23,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 144.23,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "ב",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "כ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "פ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 3,
+          "chip": "עמוד 3 מתוך 8",
+          "targetTexts": [],
+          "promptTexts": [
+            "חזרו על הצליל עם דובי והמשיכו לעמוד הבא."
+          ],
+          "interactionTitle": "",
+          "choiceLabels": [],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 4,
+          "chip": "עמוד 4 מתוך 8",
+          "targetTexts": [
+            "פ"
+          ],
+          "promptTexts": [
+            "העבירו אצבע על האות שדובי אומר כדי לפתוח את השער הבא."
+          ],
+          "interactionTitle": "העבירו אצבע על האות שדובי אומר כדי לפתוח את השער הבא.",
+          "choiceLabels": [
+            "פ",
+            "ב",
+            "כ"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "פ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "ב",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "כ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 5,
+          "chip": "עמוד 5 מתוך 8",
+          "targetTexts": [],
+          "promptTexts": [
+            "העבירו אצבע על האות ותנו לה קול."
+          ],
+          "interactionTitle": "",
+          "choiceLabels": [],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 6,
+          "chip": "עמוד 6 מתוך 8",
+          "targetTexts": [
+            "דובי"
+          ],
+          "promptTexts": [
+            "מי עזר למיקה להחזיר את הצליל לפי המשפט ששמענו?"
+          ],
+          "interactionTitle": "מי עזר למיקה להחזיר את הצליל לפי המשפט ששמענו?",
+          "choiceLabels": [
+            "דובי",
+            "דג",
+            "גן"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "דובי",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "דג",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "גן",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 7,
+          "chip": "עמוד 7 מתוך 8",
+          "targetTexts": [],
+          "promptTexts": [
+            "הקשיבו שוב ובחרו את הצליל החסר."
+          ],
+          "interactionTitle": "",
+          "choiceLabels": [],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 8,
+          "chip": "עמוד 8 מתוך 8",
+          "targetTexts": [],
+          "promptTexts": [
+            "איזה יופי! לחצו להמשך ונחגוג יחד."
+          ],
+          "interactionTitle": "",
+          "choiceLabels": [],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        }
+      ],
+      "blockedAdvance": false,
+      "failures": [
+        {
+          "type": "text-only-mode-buttons",
+          "page": 1,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 2,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 3,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 4,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 5,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 6,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 7,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 8,
+          "count": 3
+        }
+      ],
+      "failureCount": 8
+    },
+    {
+      "viewport": "mobile-375x812",
+      "bookId": "book4",
+      "selected": {
+        "clicked": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "chip": "עמוד 1 מתוך 10",
+          "targetTexts": [],
+          "promptTexts": [
+            "קדימה, יוצאים למסע האותיות עם רועי."
+          ],
+          "interactionTitle": "",
+          "choiceLabels": [],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 2,
+          "chip": "עמוד 2 מתוך 10",
+          "targetTexts": [
+            "גן"
+          ],
+          "promptTexts": [
+            "נקרא את המילה המנוקדת ונבחר תשובה."
+          ],
+          "interactionTitle": "נקרא את המילה המנוקדת ונבחר תשובה.",
+          "choiceLabels": [
+            "גן",
+            "דג",
+            "דובי"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "גן",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "דג",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "דובי",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 3,
+          "chip": "עמוד 3 מתוך 10",
+          "targetTexts": [],
+          "promptTexts": [
+            "איזו אות מתחילה את המילה פֶּרַח?"
+          ],
+          "interactionTitle": "איזו אות מתחילה את המילה פֶּרַח?",
+          "choiceLabels": [],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        }
+      ],
+      "blockedAdvance": true,
+      "failures": [
+        {
+          "type": "text-only-mode-buttons",
+          "page": 1,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 2,
+          "count": 3
+        },
+        {
+          "type": "interaction-without-target-word",
+          "page": 3,
+          "interactionTitle": "איזו אות מתחילה את המילה פֶּרַח?"
+        },
+        {
+          "type": "interaction-without-choices",
+          "page": 3,
+          "interactionTitle": "איזו אות מתחילה את המילה פֶּרַח?"
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 3,
+          "count": 3
+        },
+        {
+          "type": "page-advance-blocked",
+          "page": 3,
+          "reason": "next-still-disabled"
+        }
+      ],
+      "failureCount": 6
+    },
+    {
+      "viewport": "mobile-375x812",
+      "bookId": "book5",
+      "selected": {
+        "clicked": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "chip": "עמוד 1 מתוך 10",
+          "targetTexts": [],
+          "promptTexts": [
+            "נִבְנֶה הֲבָרָה פְּשׁוּטָה מֵהַכַּרְטִיסִים."
+          ],
+          "interactionTitle": "",
+          "choiceLabels": [],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 2,
+          "chip": "עמוד 2 מתוך 10",
+          "targetTexts": [
+            "נָ"
+          ],
+          "promptTexts": [
+            "נִבְנֶה הֲבָרָה פְּשׁוּטָה מֵהַכַּרְטִיסִים."
+          ],
+          "interactionTitle": "נִבְנֶה הֲבָרָה פְּשׁוּטָה מֵהַכַּרְטִיסִים.",
+          "choiceLabels": [
+            "נָ",
+            "מָ",
+            "סָ"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "נָ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "מָ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "סָ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 3,
+          "chip": "עמוד 3 מתוך 10",
+          "targetTexts": [
+            "נַעֲמָה"
+          ],
+          "promptTexts": [
+            "אֵיזוֹ מִלָּה מְנֻקֶּדֶת קָרָאתֶם?"
+          ],
+          "interactionTitle": "אֵיזוֹ מִלָּה מְנֻקֶּדֶת קָרָאתֶם?",
+          "choiceLabels": [
+            "נַעֲמָה",
+            "שָׁעוֹן",
+            "דָּג"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "נַעֲמָה",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "שָׁעוֹן",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "דָּג",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 4,
+          "chip": "עמוד 4 מתוך 10",
+          "targetTexts": [
+            "נָ + מָ"
+          ],
+          "promptTexts": [
+            "נְסַדֵּר אֶת הַהֲבָרוֹת בַּסֵּדֶר הַנָּכוֹן."
+          ],
+          "interactionTitle": "נְסַדֵּר אֶת הַהֲבָרוֹת בַּסֵּדֶר הַנָּכוֹן.",
+          "choiceLabels": [
+            "נָ + מָ",
+            "מָ + נָ",
+            "נָ + נָ"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "נָ + מָ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "מָ + נָ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "נָ + נָ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 5,
+          "chip": "עמוד 5 מתוך 10",
+          "targetTexts": [
+            "נָ"
+          ],
+          "promptTexts": [
+            "אֵיזוֹ הֲבָרָה מַתְאִימָה לַמִּלָּה?"
+          ],
+          "interactionTitle": "אֵיזוֹ הֲבָרָה מַתְאִימָה לַמִּלָּה?",
+          "choiceLabels": [
+            "נָ",
+            "רָ",
+            "לָ"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "נָ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "רָ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "לָ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 6,
+          "chip": "עמוד 6 מתוך 10",
+          "targetTexts": [
+            "לִפְתֹּחַ קֻפְסָה"
+          ],
+          "promptTexts": [
+            "קִרְאוּ צֵירוּף קָצָר וְנַמְשִׁיךְ."
+          ],
+          "interactionTitle": "קִרְאוּ צֵירוּף קָצָר וְנַמְשִׁיךְ.",
+          "choiceLabels": [
+            "לִפְתֹּחַ קֻפְסָה",
+            "לִסְגֹּר דֶּלֶת",
+            "לִצְיֹר שֶׁמֶשׁ"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "לִפְתֹּחַ קֻפְסָה",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "לִסְגֹּר דֶּלֶת",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "לִצְיֹר שֶׁמֶשׁ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 7,
+          "chip": "עמוד 7 מתוך 10",
+          "targetTexts": [
+            "מַפְתֵּחַ"
+          ],
+          "promptTexts": [
+            "בַּחֲרוּ חֵפֶץ לְפִי מַה שֶּׁקְּרָאתֶם."
+          ],
+          "interactionTitle": "בַּחֲרוּ חֵפֶץ לְפִי מַה שֶּׁקְּרָאתֶם.",
+          "choiceLabels": [
+            "מַפְתֵּחַ",
+            "כַּדּוּר",
+            "פֶּרַח"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "מַפְתֵּחַ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "כַּדּוּר",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "פֶּרַח",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 8,
+          "chip": "עמוד 8 מתוך 10",
+          "targetTexts": [
+            "נָעֲמָה"
+          ],
+          "promptTexts": [
+            "אֵיזוֹ מִלָּה חֲדָשָׁה דוֹמָה לַמִּלָּה שֶׁלָּמַדְנוּ?"
+          ],
+          "interactionTitle": "אֵיזוֹ מִלָּה חֲדָשָׁה דוֹמָה לַמִּלָּה שֶׁלָּמַדְנוּ?",
+          "choiceLabels": [
+            "נָעֲמָה",
+            "דּוֹבִי",
+            "לֶחֶם"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "נָעֲמָה",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "דּוֹבִי",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "לֶחֶם",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 9,
+          "chip": "עמוד 9 מתוך 10",
+          "targetTexts": [
+            "הִיא מָצְאָה מַפְתֵּחַ"
+          ],
+          "promptTexts": [
+            "מָה נַעֲמָה מָצְאָה לְפִי הַמִּשְׁפָּט?"
+          ],
+          "interactionTitle": "מָה נַעֲמָה מָצְאָה לְפִי הַמִּשְׁפָּט?",
+          "choiceLabels": [
+            "הִיא מָצְאָה מַפְתֵּחַ",
+            "הִיא מָצְאָה עָנָן",
+            "הִיא מָצְאָה דָּג"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "הִיא מָצְאָה מַפְתֵּחַ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "הִיא מָצְאָה עָנָן",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "הִיא מָצְאָה דָּג",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 10,
+          "chip": "עמוד 10 מתוך 10",
+          "targetTexts": [
+            "לְחַבֵּר הֲבָרוֹת לְמִלָּה"
+          ],
+          "promptTexts": [
+            "אֵיזוֹ מְיוּמָּנוּת תִּרְגַּלְנוּ בַּקֻּפְסָה?"
+          ],
+          "interactionTitle": "אֵיזוֹ מְיוּמָּנוּת תִּרְגַּלְנוּ בַּקֻּפְסָה?",
+          "choiceLabels": [
+            "לְחַבֵּר הֲבָרוֹת לְמִלָּה",
+            "לְזַהוֹת רַק צְבָעִים",
+            "לִסְפֹּר בִּלְבַד"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "לְחַבֵּר הֲבָרוֹת לְמִלָּה",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "לְזַהוֹת רַק צְבָעִים",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "לִסְפֹּר בִּלְבַד",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        }
+      ],
+      "blockedAdvance": false,
+      "failures": [
+        {
+          "type": "text-only-mode-buttons",
+          "page": 1,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 2,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 3,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 4,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 5,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 6,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 7,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 8,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 9,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 10,
+          "count": 3
+        }
+      ],
+      "failureCount": 10
+    },
+    {
+      "viewport": "tablet-834x1112",
+      "bookId": "book1",
+      "selected": {
+        "clicked": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "chip": "עמוד 1 מתוך 8",
+          "targetTexts": [],
+          "promptTexts": [
+            "בואו נקשיב יחד לצליל הראשון שיעזור לנו."
+          ],
+          "interactionTitle": "",
+          "choiceLabels": [],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 2,
+          "chip": "עמוד 2 מתוך 8",
+          "targetTexts": [
+            "ב"
+          ],
+          "promptTexts": [
+            "שומעים מילה ומחזירים למצעד את הצליל הראשון שלה."
+          ],
+          "interactionTitle": "שומעים מילה ומחזירים למצעד את הצליל הראשון שלה.",
+          "choiceLabels": [
+            "ב",
+            "כ",
+            "פ"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "ב",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "כ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "פ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 3,
+          "chip": "עמוד 3 מתוך 8",
+          "targetTexts": [],
+          "promptTexts": [
+            "חזרו על הצליל עם דובי והמשיכו לעמוד הבא."
+          ],
+          "interactionTitle": "",
+          "choiceLabels": [],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 4,
+          "chip": "עמוד 4 מתוך 8",
+          "targetTexts": [
+            "פ"
+          ],
+          "promptTexts": [
+            "העבירו אצבע על האות שדובי אומר כדי לפתוח את השער הבא."
+          ],
+          "interactionTitle": "העבירו אצבע על האות שדובי אומר כדי לפתוח את השער הבא.",
+          "choiceLabels": [
+            "פ",
+            "ב",
+            "כ"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "פ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "ב",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "כ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 5,
+          "chip": "עמוד 5 מתוך 8",
+          "targetTexts": [],
+          "promptTexts": [
+            "העבירו אצבע על האות ותנו לה קול."
+          ],
+          "interactionTitle": "",
+          "choiceLabels": [],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 6,
+          "chip": "עמוד 6 מתוך 8",
+          "targetTexts": [
+            "דובי"
+          ],
+          "promptTexts": [
+            "מי עזר למיקה להחזיר את הצליל לפי המשפט ששמענו?"
+          ],
+          "interactionTitle": "מי עזר למיקה להחזיר את הצליל לפי המשפט ששמענו?",
+          "choiceLabels": [
+            "דובי",
+            "דג",
+            "גן"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "דובי",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "דג",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "גן",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 7,
+          "chip": "עמוד 7 מתוך 8",
+          "targetTexts": [],
+          "promptTexts": [
+            "הקשיבו שוב ובחרו את הצליל החסר."
+          ],
+          "interactionTitle": "",
+          "choiceLabels": [],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 8,
+          "chip": "עמוד 8 מתוך 8",
+          "targetTexts": [],
+          "promptTexts": [
+            "איזה יופי! לחצו להמשך ונחגוג יחד."
+          ],
+          "interactionTitle": "",
+          "choiceLabels": [],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        }
+      ],
+      "blockedAdvance": false,
+      "failures": [
+        {
+          "type": "text-only-mode-buttons",
+          "page": 1,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 2,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 3,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 4,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 5,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 6,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 7,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 8,
+          "count": 3
+        }
+      ],
+      "failureCount": 8
+    },
+    {
+      "viewport": "tablet-834x1112",
+      "bookId": "book4",
+      "selected": {
+        "clicked": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "chip": "עמוד 1 מתוך 10",
+          "targetTexts": [],
+          "promptTexts": [
+            "קדימה, יוצאים למסע האותיות עם רועי."
+          ],
+          "interactionTitle": "",
+          "choiceLabels": [],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 2,
+          "chip": "עמוד 2 מתוך 10",
+          "targetTexts": [
+            "גן"
+          ],
+          "promptTexts": [
+            "נקרא את המילה המנוקדת ונבחר תשובה."
+          ],
+          "interactionTitle": "נקרא את המילה המנוקדת ונבחר תשובה.",
+          "choiceLabels": [
+            "גן",
+            "דג",
+            "דובי"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "גן",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "דג",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "דובי",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 3,
+          "chip": "עמוד 3 מתוך 10",
+          "targetTexts": [],
+          "promptTexts": [
+            "איזו אות מתחילה את המילה פֶּרַח?"
+          ],
+          "interactionTitle": "איזו אות מתחילה את המילה פֶּרַח?",
+          "choiceLabels": [],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        }
+      ],
+      "blockedAdvance": true,
+      "failures": [
+        {
+          "type": "text-only-mode-buttons",
+          "page": 1,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 2,
+          "count": 3
+        },
+        {
+          "type": "interaction-without-target-word",
+          "page": 3,
+          "interactionTitle": "איזו אות מתחילה את המילה פֶּרַח?"
+        },
+        {
+          "type": "interaction-without-choices",
+          "page": 3,
+          "interactionTitle": "איזו אות מתחילה את המילה פֶּרַח?"
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 3,
+          "count": 3
+        },
+        {
+          "type": "page-advance-blocked",
+          "page": 3,
+          "reason": "next-still-disabled"
+        }
+      ],
+      "failureCount": 6
+    },
+    {
+      "viewport": "tablet-834x1112",
+      "bookId": "book5",
+      "selected": {
+        "clicked": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "chip": "עמוד 1 מתוך 10",
+          "targetTexts": [],
+          "promptTexts": [
+            "נִבְנֶה הֲבָרָה פְּשׁוּטָה מֵהַכַּרְטִיסִים."
+          ],
+          "interactionTitle": "",
+          "choiceLabels": [],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 2,
+          "chip": "עמוד 2 מתוך 10",
+          "targetTexts": [
+            "נָ"
+          ],
+          "promptTexts": [
+            "נִבְנֶה הֲבָרָה פְּשׁוּטָה מֵהַכַּרְטִיסִים."
+          ],
+          "interactionTitle": "נִבְנֶה הֲבָרָה פְּשׁוּטָה מֵהַכַּרְטִיסִים.",
+          "choiceLabels": [
+            "נָ",
+            "מָ",
+            "סָ"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "נָ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "מָ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "סָ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 3,
+          "chip": "עמוד 3 מתוך 10",
+          "targetTexts": [
+            "נַעֲמָה"
+          ],
+          "promptTexts": [
+            "אֵיזוֹ מִלָּה מְנֻקֶּדֶת קָרָאתֶם?"
+          ],
+          "interactionTitle": "אֵיזוֹ מִלָּה מְנֻקֶּדֶת קָרָאתֶם?",
+          "choiceLabels": [
+            "נַעֲמָה",
+            "שָׁעוֹן",
+            "דָּג"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "נַעֲמָה",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "שָׁעוֹן",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "דָּג",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 4,
+          "chip": "עמוד 4 מתוך 10",
+          "targetTexts": [
+            "נָ + מָ"
+          ],
+          "promptTexts": [
+            "נְסַדֵּר אֶת הַהֲבָרוֹת בַּסֵּדֶר הַנָּכוֹן."
+          ],
+          "interactionTitle": "נְסַדֵּר אֶת הַהֲבָרוֹת בַּסֵּדֶר הַנָּכוֹן.",
+          "choiceLabels": [
+            "נָ + מָ",
+            "מָ + נָ",
+            "נָ + נָ"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "נָ + מָ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "מָ + נָ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "נָ + נָ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 5,
+          "chip": "עמוד 5 מתוך 10",
+          "targetTexts": [
+            "נָ"
+          ],
+          "promptTexts": [
+            "אֵיזוֹ הֲבָרָה מַתְאִימָה לַמִּלָּה?"
+          ],
+          "interactionTitle": "אֵיזוֹ הֲבָרָה מַתְאִימָה לַמִּלָּה?",
+          "choiceLabels": [
+            "נָ",
+            "רָ",
+            "לָ"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "נָ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "רָ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "לָ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 6,
+          "chip": "עמוד 6 מתוך 10",
+          "targetTexts": [
+            "לִפְתֹּחַ קֻפְסָה"
+          ],
+          "promptTexts": [
+            "קִרְאוּ צֵירוּף קָצָר וְנַמְשִׁיךְ."
+          ],
+          "interactionTitle": "קִרְאוּ צֵירוּף קָצָר וְנַמְשִׁיךְ.",
+          "choiceLabels": [
+            "לִפְתֹּחַ קֻפְסָה",
+            "לִסְגֹּר דֶּלֶת",
+            "לִצְיֹר שֶׁמֶשׁ"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "לִפְתֹּחַ קֻפְסָה",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "לִסְגֹּר דֶּלֶת",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "לִצְיֹר שֶׁמֶשׁ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 7,
+          "chip": "עמוד 7 מתוך 10",
+          "targetTexts": [
+            "מַפְתֵּחַ"
+          ],
+          "promptTexts": [
+            "בַּחֲרוּ חֵפֶץ לְפִי מַה שֶּׁקְּרָאתֶם."
+          ],
+          "interactionTitle": "בַּחֲרוּ חֵפֶץ לְפִי מַה שֶּׁקְּרָאתֶם.",
+          "choiceLabels": [
+            "מַפְתֵּחַ",
+            "כַּדּוּר",
+            "פֶּרַח"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "מַפְתֵּחַ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "כַּדּוּר",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "פֶּרַח",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 8,
+          "chip": "עמוד 8 מתוך 10",
+          "targetTexts": [
+            "נָעֲמָה"
+          ],
+          "promptTexts": [
+            "אֵיזוֹ מִלָּה חֲדָשָׁה דוֹמָה לַמִּלָּה שֶׁלָּמַדְנוּ?"
+          ],
+          "interactionTitle": "אֵיזוֹ מִלָּה חֲדָשָׁה דוֹמָה לַמִּלָּה שֶׁלָּמַדְנוּ?",
+          "choiceLabels": [
+            "נָעֲמָה",
+            "דּוֹבִי",
+            "לֶחֶם"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "נָעֲמָה",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "דּוֹבִי",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "לֶחֶם",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 9,
+          "chip": "עמוד 9 מתוך 10",
+          "targetTexts": [
+            "הִיא מָצְאָה מַפְתֵּחַ"
+          ],
+          "promptTexts": [
+            "מָה נַעֲמָה מָצְאָה לְפִי הַמִּשְׁפָּט?"
+          ],
+          "interactionTitle": "מָה נַעֲמָה מָצְאָה לְפִי הַמִּשְׁפָּט?",
+          "choiceLabels": [
+            "הִיא מָצְאָה מַפְתֵּחַ",
+            "הִיא מָצְאָה עָנָן",
+            "הִיא מָצְאָה דָּג"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "הִיא מָצְאָה מַפְתֵּחַ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "הִיא מָצְאָה עָנָן",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "הִיא מָצְאָה דָּג",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 10,
+          "chip": "עמוד 10 מתוך 10",
+          "targetTexts": [
+            "לְחַבֵּר הֲבָרוֹת לְמִלָּה"
+          ],
+          "promptTexts": [
+            "אֵיזוֹ מְיוּמָּנוּת תִּרְגַּלְנוּ בַּקֻּפְסָה?"
+          ],
+          "interactionTitle": "אֵיזוֹ מְיוּמָּנוּת תִּרְגַּלְנוּ בַּקֻּפְסָה?",
+          "choiceLabels": [
+            "לְחַבֵּר הֲבָרוֹת לְמִלָּה",
+            "לְזַהוֹת רַק צְבָעִים",
+            "לִסְפֹּר בִּלְבַד"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "לְחַבֵּר הֲבָרוֹת לְמִלָּה",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "לְזַהוֹת רַק צְבָעִים",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "לִסְפֹּר בִּלְבַד",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        }
+      ],
+      "blockedAdvance": false,
+      "failures": [
+        {
+          "type": "text-only-mode-buttons",
+          "page": 1,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 2,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 3,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 4,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 5,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 6,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 7,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 8,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 9,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 10,
+          "count": 3
+        }
+      ],
+      "failureCount": 10
+    },
+    {
+      "viewport": "desktop-1440x900",
+      "bookId": "book1",
+      "selected": {
+        "clicked": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "chip": "עמוד 1 מתוך 8",
+          "targetTexts": [],
+          "promptTexts": [
+            "בואו נקשיב יחד לצליל הראשון שיעזור לנו."
+          ],
+          "interactionTitle": "",
+          "choiceLabels": [],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 2,
+          "chip": "עמוד 2 מתוך 8",
+          "targetTexts": [
+            "ב"
+          ],
+          "promptTexts": [
+            "שומעים מילה ומחזירים למצעד את הצליל הראשון שלה."
+          ],
+          "interactionTitle": "שומעים מילה ומחזירים למצעד את הצליל הראשון שלה.",
+          "choiceLabels": [
+            "ב",
+            "כ",
+            "פ"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "ב",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "כ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "פ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 3,
+          "chip": "עמוד 3 מתוך 8",
+          "targetTexts": [],
+          "promptTexts": [
+            "חזרו על הצליל עם דובי והמשיכו לעמוד הבא."
+          ],
+          "interactionTitle": "",
+          "choiceLabels": [],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 4,
+          "chip": "עמוד 4 מתוך 8",
+          "targetTexts": [
+            "פ"
+          ],
+          "promptTexts": [
+            "העבירו אצבע על האות שדובי אומר כדי לפתוח את השער הבא."
+          ],
+          "interactionTitle": "העבירו אצבע על האות שדובי אומר כדי לפתוח את השער הבא.",
+          "choiceLabels": [
+            "פ",
+            "ב",
+            "כ"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "פ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "ב",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "כ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 5,
+          "chip": "עמוד 5 מתוך 8",
+          "targetTexts": [],
+          "promptTexts": [
+            "העבירו אצבע על האות ותנו לה קול."
+          ],
+          "interactionTitle": "",
+          "choiceLabels": [],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 6,
+          "chip": "עמוד 6 מתוך 8",
+          "targetTexts": [
+            "דובי"
+          ],
+          "promptTexts": [
+            "מי עזר למיקה להחזיר את הצליל לפי המשפט ששמענו?"
+          ],
+          "interactionTitle": "מי עזר למיקה להחזיר את הצליל לפי המשפט ששמענו?",
+          "choiceLabels": [
+            "דובי",
+            "דג",
+            "גן"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "דובי",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "דג",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "גן",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 7,
+          "chip": "עמוד 7 מתוך 8",
+          "targetTexts": [],
+          "promptTexts": [
+            "הקשיבו שוב ובחרו את הצליל החסר."
+          ],
+          "interactionTitle": "",
+          "choiceLabels": [],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 8,
+          "chip": "עמוד 8 מתוך 8",
+          "targetTexts": [],
+          "promptTexts": [
+            "איזה יופי! לחצו להמשך ונחגוג יחד."
+          ],
+          "interactionTitle": "",
+          "choiceLabels": [],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        }
+      ],
+      "blockedAdvance": false,
+      "failures": [
+        {
+          "type": "text-only-mode-buttons",
+          "page": 1,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 2,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 3,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 4,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 5,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 6,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 7,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 8,
+          "count": 3
+        }
+      ],
+      "failureCount": 8
+    },
+    {
+      "viewport": "desktop-1440x900",
+      "bookId": "book4",
+      "selected": {
+        "clicked": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "chip": "עמוד 1 מתוך 10",
+          "targetTexts": [],
+          "promptTexts": [
+            "קדימה, יוצאים למסע האותיות עם רועי."
+          ],
+          "interactionTitle": "",
+          "choiceLabels": [],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 2,
+          "chip": "עמוד 2 מתוך 10",
+          "targetTexts": [
+            "גן"
+          ],
+          "promptTexts": [
+            "נקרא את המילה המנוקדת ונבחר תשובה."
+          ],
+          "interactionTitle": "נקרא את המילה המנוקדת ונבחר תשובה.",
+          "choiceLabels": [
+            "גן",
+            "דג",
+            "דובי"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "גן",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "דג",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "דובי",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 3,
+          "chip": "עמוד 3 מתוך 10",
+          "targetTexts": [],
+          "promptTexts": [
+            "איזו אות מתחילה את המילה פֶּרַח?"
+          ],
+          "interactionTitle": "איזו אות מתחילה את המילה פֶּרַח?",
+          "choiceLabels": [],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        }
+      ],
+      "blockedAdvance": true,
+      "failures": [
+        {
+          "type": "text-only-mode-buttons",
+          "page": 1,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 2,
+          "count": 3
+        },
+        {
+          "type": "interaction-without-target-word",
+          "page": 3,
+          "interactionTitle": "איזו אות מתחילה את המילה פֶּרַח?"
+        },
+        {
+          "type": "interaction-without-choices",
+          "page": 3,
+          "interactionTitle": "איזו אות מתחילה את המילה פֶּרַח?"
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 3,
+          "count": 3
+        },
+        {
+          "type": "page-advance-blocked",
+          "page": 3,
+          "reason": "next-still-disabled"
+        }
+      ],
+      "failureCount": 6
+    },
+    {
+      "viewport": "desktop-1440x900",
+      "bookId": "book5",
+      "selected": {
+        "clicked": true
+      },
+      "pages": [
+        {
+          "page": 1,
+          "chip": "עמוד 1 מתוך 10",
+          "targetTexts": [],
+          "promptTexts": [
+            "נִבְנֶה הֲבָרָה פְּשׁוּטָה מֵהַכַּרְטִיסִים."
+          ],
+          "interactionTitle": "",
+          "choiceLabels": [],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 2,
+          "chip": "עמוד 2 מתוך 10",
+          "targetTexts": [
+            "נָ"
+          ],
+          "promptTexts": [
+            "נִבְנֶה הֲבָרָה פְּשׁוּטָה מֵהַכַּרְטִיסִים."
+          ],
+          "interactionTitle": "נִבְנֶה הֲבָרָה פְּשׁוּטָה מֵהַכַּרְטִיסִים.",
+          "choiceLabels": [
+            "נָ",
+            "מָ",
+            "סָ"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "נָ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "מָ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "סָ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 3,
+          "chip": "עמוד 3 מתוך 10",
+          "targetTexts": [
+            "נַעֲמָה"
+          ],
+          "promptTexts": [
+            "אֵיזוֹ מִלָּה מְנֻקֶּדֶת קָרָאתֶם?"
+          ],
+          "interactionTitle": "אֵיזוֹ מִלָּה מְנֻקֶּדֶת קָרָאתֶם?",
+          "choiceLabels": [
+            "נַעֲמָה",
+            "שָׁעוֹן",
+            "דָּג"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "נַעֲמָה",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "שָׁעוֹן",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "דָּג",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 4,
+          "chip": "עמוד 4 מתוך 10",
+          "targetTexts": [
+            "נָ + מָ"
+          ],
+          "promptTexts": [
+            "נְסַדֵּר אֶת הַהֲבָרוֹת בַּסֵּדֶר הַנָּכוֹן."
+          ],
+          "interactionTitle": "נְסַדֵּר אֶת הַהֲבָרוֹת בַּסֵּדֶר הַנָּכוֹן.",
+          "choiceLabels": [
+            "נָ + מָ",
+            "מָ + נָ",
+            "נָ + נָ"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "נָ + מָ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "מָ + נָ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "נָ + נָ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 5,
+          "chip": "עמוד 5 מתוך 10",
+          "targetTexts": [
+            "נָ"
+          ],
+          "promptTexts": [
+            "אֵיזוֹ הֲבָרָה מַתְאִימָה לַמִּלָּה?"
+          ],
+          "interactionTitle": "אֵיזוֹ הֲבָרָה מַתְאִימָה לַמִּלָּה?",
+          "choiceLabels": [
+            "נָ",
+            "רָ",
+            "לָ"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "נָ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "רָ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "לָ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 6,
+          "chip": "עמוד 6 מתוך 10",
+          "targetTexts": [
+            "לִפְתֹּחַ קֻפְסָה"
+          ],
+          "promptTexts": [
+            "קִרְאוּ צֵירוּף קָצָר וְנַמְשִׁיךְ."
+          ],
+          "interactionTitle": "קִרְאוּ צֵירוּף קָצָר וְנַמְשִׁיךְ.",
+          "choiceLabels": [
+            "לִפְתֹּחַ קֻפְסָה",
+            "לִסְגֹּר דֶּלֶת",
+            "לִצְיֹר שֶׁמֶשׁ"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "לִפְתֹּחַ קֻפְסָה",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "לִסְגֹּר דֶּלֶת",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "לִצְיֹר שֶׁמֶשׁ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 7,
+          "chip": "עמוד 7 מתוך 10",
+          "targetTexts": [
+            "מַפְתֵּחַ"
+          ],
+          "promptTexts": [
+            "בַּחֲרוּ חֵפֶץ לְפִי מַה שֶּׁקְּרָאתֶם."
+          ],
+          "interactionTitle": "בַּחֲרוּ חֵפֶץ לְפִי מַה שֶּׁקְּרָאתֶם.",
+          "choiceLabels": [
+            "מַפְתֵּחַ",
+            "כַּדּוּר",
+            "פֶּרַח"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "מַפְתֵּחַ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "כַּדּוּר",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "פֶּרַח",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 8,
+          "chip": "עמוד 8 מתוך 10",
+          "targetTexts": [
+            "נָעֲמָה"
+          ],
+          "promptTexts": [
+            "אֵיזוֹ מִלָּה חֲדָשָׁה דוֹמָה לַמִּלָּה שֶׁלָּמַדְנוּ?"
+          ],
+          "interactionTitle": "אֵיזוֹ מִלָּה חֲדָשָׁה דוֹמָה לַמִּלָּה שֶׁלָּמַדְנוּ?",
+          "choiceLabels": [
+            "נָעֲמָה",
+            "דּוֹבִי",
+            "לֶחֶם"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "נָעֲמָה",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "דּוֹבִי",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "לֶחֶם",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 9,
+          "chip": "עמוד 9 מתוך 10",
+          "targetTexts": [
+            "הִיא מָצְאָה מַפְתֵּחַ"
+          ],
+          "promptTexts": [
+            "מָה נַעֲמָה מָצְאָה לְפִי הַמִּשְׁפָּט?"
+          ],
+          "interactionTitle": "מָה נַעֲמָה מָצְאָה לְפִי הַמִּשְׁפָּט?",
+          "choiceLabels": [
+            "הִיא מָצְאָה מַפְתֵּחַ",
+            "הִיא מָצְאָה עָנָן",
+            "הִיא מָצְאָה דָּג"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "הִיא מָצְאָה מַפְתֵּחַ",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "הִיא מָצְאָה עָנָן",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "הִיא מָצְאָה דָּג",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": true,
+          "replayHasPlayGlyph": true
+        },
+        {
+          "page": 10,
+          "chip": "עמוד 10 מתוך 10",
+          "targetTexts": [
+            "לְחַבֵּר הֲבָרוֹת לְמִלָּה"
+          ],
+          "promptTexts": [
+            "אֵיזוֹ מְיוּמָּנוּת תִּרְגַּלְנוּ בַּקֻּפְסָה?"
+          ],
+          "interactionTitle": "אֵיזוֹ מְיוּמָּנוּת תִּרְגַּלְנוּ בַּקֻּפְסָה?",
+          "choiceLabels": [
+            "לְחַבֵּר הֲבָרוֹת לְמִלָּה",
+            "לְזַהוֹת רַק צְבָעִים",
+            "לִסְפֹּר בִּלְבַד"
+          ],
+          "unresolvedKeys": [],
+          "controls": [
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "w": 114,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "modeButtons": [
+            {
+              "text": "הקרא לי",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "קוראים ומשחקים",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "חזרה רגועה",
+              "hasIcon": false,
+              "w": 143.91,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "choiceButtons": [
+            {
+              "text": "לְחַבֵּר הֲבָרוֹת לְמִלָּה",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "לְזַהוֹת רַק צְבָעִים",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            },
+            {
+              "text": "לִסְפֹּר בִּלְבַד",
+              "hasIcon": true,
+              "w": 216,
+              "h": 72,
+              "min": 72
+            }
+          ],
+          "nextDisabled": false,
+          "replayHasPlayGlyph": true
+        }
+      ],
+      "blockedAdvance": false,
+      "failures": [
+        {
+          "type": "text-only-mode-buttons",
+          "page": 1,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 2,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 3,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 4,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 5,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 6,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 7,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 8,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 9,
+          "count": 3
+        },
+        {
+          "type": "text-only-mode-buttons",
+          "page": 10,
+          "count": 3
+        }
+      ],
+      "failureCount": 10
+    }
+  ],
+  "summary": {
+    "checkCount": 9,
+    "failedChecks": 9,
+    "totalFailures": 72,
+    "failuresByType": {
+      "text-only-mode-buttons": 63,
+      "interaction-without-target-word": 3,
+      "interaction-without-choices": 3,
+      "page-advance-blocked": 3
+    },
+    "sampleFailures": [
+      {
+        "viewport": "mobile-375x812",
+        "bookId": "book1",
+        "type": "text-only-mode-buttons",
+        "page": 1,
+        "count": 3
+      },
+      {
+        "viewport": "mobile-375x812",
+        "bookId": "book1",
+        "type": "text-only-mode-buttons",
+        "page": 2,
+        "count": 3
+      },
+      {
+        "viewport": "mobile-375x812",
+        "bookId": "book1",
+        "type": "text-only-mode-buttons",
+        "page": 3,
+        "count": 3
+      },
+      {
+        "viewport": "mobile-375x812",
+        "bookId": "book1",
+        "type": "text-only-mode-buttons",
+        "page": 4,
+        "count": 3
+      },
+      {
+        "viewport": "mobile-375x812",
+        "bookId": "book1",
+        "type": "text-only-mode-buttons",
+        "page": 5,
+        "count": 3
+      },
+      {
+        "viewport": "mobile-375x812",
+        "bookId": "book1",
+        "type": "text-only-mode-buttons",
+        "page": 6,
+        "count": 3
+      },
+      {
+        "viewport": "mobile-375x812",
+        "bookId": "book1",
+        "type": "text-only-mode-buttons",
+        "page": 7,
+        "count": 3
+      },
+      {
+        "viewport": "mobile-375x812",
+        "bookId": "book1",
+        "type": "text-only-mode-buttons",
+        "page": 8,
+        "count": 3
+      },
+      {
+        "viewport": "mobile-375x812",
+        "bookId": "book4",
+        "type": "text-only-mode-buttons",
+        "page": 1,
+        "count": 3
+      },
+      {
+        "viewport": "mobile-375x812",
+        "bookId": "book4",
+        "type": "text-only-mode-buttons",
+        "page": 2,
+        "count": 3
+      },
+      {
+        "viewport": "mobile-375x812",
+        "bookId": "book4",
+        "type": "interaction-without-target-word",
+        "page": 3,
+        "interactionTitle": "איזו אות מתחילה את המילה פֶּרַח?"
+      },
+      {
+        "viewport": "mobile-375x812",
+        "bookId": "book4",
+        "type": "interaction-without-choices",
+        "page": 3,
+        "interactionTitle": "איזו אות מתחילה את המילה פֶּרַח?"
+      },
+      {
+        "viewport": "mobile-375x812",
+        "bookId": "book4",
+        "type": "text-only-mode-buttons",
+        "page": 3,
+        "count": 3
+      },
+      {
+        "viewport": "mobile-375x812",
+        "bookId": "book4",
+        "type": "page-advance-blocked",
+        "page": 3,
+        "reason": "next-still-disabled"
+      },
+      {
+        "viewport": "mobile-375x812",
+        "bookId": "book5",
+        "type": "text-only-mode-buttons",
+        "page": 1,
+        "count": 3
+      },
+      {
+        "viewport": "mobile-375x812",
+        "bookId": "book5",
+        "type": "text-only-mode-buttons",
+        "page": 2,
+        "count": 3
+      },
+      {
+        "viewport": "mobile-375x812",
+        "bookId": "book5",
+        "type": "text-only-mode-buttons",
+        "page": 3,
+        "count": 3
+      },
+      {
+        "viewport": "mobile-375x812",
+        "bookId": "book5",
+        "type": "text-only-mode-buttons",
+        "page": 4,
+        "count": 3
+      },
+      {
+        "viewport": "mobile-375x812",
+        "bookId": "book5",
+        "type": "text-only-mode-buttons",
+        "page": 5,
+        "count": 3
+      },
+      {
+        "viewport": "mobile-375x812",
+        "bookId": "book5",
+        "type": "text-only-mode-buttons",
+        "page": 6,
+        "count": 3
+      }
+    ]
+  }
+}

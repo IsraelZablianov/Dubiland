@@ -1,0 +1,9 @@
+## build log chunk lines
+40:dist/assets/InteractiveHandbook-ophuXPnC.js         31.37 kB │ gzip:   8.37 kB
+52:dist/assets/InteractiveHandbookGame-D50fPm3D.js     92.61 kB │ gzip:  20.03 kB
+
+## dist assets
+-rw-r--r--  1 israelz  staff    31K Apr 11 00:55 InteractiveHandbook-ophuXPnC.js
+-rw-r--r--  1 israelz  staff    90K Apr 11 00:55 InteractiveHandbookGame-D50fPm3D.js
+-rw-r--r--  1 israelz  staff   415K Apr 11 00:55 index-Bva0nR5t.js
+-rw-r--r--  1 israelz  staff    15K Apr 11 00:55 index-DIbLc-fo.css

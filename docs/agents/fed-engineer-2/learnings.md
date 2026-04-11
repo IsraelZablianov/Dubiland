@@ -149,6 +149,15 @@ If an assigned implementation issue describes an old regression but current code
 ## 2026-04-10 — Route `200` + validator-UA `200` are not enough when Schema.org API is challenge-limited
 Even with a fresh pinned tunnel host and healthy route probes, Schema.org API calls can stay hard-failed as `HTTP 302` Google-sorry HTML across paced retries. Treat this as a runtime/IP blocker, attach raw `.raw` bodies plus retry timeline artifacts, and explicitly request rerun from a clean runtime instead of claiming schema success.
 
+## 2026-04-10 — Schema.org validator API probe scripts must post form fields, not JSON
+For `https://validator.schema.org/validate`, sending JSON body (`{\"url\":\"...\"}`) can return misleading `url: null` + `fetchError: NOT_FOUND` even when route probes are healthy. Use form payload fields (`url`, `output=json`, `parser=structured-data`) to get valid raw validator JSON suitable for FED/SEO handoff evidence.
+
+## 2026-04-11 — In zsh, avoid `path` as a loop variable in shell probes
+`path` is tied to the shell `PATH` array in zsh; reusing it as a loop variable can wipe command lookup and trigger cascading `command not found` errors (`curl`, `rg`, `sed`, etc.). Use neutral names like `route` in probe scripts and ad-hoc loops.
+
+## 2026-04-11 — If Paperclip PATCH returns 500 on large markdown comments, retry with a shorter evidence block
+Long status-update payloads can intermittently trigger `{\"error\":\"Internal server error\"}` on issue PATCH even when content is valid. Keep the first patch concise (key acceptance facts + artifact roots), then add any extra detail in follow-up comments if needed.
+
 ## 2026-04-10 — Launch-slot handbook swaps are safest with key-root helpers + page-count alignment
 For `InteractiveHandbookGame`, replacing a handbook slot is lower-risk when page/interactions use a single `HANDBOOK_ROOT_KEY` helper (`games.interactiveHandbook.handbooks.<slot>.*`) instead of repeated literal key strings. Pair the slot swap with matching `pages` count (for age 5-6 launch: 10 pages) in both level config and progress logic, and regenerate only the slot-specific audio family to preserve parity without broad audio-manifest churn.
 
@@ -217,3 +226,30 @@ When migrating handbook narrative quality without immediately rewriting seeded D
 
 ## 2026-04-10 — Reading age-band parity is safer when handbook and decodable flows consume one shared runtime matrix
 For cross-game reading gates (decode-first lock, choice cap, hint timeout, anti-guess thresholds), define a single typed matrix module and import it from both `InteractiveHandbookGame` and `DecodableStoryReaderGame`. This removes drift between implementations, keeps age-band fallback (`4-5` -> `5-6`) consistent, and lets PM/QA threshold tuning happen in one file.
+
+## 2026-04-11 — Letters age routing should be centralized and contract-tolerant (camel/snake + fallback)
+For multi-game difficulty starts (`LetterSoundMatch`, `LetterTracingTrail`, `LetterSkyCatcher`), use one shared resolver for age-band + mastery routing that reads both frontend-style and backend-style keys (`ageBand`/`age_band`, `masteryOutcome`/`mastery_outcome`, `inSupportMode`/`in_support_mode`). Keep explicit fallback mapping from legacy `levelNumber` so older wrappers do not break while backend progression data adoption rolls out.
+
+## 2026-04-11 — Parent dashboard comparability should hydrate fixed domain slots from the curriculum RPC
+For `/parent` comparability UI, keep child cards stable by always initializing `math/letters/reading` slots and then overlaying `dubiland_parent_dashboard_curriculum_metrics` rows by `(child_id, domain)`. This avoids layout jitter when one domain has no recent attempts, preserves top-line metrics from `dubiland_parent_dashboard_metrics`, and gives graceful per-domain empty states without failing the full dashboard fetch.
+
+## 2026-04-11 — Mascot coach retrofit pattern for dense game screens
+When adding Dubi presence to existing games, a safe default is a non-interactive `__coach` container (`64-68px`, RTL-safe logical positioning, theme tokens, `pointer-events: none`) with `MascotIllustration` variant bound to live success state (`success` on win/positive feedback, otherwise `hint`). Add `prefers-reduced-motion` fallback to disable float animation and verify coach size stays above 44px on tablet routes.
+
+## 2026-04-11 — Child route layout drift is easiest to eliminate with scaffold width tokens + header slots
+For child-facing routes (`/games`, `/profiles`, handbook/game pages), replace per-page `main/section/header` wrappers with `ChildRouteScaffold` (`narrow/standard/wide`) and `ChildRouteHeader` (title/subtitle/leading/trailing). Keep page-specific visuals by passing `mainStyle` overrides (for gradients/backgrounds) instead of reintroducing ad-hoc `min(960|1120|1180px, 100%)` containers.
+
+## 2026-04-11 — Storybook game lanes should bind to existing locale+manifest key trees
+For audio-first reading games, avoid introducing parallel i18n key families in runtime code when `common.json` + `public/audio/he/manifest.json` already define a complete contract. Reusing existing `games.<slug>.*` keys prevents silent audio fallback paths, keeps narration/status playback deterministic, and reduces late QA churn on missing audio coverage.
+
+## 2026-04-11 — Centralize age-band choice caps and pass `profileAgeBand` through level config for game internals
+For cross-surface cognitive-load limits, keep one shared helper (`lib/concurrentChoiceLimit.ts`) and feed game internals via `level.configJson.profileAgeBand` (with birth-date fallback) instead of hardcoding per-component counts. This keeps Home card reveal limits and in-game option/jump-chip counts aligned for ages 3-7 without duplicating threshold logic.
+
+## 2026-04-11 — Handbook image fallback probes in Vite dev can return `200 text/html` and still validate `onError` safety
+When verifying InteractiveHandbook fallback safety in local Vite dev, missing static image URLs may not return `404`; they can resolve to SPA HTML (`200 text/html`). Treat fallback validation as a render/decode behavior check (image src swap to PNG fallback) rather than status-code-only, and separately verify canonical handbook asset paths with direct file-existence + targeted route fetch checks.
+
+## 2026-04-11 — Close stale blocked implementation tickets when new comments shift blockers fully outside FED scope
+If a previously completed implementation issue is reassigned/left `blocked` on FED but new external comments confirm remaining blockers are acceptance/runtime-owned elsewhere, checkout once, post scope-boundary evidence with links, and close it as `done`. This prevents stale blocked ownership loops and keeps active unblock work on the true dependency issues.
+
+## 2026-04-11 — Runtime anti-guess guards are safer when trigger evaluation is pure and UI scaffold state is one-shot
+For reading choice flows, keep anti-guess trigger math (rapid-tap window + short-response streak) in a pure helper and return a resettable tracker state on trigger. Then apply UI recovery through one-shot per-page scaffold budgets (reduce options by one for the next retry/trial), which avoids sticky reduced-choice states and makes regression tests deterministic.

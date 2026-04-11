@@ -180,6 +180,15 @@ Why it matters:
 - generation can resume immediately once auth is restored,
 - avoids idle heartbeat cycles on the same blocked instruction.
 
+## 2026-04-11 — Run-ownership conflict can block comments as well as status updates
+
+When an issue is `in_progress` with `checkoutRunId=null`, comment mutations can fail with `Issue run ownership conflict` even for the same agent identity.
+
+Practical workaround pattern:
+- execute recovery communication in a separate assigned issue lane,
+- mirror status to required parent/coordinator issues,
+- record blocker owner + next action + ETA there until lock normalization happens.
+
 ## 2026-04-10 — When a media lane asks for a manifest, verify and publish mapping even if assets already exist
 
 For follow-up illustration tasks that duplicate an earlier asset-delivery lane, the fastest compliant closure is:
@@ -210,3 +219,126 @@ For consistency directives that span web images, mascot assets, and Remotion, de
 Why it matters:
 - reveals drift quickly (for example, inline Remotion mascot vs SVG mascot pack vs handbook scene mascot),
 - keeps replacement work focused on a single visual target instead of parallel style experiments.
+
+## 2026-04-11 — `issue_commented` wakes can rotate run ownership on the same ticket
+
+When a new heartbeat wake (`PAPERCLIP_WAKE_REASON=issue_commented`) lands on the same issue, the ticket can keep `executionRunId` but lose `checkoutRunId`, and mutations fail with `Issue run ownership conflict` until checkout is repeated for the new run.
+
+Why it matters:
+- prevents false assumptions that "same issue" means checkout is still valid,
+- keeps blocker/status updates reliable by forcing an explicit re-checkout per run context.
+
+## 2026-04-11 — Playwright MCP `Transport closed` is a hard blocker for Nano Banana web-ui tasks
+
+When `mcp__playwright__*` calls all fail with `Transport closed`, Gemini generation work cannot proceed at all, even if the board has already unblocked headless mode settings.
+
+Practical handling:
+- mark the active media execution lane `blocked` with exact failing calls,
+- set blocker owner to infra/runtime (Architect) rather than content/auth owners,
+- keep ETA anchored to "time after transport restore" for predictable resumption.
+
+## 2026-04-11 — Gemini can accept prompts while signed out but still refuse image creation
+
+In signed-out state, Gemini may still process prompt submission and return text, but image generation is blocked with a clear auth message (for example: cannot create images now + sign-in prompt).
+
+Why it matters:
+- prevents false positives where transport appears healthy but generation is still impossible,
+- clarifies blocker ownership should shift from runtime infra to board auth completion once this message appears.
+
+## 2026-04-11 — Board can switch media execution mode mid-stream; re-read AGENTS before acting
+
+The board can change image-generation workflow in-flight (for example from Playwright-driven Gemini to proxy comments). When this happens, re-open `docs/agents/media-expert/instructions/AGENTS.md` immediately and pivot the active issue to the new contract.
+
+Why it matters:
+- avoids wasting heartbeats on superseded tooling assumptions,
+- keeps issue comments aligned with the latest governance path (`## 🎨 Image Generation Request` format in proxy mode).
+
+## 2026-04-11 — Proxy generation lane should stay blocked until board confirms saved file paths
+
+After posting a `## 🎨 Image Generation Request`, do not keep the lane in `in_progress` without new board output. Re-checkout each heartbeat, verify for new board reply, then move the issue back to `blocked` with explicit unblock action and mirror the state on parent/coordinator issues.
+
+Why it matters:
+- keeps inbox state accurate for Ops and PM,
+- prevents duplicate prompt spam,
+- preserves clean unblock ownership (`local-board`) for board-proxy image delivery.
+
+## 2026-04-11 — When board says "ask me in comments", send a smaller immediate batch instead of referencing older payloads
+
+If board replies with a generic readiness note, post a fresh `## 🎨 Image Generation Request` with a compact batch (2-3 assets) and exact prompts/paths in that same heartbeat, then set status back to `blocked` with `blocker: board image generation`.
+
+Why it matters:
+- reduces ambiguity compared with pointing to older long requests,
+- improves turnaround probability on the next board interaction,
+- keeps the issue lifecycle aligned with proxy workflow rules.
+
+## 2026-04-11 — Use git HEAD vs working-tree panel generation for fast before/after checkpoint evidence
+
+When board-proxy image files land as uncommitted changes, generate `HEAD` vs current side-by-side panels with `ffmpeg hstack` and attach manifest paths in the parent checkpoint comment.
+
+Why it matters:
+- satisfies before/after evidence without browser capture,
+- keeps proofs reproducible directly from repo state,
+- speeds milestone reporting for PM/QA.
+
+## 2026-04-11 — Include extension token in evidence panel filenames to avoid png/webp collisions
+
+When generating before/after panels for assets that share basename across formats (for example `page-01.png` and `page-01.webp`), include extension markers in panel filenames. Otherwise panels overwrite each other and evidence becomes incomplete.
+
+Why it matters:
+- preserves one-to-one traceability per delivered file,
+- prevents silent loss of comparison artifacts,
+- keeps checkpoint manifests reliable for QA review.
+
+## 2026-04-11 — Keep handbook generation in contiguous page batches to preserve narrative style consistency
+
+For multi-page handbook art, request contiguous page ranges (for example 04-07, then 08-10) with one shared style block and explicit per-page prompts.
+
+Why it matters:
+- improves visual continuity across adjacent pages,
+- makes board delivery and validation checkpoints easier to audit,
+- reduces rework from style drift between isolated single-page requests.
+
+## 2026-04-11 — Always hash-verify board-delivered files against HEAD before claiming completion
+
+A board delivery comment can report success while repo files still match baseline byte-for-byte. Add a hash-based `Changed vs HEAD` check to the validation step and request per-file SHA-256 from board when deltas are missing.
+
+Why it matters:
+- prevents false-positive checkpoints,
+- catches copy/save path mismatches early,
+- keeps evidence claims auditable.
+
+## 2026-04-11 — On process-lost retries, re-checkout even if issue appears in_progress
+
+After interrupted runs (`process_lost_retry`), explicitly call checkout again before posting corrective comments; this rebinds run ownership and prevents stale mutation errors.
+
+Why it matters:
+- keeps run audit linkage correct,
+- avoids silent ownership drift after transport failures,
+- ensures blocker comments attach to the active run.
+
+## 2026-04-11 — If run-ownership conflicts persist, verify JWT `run_id` against `PAPERCLIP_RUN_ID`
+
+On some retries, `PAPERCLIP_RUN_ID` can differ from the run id embedded in `PAPERCLIP_API_KEY`. Ownership-guarded mutations may fail with 409 until checkout/mutations use the effective run id expected by the API.
+
+Why it matters:
+- explains seemingly random ownership conflicts,
+- prevents repeated no-op retries,
+- keeps blocked/disposition updates deliverable under heartbeat deadlines.
+
+## 2026-04-11 — For letter-association art, lock filename slugs by letter, not by chosen word
+
+For alphabet storybook lanes, image filenames should be stable letter-based IDs (`letter-01-alef`, etc.) and association words should live in a separate manifest. If PM/Content changes the pedagogy word later, path stability is preserved and FED wiring does not churn.
+
+Why it matters:
+- avoids renaming dozens of assets when copy changes,
+- keeps image-cache and integration references stable across heartbeats,
+- allows Media and Content Writer to iterate independently without breaking runtime paths.
+
+## 2026-04-11 — Truncated SHA values in board comments can still be trusted after full local hash match
+
+When board posts abbreviated hashes (prefix/suffix), verify full local SHA-256 values and ensure they align with the posted fragments plus changed-vs-HEAD checks before closing the lane.
+
+Why it matters:
+- allows fast closure without requesting redundant full-hash reposts,
+- preserves verification rigor,
+- reduces blocker churn once delta is proven.

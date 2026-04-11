@@ -4,6 +4,9 @@ import { Card, GameTopBar } from '@/components/design-system';
 import { MascotIllustration } from '@/components/illustrations';
 import { SuccessCelebration } from '@/components/motion';
 import type { GameCompletionResult, GameProps, HintTrend, ParentSummaryMetrics, StableRange } from '@/games/engine';
+import { resolveReadingRoutingContext, type ReadingRoutingAgeBand } from '@/games/reading/readingProgressionRouting';
+import { resolveAudioPathFromKey } from '@/lib/audioPathResolver';
+import { isRtlDirection, rtlNextGlyph, rtlReplayGlyph } from '@/lib/rtlChrome';
 
 type LevelId = 1 | 2 | 3;
 type MessageTone = 'neutral' | 'hint' | 'success';
@@ -61,7 +64,7 @@ interface SightWordSprintGameProps extends GameProps {
   onRequestBack?: () => void;
 }
 
-const TOTAL_ROUNDS = 8;
+const DEFAULT_TOTAL_ROUNDS = 8;
 
 const BASE_OPTION_COUNT: Record<LevelId, number> = {
   1: 2,
@@ -192,12 +195,8 @@ function shuffle<T>(items: readonly T[]): T[] {
   return next;
 }
 
-function toKebabCase(segment: string): string {
-  return segment.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
-}
-
 function audioPathForKey(key: string): string {
-  return `/audio/he/${key.split('.').map(toKebabCase).join('/')}.mp3`;
+  return resolveAudioPathFromKey(key, 'common');
 }
 
 function resolveLevel(levelNumber: number | null | undefined): LevelId {
@@ -205,6 +204,71 @@ function resolveLevel(levelNumber: number | null | undefined): LevelId {
     return levelNumber;
   }
   return 2;
+}
+
+function toPositiveInt(value: unknown): number | null {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    const normalized = Math.floor(value);
+    return normalized > 0 ? normalized : null;
+  }
+
+  if (typeof value === 'string') {
+    const parsed = Number.parseInt(value, 10);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+  }
+
+  return null;
+}
+
+function resolveRoundTarget(ageBand: ReadingRoutingAgeBand): number {
+  if (ageBand === '3-4') {
+    return 6;
+  }
+  if (ageBand === '4-5') {
+    return 7;
+  }
+  if (ageBand === '6-7') {
+    return 10;
+  }
+  return DEFAULT_TOTAL_ROUNDS;
+}
+
+function resolveInitialOptionCount(
+  ageBand: ReadingRoutingAgeBand,
+  levelId: LevelId,
+  inSupportMode: boolean,
+): number {
+  if (inSupportMode) {
+    return 2;
+  }
+
+  if (ageBand === '3-4') {
+    return 2;
+  }
+
+  if (ageBand === '4-5') {
+    return Math.min(3, BASE_OPTION_COUNT[levelId]);
+  }
+
+  if (ageBand === '6-7') {
+    const elevated = (BASE_OPTION_COUNT[levelId] + 1) as number;
+    return Math.min(5, elevated);
+  }
+
+  return BASE_OPTION_COUNT[levelId];
+}
+
+function resolveRoundSeconds(ageBand: ReadingRoutingAgeBand, levelId: LevelId): number {
+  if (ageBand === '6-7') {
+    if (levelId === 1) {
+      return 12;
+    }
+    if (levelId === 2) {
+      return 14;
+    }
+    return 16;
+  }
+  return ROUND_SECONDS[levelId];
 }
 
 function getHintTrend(hintsByRound: number[]): HintTrend {
@@ -268,27 +332,70 @@ function createRound(levelId: LevelId, optionCount: number, previousWord: WordId
 }
 
 export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }: SightWordSprintGameProps) {
-  const { t } = useTranslation('common');
-
-  const levelId = useMemo(() => resolveLevel(level.levelNumber), [level.levelNumber]);
+  const { t, i18n } = useTranslation('common');
+  const isRtl = isRtlDirection(i18n.dir(i18n.language));
+  const replayIcon = rtlReplayGlyph(isRtl);
+  const nextIcon = rtlNextGlyph(isRtl);
+  const levelConfig = useMemo(
+    () => (level.configJson as Record<string, unknown>) ?? {},
+    [level.configJson],
+  );
+  const fallbackLevelId = useMemo(() => resolveLevel(level.levelNumber), [level.levelNumber]);
+  const routingContext = useMemo(
+    () =>
+      resolveReadingRoutingContext(levelConfig, fallbackLevelId, {
+        baseLevelByAgeBand: {
+          '3-4': 1,
+          '4-5': 1,
+          '5-6': 2,
+          '6-7': 3,
+        },
+      }),
+    [fallbackLevelId, levelConfig],
+  );
+  const levelId = routingContext.initialLevelId;
+  const totalRounds = useMemo(() => {
+    const configuredRoundCount =
+      toPositiveInt(levelConfig.rounds) ??
+      toPositiveInt(levelConfig.totalRounds) ??
+      toPositiveInt(levelConfig.roundCount) ??
+      (typeof levelConfig.progression === 'object' && levelConfig.progression && !Array.isArray(levelConfig.progression)
+        ? toPositiveInt((levelConfig.progression as Record<string, unknown>).rounds) ??
+          toPositiveInt((levelConfig.progression as Record<string, unknown>).totalRounds)
+        : null);
+    return configuredRoundCount ?? resolveRoundTarget(routingContext.ageBand);
+  }, [levelConfig, routingContext.ageBand]);
+  const initialOptionCount = useMemo(
+    () => resolveInitialOptionCount(routingContext.ageBand, levelId, routingContext.inSupportMode),
+    [levelId, routingContext.ageBand, routingContext.inSupportMode],
+  );
+  const initialRoundSeconds = useMemo(
+    () => resolveRoundSeconds(routingContext.ageBand, levelId),
+    [levelId, routingContext.ageBand],
+  );
 
   const [roundIndex, setRoundIndex] = useState(0);
-  const [optionCount, setOptionCount] = useState(BASE_OPTION_COUNT[levelId]);
+  const [optionCount, setOptionCount] = useState(initialOptionCount);
   const [phase, setPhase] = useState<Phase>('intro');
   const [sessionComplete, setSessionComplete] = useState(false);
-  const [round, setRound] = useState<Round>(() => createRound(levelId, BASE_OPTION_COUNT[levelId], null));
+  const [audioPlaybackFailed, setAudioPlaybackFailed] = useState(false);
+  const [round, setRound] = useState<Round>(() => createRound(levelId, initialOptionCount, null));
   const [slotWord, setSlotWord] = useState<WordId | null>(null);
   const [hintStage, setHintStage] = useState(0);
   const [highlightTarget, setHighlightTarget] = useState(false);
   const [highlightSlot, setHighlightSlot] = useState(false);
   const [boardFeedbackTone, setBoardFeedbackTone] = useState<BoardFeedbackTone>('idle');
   const [scorePulse, setScorePulse] = useState(false);
-  const [countdownSec, setCountdownSec] = useState(ROUND_SECONDS[levelId]);
+  const [countdownSec, setCountdownSec] = useState(initialRoundSeconds);
   const [roundMessage, setRoundMessage] = useState<RoundMessage>({
     key: 'games.sightWordSprint.instructions.intro',
     tone: 'neutral',
   });
   const [summary, setSummary] = useState<SessionSummary | null>(null);
+  const roundSeconds = useMemo(
+    () => resolveRoundSeconds(routingContext.ageBand, levelId),
+    [levelId, routingContext.ageBand],
+  );
 
   const timerRef = useRef<number | null>(null);
   const introTimeoutRef = useRef<number | null>(null);
@@ -338,6 +445,9 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
 
   const playAudio = useCallback(
     async (key: string, mode: 'queue' | 'interrupt' = 'queue') => {
+      if (audioPlaybackFailed) {
+        return;
+      }
       try {
         const path = audioPathForKey(key);
         if (mode === 'interrupt') {
@@ -346,10 +456,10 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
         }
         await audio.play(path);
       } catch {
-        // Missing optional audio should not block gameplay.
+        setAudioPlaybackFailed((current) => current || true);
       }
     },
-    [audio],
+    [audio, audioPlaybackFailed],
   );
 
   const setMessageWithAudio = useCallback(
@@ -431,11 +541,11 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
     setHighlightTarget(false);
     setHighlightSlot(false);
     setBoardFeedbackTone('idle');
-    setCountdownSec(ROUND_SECONDS[levelId]);
+    setCountdownSec(roundSeconds);
 
     setMessageWithAudio('games.sightWordSprint.prompts.wordSelect.chooseWord', 'neutral', 'interrupt');
     void playAudio(`words.highFrequency.${activeRound.targetWord}`);
-  }, [levelId, playAudio, setMessageWithAudio]);
+  }, [playAudio, roundSeconds, setMessageWithAudio]);
 
   const scheduleRoundIntro = useCallback((activeRound: Round) => {
     if (introTimeoutRef.current !== null) {
@@ -476,13 +586,13 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
 
     const summaryMetrics: ParentSummaryMetrics = {
       highestStableRange: stableRangeFromAccuracy(accuracy),
-      firstAttemptSuccessRate: Math.round((firstTrySuccessesRef.current / Math.max(1, TOTAL_ROUNDS)) * 100),
+      firstAttemptSuccessRate: Math.round((firstTrySuccessesRef.current / Math.max(1, totalRounds)) * 100),
       hintTrend,
     };
 
     const completionResult: GameCompletionResult = {
       completed: true,
-      roundsCompleted: TOTAL_ROUNDS,
+      roundsCompleted: totalRounds,
       score: accuracy,
       stars: accuracy >= 86 ? 3 : accuracy >= 68 ? 2 : 1,
       summaryMetrics,
@@ -503,7 +613,7 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
     setPhase('complete');
     setMessageWithAudio('games.sightWordSprint.feedback.success.sessionComplete', 'success', 'interrupt');
     void playAudio('games.sightWordSprint.prompts.frameComplete.recap');
-  }, [clearRoundAdvanceTimeout, clearTimer, onComplete, playAudio, setMessageWithAudio, t]);
+  }, [clearRoundAdvanceTimeout, clearTimer, onComplete, playAudio, setMessageWithAudio, t, totalRounds]);
 
   const startNextRound = useCallback(() => {
     clearRoundAdvanceTimeout();
@@ -520,7 +630,9 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
     let nextOptionCount = optionCount;
 
     if (cleanStreakRef.current >= 4) {
-      const maxAllowed = Math.min(4, BASE_OPTION_COUNT[levelId] + 1);
+      const maxAllowed = routingContext.ageBand === '6-7'
+        ? Math.min(5, BASE_OPTION_COUNT[levelId] + 2)
+        : Math.min(4, BASE_OPTION_COUNT[levelId] + 1);
       nextOptionCount = Math.min(maxAllowed, optionCount + 1);
       setOptionCount(nextOptionCount);
       cleanStreakRef.current = 0;
@@ -528,9 +640,15 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
     }
 
     const nextRoundIndex = roundIndex + 1;
-    if (nextRoundIndex >= TOTAL_ROUNDS) {
+    if (nextRoundIndex >= totalRounds) {
       finishSession();
       return;
+    }
+
+    if (routingContext.ageBand === '6-7' && nextRoundIndex >= Math.max(0, totalRounds - 2)) {
+      nextOptionCount = Math.max(nextOptionCount, 4);
+      setOptionCount(nextOptionCount);
+      setMessageWithAudio('games.sightWordSprint.hints.precisionNudge.accuracyFirst', 'hint');
     }
 
     const nextRound = createRound(levelId, nextOptionCount, previousTargetWordRef.current);
@@ -541,7 +659,7 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
     setHintStage(0);
     setSlotWord(null);
     setBoardFeedbackTone('idle');
-  }, [clearRoundAdvanceTimeout, finishSession, levelId, optionCount, roundIndex, setMessageWithAudio]);
+  }, [clearRoundAdvanceTimeout, finishSession, levelId, optionCount, roundIndex, routingContext.ageBand, setMessageWithAudio, totalRounds]);
 
   const rebuildCurrentOptions = useCallback(
     (nextOptionCount: number) => {
@@ -702,14 +820,14 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
     setHighlightSlot(false);
     setBoardFeedbackTone('idle');
     setScorePulse(false);
-    setCountdownSec(ROUND_SECONDS[levelId]);
+    setCountdownSec(roundSeconds);
     roundHadMistakeRef.current = true;
     roundStartedAtRef.current = Date.now();
     clearRoundAdvanceTimeout();
 
     setMessageWithAudio('games.sightWordSprint.instructions.tapRetry', 'hint', 'interrupt');
     void playAudio(`words.highFrequency.${round.targetWord}`);
-  }, [clearRoundAdvanceTimeout, levelId, playAudio, rebuildCurrentOptions, round.targetWord, sessionComplete, setMessageWithAudio]);
+  }, [clearRoundAdvanceTimeout, playAudio, rebuildCurrentOptions, round.targetWord, roundSeconds, sessionComplete, setMessageWithAudio]);
 
   const handleHint = useCallback(() => {
     if (sessionComplete) {
@@ -786,11 +904,11 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
   useEffect(() => {
     clearTimer();
 
-    if (sessionComplete || phase !== 'select' || ROUND_SECONDS[levelId] <= 0) {
+    if (sessionComplete || phase !== 'select' || roundSeconds <= 0) {
       return;
     }
 
-    setCountdownSec(ROUND_SECONDS[levelId]);
+    setCountdownSec(roundSeconds);
 
     timerRef.current = window.setInterval(() => {
       setCountdownSec((current) => {
@@ -808,7 +926,7 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
     return () => {
       clearTimer();
     };
-  }, [clearTimer, levelId, phase, playAudio, sessionComplete, setMessageWithAudio]);
+  }, [clearTimer, phase, playAudio, roundSeconds, sessionComplete, setMessageWithAudio]);
 
   const targetWordLabel = t(WORDS[round.targetWord].key);
 
@@ -822,13 +940,13 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
 
   return (
     <Card padding="lg" className="sight-word-sprint">
-      <GameTopBar
+        <GameTopBar
         title={t('games.sightWordSprint.title')}
         subtitle={t('games.sightWordSprint.subtitle')}
-        progressLabel={`${Math.min(roundIndex + 1, TOTAL_ROUNDS)}/${TOTAL_ROUNDS}`}
+        progressLabel={`${Math.min(roundIndex + 1, totalRounds)}/${totalRounds}`}
         progressAriaLabel={t('games.sightWordSprint.prompts.wordSelect.chooseWord')}
-        currentStep={Math.min(roundIndex + 1, TOTAL_ROUNDS)}
-        totalSteps={TOTAL_ROUNDS}
+        currentStep={Math.min(roundIndex + 1, totalRounds)}
+        totalSteps={totalRounds}
         onReplayInstruction={handleReplay}
         replayAriaLabel={t('games.sightWordSprint.instructions.tapReplay')}
         onBack={onRequestBack}
@@ -836,9 +954,9 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
         rightSlot={
           <div className="sight-word-sprint__score" aria-live="polite">
             <span className={['sight-word-sprint__score-pill', scorePulse ? 'sight-word-sprint__score-pill--pulse' : ''].join(' ')}>
-              🎯 {roundIndex + 1}/{TOTAL_ROUNDS}
+              🎯 {roundIndex + 1}/{totalRounds}
             </span>
-            {ROUND_SECONDS[levelId] > 0 && <span className="sight-word-sprint__score-pill">⏱ {countdownSec}</span>}
+            {roundSeconds > 0 && <span className="sight-word-sprint__score-pill">⏱ {countdownSec}</span>}
           </div>
         }
       />
@@ -852,9 +970,15 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
           onClick={handleReplay}
           aria-label={t('games.sightWordSprint.instructions.tapReplay')}
         >
-          ▶
+          {replayIcon}
         </button>
       </div>
+
+      {audioPlaybackFailed && !sessionComplete && (
+        <p className="sight-word-sprint__audio-fallback">
+          🔇 {t('games.sightWordSprint.prompts.wordSelect.chooseWord')}
+        </p>
+      )}
 
       {!sessionComplete && (
         <div className="sight-word-sprint__icon-controls">
@@ -864,7 +988,7 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
             onClick={handleReplay}
             aria-label={t('games.sightWordSprint.instructions.tapReplay')}
           >
-            ▶
+            {replayIcon}
           </button>
           <button
             type="button"
@@ -883,7 +1007,7 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
             💡
           </button>
           <button type="button" className="sight-word-sprint__icon-button" onClick={handleNext} aria-label={t('nav.next')}>
-            →
+            {nextIcon}
           </button>
         </div>
       )}
@@ -907,7 +1031,7 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
                 }}
                 aria-label={t('games.sightWordSprint.instructions.tapReplay')}
               >
-                ▶
+                {replayIcon}
               </button>
             </div>
             <p className="sight-word-sprint__target-word" dir="rtl">{targetWordLabel}</p>
@@ -1075,6 +1199,17 @@ export function SightWordSprintGame({ level, onComplete, audio, onRequestBack }:
         .sight-word-sprint__status-text {
           margin: 0;
           color: var(--color-text-primary);
+        }
+
+        .sight-word-sprint__audio-fallback {
+          margin: 0;
+          padding: var(--space-xs) var(--space-sm);
+          border-radius: var(--radius-sm);
+          border: 1px solid color-mix(in srgb, var(--color-accent-warning) 46%, transparent);
+          background: color-mix(in srgb, var(--color-accent-warning) 16%, transparent);
+          color: var(--color-text-primary);
+          font-size: var(--font-size-sm);
+          text-align: center;
         }
 
         .sight-word-sprint__inline-replay {

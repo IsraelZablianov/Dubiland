@@ -3,6 +3,7 @@ import type { Child, Game, GameLevel } from '@dubiland/shared';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button, Card } from '@/components/design-system';
+import { ChildRouteHeader, ChildRouteScaffold } from '@/components/layout';
 import type { GameCompletionResult, ParentSummaryMetrics } from '@/games/engine';
 import { DecodableStoryReaderGame } from '@/games/reading/DecodableStoryReaderGame';
 import { READING_RUNTIME_MATRIX, toReadingAgeBand, type ReadingAgeBand } from '@/games/reading/readingRuntimeMatrix';
@@ -137,49 +138,23 @@ export default function DecodableMicroStoriesPage() {
   }, [completionMetrics]);
 
   return (
-    <main
-      style={{
-        flex: 1,
+    <ChildRouteScaffold
+      width="wide"
+      mainStyle={{
         background:
           'radial-gradient(circle at 14% 14%, color-mix(in srgb, var(--color-theme-secondary) 22%, transparent), transparent 42%), linear-gradient(180deg, var(--color-theme-bg) 0%, color-mix(in srgb, var(--color-bg-card) 90%, white 10%) 100%)',
-        padding: 'var(--space-lg)',
-        display: 'flex',
-        justifyContent: 'center',
       }}
     >
-      <section style={{ width: 'min(1180px, 100%)', display: 'grid', gap: 'var(--space-md)' }}>
-        <header
-          style={{
-            display: 'flex',
-            gap: 'var(--space-sm)',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-          }}
-        >
-          <div style={{ display: 'grid', gap: 'var(--space-2xs)' }}>
-            <h1
-              style={{
-                margin: 0,
-                fontSize: 'var(--font-size-2xl)',
-                color: 'var(--color-text-primary)',
-                fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
-              }}
-            >
-              {t('games.decodableMicroStories.title')}
-            </h1>
-            <p style={{ margin: 0, color: 'var(--color-text-secondary)' }}>
-              {t('games.decodableMicroStories.subtitle')}
-            </p>
-            <p style={{ margin: 0, color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
-              {t(toAgeBandLabelKey(runtimeAgeBand))}
-            </p>
-          </div>
-
+      <ChildRouteHeader
+        title={t('games.decodableMicroStories.title')}
+        subtitle={t('games.decodableMicroStories.subtitle')}
+        details={t(toAgeBandLabelKey(runtimeAgeBand))}
+        leading={
           <Button variant="secondary" size="lg" onClick={() => navigate('/games')} aria-label={t('nav.back')}>
             {t('nav.back')}
           </Button>
-        </header>
+        }
+      />
 
         <DecodableStoryReaderGame
           game={DECODABLE_MICRO_STORIES_GAME}
@@ -206,7 +181,6 @@ export default function DecodableMicroStoriesPage() {
             </p>
           </Card>
         )}
-      </section>
-    </main>
+    </ChildRouteScaffold>
   );
 }

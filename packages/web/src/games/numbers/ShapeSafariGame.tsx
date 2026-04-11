@@ -4,6 +4,9 @@ import { Card } from '@/components/design-system';
 import { MascotIllustration } from '@/components/illustrations';
 import { SuccessCelebration } from '@/components/motion';
 import type { GameProps, ParentSummaryMetrics, StableRange } from '@/games/engine';
+import { resolveAudioPathFromKey } from '@/lib/audioPathResolver';
+import { resolveGameConcurrentChoiceLimit } from '@/lib/concurrentChoiceLimit';
+import { isRtlDirection, rtlNextGlyph, rtlReplayGlyph } from '@/lib/rtlChrome';
 
 type ShapeId = 'circle' | 'square' | 'triangle' | 'rectangle' | 'star';
 type RoundMode = 'match' | 'sort' | 'missing';
@@ -177,16 +180,8 @@ const INACTIVITY_PROMPT_KEYS: InactivityPromptKey[] = [
   'games.shapeSafari.prompts.inactivity.tapAnyShape',
 ];
 
-function toKebabCase(value: string): string {
-  return value
-    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-    .replace(/[^a-zA-Z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .toLowerCase();
-}
-
 function resolveAudioPath(key: StatusKey): string {
-  return `/audio/he/${key.split('.').map(toKebabCase).join('/')}.mp3`;
+  return resolveAudioPathFromKey(key, 'common');
 }
 
 function randomInt(min: number, max: number): number {
@@ -232,23 +227,23 @@ function getRoundInstructionKey(mode: RoundMode, roundNumber: number): StatusKey
   return 'games.shapeSafari.instructions.chooseMissing';
 }
 
-function getRoundOptionCount(roundNumber: number): number {
-  if (roundNumber <= 2) return 3;
-  if (roundNumber <= 4) return 4;
-  return 5;
+function getRoundOptionCount(roundNumber: number, maxConcurrentChoices: number): number {
+  const roundTargetCount = roundNumber <= 2 ? 3 : roundNumber <= 4 ? 4 : 5;
+  return Math.max(2, Math.min(roundTargetCount, maxConcurrentChoices));
 }
 
-function buildRoundOptions(target: ShapeId, roundNumber: number, simplify: boolean): ShapeId[] {
+function buildRoundOptions(target: ShapeId, roundNumber: number, simplify: boolean, maxConcurrentChoices: number): ShapeId[] {
   const sourcePool = SHAPE_POOL_BY_ROUND[roundNumber] ?? SHAPE_POOL_BY_ROUND[6];
-  const optionCount = getRoundOptionCount(roundNumber);
+  const optionCount = getRoundOptionCount(roundNumber, maxConcurrentChoices);
   const pool = simplify && sourcePool.length > 3 ? sourcePool.slice(0, sourcePool.length - 1) : sourcePool;
 
   const targetSafePool = pool.includes(target) ? pool : [...pool, target];
-  const distractors = shuffle(targetSafePool.filter((shape) => shape !== target)).slice(0, optionCount - 1);
+  const clampedOptionCount = Math.max(2, Math.min(optionCount, targetSafePool.length));
+  const distractors = shuffle(targetSafePool.filter((shape) => shape !== target)).slice(0, clampedOptionCount - 1);
   return shuffle([target, ...distractors]);
 }
 
-function buildRound(roundNumber: number, targetOverride?: ShapeId, simplify = false): RoundState {
+function buildRound(roundNumber: number, maxConcurrentChoices: number, targetOverride?: ShapeId, simplify = false): RoundState {
   const roundPool = SHAPE_POOL_BY_ROUND[roundNumber] ?? SHAPE_POOL_BY_ROUND[6];
   const target = targetOverride ?? pickRandom(roundPool);
   const mode = getRoundMode(roundNumber);
@@ -259,7 +254,7 @@ function buildRound(roundNumber: number, targetOverride?: ShapeId, simplify = fa
     roundNumber,
     mode,
     target,
-    options: buildRoundOptions(target, roundNumber, simplify),
+    options: buildRoundOptions(target, roundNumber, simplify, maxConcurrentChoices),
     instructionKey: getRoundInstructionKey(mode, roundNumber),
     promptKey,
     simplifyApplied: simplify,
@@ -298,13 +293,21 @@ function getTopConfusionPair(confusionPairs: Record<string, number>): [ShapeId, 
   return [target, selected];
 }
 
-export function ShapeSafariGame({ onComplete, audio }: GameProps) {
-  const { t } = useTranslation('common');
+export function ShapeSafariGame({ level, child, onComplete, audio }: GameProps) {
+  const { t, i18n } = useTranslation('common');
+  const isRtl = isRtlDirection(i18n.dir(i18n.language));
+  const replayIcon = rtlReplayGlyph(isRtl);
+  const nextIcon = rtlNextGlyph(isRtl);
+  const maxConcurrentChoices = useMemo(
+    () => resolveGameConcurrentChoiceLimit(level.configJson, child.birthDate),
+    [child.birthDate, level.configJson],
+  );
 
   const [roundNumber, setRoundNumber] = useState(1);
-  const [round, setRound] = useState<RoundState>(() => buildRound(1));
+  const [round, setRound] = useState<RoundState>(() => buildRound(1, maxConcurrentChoices));
   const [roundSolved, setRoundSolved] = useState(false);
   const [sessionComplete, setSessionComplete] = useState(false);
+  const [audioPlaybackFailed, setAudioPlaybackFailed] = useState(false);
   const [attemptInRound, setAttemptInRound] = useState(0);
   const [consecutiveMisses, setConsecutiveMisses] = useState(0);
   const [dragOver, setDragOver] = useState(false);
@@ -338,24 +341,30 @@ export function ShapeSafariGame({ onComplete, audio }: GameProps) {
 
   const playNow = useCallback(
     async (key: StatusKey) => {
+      if (audioPlaybackFailed) {
+        return;
+      }
       try {
         await audio.playNow(resolveAudioPath(key));
       } catch {
-        // Keep gameplay responsive even when an optional audio file is missing.
+        setAudioPlaybackFailed((current) => current || true);
       }
     },
-    [audio],
+    [audio, audioPlaybackFailed],
   );
 
   const playQueued = useCallback(
     async (key: StatusKey) => {
+      if (audioPlaybackFailed) {
+        return;
+      }
       try {
         await audio.play(resolveAudioPath(key));
       } catch {
-        // Keep gameplay responsive even when an optional audio file is missing.
+        setAudioPlaybackFailed((current) => current || true);
       }
     },
-    [audio],
+    [audio, audioPlaybackFailed],
   );
 
   const incrementHintUsage = useCallback((targetRound: number) => {
@@ -521,7 +530,7 @@ export function ShapeSafariGame({ onComplete, audio }: GameProps) {
       setMessage({ key: 'games.shapeSafari.recovery.demo.trySameAgain', tone: 'hint' });
       await playNow('games.shapeSafari.recovery.demo.trySameAgain');
 
-      const retryRound = buildRound(roundNumber, round.target, true);
+      const retryRound = buildRound(roundNumber, maxConcurrentChoices, round.target, true);
       setRound(retryRound);
       setAttemptInRound(0);
       setConsecutiveMisses(0);
@@ -530,7 +539,7 @@ export function ShapeSafariGame({ onComplete, audio }: GameProps) {
     } finally {
       recoveryInFlightRef.current = false;
     }
-  }, [playNow, round.target, roundNumber, triggerReplayVisualFeedback]);
+  }, [maxConcurrentChoices, playNow, round.target, roundNumber, triggerReplayVisualFeedback]);
 
   const handleRetryRound = useCallback(() => {
     if (sessionComplete) {
@@ -618,8 +627,8 @@ export function ShapeSafariGame({ onComplete, audio }: GameProps) {
 
     const nextRoundNumber = roundNumber + 1;
     setRoundNumber(nextRoundNumber);
-    setRound(buildRound(nextRoundNumber));
-  }, [finalizeSession, roundNumber]);
+    setRound(buildRound(nextRoundNumber, maxConcurrentChoices));
+  }, [finalizeSession, maxConcurrentChoices, roundNumber]);
 
   const handleNextRound = useCallback(() => {
     if (sessionComplete || !roundSolved || nextActionInFlightRef.current) {
@@ -696,7 +705,7 @@ export function ShapeSafariGame({ onComplete, audio }: GameProps) {
           runRecoveryFlow = true;
         } else if (nextMissCount === 2) {
           if (!round.simplifyApplied) {
-            setRound(buildRound(roundNumber, round.target, true));
+            setRound(buildRound(roundNumber, maxConcurrentChoices, round.target, true));
           }
           setMessage({ key: 'games.shapeSafari.hints.lookAtCorners', tone: 'hint' });
           triggerTargetHighlight(round.target, 1400);
@@ -730,6 +739,7 @@ export function ShapeSafariGame({ onComplete, audio }: GameProps) {
       attemptInRound,
       consecutiveMisses,
       incrementHintUsage,
+      maxConcurrentChoices,
       playNow,
       playQueued,
       round.promptKey,
@@ -840,10 +850,16 @@ export function ShapeSafariGame({ onComplete, audio }: GameProps) {
         <p className={toneClassName}>{t(message.key)}</p>
       </div>
 
+      {audioPlaybackFailed && !sessionComplete && (
+        <p className="shape-safari__audio-fallback">
+          🔇 {t('games.shapeSafari.instructions.listenAndFind')}
+        </p>
+      )}
+
       {!sessionComplete && (
         <div className="shape-safari__controls">
           <button type="button" className="shape-safari__icon-button" onClick={handleReplay} aria-label={t('games.shapeSafari.instructions.tapReplay')}>
-            ▶
+            {replayIcon}
           </button>
           <button type="button" className="shape-safari__icon-button" onClick={handleRetryRound} aria-label={t('games.shapeSafari.hints.gentleRetry')}>
             ↻
@@ -858,7 +874,7 @@ export function ShapeSafariGame({ onComplete, audio }: GameProps) {
             disabled={!roundSolved}
             aria-label={t('nav.next')}
           >
-            →
+            {nextIcon}
           </button>
         </div>
       )}
@@ -1072,6 +1088,17 @@ export function ShapeSafariGame({ onComplete, audio }: GameProps) {
 
         .shape-safari__message--success {
           color: color-mix(in srgb, var(--color-accent-success) 82%, var(--color-text-primary));
+        }
+
+        .shape-safari__audio-fallback {
+          margin: 0;
+          padding: var(--space-xs) var(--space-sm);
+          border-radius: var(--radius-sm);
+          border: 1px solid color-mix(in srgb, var(--color-accent-warning) 46%, transparent);
+          background: color-mix(in srgb, var(--color-accent-warning) 16%, transparent);
+          color: var(--color-text-primary);
+          font-size: var(--font-size-sm);
+          text-align: center;
         }
 
         .shape-safari__controls {

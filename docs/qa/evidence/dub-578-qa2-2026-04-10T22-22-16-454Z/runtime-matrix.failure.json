@@ -1,0 +1,45 @@
+{
+  "error": {
+    "message": "page.waitForTimeout is not a function",
+    "stack": "TypeError: page.waitForTimeout is not a function\n    at collectViewportMetrics (file:///private/tmp/dub578_qa_matrix.mjs:222:14)\n    at file:///private/tmp/dub578_qa_matrix.mjs:544:25\n    at withPage (file:///private/tmp/dub578_qa_matrix.mjs:215:18)\n    at async run (file:///private/tmp/dub578_qa_matrix.mjs:531:23)",
+    "payload": null
+  },
+  "partial": {
+    "issue": "DUB-578",
+    "capturedAt": "2026-04-10T22:22:16.455Z",
+    "baseUrl": "http://127.0.0.1:4178",
+    "outDir": "/Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-578-qa2-2026-04-10T22-22-16-454Z",
+    "auth": {
+      "email": "qa2.dub578.1775859736455@proton.me",
+      "userId": "49373d2a-fd92-45ef-b22c-575105f90ccc",
+      "familyId": "032a350e-10e6-4e53-a52e-aeb9c22030d5",
+      "childId": "c674490e-a017-4020-a513-ea73ff650d6b"
+    },
+    "ageBandDiscoverability": [
+      {
+        "ageBand": "3-4",
+        "expectedBookId": "book1",
+        "selectedBookId": "book1",
+        "pass": true,
+        "selectedClassName": "interactive-handbook__bookshelf-choice interactive-handbook__bookshelf-choice--featured interactive-handbook__bookshelf-choice--book1 interactive-handbook__bookshelf-choice--selected"
+      },
+      {
+        "ageBand": "5-6",
+        "expectedBookId": "book4",
+        "selectedBookId": "book4",
+        "pass": true,
+        "selectedClassName": "interactive-handbook__bookshelf-choice interactive-handbook__bookshelf-choice--featured interactive-handbook__bookshelf-choice--book4 interactive-handbook__bookshelf-choice--selected"
+      },
+      {
+        "ageBand": "6-7",
+        "expectedBookId": "book7",
+        "selectedBookId": "book7",
+        "pass": true,
+        "selectedClassName": "interactive-handbook__bookshelf-choice interactive-handbook__bookshelf-choice--featured interactive-handbook__bookshelf-choice--book7 interactive-handbook__bookshelf-choice--selected"
+      }
+    ],
+    "viewportMatrix": [],
+    "progressionAndPersistence": {},
+    "assertions": {}
+  }
+}

@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Card } from '@/components/design-system';
+import { MascotIllustration } from '@/components/illustrations';
 import type { GameProps, ParentSummaryMetrics, StableRange } from '@/games/engine';
+import { resolveLettersRoutingContext } from '@/games/letters/lettersProgressionRouting';
+import { resolveAudioPathFromKey } from '@/lib/audioPathResolver';
+import { isRtlDirection, rtlNextGlyph, rtlReplayGlyph } from '@/lib/rtlChrome';
 
 type LetterId =
   | 'alef'
@@ -30,7 +34,6 @@ type LetterId =
 type LetterAudioKey = `letters.pronunciation.${LetterId}`;
 type GameLevelId = 1 | 2 | 3;
 type HintTone = 'neutral' | 'hint' | 'success';
-type AudioManifestState = 'loading' | 'ready' | 'failed';
 
 type StatusKey =
   | LetterAudioKey
@@ -101,8 +104,6 @@ interface SessionStats {
   hintUsageByRound: number[];
   highestLevelReached: GameLevelId;
 }
-
-type AudioManifest = Record<string, string>;
 
 const TRACE_VIEW_WIDTH = 340;
 const TRACE_VIEW_HEIGHT = 220;
@@ -413,10 +414,6 @@ function getFeedbackKeyFromHintTrend(hintTrend: HintTrend): StatusKey {
   return 'feedback.greatEffort';
 }
 
-function isAudioManifest(value: unknown): value is AudioManifest {
-  return Boolean(value) && typeof value === 'object';
-}
-
 function sortPair(a: LetterId, b: LetterId): [LetterId, LetterId] {
   return a < b ? [a, b] : [b, a];
 }
@@ -506,18 +503,31 @@ function getSvgPoint(
   };
 }
 
-export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
-  const { t } = useTranslation('common');
+export function LetterTracingTrailGame({ level: runtimeLevel, onComplete, audio }: GameProps) {
+  const { t, i18n } = useTranslation('common');
+  const isRtl = isRtlDirection(i18n.dir(i18n.language));
+  const replayIcon = rtlReplayGlyph(isRtl);
+  const nextIcon = rtlNextGlyph(isRtl);
+  const levelConfig = useMemo(
+    () => (runtimeLevel.configJson as Record<string, unknown>) ?? {},
+    [runtimeLevel.configJson],
+  );
+  const routingContext = useMemo(
+    () => resolveLettersRoutingContext(levelConfig, 1),
+    [levelConfig],
+  );
+  const sessionStartLevel = useMemo<GameLevelId>(
+    () => (routingContext.ageBand === '5-6' ? 1 : routingContext.initialLevelId),
+    [routingContext.ageBand, routingContext.initialLevelId],
+  );
 
-  const [audioManifest, setAudioManifest] = useState<AudioManifest | null>(null);
-  const [audioManifestState, setAudioManifestState] = useState<AudioManifestState>('loading');
   const [audioDegraded, setAudioDegraded] = useState(false);
 
   const [roundNumber, setRoundNumber] = useState(1);
-  const [level, setLevel] = useState<GameLevelId>(1);
+  const [level, setLevel] = useState<GameLevelId>(sessionStartLevel);
   const [cleanRoundsInRow, setCleanRoundsInRow] = useState(0);
   const [struggleRoundsInRow, setStruggleRoundsInRow] = useState(0);
-  const [fallbackRoundsRemaining, setFallbackRoundsRemaining] = useState(0);
+  const [fallbackRoundsRemaining, setFallbackRoundsRemaining] = useState(routingContext.inSupportMode ? 2 : 0);
   const [contrastPair, setContrastPair] = useState<[LetterId, LetterId] | null>(null);
 
   const [midpointPaused, setMidpointPaused] = useState(false);
@@ -534,8 +544,8 @@ export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
   const [round, setRound] = useState<RoundState>(() =>
     buildRound({
       roundNumber: 1,
-      level: 1,
-      fallbackMode: false,
+      level: sessionStartLevel,
+      fallbackMode: routingContext.inSupportMode,
       contrastPair: null,
       previousLetter: null,
     }),
@@ -575,11 +585,36 @@ export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
     !midpointPaused &&
     (!round.requiresSelection || selectedLetterId === round.targetLetter);
 
-  const startTolerance = round.fallbackMode ? 44 : level === 1 ? 36 : level === 2 ? 30 : 26;
-  const completionThreshold = round.fallbackMode ? 0.52 : level === 1 ? 0.58 : level === 2 ? 0.68 : 0.76;
-  const coverageTolerance = round.fallbackMode ? 24 : level === 1 ? 20 : level === 2 ? 18 : 15;
-  const shouldSnapToPath = round.fallbackMode || level === 1 || hintStep >= 2;
-  const snapRadius = round.fallbackMode ? 26 : level === 1 ? 18 : 10;
+  const levelForThreshold = round.level;
+  const ageBandStartToleranceAdjust =
+    routingContext.ageBand === '3-4' ? 6 :
+      routingContext.ageBand === '4-5' ? 2 :
+        routingContext.ageBand === '6-7' ? -4 :
+          0;
+  const ageBandCoverageToleranceAdjust =
+    routingContext.ageBand === '3-4' ? 4 :
+      routingContext.ageBand === '4-5' ? 2 :
+        routingContext.ageBand === '6-7' ? -2 :
+          0;
+  const ageBandCompletionAdjust =
+    routingContext.ageBand === '3-4' ? -0.05 :
+      routingContext.ageBand === '4-5' ? -0.02 :
+        routingContext.ageBand === '6-7' ? 0.06 :
+          0;
+
+  const baseStartTolerance = round.fallbackMode ? 44 : levelForThreshold === 1 ? 36 : levelForThreshold === 2 ? 30 : 26;
+  const baseCompletionThreshold = round.fallbackMode ? 0.52 : levelForThreshold === 1 ? 0.58 : levelForThreshold === 2 ? 0.68 : 0.76;
+  const baseCoverageTolerance = round.fallbackMode ? 24 : levelForThreshold === 1 ? 20 : levelForThreshold === 2 ? 18 : 15;
+
+  const startTolerance = Math.max(20, baseStartTolerance + ageBandStartToleranceAdjust);
+  const completionThreshold = Math.min(0.9, Math.max(0.48, baseCompletionThreshold + ageBandCompletionAdjust));
+  const coverageTolerance = Math.max(12, baseCoverageTolerance + ageBandCoverageToleranceAdjust);
+  const shouldSnapToPath = round.fallbackMode
+    ? true
+    : routingContext.ageBand === '6-7'
+      ? hintStep >= 3
+      : levelForThreshold === 1 || hintStep >= 2;
+  const snapRadius = round.fallbackMode ? 26 : levelForThreshold === 1 ? 18 : routingContext.ageBand === '6-7' ? 8 : 10;
 
   const traceGuideStrokeWidth = round.fallbackMode ? 28 : level === 1 ? 24 : level === 2 ? 18 : 14;
   const traceInkStrokeWidth = round.fallbackMode ? 16 : level === 1 ? 12 : level === 2 ? 10 : 9;
@@ -630,63 +665,17 @@ export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
     [round.hintPoints],
   );
 
-  useEffect(() => {
-    let mounted = true;
-
-    void fetch('/audio/he/manifest.json')
-      .then((response) => response.json())
-      .then((manifest: unknown) => {
-        if (!mounted) {
-          return;
-        }
-        if (!isAudioManifest(manifest)) {
-          setAudioManifestState('failed');
-          setAudioDegraded(true);
-          return;
-        }
-        setAudioManifest(manifest);
-        setAudioManifestState('ready');
-      })
-      .catch(() => {
-        if (!mounted) {
-          return;
-        }
-        setAudioManifestState('failed');
-        setAudioDegraded(true);
-      });
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  const resolveAudioPath = useCallback(
-    (key: AudioKey): string | null => {
-      if (!audioManifest) {
-        return null;
-      }
-      return audioManifest[`common.${key}`] ?? null;
-    },
-    [audioManifest],
-  );
-
   const playAudioKey = useCallback(
     (key: AudioKey) => {
       if (audioDegraded) {
         return;
       }
-      const path = resolveAudioPath(key);
-      if (!path) {
-        if (audioManifestState === 'failed') {
-          handleAudioPlaybackFailure();
-        }
-        return;
-      }
+      const path = resolveAudioPathFromKey(key, 'common');
       void audio.play(path).catch(() => {
         handleAudioPlaybackFailure();
       });
     },
-    [audio, audioDegraded, audioManifestState, handleAudioPlaybackFailure, resolveAudioPath],
+    [audio, audioDegraded, handleAudioPlaybackFailure],
   );
 
   const setMessageWithAudio = useCallback(
@@ -921,6 +910,10 @@ export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
       nextCleanRoundsInRow = 0;
     }
 
+    if (routingContext.ageBand === '5-6' && round.roundNumber === 1) {
+      nextLevel = Math.max(2, nextLevel) as GameLevelId;
+    }
+
     const nextRoundNumber = round.roundNumber + 1;
     const nextRound = buildRound({
       roundNumber: nextRoundNumber,
@@ -963,6 +956,7 @@ export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
     triggerScorePulse,
     triggerTraceCelebrate,
     usedHintThisRound,
+    routingContext.ageBand,
   ]);
 
   const registerTraceMistake = useCallback(
@@ -1313,6 +1307,8 @@ export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
     };
   }, [audio, clearQueuedAdvance, clearTransientFeedbackTimers]);
 
+  const coachVariant = sessionComplete || roundMessage.tone === 'success' ? 'success' : 'hint';
+
   if (sessionComplete) {
     return (
       <div className="letter-tracing-trail letter-tracing-trail--complete">
@@ -1325,7 +1321,7 @@ export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
               onClick={() => playAudioKey('feedback.youDidIt')}
               aria-label={replayButtonAriaLabel}
             >
-              <span aria-hidden="true">▶</span>
+              <span aria-hidden="true">{replayIcon}</span>
             </button>
           </div>
           <div className="letter-tracing-trail__text-row letter-tracing-trail__text-row--center">
@@ -1336,7 +1332,7 @@ export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
               onClick={() => playAudioKey('games.letterTracingTrail.feedback.success.amazing')}
               aria-label={replayButtonAriaLabel}
             >
-              <span aria-hidden="true">▶</span>
+              <span aria-hidden="true">{replayIcon}</span>
             </button>
           </div>
 
@@ -1362,7 +1358,7 @@ export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
                 onClick={() => playAudioKey('parentDashboard.games.letterTracingTrail.progressSummary')}
                 aria-label={replayButtonAriaLabel}
               >
-                <span aria-hidden="true">▶</span>
+                <span aria-hidden="true">{replayIcon}</span>
               </button>
             </div>
             <div className="letter-tracing-trail__text-row">
@@ -1373,7 +1369,7 @@ export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
                 onClick={() => playAudioKey('parentDashboard.games.letterTracingTrail.nextStep')}
                 aria-label={replayButtonAriaLabel}
               >
-                <span aria-hidden="true">▶</span>
+                <span aria-hidden="true">{replayIcon}</span>
               </button>
             </div>
           </Card>
@@ -1386,7 +1382,7 @@ export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
               onClick={() => playAudioKey(completionHintFeedbackKey)}
               aria-label={replayButtonAriaLabel}
             >
-              <span aria-hidden="true">▶</span>
+              <span aria-hidden="true">{replayIcon}</span>
             </button>
           </div>
         </Card>
@@ -1408,7 +1404,7 @@ export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
               onClick={() => playAudioKey('feedback.greatEffort')}
               aria-label={replayButtonAriaLabel}
             >
-              <span aria-hidden="true">▶</span>
+              <span aria-hidden="true">{replayIcon}</span>
             </button>
           </div>
           <div className="letter-tracing-trail__text-row letter-tracing-trail__text-row--center">
@@ -1421,7 +1417,7 @@ export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
               onClick={() => playAudioKey('games.letterTracingTrail.completionPraise.readyForNextLetter')}
               aria-label={replayButtonAriaLabel}
             >
-              <span aria-hidden="true">▶</span>
+              <span aria-hidden="true">{replayIcon}</span>
             </button>
           </div>
 
@@ -1432,7 +1428,7 @@ export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
             aria-label={t('nav.next')}
             style={{ minWidth: '56px', paddingInline: 'var(--space-lg)' }}
           >
-            <span aria-hidden="true">→</span>
+            <span aria-hidden="true">{nextIcon}</span>
           </Button>
         </Card>
 
@@ -1454,7 +1450,7 @@ export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
                 onClick={() => playAudioKey('games.letterTracingTrail.title')}
                 aria-label={replayButtonAriaLabel}
               >
-                <span aria-hidden="true">▶</span>
+                <span aria-hidden="true">{replayIcon}</span>
               </button>
             </div>
             <div className="letter-tracing-trail__text-row">
@@ -1465,9 +1461,13 @@ export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
                 onClick={() => playAudioKey('games.letterTracingTrail.subtitle')}
                 aria-label={replayButtonAriaLabel}
               >
-                <span aria-hidden="true">▶</span>
+                <span aria-hidden="true">{replayIcon}</span>
               </button>
             </div>
+          </div>
+
+          <div className="letter-tracing-trail__coach" aria-hidden="true">
+            <MascotIllustration variant={coachVariant} size={52} />
           </div>
 
           <div className="letter-tracing-trail__actions">
@@ -1478,7 +1478,7 @@ export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
               aria-label={t('games.letterTracingTrail.instructions.tapReplay')}
               style={{ minWidth: 'var(--touch-min)', paddingInline: 'var(--space-md)' }}
             >
-              <span aria-hidden="true">▶</span>
+              <span aria-hidden="true">{replayIcon}</span>
             </Button>
             <Button
               variant="ghost"
@@ -1505,7 +1505,7 @@ export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
               aria-label={t('nav.next')}
               style={{ minWidth: 'var(--touch-min)', paddingInline: 'var(--space-md)' }}
             >
-              <span aria-hidden="true">→</span>
+              <span aria-hidden="true">{nextIcon}</span>
             </Button>
           </div>
         </header>
@@ -1543,7 +1543,7 @@ export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
             onClick={() => playAudioKey(roundMessage.key)}
             aria-label={replayButtonAriaLabel}
           >
-            <span aria-hidden="true">▶</span>
+            <span aria-hidden="true">{replayIcon}</span>
           </button>
         </div>
 
@@ -1650,7 +1650,7 @@ export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
                 onClick={() => playAudioKey(choiceInstructionKey)}
                 aria-label={replayButtonAriaLabel}
               >
-                <span aria-hidden="true">▶</span>
+                <span aria-hidden="true">{replayIcon}</span>
               </button>
             </div>
 
@@ -1684,7 +1684,7 @@ export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
                           onClick={() => playAudioKey(optionAudioKey)}
                           aria-label={replayButtonAriaLabel}
                         >
-                          <span aria-hidden="true">▶</span>
+                          <span aria-hidden="true">{replayIcon}</span>
                         </button>
                       </div>
                     </div>
@@ -1702,7 +1702,7 @@ export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
                   onClick={() => playAudioKey(currentLetterAudioKey)}
                   aria-label={replayButtonAriaLabel}
                 >
-                  <span aria-hidden="true">▶</span>
+                  <span aria-hidden="true">{replayIcon}</span>
                 </button>
               </div>
               {round.fallbackMode && (
@@ -1716,7 +1716,7 @@ export function LetterTracingTrailGame({ onComplete, audio }: GameProps) {
                     onClick={() => playAudioKey('games.letterTracingTrail.strokeHint.watchGhostHand')}
                     aria-label={replayButtonAriaLabel}
                   >
-                    <span aria-hidden="true">▶</span>
+                    <span aria-hidden="true">{replayIcon}</span>
                   </button>
                 </div>
               )}
@@ -1757,6 +1757,24 @@ const letterTracingTrailStyles = `
   .letter-tracing-trail__heading {
     display: grid;
     gap: var(--space-xs);
+  }
+
+  .letter-tracing-trail__coach {
+    inline-size: 68px;
+    block-size: 68px;
+    border-radius: var(--radius-full);
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+    background: color-mix(in srgb, var(--color-bg-card) 90%, white);
+    border: 2px solid color-mix(in srgb, var(--color-accent-primary) 28%, transparent);
+    box-shadow: var(--shadow-sm);
+    animation: letter-tracing-coach-float 1500ms ease-in-out infinite;
+  }
+
+  .letter-tracing-trail__coach,
+  .letter-tracing-trail__coach * {
+    pointer-events: none;
   }
 
   .letter-tracing-trail__title {
@@ -2204,6 +2222,20 @@ const letterTracingTrailStyles = `
     }
     100% {
       transform: translateX(0);
+    }
+  }
+
+  @keyframes letter-tracing-coach-float {
+    0% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-4px);
+    }
+
+    100% {
+      transform: translateY(0);
     }
   }
 

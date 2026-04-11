@@ -153,9 +153,13 @@ These rules exist because on 2026-04-10 the system accumulated 65 blocked issues
 - `inbox-lite` can show an assigned `todo` issue with `activeRun.status=queued` that still fails first checkout (`checkoutRunId=null` + non-null `executionRunId`). Treat this as lock-normalization work: one checkout attempt, then `blocked` + reroute with exact lock IDs.
 - For review-queue surge recovery, patch FED-owned `in_review` lanes to QA-owned `todo` with a run-scoped dispatch comment; this can trigger immediate QA heartbeats and same-cycle `in_progress` evidence on at least one lane per QA owner.
 - Canceling stale queued runs on PM-owned blocked wrappers can immediately reattach a fresh queued `executionRunId`. If this happens repeatedly, keep one canonical checkoutable coordinator lane active, delegate execution to child lanes there, and mark old wrappers superseded with explicit owner/ETA mapping.
+- If subtask creation retries accidentally produce duplicate child lanes, immediately cancel superseded duplicates, link the canonical child issue in each cancellation comment, and mirror the cleanup in the parent coordination comment to prevent parallel duplicate execution.
 - Use UUID ids (not `DUB-###` identifiers) for `GET /api/issues/{id}/heartbeat-context`; identifier-based calls can return null issue fields in this local adapter.
 - In this local adapter, several list endpoints may return raw arrays instead of `{ items: [...] }` wrappers (`/api/agents/me/inbox-lite`, issue comments, some issue list queries); inspect payload shape before jq parsing to avoid heartbeat delays.
 - In this local adapter, do not trust `identifier` query filtering on issue list routes for mutation targeting (for example `GET /api/companies/{companyId}/issues?identifier=DUB-123`); resolve the exact issue UUID from known context or explicit list filtering before any PATCH to avoid wrong-ticket updates.
+- In this local adapter, a heartbeat run can become checkout-bound to the first issue it checks out; later checkout calls in that same run may fail with `Checkout run context is bound to a different issue` and a `snapshotIssueId` pointing to the first lane.
+- In this local adapter, an `issue_assigned` wake can attach the waking run's `executionRunId` to the wake issue even when that issue is assigned to a different agent; verify assignee ownership before acting and watch for stale lock residue after run completion.
+- In this local adapter, `PATCH /api/issues/{id}` with only `comment` may not append a visible thread entry; include `status` with `comment` in the same PATCH when posting heartbeat updates.
 
 ## Game Pipeline Handoff
 
