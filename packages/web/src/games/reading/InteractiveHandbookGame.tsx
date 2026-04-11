@@ -425,6 +425,9 @@ const PAGE_IDS_BY_BOOK: Record<LadderBookId, PageId[]> = {
 const PAGE_ID_SET = new Set<PageId>(ALL_PAGE_IDS);
 const SWIPE_GESTURE_MIN_DISTANCE_PX = 56;
 const SWIPE_GESTURE_MAX_VERTICAL_DRIFT_PX = 64;
+const CONTROL_ROW_VIEWPORT_INSET_PX = 16;
+const CONTROL_ROW_REALIGN_SHORT_DELAY_MS = 300;
+const CONTROL_ROW_REALIGN_AFTER_PAGE_TURN_MS = 520;
 const LADDER_BOOK_SEQUENCE: LadderBookId[] = ['book1', 'book4', 'book5', 'book6', 'book7', 'book8', 'book9', 'book10'];
 const AGE_BAND_TO_BOOK: Record<AgeBand, LadderBookId> = READING_LADDER_BOOK_BY_AGE_BAND;
 const LAUNCH_ALIAS_TO_HANDBOOK_SLUG: Record<LaunchSlotAlias, HandbookSlug> = {
@@ -2256,6 +2259,27 @@ export function buildFallbackRendererBlocks(
   return blocks;
 }
 
+export function shouldRepositionControlRowInViewport(input: {
+  top: number;
+  left: number;
+  right: number;
+  viewportWidth: number;
+  insetPx?: number;
+}): boolean {
+  const insetPx = input.insetPx ?? CONTROL_ROW_VIEWPORT_INSET_PX;
+
+  if (
+    !Number.isFinite(input.top) ||
+    !Number.isFinite(input.left) ||
+    !Number.isFinite(input.right) ||
+    !Number.isFinite(input.viewportWidth)
+  ) {
+    return false;
+  }
+
+  return input.top < insetPx || input.left < insetPx || input.right > input.viewportWidth - insetPx;
+}
+
 export function InteractiveHandbookGame({
   level,
   onComplete,
@@ -2324,6 +2348,7 @@ export function InteractiveHandbookGame({
   const chapterTransitionCueRef = useRef<string | null>(null);
   const antiGuessTrackerRef = useRef<HandbookAntiGuessTrackerState>(createInitialHandbookAntiGuessTrackerState());
   const antiGuessPauseTimerRef = useRef<number | null>(null);
+  const controlsRowRef = useRef<HTMLDivElement | null>(null);
 
   const qualityGate = useMemo(
     () => resolveQualityGate(level.configJson, activeLadderBookId),
@@ -3206,6 +3231,53 @@ export function InteractiveHandbookGame({
   }, [activeAgeBand, activeInteraction, currentPage.id, isMagicLetterMapListenExploreMode, pageAttempts, retryScaffoldByPage]);
 
   useEffect(() => {
+    if (typeof window === 'undefined' || isCompleted) {
+      return;
+    }
+
+    const controlsRowNode = controlsRowRef.current;
+    if (!controlsRowNode) {
+      return;
+    }
+
+    const alignControlsRowInViewport = () => {
+      const controlsRect = controlsRowNode.getBoundingClientRect();
+      const shouldReposition = shouldRepositionControlRowInViewport({
+        top: controlsRect.top,
+        left: controlsRect.left,
+        right: controlsRect.right,
+        viewportWidth: window.innerWidth,
+      });
+
+      if (!shouldReposition) {
+        return;
+      }
+
+      controlsRowNode.scrollIntoView({
+        block: 'nearest',
+        inline: 'nearest',
+        behavior: 'auto',
+      });
+    };
+
+    const frame = window.requestAnimationFrame(() => {
+      alignControlsRowInViewport();
+    });
+    const shortDelayedRealign = window.setTimeout(() => {
+      alignControlsRowInViewport();
+    }, CONTROL_ROW_REALIGN_SHORT_DELAY_MS);
+    const delayedRealign = window.setTimeout(() => {
+      alignControlsRowInViewport();
+    }, CONTROL_ROW_REALIGN_AFTER_PAGE_TURN_MS);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.clearTimeout(shortDelayedRealign);
+      window.clearTimeout(delayedRealign);
+    };
+  }, [currentPage.id, isCompleted]);
+
+  useEffect(() => {
     markPageVisited(currentPage.id);
     const shouldAnnounceChapterTransition = Boolean(chapterTransitionKey) && chapterTransitionCueRef.current !== chapterTransitionKey;
     chapterTransitionCueRef.current = chapterTransitionKey;
@@ -3440,7 +3512,7 @@ export function InteractiveHandbookGame({
           </p>
         ) : null}
 
-        <div className="interactive-handbook__controls">
+        <div className="interactive-handbook__controls" ref={controlsRowRef}>
           <button
             type="button"
             className="interactive-handbook__icon-button"

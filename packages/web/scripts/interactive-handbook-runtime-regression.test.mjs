@@ -6,6 +6,7 @@ import {
   evaluateHandbookAntiGuessGuard,
   mergeRuntimePageDefinitions,
   reduceChoicesForRetryScaffold,
+  shouldRepositionControlRowInViewport,
 } from '../src/games/reading/InteractiveHandbookGame.tsx';
 
 test('renderer normalizes target-word and question block aliases', () => {
@@ -36,6 +37,36 @@ test('renderer normalizes target-word and question block aliases', () => {
 
   assert.ok(targetBlock, 'expected target-word block to normalize to text role="target"');
   assert.ok(promptBlock, 'expected question block to normalize to prompt text');
+});
+
+test('control-row viewport guard flags portrait drift states only', () => {
+  assert.equal(
+    shouldRepositionControlRowInViewport({
+      top: 104,
+      left: 48,
+      right: 712,
+      viewportWidth: 768,
+    }),
+    false,
+  );
+  assert.equal(
+    shouldRepositionControlRowInViewport({
+      top: -53.7,
+      left: 48,
+      right: 156.7,
+      viewportWidth: 768,
+    }),
+    true,
+  );
+  assert.equal(
+    shouldRepositionControlRowInViewport({
+      top: 476.5,
+      left: -484.4,
+      right: -287,
+      viewportWidth: 768,
+    }),
+    true,
+  );
 });
 
 test('runtime interaction choices override while story-depth prompt stays on base CTA flow', () => {

@@ -1,0 +1,308 @@
+[
+  {
+    "route": "/profiles",
+    "finalPath": "/profiles",
+    "title": "בחירת פרופיל | דובילנד",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": true,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 77
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games",
+    "finalPath": "/games",
+    "title": "דובילנד | משחקי עברית לילדים בגילאי 3-7",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": true,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 77
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/parent",
+    "finalPath": "/parent",
+    "title": "אזור הורים | דובילנד",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": true,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 77
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/numbers/counting-picnic",
+    "finalPath": "/games/numbers/counting-picnic",
+    "title": "פיקניק ספירה עם דובי | דובילנד",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": true,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 77
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/numbers/more-or-less-market",
+    "finalPath": "/games/numbers/more-or-less-market",
+    "title": "שוק יותר או פחות עם דובי | דובילנד",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": true,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 77
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/numbers/shape-safari",
+    "finalPath": "/games/numbers/shape-safari",
+    "title": "ספארי צורות עם דובי | דובילנד",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": true,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 77
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/numbers/number-line-jumps",
+    "finalPath": "/games/numbers/number-line-jumps",
+    "title": "קפיצות מספרים עם דובי | דובילנד",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": true,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 77
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/colors/color-garden",
+    "finalPath": "/games/colors/color-garden",
+    "title": "גינת הצבעים עם דובי | דובילנד",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": true,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 77
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/reading/picture-to-word-builder",
+    "finalPath": "/games/reading/picture-to-word-builder",
+    "title": "בונים מילה מתמונה עם דובי | דובילנד",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": true,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 77
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/reading/sight-word-sprint",
+    "finalPath": "/games/reading/sight-word-sprint",
+    "title": "מרוץ מילות תדירות עם דובי | דובילנד",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": true,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 77
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/reading/decodable-micro-stories",
+    "finalPath": "/games/reading/decodable-micro-stories",
+    "title": "סיפורי קריאה מדורגים עם דובי | דובילנד",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": true,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 77
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/reading/interactive-handbook",
+    "finalPath": "/games/reading/interactive-handbook",
+    "title": "ספרון אינטראקטיבי: דובי וגן ההפתעות | דובילנד",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": true,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 77
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/reading/letter-storybook",
+    "finalPath": "/games/reading/letter-storybook",
+    "title": "הסיפור של האותיות עם דובי | דובילנד",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": true,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 77
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/reading/root-family-stickers",
+    "finalPath": "/games/reading/root-family-stickers",
+    "title": "מדבקות משפחת שורש עם דובי | דובילנד",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": true,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 77
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/reading/confusable-letter-contrast",
+    "finalPath": "/games/reading/confusable-letter-contrast",
+    "title": "מבדק אותיות דומות עם דובי | דובילנד",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": true,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 77
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/letters/letter-sound-match",
+    "finalPath": "/games/letters/letter-sound-match",
+    "title": "התאמת צליל לאות עם דובי | דובילנד",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": true,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 77
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/letters/letter-tracing-trail",
+    "finalPath": "/games/letters/letter-tracing-trail",
+    "title": "מסלול עקיבת אותיות עם דובי | דובילנד",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": true,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 77
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/letters/letter-sky-catcher",
+    "finalPath": "/games/letters/letter-sky-catcher",
+    "title": "שומר האותיות עם דובי | דובילנד",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": true,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 77
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  }
+]

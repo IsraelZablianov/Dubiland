@@ -1,0 +1,17 @@
+{
+  "totalRoutes": 27,
+  "byFinalPath": {
+    "/": 1,
+    "/about": 1,
+    "/parents": 1,
+    "/parents/faq": 1,
+    "/letters": 1,
+    "/numbers": 1,
+    "/reading": 1,
+    "/login": 18,
+    "/games": 1,
+    "/this-route-does-not-exist": 1
+  },
+  "routesMissingPublicHeaderAndAppShell": [],
+  "routesWithPublicHeaderNoPublicFooter": []
+}

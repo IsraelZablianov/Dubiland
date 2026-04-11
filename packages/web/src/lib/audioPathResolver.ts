@@ -1,3 +1,5 @@
+import { assetUrl } from './assetUrl';
+
 type AudioManifestEntry = string | { path?: string };
 
 type AudioManifest = Record<string, AudioManifestEntry>;
@@ -89,7 +91,7 @@ async function loadManifest(): Promise<void> {
   }
 
   try {
-    const response = await fetch(AUDIO_MANIFEST_URL);
+    const response = await fetch(assetUrl(AUDIO_MANIFEST_URL));
     if (!response.ok) {
       return;
     }

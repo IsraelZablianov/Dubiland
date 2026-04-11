@@ -1,0 +1,542 @@
+[
+  {
+    "route": "/",
+    "finalPath": "/",
+    "title": "דובילנד | לומדים עברית בכיף — משחקי אותיות, מספרים וקריאה לגילאי 3-7",
+    "dir": "rtl",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": false,
+    "appShellMain": false,
+    "appShellFooter": false,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 89
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 362
+    }
+  },
+  {
+    "route": "/about",
+    "finalPath": "/about",
+    "title": "אודות דובילנד | הסיפור שלנו והגישה החינוכית",
+    "dir": "rtl",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": false,
+    "appShellMain": false,
+    "appShellFooter": false,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 89
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/parents",
+    "finalPath": "/parents",
+    "title": "מדריך להורים | דובילנד — איך הילדים לומדים בכיף",
+    "dir": "rtl",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": false,
+    "appShellMain": false,
+    "appShellFooter": false,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 89
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/parents/faq",
+    "finalPath": "/parents/faq",
+    "title": "שאלות נפוצות להורים | דובילנד",
+    "dir": "rtl",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": false,
+    "appShellMain": false,
+    "appShellFooter": false,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 89
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/letters",
+    "finalPath": "/letters",
+    "title": "אותיות בעברית לילדים | דובילנד",
+    "dir": "rtl",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": false,
+    "appShellMain": false,
+    "appShellFooter": false,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 89
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/numbers",
+    "finalPath": "/numbers",
+    "title": "מספרים וחשבון לילדים | דובילנד",
+    "dir": "rtl",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": false,
+    "appShellMain": false,
+    "appShellFooter": false,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 89
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/reading",
+    "finalPath": "/reading",
+    "title": "קריאה ראשונה לילדים | דובילנד",
+    "dir": "rtl",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": false,
+    "appShellMain": false,
+    "appShellFooter": false,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 89
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/login",
+    "finalPath": "/login",
+    "title": "כניסה לדובילנד | לומדים עברית דרך משחק",
+    "dir": "rtl",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": false,
+    "appShellMain": false,
+    "appShellFooter": false,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 89
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/profiles",
+    "finalPath": "/login",
+    "title": "כניסה לדובילנד | לומדים עברית דרך משחק",
+    "dir": "rtl",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": false,
+    "appShellMain": false,
+    "appShellFooter": false,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 89
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games",
+    "finalPath": "/games",
+    "title": "דובילנד | משחקי עברית לילדים בגילאי 3-7",
+    "dir": "rtl",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": true,
+    "appShellMain": false,
+    "appShellFooter": false,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 89
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/parent",
+    "finalPath": "/login",
+    "title": "כניסה לדובילנד | לומדים עברית דרך משחק",
+    "dir": "rtl",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": false,
+    "appShellMain": false,
+    "appShellFooter": false,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 89
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/numbers/counting-picnic",
+    "finalPath": "/login",
+    "title": "כניסה לדובילנד | לומדים עברית דרך משחק",
+    "dir": "rtl",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": false,
+    "appShellMain": false,
+    "appShellFooter": false,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 89
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/numbers/more-or-less-market",
+    "finalPath": "/login",
+    "title": "כניסה לדובילנד | לומדים עברית דרך משחק",
+    "dir": "rtl",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": false,
+    "appShellMain": false,
+    "appShellFooter": false,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 89
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/numbers/shape-safari",
+    "finalPath": "/login",
+    "title": "כניסה לדובילנד | לומדים עברית דרך משחק",
+    "dir": "rtl",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": false,
+    "appShellMain": false,
+    "appShellFooter": false,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 89
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/numbers/number-line-jumps",
+    "finalPath": "/login",
+    "title": "כניסה לדובילנד | לומדים עברית דרך משחק",
+    "dir": "rtl",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": false,
+    "appShellMain": false,
+    "appShellFooter": false,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 89
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/colors/color-garden",
+    "finalPath": "/login",
+    "title": "כניסה לדובילנד | לומדים עברית דרך משחק",
+    "dir": "rtl",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": false,
+    "appShellMain": false,
+    "appShellFooter": false,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 89
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/reading/picture-to-word-builder",
+    "finalPath": "/login",
+    "title": "כניסה לדובילנד | לומדים עברית דרך משחק",
+    "dir": "rtl",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": false,
+    "appShellMain": false,
+    "appShellFooter": false,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 89
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/reading/sight-word-sprint",
+    "finalPath": "/login",
+    "title": "כניסה לדובילנד | לומדים עברית דרך משחק",
+    "dir": "rtl",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": false,
+    "appShellMain": false,
+    "appShellFooter": false,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 89
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/reading/decodable-micro-stories",
+    "finalPath": "/login",
+    "title": "כניסה לדובילנד | לומדים עברית דרך משחק",
+    "dir": "rtl",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": false,
+    "appShellMain": false,
+    "appShellFooter": false,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 89
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/reading/interactive-handbook",
+    "finalPath": "/login",
+    "title": "כניסה לדובילנד | לומדים עברית דרך משחק",
+    "dir": "rtl",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": false,
+    "appShellMain": false,
+    "appShellFooter": false,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 89
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/reading/letter-storybook",
+    "finalPath": "/login",
+    "title": "כניסה לדובילנד | לומדים עברית דרך משחק",
+    "dir": "rtl",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": false,
+    "appShellMain": false,
+    "appShellFooter": false,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 89
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/reading/root-family-stickers",
+    "finalPath": "/login",
+    "title": "כניסה לדובילנד | לומדים עברית דרך משחק",
+    "dir": "rtl",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": false,
+    "appShellMain": false,
+    "appShellFooter": false,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 89
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/reading/confusable-letter-contrast",
+    "finalPath": "/login",
+    "title": "כניסה לדובילנד | לומדים עברית דרך משחק",
+    "dir": "rtl",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": false,
+    "appShellMain": false,
+    "appShellFooter": false,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 89
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/letters/letter-sound-match",
+    "finalPath": "/login",
+    "title": "כניסה לדובילנד | לומדים עברית דרך משחק",
+    "dir": "rtl",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": false,
+    "appShellMain": false,
+    "appShellFooter": false,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 89
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/letters/letter-tracing-trail",
+    "finalPath": "/login",
+    "title": "כניסה לדובילנד | לומדים עברית דרך משחק",
+    "dir": "rtl",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": false,
+    "appShellMain": false,
+    "appShellFooter": false,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 89
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/games/letters/letter-sky-catcher",
+    "finalPath": "/login",
+    "title": "כניסה לדובילנד | לומדים עברית דרך משחק",
+    "dir": "rtl",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": false,
+    "appShellMain": false,
+    "appShellFooter": false,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 89
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  },
+  {
+    "route": "/this-route-does-not-exist",
+    "finalPath": "/this-route-does-not-exist",
+    "title": "הדף לא נמצא | דובילנד",
+    "dir": "rtl",
+    "publicHeader": true,
+    "publicFooter": true,
+    "appShell": false,
+    "appShellMain": false,
+    "appShellFooter": false,
+    "appHeader": false,
+    "publicHeaderDim": {
+      "w": 1280,
+      "h": 89
+    },
+    "publicFooterDim": {
+      "w": 1280,
+      "h": 363
+    }
+  }
+]

@@ -1,0 +1,918 @@
+{
+  "issue": "DUB-578",
+  "capturedAt": "2026-04-11T11:17:01.296Z",
+  "baseUrl": "http://127.0.0.1:4183",
+  "outDir": "/Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-578-qa2-rerun-2026-04-11T11-17-01-035Z",
+  "auth": {
+    "mode": "guest-profile",
+    "childId": "qa-rerun-child"
+  },
+  "ageBandDiscoverability": [
+    {
+      "ageBand": "3-4",
+      "expectedBookId": "book1",
+      "selectedBookId": "book1",
+      "pass": true,
+      "selectedClassName": "interactive-handbook__bookshelf-choice interactive-handbook__bookshelf-choice--featured interactive-handbook__bookshelf-choice--book1 interactive-handbook__bookshelf-choice--selected"
+    },
+    {
+      "ageBand": "5-6",
+      "expectedBookId": "book4",
+      "selectedBookId": "book4",
+      "pass": true,
+      "selectedClassName": "interactive-handbook__bookshelf-choice interactive-handbook__bookshelf-choice--featured interactive-handbook__bookshelf-choice--book4 interactive-handbook__bookshelf-choice--selected"
+    },
+    {
+      "ageBand": "6-7",
+      "expectedBookId": "book7",
+      "selectedBookId": "book7",
+      "pass": true,
+      "selectedClassName": "interactive-handbook__bookshelf-choice interactive-handbook__bookshelf-choice--featured interactive-handbook__bookshelf-choice--book7 interactive-handbook__bookshelf-choice--selected"
+    }
+  ],
+  "viewportMatrix": [
+    {
+      "viewport": "1024x768",
+      "screenshot": "/Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-578-qa2-rerun-2026-04-11T11-17-01-035Z/handbook-1024x768.png",
+      "audio": {
+        "autoPlayCountAfterLoad": 1,
+        "playCountAfterReplayClick": 2,
+        "replayIncrementsAudio": true
+      },
+      "pageChipBefore": "עמוד 1 מתוך 10",
+      "pageChipAfterNextClick": "עמוד 2 מתוך 10",
+      "nextDisabledBefore": false,
+      "htmlDir": "rtl",
+      "bodyDir": null,
+      "storyDir": "rtl",
+      "controls": {
+        "count": 6,
+        "minHeight": 72,
+        "minWidth": 151.328125,
+        "tooSmallCount": 0,
+        "tooSmallSample": []
+      },
+      "choices": {
+        "count": 3,
+        "minHeight": 72,
+        "minWidth": 290.6640625,
+        "tooSmallCount": 0,
+        "tooSmallSample": []
+      },
+      "textReplay": {
+        "count": 3,
+        "minHeight": 112.8515625,
+        "minWidth": 864,
+        "tooSmallCount": 0,
+        "hasTriangleGlyph": true
+      },
+      "replayControl": {
+        "present": true,
+        "hasTriangleIconPath": true,
+        "pathD": "M10 9.1L14.7 12L10 14.9V9.1Z"
+      },
+      "hasCheckSubmitButton": false,
+      "nextIcon": {
+        "inlineStyle": "transform: scaleX(-1);",
+        "computedTransform": "matrix(-1, 0, 0, 1, 0, 0)"
+      },
+      "modeButtons": [
+        {
+          "text": "הקרא לי",
+          "width": 104,
+          "height": 72
+        },
+        {
+          "text": "קוראים ומשחקים",
+          "width": 143.91,
+          "height": 72
+        },
+        {
+          "text": "חזרה רגועה",
+          "width": 104.7,
+          "height": 72
+        }
+      ],
+      "selectedBooks": [
+        {
+          "className": "interactive-handbook__bookshelf-choice interactive-handbook__bookshelf-choice--featured interactive-handbook__bookshelf-choice--book4 interactive-handbook__bookshelf-choice--selected",
+          "bookId": "book4"
+        }
+      ],
+      "pageDidNotAdvanceOnDisabledNext": true
+    },
+    {
+      "viewport": "768x1024",
+      "screenshot": "/Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-578-qa2-rerun-2026-04-11T11-17-01-035Z/handbook-768x1024.png",
+      "audio": {
+        "autoPlayCountAfterLoad": 1,
+        "playCountAfterReplayClick": 2,
+        "replayIncrementsAudio": true
+      },
+      "pageChipBefore": "עמוד 1 מתוך 10",
+      "pageChipAfterNextClick": "עמוד 2 מתוך 10",
+      "nextDisabledBefore": false,
+      "htmlDir": "rtl",
+      "bodyDir": null,
+      "storyDir": "rtl",
+      "controls": {
+        "count": 6,
+        "minHeight": 72,
+        "minWidth": 108.6640625,
+        "tooSmallCount": 0,
+        "tooSmallSample": []
+      },
+      "choices": {
+        "count": 3,
+        "minHeight": 72,
+        "minWidth": 205.328125,
+        "tooSmallCount": 0,
+        "tooSmallSample": []
+      },
+      "textReplay": {
+        "count": 3,
+        "minHeight": 0,
+        "minWidth": 0,
+        "tooSmallCount": 1,
+        "hasTriangleGlyph": true
+      },
+      "replayControl": {
+        "present": true,
+        "hasTriangleIconPath": true,
+        "pathD": "M10 9.1L14.7 12L10 14.9V9.1Z"
+      },
+      "hasCheckSubmitButton": false,
+      "nextIcon": {
+        "inlineStyle": "transform: scaleX(-1);",
+        "computedTransform": "matrix(-1, 0, 0, 1, 0, 0)"
+      },
+      "modeButtons": [
+        {
+          "text": "הקרא לי",
+          "width": 143.91,
+          "height": 72
+        },
+        {
+          "text": "קוראים ומשחקים",
+          "width": 143.91,
+          "height": 72
+        },
+        {
+          "text": "חזרה רגועה",
+          "width": 143.91,
+          "height": 72
+        }
+      ],
+      "selectedBooks": [
+        {
+          "className": "interactive-handbook__bookshelf-choice interactive-handbook__bookshelf-choice--featured interactive-handbook__bookshelf-choice--book4 interactive-handbook__bookshelf-choice--selected",
+          "bookId": "book4"
+        }
+      ],
+      "pageDidNotAdvanceOnDisabledNext": true
+    },
+    {
+      "viewport": "390x844",
+      "screenshot": "/Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-578-qa2-rerun-2026-04-11T11-17-01-035Z/handbook-390x844.png",
+      "audio": {
+        "autoPlayCountAfterLoad": 1,
+        "playCountAfterReplayClick": 2,
+        "replayIncrementsAudio": true
+      },
+      "pageChipBefore": "עמוד 1 מתוך 10",
+      "pageChipAfterNextClick": "עמוד 2 מתוך 10",
+      "nextDisabledBefore": false,
+      "htmlDir": "rtl",
+      "bodyDir": null,
+      "storyDir": "rtl",
+      "controls": {
+        "count": 6,
+        "minHeight": 72,
+        "minWidth": 95.328125,
+        "tooSmallCount": 0,
+        "tooSmallSample": []
+      },
+      "choices": {
+        "count": 3,
+        "minHeight": 72,
+        "minWidth": 246,
+        "tooSmallCount": 0,
+        "tooSmallSample": []
+      },
+      "textReplay": {
+        "count": 3,
+        "minHeight": 0,
+        "minWidth": 0,
+        "tooSmallCount": 1,
+        "hasTriangleGlyph": true
+      },
+      "replayControl": {
+        "present": true,
+        "hasTriangleIconPath": true,
+        "pathD": "M10 9.1L14.7 12L10 14.9V9.1Z"
+      },
+      "hasCheckSubmitButton": false,
+      "nextIcon": {
+        "inlineStyle": "transform: scaleX(-1);",
+        "computedTransform": "matrix(-1, 0, 0, 1, 0, 0)"
+      },
+      "modeButtons": [
+        {
+          "text": "הקרא לי",
+          "width": 104,
+          "height": 72
+        },
+        {
+          "text": "קוראים ומשחקים",
+          "width": 104,
+          "height": 72
+        },
+        {
+          "text": "חזרה רגועה",
+          "width": 104,
+          "height": 72
+        }
+      ],
+      "selectedBooks": [
+        {
+          "className": "interactive-handbook__bookshelf-choice interactive-handbook__bookshelf-choice--featured interactive-handbook__bookshelf-choice--book4 interactive-handbook__bookshelf-choice--selected",
+          "bookId": "book4"
+        }
+      ],
+      "pageDidNotAdvanceOnDisabledNext": true
+    }
+  ],
+  "progressionAndPersistence": {
+    "startChip": "עמוד 1 מתוך 10",
+    "flow": {
+      "steps": [
+        {
+          "i": 0,
+          "chip": "עמוד 1 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 1,
+          "chip": "עמוד 2 מתוך 10",
+          "nextDisabled": true,
+          "completion": false
+        },
+        {
+          "i": 2,
+          "chip": "עמוד 2 מתוך 10",
+          "nextDisabled": true,
+          "completion": false
+        },
+        {
+          "i": 3,
+          "chip": "עמוד 2 מתוך 10",
+          "nextDisabled": true,
+          "completion": false
+        },
+        {
+          "i": 4,
+          "chip": "עמוד 2 מתוך 10",
+          "nextDisabled": true,
+          "completion": false
+        },
+        {
+          "i": 5,
+          "chip": "עמוד 2 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 6,
+          "chip": "עמוד 3 מתוך 10",
+          "nextDisabled": true,
+          "completion": false
+        },
+        {
+          "i": 7,
+          "chip": "עמוד 3 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 8,
+          "chip": "עמוד 4 מתוך 10",
+          "nextDisabled": true,
+          "completion": false
+        },
+        {
+          "i": 9,
+          "chip": "עמוד 4 מתוך 10",
+          "nextDisabled": true,
+          "completion": false
+        },
+        {
+          "i": 10,
+          "chip": "עמוד 4 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 11,
+          "chip": "עמוד 5 מתוך 10",
+          "nextDisabled": true,
+          "completion": false
+        },
+        {
+          "i": 12,
+          "chip": "עמוד 5 מתוך 10",
+          "nextDisabled": true,
+          "completion": false
+        },
+        {
+          "i": 13,
+          "chip": "עמוד 5 מתוך 10",
+          "nextDisabled": true,
+          "completion": false
+        },
+        {
+          "i": 14,
+          "chip": "עמוד 5 מתוך 10",
+          "nextDisabled": true,
+          "completion": false
+        },
+        {
+          "i": 15,
+          "chip": "עמוד 5 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 16,
+          "chip": "עמוד 6 מתוך 10",
+          "nextDisabled": true,
+          "completion": false
+        },
+        {
+          "i": 17,
+          "chip": "עמוד 6 מתוך 10",
+          "nextDisabled": true,
+          "completion": false
+        },
+        {
+          "i": 18,
+          "chip": "עמוד 6 מתוך 10",
+          "nextDisabled": true,
+          "completion": false
+        },
+        {
+          "i": 19,
+          "chip": "עמוד 6 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 20,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": true,
+          "completion": false
+        },
+        {
+          "i": 21,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": true,
+          "completion": false
+        },
+        {
+          "i": 22,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 23,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 24,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 25,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 26,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 27,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 28,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 29,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 30,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 31,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 32,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 33,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 34,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 35,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 36,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 37,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 38,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 39,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 40,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 41,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 42,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 43,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 44,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 45,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 46,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 47,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 48,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 49,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 50,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 51,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 52,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 53,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 54,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 55,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 56,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 57,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 58,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 59,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 60,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 61,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 62,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 63,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 64,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 65,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 66,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 67,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 68,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 69,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 70,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 71,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 72,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 73,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 74,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 75,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 76,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 77,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 78,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 79,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 80,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 81,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 82,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 83,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 84,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 85,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 86,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 87,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 88,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        },
+        {
+          "i": 89,
+          "chip": "עמוד 7 מתוך 10",
+          "nextDisabled": false,
+          "completion": false
+        }
+      ],
+      "completionReached": false
+    },
+    "pageBeforeReload": "עמוד 2 מתוך 10",
+    "pageAfterReload": "עמוד 1 מתוך 10",
+    "progressRequests": [
+      {
+        "method": "GET",
+        "url": "https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?select=furthest_page_number%2Ccompleted%2Cpage_completion_json&child_id=eq.qa-rerun-child&handbook_id=eq.4550fab6-097d-461a-a96c-8b1a96d3f8d4"
+      },
+      {
+        "method": "POST",
+        "url": "https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id"
+      },
+      {
+        "method": "POST",
+        "url": "https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id"
+      },
+      {
+        "method": "POST",
+        "url": "https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id"
+      },
+      {
+        "method": "GET",
+        "url": "https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?select=furthest_page_number%2Ccompleted%2Cpage_completion_json&child_id=eq.qa-rerun-child&handbook_id=eq.4550fab6-097d-461a-a96c-8b1a96d3f8d4"
+      },
+      {
+        "method": "POST",
+        "url": "https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id"
+      },
+      {
+        "method": "POST",
+        "url": "https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id"
+      },
+      {
+        "method": "POST",
+        "url": "https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id"
+      },
+      {
+        "method": "POST",
+        "url": "https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id"
+      },
+      {
+        "method": "POST",
+        "url": "https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id"
+      },
+      {
+        "method": "POST",
+        "url": "https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id"
+      },
+      {
+        "method": "POST",
+        "url": "https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id"
+      },
+      {
+        "method": "POST",
+        "url": "https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id"
+      },
+      {
+        "method": "POST",
+        "url": "https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id"
+      },
+      {
+        "method": "POST",
+        "url": "https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id"
+      },
+      {
+        "method": "POST",
+        "url": "https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id"
+      },
+      {
+        "method": "POST",
+        "url": "https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id"
+      },
+      {
+        "method": "POST",
+        "url": "https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id"
+      },
+      {
+        "method": "POST",
+        "url": "https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id"
+      },
+      {
+        "method": "POST",
+        "url": "https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id"
+      },
+      {
+        "method": "POST",
+        "url": "https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id"
+      },
+      {
+        "method": "POST",
+        "url": "https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id"
+      },
+      {
+        "method": "POST",
+        "url": "https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id"
+      },
+      {
+        "method": "POST",
+        "url": "https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/child_handbook_progress?on_conflict=child_id%2Chandbook_id"
+      }
+    ],
+    "completionReached": false,
+    "replayWorked": null,
+    "endState": {
+      "chip": "עמוד 7 מתוך 10",
+      "nextExists": true,
+      "nextDisabled": false,
+      "nextAriaLabel": "המשך",
+      "status": "נהדר! עניתם לפי מה שקראנו.",
+      "interactionCard": true,
+      "completion": false
+    },
+    "audioPlayCount": 76
+  },
+  "assertions": {
+    "ageBandDiscoverabilityPass": true,
+    "rtlPass": true,
+    "touchTargetsPass": true,
+    "replayAudioPass": true,
+    "noCheckSubmitPass": true,
+    "persistencePass": false,
+    "persistedFurthest": 2,
+    "reloadedCurrent": 1,
+    "completionReached": false,
+    "replayPathPass": false,
+    "authenticatedPersistenceRequestsObserved": true
+  }
+}

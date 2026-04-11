@@ -26,7 +26,7 @@ const variantStyles: Record<ButtonVariant, React.CSSProperties> = {
     border: '2px solid transparent',
   },
   danger: {
-    background: 'var(--color-accent-danger)',
+    background: 'var(--color-accent-danger-strong, var(--color-accent-danger))',
     color: 'var(--color-text-inverse)',
     border: 'none',
   },

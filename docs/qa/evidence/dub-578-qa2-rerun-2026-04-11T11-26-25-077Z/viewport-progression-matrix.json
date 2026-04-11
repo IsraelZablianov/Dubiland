@@ -1,0 +1,4735 @@
+{
+  "issue": "DUB-578",
+  "capturedAt": "2026-04-11T11:26:25.325Z",
+  "outDir": "/Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-578-qa2-rerun-2026-04-11T11-26-25-077Z",
+  "viewportProgress": [
+    {
+      "viewport": "1024x768",
+      "screenshot": "/Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-578-qa2-rerun-2026-04-11T11-26-25-077Z/progress-1024x768.png",
+      "completionReached": true,
+      "untranslated": [
+        {
+          "i": 22,
+          "chip": "עמוד 6 מתוך 10",
+          "status": "games.interactiveHandbook.handbooks.magicLetterMap.interactions.confusableContrast.success"
+        }
+      ],
+      "offscreenNext": [
+        {
+          "i": 5,
+          "chip": "עמוד 1 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": 1983.015625,
+            "w": 151.3359375,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 1024,
+            "h": 768
+          },
+          "scrollY": 0
+        },
+        {
+          "i": 20,
+          "chip": "עמוד 6 מתוך 10",
+          "nextRect": {
+            "x": -453.515625,
+            "y": 347.9375,
+            "w": 234.921875,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 1024,
+            "h": 768
+          },
+          "scrollY": 2175.5
+        },
+        {
+          "i": 21,
+          "chip": "עמוד 6 מתוך 10",
+          "nextRect": {
+            "x": -453.515625,
+            "y": 347.9375,
+            "w": 234.921875,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 1024,
+            "h": 768
+          },
+          "scrollY": 2175.5
+        },
+        {
+          "i": 22,
+          "chip": "עמוד 6 מתוך 10",
+          "nextRect": {
+            "x": -453.515625,
+            "y": 347.9375,
+            "w": 234.921875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 1024,
+            "h": 768
+          },
+          "scrollY": 2175.5
+        }
+      ],
+      "clickErrors": [],
+      "last": {
+        "i": 29,
+        "chip": "",
+        "status": "",
+        "completion": true,
+        "interaction": false,
+        "nextRect": null,
+        "offscreenNext": false,
+        "untranslatedStatus": false,
+        "scrollY": 553
+      },
+      "trace": [
+        {
+          "i": 0,
+          "chip": "",
+          "status": "",
+          "completion": false,
+          "interaction": false,
+          "nextRect": null,
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 0
+        },
+        {
+          "i": 1,
+          "chip": "",
+          "status": "",
+          "completion": false,
+          "interaction": false,
+          "nextRect": null,
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 0
+        },
+        {
+          "i": 2,
+          "chip": "",
+          "status": "",
+          "completion": false,
+          "interaction": false,
+          "nextRect": null,
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 0
+        },
+        {
+          "i": 3,
+          "chip": "",
+          "status": "",
+          "completion": false,
+          "interaction": false,
+          "nextRect": null,
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 0
+        },
+        {
+          "i": 4,
+          "chip": "",
+          "status": "",
+          "completion": false,
+          "interaction": false,
+          "nextRect": null,
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 0
+        },
+        {
+          "i": 5,
+          "chip": "עמוד 1 מתוך 10",
+          "status": "קדימה, יוצאים למסע האותיות עם רועי.",
+          "completion": false,
+          "interaction": false,
+          "nextRect": {
+            "x": 48,
+            "y": 1983.015625,
+            "w": 151.3359375,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 0
+        },
+        {
+          "i": 6,
+          "chip": "עמוד 2 מתוך 10",
+          "status": "גן",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 348.015625,
+            "w": 151.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1635
+        },
+        {
+          "i": 7,
+          "chip": "עמוד 2 מתוך 10",
+          "status": "גן",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 348.015625,
+            "w": 151.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1635
+        },
+        {
+          "i": 8,
+          "chip": "עמוד 2 מתוך 10",
+          "status": "מצוין! קראתם נכון את המילה.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 348.015625,
+            "w": 151.3359375,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1635
+        },
+        {
+          "i": 9,
+          "chip": "עמוד 3 מתוך 10",
+          "status": "פ",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 348.015625,
+            "w": 151.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1635
+        },
+        {
+          "i": 10,
+          "chip": "עמוד 3 מתוך 10",
+          "status": "פ",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 348.015625,
+            "w": 151.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1635
+        },
+        {
+          "i": 11,
+          "chip": "עמוד 3 מתוך 10",
+          "status": "מעולה! האות הנכונה פתחה את השער.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 348.015625,
+            "w": 151.3359375,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1635
+        },
+        {
+          "i": 12,
+          "chip": "עמוד 4 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 348.015625,
+            "w": 151.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1635
+        },
+        {
+          "i": 13,
+          "chip": "עמוד 4 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 348.015625,
+            "w": 151.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1635
+        },
+        {
+          "i": 14,
+          "chip": "עמוד 4 מתוך 10",
+          "status": "מצוין! קראתם נכון את המילה.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 348.015625,
+            "w": 151.3359375,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1635
+        },
+        {
+          "i": 15,
+          "chip": "עמוד 5 מתוך 10",
+          "status": "4",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 348.015625,
+            "w": 151.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1635
+        },
+        {
+          "i": 16,
+          "chip": "עמוד 5 מתוך 10",
+          "status": "4",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 348.015625,
+            "w": 151.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1635
+        },
+        {
+          "i": 17,
+          "chip": "עמוד 5 מתוך 10",
+          "status": "כמעט, נספור שוב יחד.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 348.015625,
+            "w": 151.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1635
+        },
+        {
+          "i": 18,
+          "chip": "עמוד 5 מתוך 10",
+          "status": "נספור יחד: שתיים, שלוש, ארבע.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 348.015625,
+            "w": 151.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1635
+        },
+        {
+          "i": 19,
+          "chip": "עמוד 5 מתוך 10",
+          "status": "יופי! פתרתם נכון את תרגיל הקסם.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 348.015625,
+            "w": 151.3359375,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1635
+        },
+        {
+          "i": 20,
+          "chip": "עמוד 6 מתוך 10",
+          "status": "פ",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": -453.515625,
+            "y": 347.9375,
+            "w": 234.921875,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2175.5
+        },
+        {
+          "i": 21,
+          "chip": "עמוד 6 מתוך 10",
+          "status": "פ",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": -453.515625,
+            "y": 347.9375,
+            "w": 234.921875,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2175.5
+        },
+        {
+          "i": 22,
+          "chip": "עמוד 6 מתוך 10",
+          "status": "games.interactiveHandbook.handbooks.magicLetterMap.interactions.confusableContrast.success",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": -453.515625,
+            "y": 347.9375,
+            "w": 234.921875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": true,
+          "scrollY": 2175.5
+        },
+        {
+          "i": 23,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 104.015625,
+            "w": 151.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1879
+        },
+        {
+          "i": 24,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 104.015625,
+            "w": 151.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1879
+        },
+        {
+          "i": 25,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 104.015625,
+            "w": 151.3359375,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1879
+        },
+        {
+          "i": 26,
+          "chip": "עמוד 8 מתוך 10",
+          "status": "שְׁתֵּי חַלּוֹת",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 104.015625,
+            "w": 151.3359375,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1879
+        },
+        {
+          "i": 27,
+          "chip": "עמוד 9 מתוך 10",
+          "status": "עוד קריאה קצרה ונפתח את השער.",
+          "completion": false,
+          "interaction": false,
+          "nextRect": {
+            "x": 48,
+            "y": 285.515625,
+            "w": 151.3359375,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1697.5
+        },
+        {
+          "i": 28,
+          "chip": "עמוד 10 מתוך 10",
+          "status": "אותיות",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 104.015625,
+            "w": 151.3359375,
+            "h": 72,
+            "disabled": false,
+            "label": "איזה יופי, סיימתם את הספרון."
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1879
+        },
+        {
+          "i": 29,
+          "chip": "",
+          "status": "",
+          "completion": true,
+          "interaction": false,
+          "nextRect": null,
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 553
+        }
+      ]
+    },
+    {
+      "viewport": "768x1024",
+      "screenshot": "/Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-578-qa2-rerun-2026-04-11T11-26-25-077Z/progress-768x1024.png",
+      "completionReached": false,
+      "untranslated": [
+        {
+          "i": 19,
+          "chip": "עמוד 6 מתוך 10",
+          "status": "games.interactiveHandbook.handbooks.magicLetterMap.interactions.confusableContrast.success"
+        }
+      ],
+      "offscreenNext": [
+        {
+          "i": 2,
+          "chip": "עמוד 1 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": 1951.78125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 768,
+            "h": 1024
+          },
+          "scrollY": 0
+        },
+        {
+          "i": 17,
+          "chip": "עמוד 6 מתוך 10",
+          "nextRect": {
+            "x": -484.484375,
+            "y": 476.5625,
+            "w": 197.4140625,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 768,
+            "h": 1024
+          },
+          "scrollY": 2005.5
+        },
+        {
+          "i": 18,
+          "chip": "עמוד 6 מתוך 10",
+          "nextRect": {
+            "x": -484.484375,
+            "y": 476.5625,
+            "w": 197.4140625,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 768,
+            "h": 1024
+          },
+          "scrollY": 2005.5
+        },
+        {
+          "i": 19,
+          "chip": "עמוד 6 מתוך 10",
+          "nextRect": {
+            "x": -484.484375,
+            "y": 476.5625,
+            "w": 197.4140625,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 768,
+            "h": 1024
+          },
+          "scrollY": 2005.5
+        },
+        {
+          "i": 20,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -53.71875,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 768,
+            "h": 1024
+          },
+          "scrollY": 2005.5
+        },
+        {
+          "i": 21,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -53.71875,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 768,
+            "h": 1024
+          },
+          "scrollY": 2005.5
+        },
+        {
+          "i": 22,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -53.71875,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 768,
+            "h": 1024
+          },
+          "scrollY": 2005.5
+        }
+      ],
+      "clickErrors": [],
+      "last": {
+        "i": 79,
+        "chip": "עמוד 7 מתוך 10",
+        "status": "נהדר! עניתם לפי מה שקראנו.",
+        "completion": false,
+        "interaction": true,
+        "nextRect": {
+          "x": 48,
+          "y": 0.28125,
+          "w": 108.671875,
+          "h": 72,
+          "disabled": false,
+          "label": "המשך"
+        },
+        "offscreenNext": false,
+        "untranslatedStatus": false,
+        "scrollY": 1951.5
+      },
+      "trace": [
+        {
+          "i": 0,
+          "chip": "",
+          "status": "",
+          "completion": false,
+          "interaction": false,
+          "nextRect": null,
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 0
+        },
+        {
+          "i": 1,
+          "chip": "",
+          "status": "",
+          "completion": false,
+          "interaction": false,
+          "nextRect": null,
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 0
+        },
+        {
+          "i": 2,
+          "chip": "עמוד 1 מתוך 10",
+          "status": "קדימה, יוצאים למסע האותיות עם רועי.",
+          "completion": false,
+          "interaction": false,
+          "nextRect": {
+            "x": 48,
+            "y": 1951.78125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 0
+        },
+        {
+          "i": 3,
+          "chip": "עמוד 2 מתוך 10",
+          "status": "גן",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 476.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1475.5
+        },
+        {
+          "i": 4,
+          "chip": "עמוד 2 מתוך 10",
+          "status": "גן",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 476.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1475.5
+        },
+        {
+          "i": 5,
+          "chip": "עמוד 2 מתוך 10",
+          "status": "מצוין! קראתם נכון את המילה.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 476.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1475.5
+        },
+        {
+          "i": 6,
+          "chip": "עמוד 3 מתוך 10",
+          "status": "פ",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 476.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1475.5
+        },
+        {
+          "i": 7,
+          "chip": "עמוד 3 מתוך 10",
+          "status": "פ",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 476.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1475.5
+        },
+        {
+          "i": 8,
+          "chip": "עמוד 3 מתוך 10",
+          "status": "מעולה! האות הנכונה פתחה את השער.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 476.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1475.5
+        },
+        {
+          "i": 9,
+          "chip": "עמוד 4 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 476.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1475.5
+        },
+        {
+          "i": 10,
+          "chip": "עמוד 4 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 476.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1475.5
+        },
+        {
+          "i": 11,
+          "chip": "עמוד 4 מתוך 10",
+          "status": "מצוין! קראתם נכון את המילה.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 476.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1475.5
+        },
+        {
+          "i": 12,
+          "chip": "עמוד 5 מתוך 10",
+          "status": "4",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 476.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1475.5
+        },
+        {
+          "i": 13,
+          "chip": "עמוד 5 מתוך 10",
+          "status": "4",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 476.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1475.5
+        },
+        {
+          "i": 14,
+          "chip": "עמוד 5 מתוך 10",
+          "status": "כמעט, נספור שוב יחד.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 476.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1475.5
+        },
+        {
+          "i": 15,
+          "chip": "עמוד 5 מתוך 10",
+          "status": "נספור יחד: שתיים, שלוש, ארבע.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 476.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1475.5
+        },
+        {
+          "i": 16,
+          "chip": "עמוד 5 מתוך 10",
+          "status": "יופי! פתרתם נכון את תרגיל הקסם.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 476.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1475.5
+        },
+        {
+          "i": 17,
+          "chip": "עמוד 6 מתוך 10",
+          "status": "פ",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": -484.484375,
+            "y": 476.5625,
+            "w": 197.4140625,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2005.5
+        },
+        {
+          "i": 18,
+          "chip": "עמוד 6 מתוך 10",
+          "status": "פ",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": -484.484375,
+            "y": 476.5625,
+            "w": 197.4140625,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2005.5
+        },
+        {
+          "i": 19,
+          "chip": "עמוד 6 מתוך 10",
+          "status": "games.interactiveHandbook.handbooks.magicLetterMap.interactions.confusableContrast.success",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": -484.484375,
+            "y": 476.5625,
+            "w": 197.4140625,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": true,
+          "scrollY": 2005.5
+        },
+        {
+          "i": 20,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -53.71875,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2005.5
+        },
+        {
+          "i": 21,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -53.71875,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2005.5
+        },
+        {
+          "i": 22,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -53.71875,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2005.5
+        },
+        {
+          "i": 23,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 24,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 25,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 26,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 27,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 28,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 29,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 30,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 31,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 32,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 33,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 34,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 35,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 36,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 37,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 38,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 39,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 40,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 41,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 42,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 43,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 44,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 45,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 46,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 47,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 48,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 49,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 50,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 51,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 52,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 53,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 54,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 55,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 56,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 57,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 58,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 59,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 60,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 61,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 62,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 63,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 64,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 65,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 66,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 67,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 68,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 69,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 70,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 71,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 72,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 73,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 74,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 75,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 76,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 77,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 78,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        },
+        {
+          "i": 79,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "נהדר! עניתם לפי מה שקראנו.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 0.28125,
+            "w": 108.671875,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1951.5
+        }
+      ]
+    },
+    {
+      "viewport": "390x844",
+      "screenshot": "/Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-578-qa2-rerun-2026-04-11T11-26-25-077Z/progress-390x844.png",
+      "completionReached": false,
+      "untranslated": [
+        {
+          "i": 19,
+          "chip": "עמוד 6 מתוך 10",
+          "status": "games.interactiveHandbook.handbooks.magicLetterMap.interactions.confusableContrast.success"
+        }
+      ],
+      "offscreenNext": [
+        {
+          "i": 2,
+          "chip": "עמוד 1 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": 1963,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 0
+        },
+        {
+          "i": 17,
+          "chip": "עמוד 6 מתוך 10",
+          "nextRect": {
+            "x": -862.484375,
+            "y": 306.0625,
+            "w": 197.4140625,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2176
+        },
+        {
+          "i": 18,
+          "chip": "עמוד 6 מתוך 10",
+          "nextRect": {
+            "x": -797.484375,
+            "y": 306.0625,
+            "w": 197.4140625,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2176
+        },
+        {
+          "i": 19,
+          "chip": "עמוד 6 מתוך 10",
+          "nextRect": {
+            "x": -797.484375,
+            "y": 306.0625,
+            "w": 197.4140625,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2176
+        },
+        {
+          "i": 20,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -217,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2176
+        },
+        {
+          "i": 21,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 22,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 23,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 24,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 25,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 26,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 27,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 28,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 29,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 30,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 31,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 32,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 33,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 34,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 35,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 36,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 37,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 38,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 39,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 40,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 41,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 42,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 43,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 44,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 45,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 46,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 47,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 48,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 49,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 50,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 51,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 52,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 53,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 54,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 55,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 56,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 57,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 58,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 59,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 60,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 61,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 62,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 63,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 64,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 65,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 66,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 67,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 68,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 69,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 70,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 71,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 72,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 73,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 74,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 75,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 76,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 77,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 78,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        },
+        {
+          "i": 79,
+          "chip": "עמוד 7 מתוך 10",
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "viewport": {
+            "w": 390,
+            "h": 844
+          },
+          "scrollY": 2147.5
+        }
+      ],
+      "clickErrors": [],
+      "last": {
+        "i": 79,
+        "chip": "עמוד 7 מתוך 10",
+        "status": "דובי",
+        "completion": false,
+        "interaction": true,
+        "nextRect": {
+          "x": 48,
+          "y": -188.5,
+          "w": 95.3359375,
+          "h": 72,
+          "disabled": true,
+          "label": "המשך"
+        },
+        "offscreenNext": true,
+        "untranslatedStatus": false,
+        "scrollY": 2147.5
+      },
+      "trace": [
+        {
+          "i": 0,
+          "chip": "",
+          "status": "",
+          "completion": false,
+          "interaction": false,
+          "nextRect": null,
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 0
+        },
+        {
+          "i": 1,
+          "chip": "",
+          "status": "",
+          "completion": false,
+          "interaction": false,
+          "nextRect": null,
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 0
+        },
+        {
+          "i": 2,
+          "chip": "עמוד 1 מתוך 10",
+          "status": "קדימה, יוצאים למסע האותיות עם רועי.",
+          "completion": false,
+          "interaction": false,
+          "nextRect": {
+            "x": 48,
+            "y": 1963,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 0
+        },
+        {
+          "i": 3,
+          "chip": "עמוד 2 מתוך 10",
+          "status": "גן",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 382,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1577
+        },
+        {
+          "i": 4,
+          "chip": "עמוד 2 מתוך 10",
+          "status": "גן",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 382,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1577
+        },
+        {
+          "i": 5,
+          "chip": "עמוד 2 מתוך 10",
+          "status": "מצוין! קראתם נכון את המילה.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 382,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1577
+        },
+        {
+          "i": 6,
+          "chip": "עמוד 3 מתוך 10",
+          "status": "פ",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 382,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1577
+        },
+        {
+          "i": 7,
+          "chip": "עמוד 3 מתוך 10",
+          "status": "פ",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 382,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1577
+        },
+        {
+          "i": 8,
+          "chip": "עמוד 3 מתוך 10",
+          "status": "מעולה! האות הנכונה פתחה את השער.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 386,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1577
+        },
+        {
+          "i": 9,
+          "chip": "עמוד 4 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 382,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1577
+        },
+        {
+          "i": 10,
+          "chip": "עמוד 4 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 382,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1577
+        },
+        {
+          "i": 11,
+          "chip": "עמוד 4 מתוך 10",
+          "status": "מצוין! קראתם נכון את המילה.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 382,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1577
+        },
+        {
+          "i": 12,
+          "chip": "עמוד 5 מתוך 10",
+          "status": "4",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 382,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1577
+        },
+        {
+          "i": 13,
+          "chip": "עמוד 5 מתוך 10",
+          "status": "4",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 382,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1577
+        },
+        {
+          "i": 14,
+          "chip": "עמוד 5 מתוך 10",
+          "status": "נספור יחד: שתיים, שלוש, ארבע.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 382,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1577
+        },
+        {
+          "i": 15,
+          "chip": "עמוד 5 מתוך 10",
+          "status": "נספור יחד: שתיים, שלוש, ארבע.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 382,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1577
+        },
+        {
+          "i": 16,
+          "chip": "עמוד 5 מתוך 10",
+          "status": "יופי! פתרתם נכון את תרגיל הקסם.",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": 382,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": false,
+          "untranslatedStatus": false,
+          "scrollY": 1577
+        },
+        {
+          "i": 17,
+          "chip": "עמוד 6 מתוך 10",
+          "status": "פ",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": -862.484375,
+            "y": 306.0625,
+            "w": 197.4140625,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2176
+        },
+        {
+          "i": 18,
+          "chip": "עמוד 6 מתוך 10",
+          "status": "פ",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": -797.484375,
+            "y": 306.0625,
+            "w": 197.4140625,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2176
+        },
+        {
+          "i": 19,
+          "chip": "עמוד 6 מתוך 10",
+          "status": "games.interactiveHandbook.handbooks.magicLetterMap.interactions.confusableContrast.success",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": -797.484375,
+            "y": 306.0625,
+            "w": 197.4140625,
+            "h": 72,
+            "disabled": false,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": true,
+          "scrollY": 2176
+        },
+        {
+          "i": 20,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -217,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2176
+        },
+        {
+          "i": 21,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 22,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 23,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 24,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 25,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 26,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 27,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 28,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 29,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 30,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 31,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 32,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 33,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 34,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 35,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 36,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 37,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 38,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 39,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 40,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 41,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 42,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 43,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 44,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 45,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 46,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 47,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 48,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 49,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 50,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 51,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 52,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 53,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 54,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 55,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 56,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 57,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 58,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 59,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 60,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 61,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 62,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 63,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 64,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 65,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 66,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 67,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 68,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 69,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 70,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 71,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 72,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 73,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 74,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 75,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 76,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 77,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 78,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        },
+        {
+          "i": 79,
+          "chip": "עמוד 7 מתוך 10",
+          "status": "דובי",
+          "completion": false,
+          "interaction": true,
+          "nextRect": {
+            "x": 48,
+            "y": -188.5,
+            "w": 95.3359375,
+            "h": 72,
+            "disabled": true,
+            "label": "המשך"
+          },
+          "offscreenNext": true,
+          "untranslatedStatus": false,
+          "scrollY": 2147.5
+        }
+      ]
+    }
+  ],
+  "assertions": {
+    "completionAllViewports": false,
+    "noUntranslatedStatusAllViewports": false,
+    "nextAlwaysInViewportAllViewports": false
+  }
+}

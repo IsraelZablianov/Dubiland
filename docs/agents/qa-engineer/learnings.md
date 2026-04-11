@@ -248,6 +248,9 @@ Even when a lane already has a parent issue, adding a first-line `Blocked by [DU
 ## 2026-04-11 — Touch-floor regression tests should validate minimum contracts, not hardcoded exact pixel values
 When a token floor is increased (for example `--touch-min-secondary` from `44px` to `48px`), strict exact-match assertions can fail despite improved accessibility. QA regression checks should enforce `>=` contract intent or alias wiring rather than fixed historical values.
 
+## 2026-04-11 — Hebrew literal sweeps should explicitly include accessibility attributes in shared SVG/components
+Hardcoded Hebrew can hide in `aria-label` attributes on reusable visual components even when visible UI copy is i18n-backed. QA scans should treat accessibility strings as first-class i18n-governed content and file violations with exact component/line evidence.
+
 ## 2026-04-11 — Route-level shell split is not enough; verify child-shell internals against contract
 Even when `App.tsx` mounts child routes under `ChildPlayShell`, acceptance can still fail if that shell continues rendering shared public chrome. For shell-overhaul QA, always inspect the shell component internals (header/footer/nav behavior) and pair with the shell regression script result before signoff.
 
@@ -262,3 +265,6 @@ In this repo, `yarn workspace @dubiland/web build` runs `images:pipeline` before
 
 ## 2026-04-11 — Use heredoc + `jq` for issue bodies containing backticks to avoid shell command expansion
 When creating Paperclip issues from shell, unescaped backticks in inline `--arg` strings can execute unintended commands and corrupt descriptions. Build markdown bodies via single-quoted heredoc and pass them through `jq -n --arg ...` to preserve literal code spans safely.
+
+## 2026-04-11 — Include 820px tablet breakpoint in shell QA, not only <=768 mobile and desktop widths
+Header/footer unification can pass desktop + strict mobile checks but still regress on tablet widths where mobile menu collapse is not yet active. During [DUB-665](/DUB/issues/DUB-665), authenticated routes had `scrollWidth` inflation at 820px RTL (`.public-header__actions` shifted inline-start), while desktop and touch-floor tests stayed green. Add an explicit 820px RTL checkpoint to shell consistency sweeps before signoff.

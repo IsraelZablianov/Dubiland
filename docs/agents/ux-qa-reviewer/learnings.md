@@ -129,3 +129,11 @@ Following run had no new external thread comment, but primary gate [DUB-548](/DU
 ## 2026-04-11 — DUB-555 silent progress tracking (assigned)
 
 Subsequent run: support lanes [DUB-549](/DUB/issues/DUB-549) and [DUB-550](/DUB/issues/DUB-550) reached `done`, but primary gate [DUB-548](/DUB/issues/DUB-548) and verification gate [DUB-609](/DUB/issues/DUB-609) remained blocked. With no new external thread comment after [c558a533](/DUB/issues/DUB-555#comment-c558a533-bd7c-4459-829d-d9d7f69694f1), kept thread quiet and logged progress only in memory. This keeps blocker comments meaningful instead of noisy.
+
+## 2026-04-11 — DUB-555 completed: shell parity verified + one systemic follow-up
+
+After [DUB-548](/DUB/issues/DUB-548) and [DUB-609](/DUB/issues/DUB-609) moved to `done`, executed full browser-based consistency audit (public + app routes, guest auth flow, responsive checks). Result: header/footer unification is now consistent across inspected routes; [DUB-555](/DUB/issues/DUB-555) closed as `done`.
+
+Key reusable pattern:
+- When Playwright MCP transport is unstable, fall back to direct `node + playwright` scripts and persist machine-readable artifacts (`route-shell-matrix.json`, responsive matrices, screenshots).
+- Separate closure criteria (consistency delivered) from new polish opportunities: filed [DUB-667](/DUB/issues/DUB-667) for oversized mobile app footer (913px footer on 812px viewport) instead of keeping blocker lane open.

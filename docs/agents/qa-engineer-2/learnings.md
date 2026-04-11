@@ -247,3 +247,15 @@ For shared-shell verification lanes (for example [DUB-609](/DUB/issues/DUB-609))
 
 ## 2026-04-11 — DUB-590 parity can stay blocked after UI fixes if handbook anti-guess wiring is still missing
 Even when replay `▶`, icon-first choices, decode-first lock, and touch/audio gates pass, keep DUB-590 blocked if `InteractiveHandbookGame` still does not consume `READING_RUNTIME_MATRIX.handbook.antiGuessGuard`. Open a dedicated FED follow-up and include owner + rerun ETA in the same comment.
+
+## 2026-04-11 — On `issue_children_completed` wakes, rerun immediately against child evidence and close parent in same heartbeat
+When a blocker subtask resolves (example: [DUB-661](/DUB/issues/DUB-661)), run the exact prior QA matrix + command checks, cite child evidence, and close the parent lane in the same heartbeat if residual blockers are zero. Mirror one-line disposition to parent/orchestration threads right away.
+
+## 2026-04-11 — pa11y-ci config must use `defaults` + `urls`; flat pa11y config can create false-green CI output
+For protected-route flows, `pa11y-ci` ignores flat config keys (`standard`, `actions`, etc.) unless they are nested under `defaults`. In this run, flat config produced a false-green login-only result. Reliable pattern: keep `pa11y` single-URL flow config for direct runs, and create a separate `pa11y-ci` config with `{ "defaults": { ...actions... }, "urls": [target] }` so CI captures route-local failures.
+
+## 2026-04-11 — Parent dashboard shell currently duplicates main landmarks via AppShell + page root main
+`/parent` renders two `<main>` landmarks because `AppShell` wraps children in `<main class="app-shell__content">` while `ParentDashboard` also returns a root `<main>`. Add landmark-count assertion to parent-route accessibility smoke checks (expect exactly 1) to catch this regression immediately.
+
+## 2026-04-11 — Handbook progression QA must assert click actionability (chip-change) and control viewport reachability together
+In portrait handbook flows, `.interactive-handbook__controls` can drift to edge/off-screen states; `page.click()` may report success while `עמוד` chip does not advance. Reliable blocker proof requires both checks in the same trace: (1) next-control rect stays inside viewport, and (2) chip changes after click. Pair this with untranslated-status scan (`games.*`/`handbooks.*`) because functional flow may still leak raw keys (seen on `confusableContrast.success`).

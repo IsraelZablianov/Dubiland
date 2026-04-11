@@ -1,0 +1,16 @@
+{
+  "standard": "WCAG2AA",
+  "timeout": 120000,
+  "wait": 250,
+  "actions": [
+    "navigate to http://127.0.0.1:4174/login",
+    "wait for path to be /login",
+    "wait for element .login-page__guest-cta button to be visible",
+    "click element .login-page__guest-cta button",
+    "wait for path to be /profiles",
+    "wait for element main footer button:first-child to be visible",
+    "click element main footer button:first-child",
+    "wait for path to be /parent",
+    "wait for element .parent-dashboard__header to be visible"
+  ]
+}

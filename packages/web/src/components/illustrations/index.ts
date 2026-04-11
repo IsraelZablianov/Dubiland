@@ -6,3 +6,6 @@ export type { TopicIllustrationSlug } from './TopicIllustration';
 
 export { FeatureIllustration } from './FeatureIllustration';
 export type { FeatureIllustrationKind } from './FeatureIllustration';
+
+export { FamilyIllustration } from './FamilyIllustration';
+export type { FamilyScene } from './FamilyIllustration';

@@ -31,6 +31,12 @@ const MARKETING_HEADER_CTA_STYLE = {
   fontSize: 'var(--font-size-md)',
 };
 
+const APP_HEADER_ACTION_STYLE = {
+  background: 'var(--color-bg-card)',
+  color: 'var(--color-text-primary)',
+  border: '2px solid #B89B78',
+};
+
 function isMainNavActive(currentPath: string, navPath: string): boolean {
   if (navPath === '/games') {
     return currentPath === '/games' || currentPath.startsWith('/games/');
@@ -64,6 +70,7 @@ export function PublicHeader() {
   const navLinks = showAppActions ? APP_NAV_LINKS : PUBLIC_NAV_LINKS;
   const isProfiles = location.pathname === '/profiles';
   const isParentArea = location.pathname === '/parent';
+  const headerClassName = `public-header ${showAppActions ? 'public-header--app' : 'public-header--public'}`;
 
   const goToAppRoute = (path: string) => {
     navigate(path);
@@ -85,7 +92,7 @@ export function PublicHeader() {
   };
 
   return (
-    <header className="public-header">
+    <header className={headerClassName}>
       <div className="public-header__inner">
         <Link to={homeDestination} className="public-header__logo" aria-label={t('header.logoAlt')}>
           <MascotIllustration variant="hero" size={42} className="public-header__logo-icon" />
@@ -138,13 +145,19 @@ export function PublicHeader() {
               )}
 
               <div className="public-header__app-nav">
-                <Button variant="ghost" size="sm" disabled={isProfiles} onClick={() => goToAppRoute('/profiles')}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  disabled={isProfiles}
+                  onClick={() => goToAppRoute('/profiles')}
+                  style={APP_HEADER_ACTION_STYLE}
+                >
                   {t('common:profile.title')}
                 </Button>
                 <Button variant="secondary" size="sm" disabled={isParentArea} onClick={() => goToAppRoute('/parent')}>
                   {t('common:nav.parentArea')}
                 </Button>
-                <Button variant="ghost" size="sm" onClick={() => void handleSignOut()}>
+                <Button variant="ghost" size="sm" onClick={() => void handleSignOut()} style={APP_HEADER_ACTION_STYLE}>
                   {t('common:nav.signOut')}
                 </Button>
               </div>
@@ -158,8 +171,7 @@ export function PublicHeader() {
           position: sticky;
           top: 0;
           z-index: 100;
-          background: rgba(255, 248, 231, 0.95);
-          backdrop-filter: blur(12px);
+          background: var(--color-bg-primary);
           border-bottom: 1px solid var(--color-bg-secondary);
           box-shadow: var(--shadow-sm);
         }
@@ -196,7 +208,7 @@ export function PublicHeader() {
           font-family: var(--font-family-display);
           font-size: var(--font-size-xl);
           font-weight: var(--font-weight-extrabold);
-          color: var(--color-theme-primary);
+          color: var(--color-text-primary);
         }
 
         .public-header__nav {
@@ -204,11 +216,12 @@ export function PublicHeader() {
           align-items: center;
           gap: var(--space-md);
           flex: 1;
+          min-inline-size: 0;
         }
 
         .public-header__nav-link {
           text-decoration: none;
-          color: var(--color-text-secondary);
+          color: var(--color-text-primary);
           font-size: var(--font-size-md);
           font-weight: var(--font-weight-medium);
           padding-inline: var(--space-sm);
@@ -235,6 +248,7 @@ export function PublicHeader() {
           align-items: center;
           gap: var(--space-sm);
           flex-shrink: 0;
+          min-inline-size: 0;
         }
 
         .public-header__actions a {
@@ -257,6 +271,39 @@ export function PublicHeader() {
           display: flex;
           align-items: center;
           gap: var(--space-xs);
+        }
+
+        @media (max-width: 1024px) {
+          .public-header--app .public-header__inner {
+            flex-wrap: wrap;
+            row-gap: var(--space-sm);
+          }
+
+          .public-header--app .public-header__actions {
+            margin-inline-start: auto;
+            max-inline-size: 100%;
+          }
+
+          .public-header--app .public-header__app-actions {
+            flex-wrap: wrap;
+            justify-content: flex-end;
+          }
+
+          .public-header--app .public-header__app-nav {
+            flex-wrap: wrap;
+            justify-content: flex-end;
+          }
+
+          .public-header--app .public-header__nav {
+            order: 3;
+            flex-basis: 100%;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+          }
+
+          .public-header--app .public-header__child {
+            max-inline-size: 100%;
+          }
         }
 
         .public-header__child {
@@ -339,8 +386,7 @@ export function PublicHeader() {
             top: 100%;
             right: 0;
             left: 0;
-            background: rgba(255, 248, 231, 0.98);
-            backdrop-filter: blur(12px);
+            background: var(--color-bg-primary);
             padding: var(--space-md) var(--space-xl);
             border-bottom: 1px solid var(--color-bg-secondary);
             box-shadow: var(--shadow-md);

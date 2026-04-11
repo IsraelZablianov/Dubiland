@@ -184,3 +184,6 @@ For `magicLetterMap`, runtime content can inject a page-10 interaction not prese
 
 ## 2026-04-11 — Handbook runtime regression should execute from `packages/web` cwd for path aliases
 Even with `node --import tsx --test`, running `interactive-handbook-runtime-regression.test.mjs` from repo root can fail resolving `@/...` imports. Run it from `packages/web` (or set equivalent tsconfig path context) so alias resolution stays deterministic in heartbeat revalidation passes.
+
+## 2026-04-11 — Page transitions should auto-recenter handbook controls when prior scroll offset hides them
+In portrait handbook flows, preserving a deep `window.scrollY` across page transitions can push the controls row above the viewport (for example around page 7), making `next` feel broken. A lightweight page-change guard that checks control-row bounds and calls `scrollIntoView({ block: 'nearest', inline: 'nearest' })` when out-of-frame prevents progression stalls without rewriting the layout system.

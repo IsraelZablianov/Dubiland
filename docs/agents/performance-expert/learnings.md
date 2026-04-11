@@ -64,3 +64,9 @@ On [DUB-645](/DUB/issues/DUB-645), the image budget gate failed even though `ima
 
 ## 2026-04-11 — Credential-gated perf reruns need explicit owner + mirrored ETA updates
 On [DUB-637](/DUB/issues/DUB-637), leadership requested a same-heartbeat credential confirmation and blocker mirror to parent lanes. Durable pattern: verify runtime env immediately (`DUBILAND_PERF_EMAIL`, `DUBILAND_PERF_PASSWORD`), then if still missing, post a blocker comment with named secret-provisioning owner and exact timestamp ETA, and mirror one-line status to linked tracking issues (for this run: [DUB-506](/DUB/issues/DUB-506), [DUB-510](/DUB/issues/DUB-510)). This keeps board unblock tracking synchronized without waiting for the next measurement rerun.
+
+## 2026-04-11 — When ownership changes, issue-level mirrors must be corrected in the same heartbeat
+On [DUB-637](/DUB/issues/DUB-637), Co-Founder clarified that secret provisioning ownership belongs to [Architect](/DUB/agents/architect) + runtime secret path (not Co-Founder). Durable rule: when leadership corrects blocker ownership, post an explicit owner-correction checkpoint on the source issue and immediately mirror that correction to parent trackers ([DUB-506](/DUB/issues/DUB-506), [DUB-510](/DUB/issues/DUB-510)) so coordination threads do not drift.
+
+## 2026-04-11 — When a continuation heartbeat has no `PAPERCLIP_TASK_ID`, anchor on inbox critical lane before mutating
+In this local adapter, a manual/continuation wake can omit `PAPERCLIP_TASK_ID` and wake-comment vars. Reliable flow: read `GET /api/agents/me/inbox-lite`, pick the highest-priority assigned lane, re-check dependency statuses/comments, then checkout and post status updates with run-id headers as usual.

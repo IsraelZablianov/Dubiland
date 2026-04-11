@@ -108,6 +108,21 @@ test('public header shell keeps touch-floor contract', () => {
   );
 });
 
+test('authenticated app header keeps tablet-safe wrap contract', () => {
+  const headerSource = read('src/components/layout/PublicHeader.tsx');
+
+  assert.match(
+    headerSource,
+    /@media\s*\(max-width:\s*1024px\)\s*{[\s\S]*\.public-header--app \.public-header__nav\s*{[\s\S]*order:\s*3;[\s\S]*flex-basis:\s*100%;[\s\S]*}/,
+    'Authenticated app header should move nav to a full-width row on tablet widths',
+  );
+  assert.match(
+    headerSource,
+    /@media\s*\(max-width:\s*1024px\)\s*{[\s\S]*\.public-header--app \.public-header__app-nav\s*{[\s\S]*flex-wrap:\s*wrap;[\s\S]*}/,
+    'Authenticated app header app-nav should wrap on tablet widths',
+  );
+});
+
 test('public footer shell keeps touch-floor contract', () => {
   const footerSource = read('src/components/layout/PublicFooter.tsx');
   const logoBlock = extractCssBlock(footerSource, '.public-footer__logo');
@@ -159,5 +174,20 @@ test('child route scaffold avoids nested main landmarks in app shells', () => {
     source,
     /<div\b/,
     'ChildRouteScaffold should use a neutral container element',
+  );
+});
+
+test('parent dashboard route avoids nested main landmarks in app shells', () => {
+  const source = read('src/pages/ParentDashboard.tsx');
+
+  assert.doesNotMatch(
+    source,
+    /<main\b/,
+    'ParentDashboard should not render a main landmark because AppShell already provides one',
+  );
+  assert.match(
+    source,
+    /className="parent-dashboard__page"/,
+    'ParentDashboard should render a neutral page container element',
   );
 });

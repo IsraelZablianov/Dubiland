@@ -1,0 +1,122 @@
+[
+  {
+    "route": "/profiles",
+    "size": "desktop",
+    "path": "/profiles",
+    "scrollW": 1280,
+    "innerW": 1280,
+    "bodyW": 1280,
+    "hasPublicHeader": true,
+    "hasPublicFooter": true
+  },
+  {
+    "route": "/games",
+    "size": "desktop",
+    "path": "/games",
+    "scrollW": 1280,
+    "innerW": 1280,
+    "bodyW": 1280,
+    "hasPublicHeader": true,
+    "hasPublicFooter": true
+  },
+  {
+    "route": "/parent",
+    "size": "desktop",
+    "path": "/parent",
+    "scrollW": 1280,
+    "innerW": 1280,
+    "bodyW": 1280,
+    "hasPublicHeader": true,
+    "hasPublicFooter": true
+  },
+  {
+    "route": "/games/numbers/counting-picnic",
+    "size": "desktop",
+    "path": "/games/numbers/counting-picnic",
+    "scrollW": 1280,
+    "innerW": 1280,
+    "bodyW": 1280,
+    "hasPublicHeader": true,
+    "hasPublicFooter": true
+  },
+  {
+    "route": "/profiles",
+    "size": "tablet",
+    "path": "/profiles",
+    "scrollW": 768,
+    "innerW": 768,
+    "bodyW": 768,
+    "hasPublicHeader": true,
+    "hasPublicFooter": true
+  },
+  {
+    "route": "/games",
+    "size": "tablet",
+    "path": "/games",
+    "scrollW": 768,
+    "innerW": 768,
+    "bodyW": 768,
+    "hasPublicHeader": true,
+    "hasPublicFooter": true
+  },
+  {
+    "route": "/parent",
+    "size": "tablet",
+    "path": "/parent",
+    "scrollW": 768,
+    "innerW": 768,
+    "bodyW": 768,
+    "hasPublicHeader": true,
+    "hasPublicFooter": true
+  },
+  {
+    "route": "/games/numbers/counting-picnic",
+    "size": "tablet",
+    "path": "/games/numbers/counting-picnic",
+    "scrollW": 768,
+    "innerW": 768,
+    "bodyW": 768,
+    "hasPublicHeader": true,
+    "hasPublicFooter": true
+  },
+  {
+    "route": "/profiles",
+    "size": "mobile",
+    "path": "/profiles",
+    "scrollW": 375,
+    "innerW": 375,
+    "bodyW": 375,
+    "hasPublicHeader": true,
+    "hasPublicFooter": true
+  },
+  {
+    "route": "/games",
+    "size": "mobile",
+    "path": "/games",
+    "scrollW": 375,
+    "innerW": 375,
+    "bodyW": 375,
+    "hasPublicHeader": true,
+    "hasPublicFooter": true
+  },
+  {
+    "route": "/parent",
+    "size": "mobile",
+    "path": "/parent",
+    "scrollW": 375,
+    "innerW": 375,
+    "bodyW": 375,
+    "hasPublicHeader": true,
+    "hasPublicFooter": true
+  },
+  {
+    "route": "/games/numbers/counting-picnic",
+    "size": "mobile",
+    "path": "/games/numbers/counting-picnic",
+    "scrollW": 375,
+    "innerW": 375,
+    "bodyW": 375,
+    "hasPublicHeader": true,
+    "hasPublicFooter": true
+  }
+]

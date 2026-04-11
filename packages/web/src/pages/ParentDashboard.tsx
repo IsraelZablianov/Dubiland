@@ -274,27 +274,15 @@ export default function ParentDashboard() {
 
   if (loading) {
     return (
-      <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '70vh' }}>
+      <div className="parent-dashboard__loading" aria-busy="true">
         <MascotIllustration variant="loading" size={120} className="floating-element" />
-      </main>
+      </div>
     );
   }
 
   return (
-    <main
-      style={{
-        flex: 1,
-        backgroundImage:
-          'linear-gradient(180deg, color-mix(in srgb, var(--color-bg-primary) 90%, white 10%) 0%, color-mix(in srgb, var(--color-bg-secondary) 86%, white 14%) 100%), url(/images/backgrounds/home/home-storybook.webp)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundBlendMode: 'soft-light, normal',
-        padding: 'var(--space-xl)',
-        display: 'flex',
-        justifyContent: 'center',
-      }}
-    >
-      <section style={{ width: 'min(1040px, 100%)', display: 'grid', gap: 'var(--space-lg)' }}>
+    <div className="parent-dashboard__page">
+      <section className="parent-dashboard__content">
         <header className="parent-dashboard__header">
           <div className="parent-dashboard__header-copy">
             <h1
@@ -306,7 +294,7 @@ export default function ParentDashboard() {
             >
               {t('parentDashboard.title')}
             </h1>
-            <p style={{ color: 'var(--color-text-secondary)' }}>{t('parentDashboard.subtitle')}</p>
+            <p style={{ color: 'var(--color-text-primary)' }}>{t('parentDashboard.subtitle')}</p>
           </div>
 
           <FloatingElement className="parent-dashboard__header-mascot">
@@ -506,14 +494,13 @@ export default function ParentDashboard() {
             className="parent-dashboard__empty-state"
             style={{
               border: '2px solid color-mix(in srgb, var(--color-theme-primary) 18%, transparent)',
-              background:
-                'linear-gradient(160deg, color-mix(in srgb, var(--color-bg-card) 90%, var(--color-theme-secondary) 10%), var(--color-bg-card))',
+              background: 'var(--color-bg-card)',
             }}
           >
             <MascotIllustration variant="hint" size={96} />
             <div className="parent-dashboard__empty-state-copy">
               <strong style={{ color: 'var(--color-text-primary)' }}>{t('profile.noChildrenYet')}</strong>
-              <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
+              <span style={{ color: 'var(--color-text-primary)', fontSize: 'var(--font-size-sm)' }}>
                 {t('parentDashboard.subtitle')}
               </span>
             </div>
@@ -551,6 +538,42 @@ export default function ParentDashboard() {
         ) : null}
       </section>
       <style>{`
+        .parent-dashboard__page {
+          flex: 1;
+          background-image:
+            linear-gradient(
+              180deg,
+              color-mix(in srgb, var(--color-bg-primary) 90%, white 10%) 0%,
+              color-mix(in srgb, var(--color-bg-secondary) 86%, white 14%) 100%
+            ),
+            url(/images/backgrounds/home/home-storybook.webp);
+          background-size: cover;
+          background-position: center;
+          background-blend-mode: soft-light, normal;
+          padding: var(--space-xl);
+          display: flex;
+          justify-content: center;
+        }
+
+        .parent-dashboard__loading {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 70vh;
+        }
+
+        .parent-dashboard__content {
+          width: min(1040px, 100%);
+          display: grid;
+          gap: var(--space-lg);
+          padding: var(--space-lg);
+          border-radius: var(--radius-xl);
+          border: 1px solid var(--color-border-subtle);
+          background: var(--color-bg-card);
+          box-shadow: var(--shadow-card);
+        }
+
         .parent-dashboard__header {
           display: grid;
           grid-template-columns: 1fr auto;
@@ -794,6 +817,14 @@ export default function ParentDashboard() {
             gap: var(--space-sm);
           }
 
+          .parent-dashboard__page {
+            padding: var(--space-lg);
+          }
+
+          .parent-dashboard__content {
+            padding: var(--space-md);
+          }
+
           .parent-dashboard__header-mascot {
             justify-self: center;
           }
@@ -833,6 +864,6 @@ export default function ParentDashboard() {
           }
         }
       `}</style>
-    </main>
+    </div>
   );
 }

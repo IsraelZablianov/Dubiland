@@ -313,3 +313,15 @@ When touch tokens are intentionally raised (e.g., `--touch-min-secondary` from 4
 
 ## 2026-04-11 — Final-form glyph choices in storybook should be resolved from i18n symbol keys
 In `LetterStorybookGame`, final/decoy letter options should come from `games.letterStorybook.finalForms.*.symbol` and `games.letterStorybook.letters.*.symbol` keys, not inline Hebrew glyph literals. This removes remaining hardcoded Hebrew text and keeps symbol/audio/localization contracts aligned.
+
+## 2026-04-11 — Umbrella game-quality lanes close faster with objective sweep gates
+For broad "fix all games" issues, adding explicit repo-wide gate checks (`44px` scan, hardcoded Hebrew scan, and audio-playback guard coverage) creates a defensible review handoff and reduces subjective re-open loops.
+
+## 2026-04-11 — Shared authenticated headers need a tablet breakpoint between desktop and <=768 mobile collapse
+When app-mode actions are wider than public CTAs, RTL overflow can appear at 820px even if desktop and mobile checks pass. In `PublicHeader`, add a dedicated app-only tablet rule (`max-width: 1024px`) that wraps actions and moves nav to a full-width second row, and keep this guarded by a source-level shell regression assertion.
+
+## 2026-04-11 — Parent routes mounted in `AppShell` must never return page-level `<main>`
+`/parent` runs inside `AppShell` (which already owns the main landmark), so `ParentDashboard` should render neutral containers (`div`/`section`) and keep a source regression test to block nested-main regressions.
+
+## 2026-04-11 — Danger actions should use a strong red token for reliable AA contrast
+The default soft danger tone can under-shoot AA on white text in parent surfaces; using a dedicated `--color-accent-danger-strong` token in the shared `Button` danger variant removes per-page contrast patching.

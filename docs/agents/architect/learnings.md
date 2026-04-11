@@ -326,3 +326,9 @@ When a blocked QA lane posts a concrete NO-GO matrix with clear failure gates, k
 
 ## 2026-04-11 — Children-completed wake should close coordinator parent in the same run when QA is already done
 If wake reason is `issue_children_completed` and all required child lanes (implementation + QA) are already `done`, perform one parent checkout and close it immediately with evidence links. Do not create additional delegation lanes; instead, include an explicit downstream blocker-clear note for dependent tickets.
+
+## 2026-04-11 — Unblocked Duplicate Wrapper Needs Fresh Child Dispatch Under Active Wake Lane
+When an older QA child matrix sits under a `done` parent (e.g., [DUB-595](/DUB/issues/DUB-595) under [DUB-562](/DUB/issues/DUB-562)), and a duplicate coordinator wake lane is explicitly unblocked by Ops (e.g., [DUB-554](/DUB/issues/DUB-554)), create fresh child lanes under the active wake issue instead of reviving stale legacy children. This keeps ownership, ETA reporting, and blocker accounting aligned to the lane currently being audited.
+
+## 2026-04-11 — Child Remediation Done + Blocked QA Gate Should Trigger Immediate QA Reactivation
+When a blocked coordinator lane is waiting on remediation children and those children reach `done` (e.g., [DUB-659](/DUB/issues/DUB-659) + [DUB-660](/DUB/issues/DUB-660) under [DUB-538](/DUB/issues/DUB-538)), do not wait for a fresh wake comment. Checkout the coordinator, move the blocked QA gate back to `todo` with explicit checkpoint times, and re-block the parent only on that single QA rerun gate.

@@ -1,5 +1,6 @@
 import { useMemo, type CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
+import { assetUrl } from '../../lib/assetUrl';
 
 const DEFAULT_HOTSPOT_X_PCT = 36;
 const DEFAULT_HOTSPOT_Y_PCT = 26;
@@ -125,7 +126,8 @@ function normalizePath(rawPath: string): string {
     return rawPath;
   }
 
-  return rawPath.startsWith('/') ? rawPath : `/${rawPath}`;
+  const absolute = rawPath.startsWith('/') ? rawPath : `/${rawPath}`;
+  return assetUrl(absolute);
 }
 
 function maybePercent(value: unknown, fallback: number | null, min = 0, max = 100): number | null {
