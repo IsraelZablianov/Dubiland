@@ -805,8 +805,8 @@ async function main() {
     });
   }
 
-  await runLoggedCommand('node', ['packages/web/scripts/assert-production-react-runtime.mjs'], {
-    cwd: rootDir,
+  await runLoggedCommand('node', ['./scripts/assert-production-react-runtime.mjs'], {
+    cwd: path.join(rootDir, 'packages/web'),
     logPath: path.join(args.outDir, 'runtime-guard.log'),
   });
 

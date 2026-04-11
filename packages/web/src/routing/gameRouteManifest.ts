@@ -3,7 +3,9 @@ import { mapRouteTopicToContentSlug, type ContentTopicSlug, type RouteTopicSlug 
 
 const CountingPicnic = lazy(() => import('@/pages/CountingPicnic'));
 const MoreOrLessMarket = lazy(() => import('@/pages/MoreOrLessMarket'));
+const MeasureAndMatch = lazy(() => import('@/pages/MeasureAndMatch'));
 const ShapeSafari = lazy(() => import('@/pages/ShapeSafari'));
+const PatternTrain = lazy(() => import('@/pages/PatternTrain'));
 const ColorGarden = lazy(() => import('@/pages/ColorGarden'));
 const NumberLineJumps = lazy(() => import('@/pages/NumberLineJumps'));
 const Build10Workshop = lazy(() => import('@/pages/Build10Workshop'));
@@ -15,10 +17,15 @@ const DecodableMicroStories = lazy(() => import('@/pages/DecodableMicroStories')
 const DecodableStoryMissions = lazy(() => import('@/pages/DecodableStoryMissions'));
 const InteractiveHandbook = lazy(() => import('@/pages/InteractiveHandbook'));
 const LetterStorybook = lazy(() => import('@/pages/LetterStorybook'));
+const LetterStorybookV2 = lazy(() => import('@/pages/LetterStorybookV2'));
 const RootFamilyStickers = lazy(() => import('@/pages/RootFamilyStickers'));
 const ConfusableLetterContrast = lazy(() => import('@/pages/ConfusableLetterContrast'));
 const NikudSoundLadder = lazy(() => import('@/pages/NikudSoundLadder'));
 const SyllableTrainBuilder = lazy(() => import('@/pages/SyllableTrainBuilder'));
+const SoundSlideBlending = lazy(() => import('@/pages/SoundSlideBlending'));
+const ShvaSoundSwitch = lazy(() => import('@/pages/ShvaSoundSwitch'));
+const SpellAndSendPostOffice = lazy(() => import('@/pages/SpellAndSendPostOffice'));
+const PointingFadeBridge = lazy(() => import('@/pages/PointingFadeBridge'));
 const BlendToReadVideoShorts = lazy(() => import('@/pages/BlendToReadVideoShorts'));
 const LetterSoundMatch = lazy(() => import('@/pages/LetterSoundMatch'));
 const LetterTracingTrail = lazy(() => import('@/pages/LetterTracingTrail'));
@@ -76,8 +83,18 @@ export const GAME_ROUTE_MANIFEST = [
   }),
   defineGameRoute({
     routeTopicSlug: 'numbers',
+    gameSlug: 'measure-and-match',
+    component: MeasureAndMatch,
+  }),
+  defineGameRoute({
+    routeTopicSlug: 'numbers',
     gameSlug: 'shape-safari',
     component: ShapeSafari,
+  }),
+  defineGameRoute({
+    routeTopicSlug: 'numbers',
+    gameSlug: 'pattern-train',
+    component: PatternTrain,
   }),
   defineGameRoute({
     routeTopicSlug: 'numbers',
@@ -137,6 +154,11 @@ export const GAME_ROUTE_MANIFEST = [
   }),
   defineGameRoute({
     routeTopicSlug: 'reading',
+    gameSlug: 'letter-storybook-v2',
+    component: LetterStorybookV2,
+  }),
+  defineGameRoute({
+    routeTopicSlug: 'reading',
     gameSlug: 'root-family-stickers',
     component: RootFamilyStickers,
   }),
@@ -154,6 +176,26 @@ export const GAME_ROUTE_MANIFEST = [
     routeTopicSlug: 'reading',
     gameSlug: 'syllable-train-builder',
     component: SyllableTrainBuilder,
+  }),
+  defineGameRoute({
+    routeTopicSlug: 'reading',
+    gameSlug: 'sound-slide-blending',
+    component: SoundSlideBlending,
+  }),
+  defineGameRoute({
+    routeTopicSlug: 'reading',
+    gameSlug: 'shva-sound-switch',
+    component: ShvaSoundSwitch,
+  }),
+  defineGameRoute({
+    routeTopicSlug: 'reading',
+    gameSlug: 'spell-and-send-post-office',
+    component: SpellAndSendPostOffice,
+  }),
+  defineGameRoute({
+    routeTopicSlug: 'reading',
+    gameSlug: 'pointing-fade-bridge',
+    component: PointingFadeBridge,
   }),
   defineGameRoute({
     routeTopicSlug: 'reading',

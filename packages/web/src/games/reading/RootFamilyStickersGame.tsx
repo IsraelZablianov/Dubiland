@@ -405,11 +405,14 @@ export function RootFamilyStickersGame({ level: runtimeLevel, onComplete, audio 
   const [sortingRoundIndex, setSortingRoundIndex] = useState(0);
   const [sortingCards, setSortingCards] = useState<SortCard[]>(() => shuffle(sortingRounds[0].cards));
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
+  const [lastSortingCardId, setLastSortingCardId] = useState<string | null>(null);
+  const [activeSortingRootId, setActiveSortingRootId] = useState<RootId | null>(null);
   const [showRootHighlight, setShowRootHighlight] = useState(sortingRounds[0].showRootHighlight);
 
   const [buildRoundIndex, setBuildRoundIndex] = useState(0);
   const [buildErrors, setBuildErrors] = useState(0);
   const [buildSolved, setBuildSolved] = useState(false);
+  const [lastBuildChoice, setLastBuildChoice] = useState<WordId | null>(null);
 
   const [phraseRoundIndex, setPhraseRoundIndex] = useState(0);
   const [phraseCompleted, setPhraseCompleted] = useState(false);
@@ -597,6 +600,8 @@ export function RootFamilyStickersGame({ level: runtimeLevel, onComplete, audio 
       cardErrorsRef.current = {};
       setSortingCards(shuffle(round.cards));
       setSelectedCardId(null);
+      setLastSortingCardId(null);
+      setActiveSortingRootId(null);
       setShowRootHighlight(round.showRootHighlight);
       setHintStep(0);
       setCheckpointHints(0);
@@ -678,6 +683,7 @@ export function RootFamilyStickersGame({ level: runtimeLevel, onComplete, audio 
     if (stage === 'building') {
       setBuildSolved(false);
       setBuildErrors(0);
+      setLastBuildChoice(null);
       setHintStep(0);
       setCheckpointHints(0);
       return;
@@ -715,6 +721,9 @@ export function RootFamilyStickersGame({ level: runtimeLevel, onComplete, audio 
 
       const card = sortingCards.find((item) => item.id === cardId);
       if (!card) return;
+
+      setActiveSortingRootId(rootId);
+      setLastSortingCardId(card.id);
 
       if (isSlowMode) {
         void playAudioNow(wordAudioPath(card.wordId));
@@ -819,6 +828,7 @@ export function RootFamilyStickersGame({ level: runtimeLevel, onComplete, audio 
     (wordId: WordId) => {
       if (stage !== 'building' || buildSolved) return;
 
+      setLastBuildChoice(wordId);
       statsRef.current.totalActions += 1;
 
       if (wordId === currentBuildRound.targetWordId) {
@@ -892,6 +902,7 @@ export function RootFamilyStickersGame({ level: runtimeLevel, onComplete, audio 
       setBuildRoundIndex(0);
       setBuildSolved(false);
       setBuildErrors(0);
+      setLastBuildChoice(null);
       return;
     }
 
@@ -901,6 +912,7 @@ export function RootFamilyStickersGame({ level: runtimeLevel, onComplete, audio 
         setBuildRoundIndex((value) => value + 1);
         setBuildSolved(false);
         setBuildErrors(0);
+        setLastBuildChoice(null);
         return;
       }
 
@@ -1008,6 +1020,13 @@ export function RootFamilyStickersGame({ level: runtimeLevel, onComplete, audio 
     );
   }, [sortingCards.length, stage, updateStatus]);
 
+  const statusMascotVariant =
+    stage === 'complete' || status.tone === 'success' || boardFeedback === 'success'
+      ? 'success'
+      : status.tone === 'hint' || status.tone === 'error' || boardFeedback === 'miss'
+        ? 'hint'
+        : 'hero';
+
   const controlButtons = (
     <div
       style={{
@@ -1067,6 +1086,11 @@ export function RootFamilyStickersGame({ level: runtimeLevel, onComplete, audio 
       <button
         key={root.id}
         type="button"
+        className={[
+          'root-family-stickers__root-drop-zone',
+          boardFeedback === 'success' && activeSortingRootId === root.id ? 'root-family-stickers__root-drop-zone--success' : '',
+          boardFeedback === 'miss' && activeSortingRootId === root.id ? 'root-family-stickers__root-drop-zone--miss' : '',
+        ].join(' ')}
         onClick={() => handleDropOnRoot(root.id)}
         onDragOver={(event) => event.preventDefault()}
         onDrop={(event) => {
@@ -1166,6 +1190,12 @@ export function RootFamilyStickersGame({ level: runtimeLevel, onComplete, audio 
         }}
       >
         <div
+          className={[
+            'root-family-stickers__status-row',
+            status.tone === 'hint' ? 'root-family-stickers__status-row--hint' : '',
+            status.tone === 'success' ? 'root-family-stickers__status-row--success' : '',
+            status.tone === 'error' ? 'root-family-stickers__status-row--error' : '',
+          ].join(' ')}
           style={{
             display: 'grid',
             gridTemplateColumns: 'auto 1fr',
@@ -1173,9 +1203,18 @@ export function RootFamilyStickersGame({ level: runtimeLevel, onComplete, audio 
             alignItems: 'center',
           }}
         >
-          <MascotIllustration variant={stage === 'complete' ? 'success' : 'hero'} size={78} />
+          <span
+            className={[
+              'root-family-stickers__status-mascot',
+              statusMascotVariant === 'success' ? 'root-family-stickers__status-mascot--success' : '',
+              statusMascotVariant === 'hint' ? 'root-family-stickers__status-mascot--hint' : '',
+            ].join(' ')}
+            aria-hidden="true"
+          >
+            <MascotIllustration variant={statusMascotVariant} size={78} />
+          </span>
           <div style={{ display: 'grid', gap: 'var(--space-2xs)' }}>
-            <span style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
+            <span className="root-family-stickers__status-text" style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
               {toneIcon(status.tone, replayIcon)} {t(status.key)}
             </span>
             {isSlowMode && (
@@ -1227,6 +1266,12 @@ export function RootFamilyStickersGame({ level: runtimeLevel, onComplete, audio 
                   <button
                     key={card.id}
                     type="button"
+                    className={[
+                      'root-family-stickers__sorting-card',
+                      isSelected ? 'root-family-stickers__sorting-card--selected' : '',
+                      card.isDecoy ? 'root-family-stickers__sorting-card--decoy' : '',
+                      boardFeedback === 'miss' && lastSortingCardId === card.id ? 'root-family-stickers__sorting-card--miss' : '',
+                    ].join(' ')}
                     draggable
                     onDragStart={() => {
                       dragCardIdRef.current = card.id;
@@ -1310,6 +1355,12 @@ export function RootFamilyStickersGame({ level: runtimeLevel, onComplete, audio 
               {currentBuildRound.options.map((wordId) => (
                 <Button
                   key={wordId}
+                  className={[
+                    'root-family-stickers__build-choice',
+                    buildSolved && wordId === currentBuildRound.targetWordId ? 'root-family-stickers__build-choice--locked-success' : '',
+                    boardFeedback === 'success' && lastBuildChoice === wordId ? 'root-family-stickers__build-choice--success' : '',
+                    boardFeedback === 'miss' && lastBuildChoice === wordId ? 'root-family-stickers__build-choice--miss' : '',
+                  ].join(' ')}
                   variant={buildSolved && wordId === currentBuildRound.targetWordId ? 'primary' : 'secondary'}
                   size="md"
                   onClick={() => handleBuildChoice(wordId)}
@@ -1338,6 +1389,11 @@ export function RootFamilyStickersGame({ level: runtimeLevel, onComplete, audio 
           >
             <button
               type="button"
+              className={[
+                'root-family-stickers__phrase-card',
+                phraseCompleted ? 'root-family-stickers__phrase-card--complete' : '',
+                boardFeedback === 'success' ? 'root-family-stickers__phrase-card--success' : '',
+              ].join(' ')}
               onClick={handlePhraseReadComplete}
               aria-label={t(PHRASE_KEY_BY_ID[currentPhraseRound.target])}
               style={{
@@ -1444,6 +1500,112 @@ export function RootFamilyStickersGame({ level: runtimeLevel, onComplete, audio 
           animation: root-family-surface-miss 300ms ease-in-out;
         }
 
+        .root-family-stickers__status-row {
+          transition:
+            border-color 180ms ease,
+            background-color 180ms ease;
+          border-radius: var(--radius-md);
+          border: 1px solid color-mix(in srgb, var(--color-border) 72%, transparent);
+          background: color-mix(in srgb, var(--color-bg-surface) 88%, transparent);
+          padding: var(--space-2xs);
+        }
+
+        .root-family-stickers__status-row--hint {
+          border-color: color-mix(in srgb, var(--color-accent-warning) 54%, transparent);
+        }
+
+        .root-family-stickers__status-row--success {
+          border-color: color-mix(in srgb, var(--color-accent-success) 58%, transparent);
+        }
+
+        .root-family-stickers__status-row--error {
+          border-color: color-mix(in srgb, var(--color-accent-warning) 62%, transparent);
+        }
+
+        .root-family-stickers__status-mascot {
+          min-inline-size: 82px;
+          min-block-size: 82px;
+          border-radius: var(--radius-full);
+          border: 1px solid color-mix(in srgb, var(--color-border) 72%, transparent);
+          background: color-mix(in srgb, var(--color-bg-surface) 86%, transparent);
+          display: inline-grid;
+          place-items: center;
+          transition:
+            border-color 180ms ease,
+            transform 220ms ease;
+        }
+
+        .root-family-stickers__status-mascot--success {
+          border-color: color-mix(in srgb, var(--color-accent-success) 56%, transparent);
+          transform: scale(1.03);
+        }
+
+        .root-family-stickers__status-mascot--hint {
+          border-color: color-mix(in srgb, var(--color-accent-warning) 58%, transparent);
+        }
+
+        .root-family-stickers__status-text {
+          transition: color 180ms ease;
+        }
+
+        .root-family-stickers__root-drop-zone {
+          transition:
+            transform 180ms ease,
+            box-shadow 180ms ease;
+        }
+
+        .root-family-stickers__root-drop-zone--success {
+          animation: root-family-drop-zone-success 300ms ease-out;
+        }
+
+        .root-family-stickers__root-drop-zone--miss {
+          animation: root-family-drop-zone-miss 260ms ease-in-out;
+        }
+
+        .root-family-stickers__sorting-card {
+          transition:
+            transform 140ms ease,
+            box-shadow 140ms ease;
+        }
+
+        .root-family-stickers__sorting-card--selected {
+          box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+        }
+
+        .root-family-stickers__sorting-card--decoy {
+          background: color-mix(in srgb, var(--color-accent-warning) 10%, var(--color-bg-surface));
+        }
+
+        .root-family-stickers__sorting-card--miss {
+          animation: root-family-card-miss 260ms ease-in-out;
+        }
+
+        .root-family-stickers__build-choice {
+          transition:
+            transform 170ms ease,
+            box-shadow 170ms ease;
+        }
+
+        .root-family-stickers__build-choice--success,
+        .root-family-stickers__build-choice--locked-success {
+          animation: root-family-build-success 280ms ease-out;
+        }
+
+        .root-family-stickers__build-choice--miss {
+          animation: root-family-build-miss 240ms ease-in-out;
+        }
+
+        .root-family-stickers__phrase-card {
+          transition:
+            transform 180ms ease,
+            box-shadow 180ms ease;
+        }
+
+        .root-family-stickers__phrase-card--success,
+        .root-family-stickers__phrase-card--complete {
+          animation: root-family-phrase-success 300ms ease-out;
+        }
+
         @keyframes root-family-progress-live {
           0%,
           100% {
@@ -1491,11 +1653,94 @@ export function RootFamilyStickersGame({ level: runtimeLevel, onComplete, audio 
           }
         }
 
+        @keyframes root-family-drop-zone-success {
+          0% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.03);
+          }
+          100% {
+            transform: scale(1);
+          }
+        }
+
+        @keyframes root-family-drop-zone-miss {
+          0%,
+          100% {
+            transform: translateY(0);
+          }
+          35% {
+            transform: translateY(-2px);
+          }
+          70% {
+            transform: translateY(1px);
+          }
+        }
+
+        @keyframes root-family-card-miss {
+          0%,
+          100% {
+            transform: translateX(0);
+          }
+          25% {
+            transform: translateX(3px);
+          }
+          75% {
+            transform: translateX(-3px);
+          }
+        }
+
+        @keyframes root-family-build-success {
+          0% {
+            transform: scale(1);
+          }
+          55% {
+            transform: scale(1.05);
+          }
+          100% {
+            transform: scale(1);
+          }
+        }
+
+        @keyframes root-family-build-miss {
+          0%,
+          100% {
+            transform: translateX(0);
+          }
+          40% {
+            transform: translateX(-3px);
+          }
+          75% {
+            transform: translateX(3px);
+          }
+        }
+
+        @keyframes root-family-phrase-success {
+          0% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.02);
+          }
+          100% {
+            transform: scale(1);
+          }
+        }
+
         @media (prefers-reduced-motion: reduce) {
           .root-family-stickers__progress-dot--active-live,
           .root-family-stickers__score-pill--pulse,
           .root-family-stickers__surface--success,
-          .root-family-stickers__surface--miss {
+          .root-family-stickers__surface--miss,
+          .root-family-stickers__root-drop-zone--success,
+          .root-family-stickers__root-drop-zone--miss,
+          .root-family-stickers__sorting-card--miss,
+          .root-family-stickers__build-choice--success,
+          .root-family-stickers__build-choice--locked-success,
+          .root-family-stickers__build-choice--miss,
+          .root-family-stickers__phrase-card--success,
+          .root-family-stickers__phrase-card--complete {
             animation: none !important;
             transform: none !important;
           }

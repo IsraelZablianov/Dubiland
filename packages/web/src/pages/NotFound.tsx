@@ -73,7 +73,7 @@ export default function NotFound() {
           font-family: var(--font-family-display);
           font-size: clamp(4rem, 10vw, 8rem);
           font-weight: var(--font-weight-extrabold);
-          color: var(--color-bg-secondary);
+          color: var(--color-theme-primary);
           line-height: 1;
         }
 

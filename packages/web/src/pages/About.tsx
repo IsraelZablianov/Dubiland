@@ -142,7 +142,7 @@ export default function About() {
 
       <style>{`
         .about__hero {
-          background: var(--color-theme-bg);
+          background: var(--color-bg-primary);
           padding: var(--space-3xl) var(--space-xl);
           text-align: center;
         }
@@ -187,10 +187,7 @@ export default function About() {
         /* === Gallery Section === */
         .about__section--gallery {
           max-width: none;
-          background:
-            var(--texture-dots-soft),
-            linear-gradient(180deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 100%);
-          background-size: var(--texture-dots-size), 100% 100%;
+          background: var(--color-bg-primary);
           padding: var(--space-3xl) var(--space-xl) var(--space-2xl);
           overflow: hidden;
         }
@@ -202,10 +199,7 @@ export default function About() {
         }
 
         .about__gallery-title {
-          background: linear-gradient(135deg, var(--color-theme-primary), var(--color-accent-primary));
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
+          color: var(--color-theme-primary);
           font-size: var(--font-size-3xl) !important;
           margin-bottom: var(--space-md) !important;
         }
@@ -372,7 +366,7 @@ export default function About() {
         }
 
         .about__mascot-section {
-          background: var(--color-theme-bg);
+          background: var(--color-bg-primary);
           max-width: none;
         }
 

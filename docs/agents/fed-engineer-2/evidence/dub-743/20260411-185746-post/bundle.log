@@ -1,0 +1,7 @@
+[perf:bundle] measured gzip budgets from dist assets
+[perf:bundle] index: index-3Urp1YVv.js gzip 65,956 / 130,000 (PASS)
+[perf:bundle] react: react-TeP_XUL0.js gzip 17,070 / 18,000 (PASS)
+[perf:bundle] i18n: i18n-Dr9B4Pzo.js gzip 15,333 / 16,000 (PASS)
+[perf:bundle] total JS: 1,936,134 / 1,650,000 (FAIL)
+[perf:bundle] report: docs/agents/fed-engineer-2/evidence/dub-743/20260411-185746-post/bundle-results.json
+[perf:bundle] FAIL (1 violation(s))

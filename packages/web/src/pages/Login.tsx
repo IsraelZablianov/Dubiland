@@ -210,7 +210,6 @@ export default function Login() {
               style={{
                 width: '100%',
                 minHeight: 'var(--touch-primary-action-prominent)',
-                color: 'var(--color-text-primary)',
               }}
             >
               {t('onboarding:continueAsGuest')}

@@ -23,12 +23,14 @@ type ProfileAgeBand = Exclude<AgeBand, 'all'>;
 type HomeGameSlug =
   | 'countingPicnic'
   | 'moreOrLessMarket'
+  | 'measureAndMatch'
   | 'numberLineJumps'
   | 'build10Workshop'
   | 'subtractionStreet'
   | 'timeAndRoutineBuilder'
   | 'colorGarden'
   | 'shapeSafari'
+  | 'patternTrain'
   | 'letterSoundMatch'
   | 'letterTracingTrail'
   | 'letterSkyCatcher'
@@ -38,10 +40,16 @@ type HomeGameSlug =
   | 'decodableStoryMissions'
   | 'interactiveHandbook'
   | 'letterStorybook'
+  | 'letterStorybookV2'
   | 'rootFamilyStickers'
   | 'confusableLetterContrast'
   | 'nikudSoundLadder'
-  | 'syllableTrainBuilder';
+  | 'syllableTrainBuilder'
+  | 'soundSlideBlending'
+  | 'shvaSoundSwitch'
+  | 'spellAndSendPostOffice'
+  | 'pointingFadeBridge'
+  | 'blendToReadVideoShorts';
 
 interface TopicGameOption {
   slug: HomeGameSlug;
@@ -72,8 +80,14 @@ const AGE_BANDS: ProfileAgeBand[] = ['3-4', '4-5', '5-6', '6-7'];
 const NAVIGATION_AUDIO_LEAD_MS = 140;
 const DEFAULT_GAME_THUMBNAIL = '/images/games/thumbnails/interactiveHandbook/thumb-16x10.webp';
 const HOME_BACKGROUND_IMAGE_PATH = '/images/backgrounds/home/home-storybook.webp';
+const HOME_MOBILE_MAX_WIDTH = 767;
+const HOME_TABLET_MAX_WIDTH = 1199;
 
 const SECTION_ORDER: HomeSectionSlug[] = ['letters', 'reading', 'math', 'books'];
+const LETTER_STORYBOOK_TITLE_KEY = 'games.letterStorybook.title';
+const LETTER_STORYBOOK_V2_TITLE_KEY = 'games.letterStorybookV2.title';
+
+type HomeViewportMode = 'mobile' | 'tablet' | 'desktop';
 
 const SECTION_ICON_BY_SLUG: Record<HomeSectionSlug, string> = {
   letters: '🔤',
@@ -105,6 +119,16 @@ const HOME_GAME_OPTIONS: TopicGameOption[] = [
     thumbnailUrl: DEFAULT_GAME_THUMBNAIL,
     difficulty: 2,
     primaryAgeBand: '4-5',
+    supportAgeBands: ['5-6'],
+    topic: 'math',
+    section: 'math',
+  },
+  {
+    slug: 'measureAndMatch',
+    route: '/games/numbers/measure-and-match',
+    thumbnailUrl: DEFAULT_GAME_THUMBNAIL,
+    difficulty: 4,
+    primaryAgeBand: '6-7',
     supportAgeBands: ['5-6'],
     topic: 'math',
     section: 'math',
@@ -166,6 +190,16 @@ const HOME_GAME_OPTIONS: TopicGameOption[] = [
     difficulty: 2,
     primaryAgeBand: '3-4',
     supportAgeBands: ['4-5'],
+    topic: 'math',
+    section: 'math',
+  },
+  {
+    slug: 'patternTrain',
+    route: '/games/numbers/pattern-train',
+    thumbnailUrl: DEFAULT_GAME_THUMBNAIL,
+    difficulty: 2,
+    primaryAgeBand: '4-5',
+    supportAgeBands: ['3-4', '5-6'],
     topic: 'math',
     section: 'math',
   },
@@ -260,6 +294,16 @@ const HOME_GAME_OPTIONS: TopicGameOption[] = [
     section: 'books',
   },
   {
+    slug: 'letterStorybookV2',
+    route: '/games/reading/letter-storybook-v2',
+    thumbnailUrl: '/images/games/thumbnails/interactiveHandbook/thumb-16x10.webp',
+    difficulty: 4,
+    primaryAgeBand: '5-6',
+    supportAgeBands: ['3-4', '6-7'],
+    topic: 'reading',
+    section: 'books',
+  },
+  {
     slug: 'rootFamilyStickers',
     route: '/games/reading/root-family-stickers',
     thumbnailUrl: DEFAULT_GAME_THUMBNAIL,
@@ -299,6 +343,56 @@ const HOME_GAME_OPTIONS: TopicGameOption[] = [
     topic: 'reading',
     section: 'reading',
   },
+  {
+    slug: 'soundSlideBlending',
+    route: '/games/reading/sound-slide-blending',
+    thumbnailUrl: DEFAULT_GAME_THUMBNAIL,
+    difficulty: 4,
+    primaryAgeBand: '5-6',
+    supportAgeBands: ['6-7'],
+    topic: 'reading',
+    section: 'reading',
+  },
+  {
+    slug: 'shvaSoundSwitch',
+    route: '/games/reading/shva-sound-switch',
+    thumbnailUrl: DEFAULT_GAME_THUMBNAIL,
+    difficulty: 5,
+    primaryAgeBand: '6-7',
+    supportAgeBands: ['5-6'],
+    topic: 'reading',
+    section: 'reading',
+  },
+  {
+    slug: 'spellAndSendPostOffice',
+    route: '/games/reading/spell-and-send-post-office',
+    thumbnailUrl: DEFAULT_GAME_THUMBNAIL,
+    difficulty: 5,
+    primaryAgeBand: '6-7',
+    supportAgeBands: ['5-6'],
+    topic: 'reading',
+    section: 'reading',
+  },
+  {
+    slug: 'pointingFadeBridge',
+    route: '/games/reading/pointing-fade-bridge',
+    thumbnailUrl: DEFAULT_GAME_THUMBNAIL,
+    difficulty: 4,
+    primaryAgeBand: '6-7',
+    supportAgeBands: ['5-6'],
+    topic: 'reading',
+    section: 'reading',
+  },
+  {
+    slug: 'blendToReadVideoShorts',
+    route: '/games/reading/blend-to-read-video-shorts',
+    thumbnailUrl: DEFAULT_GAME_THUMBNAIL,
+    difficulty: 4,
+    primaryAgeBand: '5-6',
+    supportAgeBands: ['6-7'],
+    topic: 'reading',
+    section: 'reading',
+  },
 ];
 
 const GAME_OPTIONS_BY_SLUG: Record<HomeGameSlug, TopicGameOption> = HOME_GAME_OPTIONS.reduce(
@@ -326,6 +420,30 @@ function toBandKey(band: ProfileAgeBand): '3_4' | '4_5' | '5_6' | '6_7' {
 
 function toSectionOrderIndex(section: HomeSectionSlug): number {
   return SECTION_ORDER.indexOf(section);
+}
+
+function toHomeViewportMode(width: number): HomeViewportMode {
+  if (width <= HOME_MOBILE_MAX_WIDTH) {
+    return 'mobile';
+  }
+
+  if (width <= HOME_TABLET_MAX_WIDTH) {
+    return 'tablet';
+  }
+
+  return 'desktop';
+}
+
+function toHomeGameTitleKey(slug: HomeGameSlug, hasLetterStorybookV2Title: boolean): string {
+  if (slug === 'blendToReadVideoShorts') {
+    return 'videos.blendToRead.title';
+  }
+
+  if (slug === 'letterStorybookV2') {
+    return hasLetterStorybookV2Title ? LETTER_STORYBOOK_V2_TITLE_KEY : LETTER_STORYBOOK_TITLE_KEY;
+  }
+
+  return `games.${slug}.title`;
 }
 
 function toAgeMatchRank(
@@ -538,6 +656,19 @@ export default function Home() {
   const [catalogLoadStatus, setCatalogLoadStatus] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
   const pendingNavigationTimeoutRef = useRef<number | null>(null);
   const lastDailyGoalProgressRef = useRef<number | null>(null);
+  const sectionRefs = useRef<Record<HomeSectionSlug, HTMLElement | null>>({
+    letters: null,
+    reading: null,
+    math: null,
+    books: null,
+  });
+
+  const [viewportMode, setViewportMode] = useState<HomeViewportMode>(() =>
+    typeof window === 'undefined' ? 'desktop' : toHomeViewportMode(window.innerWidth),
+  );
+  const [isTabletRailExpanded, setIsTabletRailExpanded] = useState(true);
+  const [activeSection, setActiveSection] = useState<HomeSectionSlug>('letters');
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   const maxConcurrentChoices = useMemo(
     () => resolveConcurrentChoiceLimit(selectedAgeBand, profileAgeBand),
@@ -554,6 +685,47 @@ export default function Home() {
   }, []);
 
   useEffect(() => clearPendingNavigation, [clearPendingNavigation]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const syncViewportMode = () => {
+      setViewportMode(toHomeViewportMode(window.innerWidth));
+    };
+
+    syncViewportMode();
+    window.addEventListener('resize', syncViewportMode, { passive: true });
+
+    return () => {
+      window.removeEventListener('resize', syncViewportMode);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (viewportMode !== 'tablet') {
+      setIsTabletRailExpanded(true);
+    }
+  }, [viewportMode]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const syncReducedMotion = () => {
+      setPrefersReducedMotion(mediaQuery.matches);
+    };
+
+    syncReducedMotion();
+    mediaQuery.addEventListener('change', syncReducedMotion);
+
+    return () => {
+      mediaQuery.removeEventListener('change', syncReducedMotion);
+    };
+  }, []);
 
   useEffect(() => {
     const persisted = getPersistedAgeBandOverride(childId);
@@ -724,6 +896,7 @@ export default function Home() {
     },
     [audio],
   );
+  const hasLetterStorybookV2Title = i18n.exists(LETTER_STORYBOOK_V2_TITLE_KEY, { ns: 'common' });
 
   const navigateWithLeadAudio = useCallback(
     (route: string, audioKey: string) => {
@@ -783,12 +956,152 @@ export default function Home() {
     playCommonAudioNow('home.chooseTopic');
   }, [playCommonAudioNow]);
 
+  const handleToggleTabletRail = useCallback(() => {
+    setIsTabletRailExpanded((previousState) => {
+      const nextState = !previousState;
+      playCommonAudioNow(nextState ? 'nav.chooseTopic' : 'nav.back');
+      return nextState;
+    });
+  }, [playCommonAudioNow]);
+
   const startFeaturedRoute = featuredGames[0]?.route ?? allVisibleGames[0]?.route ?? '/games';
-  const startFeaturedAudioKey = featuredGames[0] ? `games.${featuredGames[0].slug}.title` : 'home.startLearning';
+  const startFeaturedAudioKey = featuredGames[0]
+    ? toHomeGameTitleKey(featuredGames[0].slug, hasLetterStorybookV2Title)
+    : 'home.startLearning';
 
   const showEmptyState = allVisibleGames.length === 0;
   const showSectionChoices = !requiresProgressiveReveal || showExpandedChoices;
   const remainingChoiceCount = Math.max(0, allVisibleGames.length - featuredGames.length);
+  const visibleSectionSlugs = useMemo(
+    () => SECTION_ORDER.filter((sectionSlug) => sectionedGames[sectionSlug].length > 0),
+    [sectionedGames],
+  );
+
+  useEffect(() => {
+    if (visibleSectionSlugs.length === 0) {
+      return;
+    }
+
+    setActiveSection((previousSection) =>
+      visibleSectionSlugs.includes(previousSection) ? previousSection : visibleSectionSlugs[0],
+    );
+  }, [visibleSectionSlugs]);
+
+  useEffect(() => {
+    if (!showSectionChoices || visibleSectionSlugs.length === 0 || typeof IntersectionObserver === 'undefined') {
+      return;
+    }
+
+    const intersectionRatios = new Map<HomeSectionSlug, number>();
+    visibleSectionSlugs.forEach((sectionSlug) => {
+      intersectionRatios.set(sectionSlug, 0);
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const slug = entry.target.getAttribute('data-home-section-slug') as HomeSectionSlug | null;
+          if (!slug) {
+            return;
+          }
+
+          intersectionRatios.set(slug, entry.isIntersecting ? entry.intersectionRatio : 0);
+        });
+
+        let nextActiveSection = activeSection;
+        let highestRatio = 0;
+
+        visibleSectionSlugs.forEach((sectionSlug) => {
+          const ratio = intersectionRatios.get(sectionSlug) ?? 0;
+          if (ratio > highestRatio) {
+            highestRatio = ratio;
+            nextActiveSection = sectionSlug;
+          }
+        });
+
+        if (highestRatio > 0 && nextActiveSection !== activeSection) {
+          setActiveSection(nextActiveSection);
+        }
+      },
+      {
+        root: null,
+        threshold: [0.1, 0.25, 0.5, 0.7],
+        rootMargin: '-30% 0px -45% 0px',
+      },
+    );
+
+    visibleSectionSlugs.forEach((sectionSlug) => {
+      const sectionElement = sectionRefs.current[sectionSlug];
+      if (sectionElement) {
+        observer.observe(sectionElement);
+      }
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [activeSection, showSectionChoices, visibleSectionSlugs]);
+
+  const handleJumpToSection = useCallback(
+    (sectionSlug: HomeSectionSlug) => {
+      const targetElement = sectionRefs.current[sectionSlug];
+      if (!targetElement) {
+        return;
+      }
+
+      setActiveSection(sectionSlug);
+      playCommonAudioNow(`home.sections.${sectionSlug}.title`);
+
+      targetElement.scrollIntoView({
+        behavior: prefersReducedMotion ? 'auto' : 'smooth',
+        block: 'start',
+        inline: 'nearest',
+      });
+    },
+    [playCommonAudioNow, prefersReducedMotion],
+  );
+
+  const renderSectionJumpControls = (axis: 'inline' | 'block') => {
+    if (visibleSectionSlugs.length === 0 || !showSectionChoices) {
+      return null;
+    }
+
+    return (
+      <div
+        className={`home__section-jumps home__section-jumps--${axis}`}
+        role="group"
+        aria-label={t('home.chooseTopic')}
+      >
+        {visibleSectionSlugs.map((sectionSlug) => {
+          const sectionTitleKey = `home.sections.${sectionSlug}.title` as const;
+          const isActive = activeSection === sectionSlug;
+
+          return (
+            <button
+              key={`home-jump-${sectionSlug}`}
+              type="button"
+              className={`home__section-jump${isActive ? ' is-active' : ''}`}
+              aria-label={t(sectionTitleKey)}
+              aria-controls={`home-section-${sectionSlug}`}
+              aria-pressed={isActive}
+              aria-current={isActive ? 'true' : undefined}
+              onClick={() => handleJumpToSection(sectionSlug)}
+              onFocus={() => setActiveSection(sectionSlug)}
+            >
+              <span aria-hidden="true" className="home__section-jump-icon">
+                {SECTION_ICON_BY_SLUG[sectionSlug]}
+              </span>
+              <span className="home__section-jump-label">{t(sectionTitleKey)}</span>
+            </button>
+          );
+        })}
+      </div>
+    );
+  };
+
+  const showMobileUtilityShelf = viewportMode === 'mobile';
+  const showSideRail = viewportMode !== 'mobile';
+  const showSideRailPanel = viewportMode === 'desktop' || isTabletRailExpanded;
 
   return (
     <ChildRouteScaffold
@@ -803,279 +1116,463 @@ export default function Home() {
         padding: 'var(--space-xl)',
       }}
     >
-        <Card
-          padding="lg"
-          style={{
-            display: 'grid',
-            gap: 'var(--space-md)',
-            border: '2px solid color-mix(in srgb, var(--color-theme-primary) 24%, transparent)',
-            background:
-              'linear-gradient(138deg, color-mix(in srgb, var(--color-bg-card) 76%, var(--color-theme-secondary) 24%), color-mix(in srgb, var(--color-bg-card) 86%, white 14%))',
-          }}
-        >
-          <ChildRouteHeader
-            title={t('home.greeting', { name: childName })}
-            subtitle={t('home.dubiWelcome')}
-            trailing={
-              <FloatingElement durationMs={3200}>
-                <MascotIllustration variant="hint" size="clamp(108px, 18vw, 132px)" />
-              </FloatingElement>
-            }
-            headingStyle={{ gap: 'var(--space-xs)' }}
-            titleStyle={{
-              fontSize: 'var(--font-size-2xl)',
-              fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
-              color: 'var(--color-text-primary)',
+      <div className="home__layout">
+        <div className="home__content-column">
+          <Card
+            padding="lg"
+            style={{
+              display: 'grid',
+              gap: 'var(--space-md)',
+              border: '2px solid color-mix(in srgb, var(--color-theme-primary) 24%, transparent)',
+              background:
+                'linear-gradient(138deg, color-mix(in srgb, var(--color-bg-card) 76%, var(--color-theme-secondary) 24%), color-mix(in srgb, var(--color-bg-card) 86%, white 14%))',
             }}
-            subtitleStyle={{
-              color: 'var(--color-text-secondary)',
-              fontSize: 'var(--font-size-md)',
-            }}
-          />
+          >
+            <ChildRouteHeader
+              title={t('home.greeting', { name: childName })}
+              subtitle={t('home.dubiWelcome')}
+              trailing={
+                <FloatingElement durationMs={3200}>
+                  <MascotIllustration variant="hint" size="clamp(108px, 18vw, 132px)" />
+                </FloatingElement>
+              }
+              headingStyle={{ gap: 'var(--space-xs)' }}
+              titleStyle={{
+                fontSize: 'var(--font-size-2xl)',
+                fontWeight: 'var(--font-weight-extrabold)' as unknown as number,
+                color: 'var(--color-text-primary)',
+              }}
+              subtitleStyle={{
+                color: 'var(--color-text-secondary)',
+                fontSize: 'var(--font-size-md)',
+              }}
+            />
 
-          <div className="home__hero-stats">
-            <div style={{ display: 'grid', gap: 'var(--space-2xs)' }}>
-              <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>{t('home.dailyGoal')}</p>
-              <strong style={{ color: 'var(--color-text-primary)', fontSize: 'var(--font-size-lg)' }}>
-                {t('home.minutes', { count: dailyGoalMinutes })} / {t('home.minutes', { count: dailyGoalTarget })}
-              </strong>
+            <div className="home__hero-stats">
+              <div style={{ display: 'grid', gap: 'var(--space-2xs)' }}>
+                <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>{t('home.dailyGoal')}</p>
+                <strong style={{ color: 'var(--color-text-primary)', fontSize: 'var(--font-size-lg)' }}>
+                  {t('home.minutes', { count: dailyGoalMinutes })} / {t('home.minutes', { count: dailyGoalTarget })}
+                </strong>
+              </div>
+
+              <Button
+                variant="primary"
+                size="lg"
+                aria-label={t('home.startLearning')}
+                onClick={() => navigateWithLeadAudio(startFeaturedRoute, startFeaturedAudioKey)}
+              >
+                {t('home.startLearning')}
+              </Button>
             </div>
 
-            <Button
-              variant="primary"
-              size="lg"
-              aria-label={t('home.startLearning')}
-              onClick={() => navigateWithLeadAudio(startFeaturedRoute, startFeaturedAudioKey)}
-            >
-              {t('home.startLearning')}
-            </Button>
-          </div>
+            <ProgressPills
+              percent={dailyGoalProgress}
+              segments={8}
+              isRtl={isRtl}
+              ariaLabel={t('home.dailyGoal')}
+              ariaValueText={t('home.progressValue', { count: dailyGoalProgress })}
+            />
+          </Card>
 
-          <ProgressPills
-            percent={dailyGoalProgress}
-            segments={8}
-            isRtl={isRtl}
-            ariaLabel={t('home.dailyGoal')}
-            ariaValueText={t('home.progressValue', { count: dailyGoalProgress })}
-          />
-        </Card>
-
-        <Card
-          padding="md"
-          style={{
-            display: 'grid',
-            gap: 'var(--space-sm)',
-            border: '2px solid color-mix(in srgb, var(--color-accent-info) 28%, transparent)',
-            background:
-              'linear-gradient(160deg, color-mix(in srgb, var(--color-bg-card) 80%, var(--color-accent-info) 20%), var(--color-bg-card))',
-          }}
-        >
-          <div style={{ display: 'grid', gap: 'var(--space-2xs)' }}>
-            <h2 style={{ color: 'var(--color-text-primary)', fontSize: 'var(--font-size-xl)' }}>{t('home.featured.title')}</h2>
-            <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>{t('home.featured.subtitle')}</p>
-            <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-xs)' }}>{t('home.featured.badge')}</p>
-          </div>
-
-          {featuredGames.length > 0 ? (
-            <div className="home__featured-grid">
-              {featuredGames.map((game, index) => {
-                const progressPercent = childProgress.gameProgressBySlug[game.slug] ?? 0;
-                const gameTitleKey = `games.${game.slug}.title`;
-
-                return (
-                  <GameCard
-                    key={`featured-${game.id}`}
-                    title={t(gameTitleKey as any)}
-                    thumbnailUrl={game.thumbnailUrl}
-                    difficulty={game.difficulty}
-                    agePrimaryLabel={ageBandLabels[game.primaryAgeBand]}
-                    ageSupportLabels={game.supportAgeBands.map((band) => ageBandLabels[band])}
-                    topicLabel={t(`contentTags.topic.${game.topic}` as any)}
-                    topicIcon={TOPIC_ICON_BY_SLUG[game.topic]}
-                    difficultyLabel={t('contentTags.difficulty.label')}
-                    stars={toStars(progressPercent)}
-                    progressPercent={progressPercent}
-                    progressAriaLabel={t('home.progressLabel')}
-                    progressValueLabel={t('home.progressValue', { count: progressPercent })}
-                    playLabel={t('games.play')}
-                    isRtl={isRtl}
-                    onClick={() => handleOpenGame(game.route, gameTitleKey)}
-                    aria-label={t(gameTitleKey as any)}
-                    style={{
-                      minHeight: '280px',
-                      animationDelay: `${index * 70}ms`,
-                    }}
-                  />
-                );
-              })}
-            </div>
-          ) : (
-            <Card padding="lg" style={{ display: 'grid', placeItems: 'center' }}>
-              <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
-                {catalogLoadStatus === 'loading' ? t('contentFilters.age.loading') : t('games.empty')}
-              </p>
+          {showMobileUtilityShelf && (
+            <Card padding="sm" className="home__mobile-utility-shelf">
+              <AgeRangeFilterBar
+                title={t('contentFilters.age.title')}
+                state={{
+                  profileAgeBand,
+                  selectedAgeBand,
+                  isManualOverride,
+                }}
+                ageBands={AGE_BANDS}
+                labels={ageBandLabels}
+                allowAllAges
+                isPersistingOverride={isPersistingOverride}
+                persistingLabel={t('contentFilters.age.syncing')}
+                onSelectBand={handleSelectAgeBand}
+                onResetToProfileAge={handleResetToProfileAge}
+                resetLabel={t('contentFilters.age.resetToProfile')}
+              />
+              {renderSectionJumpControls('inline')}
+              {catalogLoadStatus === 'error' && (
+                <p style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-accent-danger)' }}>
+                  {t('contentFilters.age.fallbackNotice')}
+                </p>
+              )}
             </Card>
           )}
 
-          <SuccessCelebration dense />
-        </Card>
-
-        <Card
-          padding="md"
-          style={{
-            display: 'grid',
-            gap: 'var(--space-sm)',
-            border: '2px solid color-mix(in srgb, var(--color-theme-primary) 20%, transparent)',
-          }}
-        >
-          <h3 style={{ color: 'var(--color-text-primary)', fontSize: 'var(--font-size-lg)' }}>{t('contentFilters.age.title')}</h3>
-
-          <AgeRangeFilterBar
-            title={t('contentFilters.age.title')}
-            state={{
-              profileAgeBand,
-              selectedAgeBand,
-              isManualOverride,
-            }}
-            ageBands={AGE_BANDS}
-            labels={ageBandLabels}
-            allowAllAges
-            isPersistingOverride={isPersistingOverride}
-            persistingLabel={t('contentFilters.age.syncing')}
-            onSelectBand={handleSelectAgeBand}
-            onResetToProfileAge={handleResetToProfileAge}
-            resetLabel={t('contentFilters.age.resetToProfile')}
-          />
-
-          {catalogLoadStatus === 'error' && (
-            <p style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-accent-danger)' }}>
-              {t('contentFilters.age.fallbackNotice')}
-            </p>
-          )}
-        </Card>
-
-        {showEmptyState ? (
-          <Card padding="lg" style={{ display: 'grid', placeItems: 'center' }}>
-            <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>{t('home.emptyByAge')}</p>
-          </Card>
-        ) : showSectionChoices ? (
-          <div className="home__sections-grid">
-            {SECTION_ORDER.map((sectionSlug) => {
-              const sectionGames = sectionedGames[sectionSlug];
-              if (sectionGames.length === 0) {
-                return null;
-              }
-
-              const sectionProgress = sectionProgressBySlug[sectionSlug] ?? 0;
-
-              return (
-                <Card
-                  key={sectionSlug}
-                  padding="md"
-                  style={{
-                    display: 'grid',
-                    gap: 'var(--space-sm)',
-                    border: '2px solid color-mix(in srgb, var(--color-theme-primary) 16%, transparent)',
-                    background:
-                      sectionSlug === 'books'
-                        ? 'linear-gradient(160deg, color-mix(in srgb, var(--color-bg-card) 78%, var(--color-accent-warning) 22%), var(--color-bg-card))'
-                        : 'var(--color-bg-card)',
-                  }}
-                >
-                  <div style={{ display: 'grid', gap: 'var(--space-2xs)' }}>
-                    <h3 style={{ color: 'var(--color-text-primary)', fontSize: 'var(--font-size-lg)' }}>
-                      {SECTION_ICON_BY_SLUG[sectionSlug]} {t(`home.sections.${sectionSlug}.title` as any)}
-                    </h3>
-                    <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
-                      {t(`home.sections.${sectionSlug}.subtitle` as any)}
-                    </p>
-                    <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-xs)' }}>
-                      {t('home.sectionProgressValue', { count: sectionProgress })}
-                    </p>
-                    <ProgressPills
-                      percent={sectionProgress}
-                      segments={5}
-                      isRtl={isRtl}
-                      ariaLabel={t(`home.sections.${sectionSlug}.title` as any)}
-                      ariaValueText={t('home.sectionProgressValue', { count: sectionProgress })}
-                    />
-                    <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-xs)' }}>
-                      {t('home.sectionGameCount', { count: sectionGames.length })}
-                    </p>
-                  </div>
-
-                  <div className="home__section-games-grid">
-                    {sectionGames.map((game, index) => {
-                      const progressPercent = childProgress.gameProgressBySlug[game.slug] ?? 0;
-                      const gameTitleKey = `games.${game.slug}.title`;
-
-                      return (
-                        <GameCard
-                          key={game.id}
-                          title={t(gameTitleKey as any)}
-                          thumbnailUrl={game.thumbnailUrl}
-                          difficulty={game.difficulty}
-                          agePrimaryLabel={ageBandLabels[game.primaryAgeBand]}
-                          ageSupportLabels={game.supportAgeBands.map((band) => ageBandLabels[band])}
-                          topicLabel={t(`contentTags.topic.${game.topic}` as any)}
-                          topicIcon={TOPIC_ICON_BY_SLUG[game.topic]}
-                          difficultyLabel={t('contentTags.difficulty.label')}
-                          stars={toStars(progressPercent)}
-                          progressPercent={progressPercent}
-                          progressAriaLabel={t('home.progressLabel')}
-                          progressValueLabel={t('home.progressValue', { count: progressPercent })}
-                          playLabel={t('games.play')}
-                          isRtl={isRtl}
-                          onClick={() => handleOpenGame(game.route, gameTitleKey)}
-                          aria-label={t(gameTitleKey as any)}
-                          style={{
-                            minHeight: '270px',
-                            animationDelay: `${index * 55}ms`,
-                          }}
-                        />
-                      );
-                    })}
-                  </div>
-                </Card>
-              );
-            })}
-          </div>
-        ) : (
           <Card
             padding="md"
             style={{
               display: 'grid',
               gap: 'var(--space-sm)',
-              border: '2px solid color-mix(in srgb, var(--color-theme-primary) 20%, transparent)',
+              border: '2px solid color-mix(in srgb, var(--color-accent-info) 28%, transparent)',
               background:
-                'linear-gradient(160deg, color-mix(in srgb, var(--color-bg-card) 82%, var(--color-theme-secondary) 18%), var(--color-bg-card))',
+                'linear-gradient(160deg, color-mix(in srgb, var(--color-bg-card) 80%, var(--color-accent-info) 20%), var(--color-bg-card))',
             }}
           >
             <div style={{ display: 'grid', gap: 'var(--space-2xs)' }}>
-              <h3 style={{ color: 'var(--color-text-primary)', fontSize: 'var(--font-size-lg)' }}>{t('home.chooseTopic')}</h3>
-              <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
-                {t('home.sectionGameCount', { count: remainingChoiceCount })}
-              </p>
+              <h2 style={{ color: 'var(--color-text-primary)', fontSize: 'var(--font-size-xl)' }}>{t('home.featured.title')}</h2>
+              <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>{t('home.featured.subtitle')}</p>
+              <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-xs)' }}>{t('home.featured.badge')}</p>
             </div>
-            <Button
-              variant="secondary"
-              size="lg"
-              aria-label={t('home.chooseTopic')}
-              onClick={handleRevealChoices}
-            >
-              {t('home.chooseTopic')}
-            </Button>
+
+            {featuredGames.length > 0 ? (
+              <div className="home__featured-grid">
+                {featuredGames.map((game, index) => {
+                  const progressPercent = childProgress.gameProgressBySlug[game.slug] ?? 0;
+                  const gameTitleKey = toHomeGameTitleKey(game.slug, hasLetterStorybookV2Title);
+
+                  return (
+                    <GameCard
+                      key={`featured-${game.id}`}
+                      title={t(gameTitleKey as any)}
+                      thumbnailUrl={game.thumbnailUrl}
+                      difficulty={game.difficulty}
+                      agePrimaryLabel={ageBandLabels[game.primaryAgeBand]}
+                      ageSupportLabels={game.supportAgeBands.map((band) => ageBandLabels[band])}
+                      topicLabel={t(`contentTags.topic.${game.topic}` as any)}
+                      topicIcon={TOPIC_ICON_BY_SLUG[game.topic]}
+                      difficultyLabel={t('contentTags.difficulty.label')}
+                      stars={toStars(progressPercent)}
+                      progressPercent={progressPercent}
+                      progressAriaLabel={t('home.progressLabel')}
+                      progressValueLabel={t('home.progressValue', { count: progressPercent })}
+                      playLabel={t('games.play')}
+                      isRtl={isRtl}
+                      onClick={() => handleOpenGame(game.route, gameTitleKey)}
+                      aria-label={t(gameTitleKey as any)}
+                      style={{
+                        minHeight: '280px',
+                        animationDelay: `${index * 70}ms`,
+                      }}
+                    />
+                  );
+                })}
+              </div>
+            ) : (
+              <Card padding="lg" style={{ display: 'grid', placeItems: 'center' }}>
+                <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+                  {catalogLoadStatus === 'loading' ? t('contentFilters.age.loading') : t('games.empty')}
+                </p>
+              </Card>
+            )}
+
+            <SuccessCelebration dense />
           </Card>
+
+          {showEmptyState ? (
+            <Card padding="lg" style={{ display: 'grid', placeItems: 'center' }}>
+              <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>{t('home.emptyByAge')}</p>
+            </Card>
+          ) : showSectionChoices ? (
+            <div className="home__sections-grid">
+              {SECTION_ORDER.map((sectionSlug) => {
+                const sectionGames = sectionedGames[sectionSlug];
+                if (sectionGames.length === 0) {
+                  return null;
+                }
+
+                const sectionProgress = sectionProgressBySlug[sectionSlug] ?? 0;
+
+                return (
+                  <section
+                    key={sectionSlug}
+                    id={`home-section-${sectionSlug}`}
+                    data-home-section-slug={sectionSlug}
+                    className="home__section-anchor"
+                    ref={(element) => {
+                      sectionRefs.current[sectionSlug] = element;
+                    }}
+                  >
+                    <Card
+                      padding="md"
+                      style={{
+                        display: 'grid',
+                        gap: 'var(--space-sm)',
+                        border: '2px solid color-mix(in srgb, var(--color-theme-primary) 16%, transparent)',
+                        background:
+                          sectionSlug === 'books'
+                            ? 'linear-gradient(160deg, color-mix(in srgb, var(--color-bg-card) 78%, var(--color-accent-warning) 22%), var(--color-bg-card))'
+                            : 'var(--color-bg-card)',
+                      }}
+                    >
+                      <div style={{ display: 'grid', gap: 'var(--space-2xs)' }}>
+                        <h3 style={{ color: 'var(--color-text-primary)', fontSize: 'var(--font-size-lg)' }}>
+                          {SECTION_ICON_BY_SLUG[sectionSlug]} {t(`home.sections.${sectionSlug}.title` as any)}
+                        </h3>
+                        <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
+                          {t(`home.sections.${sectionSlug}.subtitle` as any)}
+                        </p>
+                        <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-xs)' }}>
+                          {t('home.sectionProgressValue', { count: sectionProgress })}
+                        </p>
+                        <ProgressPills
+                          percent={sectionProgress}
+                          segments={5}
+                          isRtl={isRtl}
+                          ariaLabel={t(`home.sections.${sectionSlug}.title` as any)}
+                          ariaValueText={t('home.sectionProgressValue', { count: sectionProgress })}
+                        />
+                        <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-xs)' }}>
+                          {t('home.sectionGameCount', { count: sectionGames.length })}
+                        </p>
+                      </div>
+
+                      <div className="home__section-games-grid">
+                        {sectionGames.map((game, index) => {
+                          const progressPercent = childProgress.gameProgressBySlug[game.slug] ?? 0;
+                          const gameTitleKey = toHomeGameTitleKey(game.slug, hasLetterStorybookV2Title);
+
+                          return (
+                            <GameCard
+                              key={game.id}
+                              title={t(gameTitleKey as any)}
+                              thumbnailUrl={game.thumbnailUrl}
+                              difficulty={game.difficulty}
+                              agePrimaryLabel={ageBandLabels[game.primaryAgeBand]}
+                              ageSupportLabels={game.supportAgeBands.map((band) => ageBandLabels[band])}
+                              topicLabel={t(`contentTags.topic.${game.topic}` as any)}
+                              topicIcon={TOPIC_ICON_BY_SLUG[game.topic]}
+                              difficultyLabel={t('contentTags.difficulty.label')}
+                              stars={toStars(progressPercent)}
+                              progressPercent={progressPercent}
+                              progressAriaLabel={t('home.progressLabel')}
+                              progressValueLabel={t('home.progressValue', { count: progressPercent })}
+                              playLabel={t('games.play')}
+                              isRtl={isRtl}
+                              onClick={() => handleOpenGame(game.route, gameTitleKey)}
+                              aria-label={t(gameTitleKey as any)}
+                              style={{
+                                minHeight: '270px',
+                                animationDelay: `${index * 55}ms`,
+                              }}
+                            />
+                          );
+                        })}
+                      </div>
+                    </Card>
+                  </section>
+                );
+              })}
+            </div>
+          ) : (
+            <Card
+              padding="md"
+              style={{
+                display: 'grid',
+                gap: 'var(--space-sm)',
+                border: '2px solid color-mix(in srgb, var(--color-theme-primary) 20%, transparent)',
+                background:
+                  'linear-gradient(160deg, color-mix(in srgb, var(--color-bg-card) 82%, var(--color-theme-secondary) 18%), var(--color-bg-card))',
+              }}
+            >
+              <div style={{ display: 'grid', gap: 'var(--space-2xs)' }}>
+                <h3 style={{ color: 'var(--color-text-primary)', fontSize: 'var(--font-size-lg)' }}>{t('home.chooseTopic')}</h3>
+                <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--font-size-sm)' }}>
+                  {t('home.sectionGameCount', { count: remainingChoiceCount })}
+                </p>
+              </div>
+              <Button
+                variant="secondary"
+                size="lg"
+                aria-label={t('home.chooseTopic')}
+                onClick={handleRevealChoices}
+              >
+                {t('home.chooseTopic')}
+              </Button>
+            </Card>
+          )}
+        </div>
+
+        {showSideRail && (
+          <aside
+            className={`home__utility-rail ${viewportMode === 'tablet' ? 'home__utility-rail--tablet' : 'home__utility-rail--desktop'} ${showSideRailPanel ? 'is-open' : 'is-collapsed'}`}
+            aria-label={t('contentFilters.age.title')}
+          >
+            {viewportMode === 'tablet' && (
+              <Button
+                variant="secondary"
+                size="sm"
+                className="home__utility-toggle"
+                aria-expanded={showSideRailPanel}
+                aria-controls="home-utility-panel"
+                aria-label={showSideRailPanel ? t('nav.back') : t('nav.chooseTopic')}
+                onClick={handleToggleTabletRail}
+              >
+                {showSideRailPanel ? '✕' : '☰'}
+                <span>{showSideRailPanel ? t('nav.back') : t('nav.chooseTopic')}</span>
+              </Button>
+            )}
+
+            {showSideRailPanel && (
+              <div id="home-utility-panel" className="home__utility-panel">
+                <AgeRangeFilterBar
+                  title={t('contentFilters.age.title')}
+                  state={{
+                    profileAgeBand,
+                    selectedAgeBand,
+                    isManualOverride,
+                  }}
+                  ageBands={AGE_BANDS}
+                  labels={ageBandLabels}
+                  allowAllAges
+                  isPersistingOverride={isPersistingOverride}
+                  persistingLabel={t('contentFilters.age.syncing')}
+                  onSelectBand={handleSelectAgeBand}
+                  onResetToProfileAge={handleResetToProfileAge}
+                  resetLabel={t('contentFilters.age.resetToProfile')}
+                />
+                {renderSectionJumpControls('block')}
+                {catalogLoadStatus === 'error' && (
+                  <p style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-accent-danger)' }}>
+                    {t('contentFilters.age.fallbackNotice')}
+                  </p>
+                )}
+              </div>
+            )}
+          </aside>
         )}
-      
+      </div>
 
       <style>{`
+        .home__layout {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr);
+          gap: var(--home-rail-gap);
+          align-items: start;
+        }
+
+        .home__content-column {
+          display: grid;
+          gap: var(--space-md);
+          min-inline-size: 0;
+        }
+
         .home__hero-stats {
           display: flex;
           flex-wrap: wrap;
           align-items: center;
           justify-content: space-between;
           gap: var(--space-sm);
+        }
+
+        .home__mobile-utility-shelf {
+          position: sticky;
+          inset-block-start: var(--home-sticky-offset);
+          z-index: var(--home-rail-z-index);
+          display: grid;
+          gap: var(--space-sm);
+          background: color-mix(in srgb, var(--color-bg-card) 92%, white 8%);
+          border: 2px solid color-mix(in srgb, var(--color-theme-secondary) 28%, transparent);
+          backdrop-filter: saturate(1.1) blur(4px);
+        }
+
+        .home__utility-rail {
+          position: sticky;
+          inset-block-start: var(--home-sticky-offset);
+          z-index: var(--home-rail-z-index);
+          display: grid;
+          gap: var(--space-sm);
+          align-self: start;
+          justify-items: end;
+        }
+
+        .home__utility-panel {
+          inline-size: var(--home-rail-inline-size);
+          display: grid;
+          gap: var(--space-sm);
+          border-radius: var(--radius-lg);
+          border: 2px solid color-mix(in srgb, var(--color-theme-secondary) 28%, transparent);
+          background:
+            linear-gradient(
+              170deg,
+              color-mix(in srgb, var(--color-bg-card) 84%, var(--color-theme-secondary) 16%),
+              var(--color-bg-card)
+            );
+          box-shadow: var(--shadow-card);
+          padding: var(--space-sm);
+        }
+
+        .home__utility-toggle {
+          min-block-size: var(--home-rail-toggle-size);
+          min-inline-size: var(--home-rail-toggle-size);
+          padding-inline: var(--space-sm);
+          align-self: start;
+        }
+
+        .home__section-jumps {
+          display: flex;
+          gap: var(--space-xs);
+        }
+
+        .home__section-jumps--inline {
+          overflow-x: auto;
+          padding-block-end: var(--space-2xs);
+          scrollbar-width: thin;
+        }
+
+        .home__section-jumps--block {
+          flex-direction: column;
+        }
+
+        .home__section-jump {
+          display: inline-flex;
+          align-items: center;
+          justify-content: flex-start;
+          gap: var(--space-2xs);
+          min-block-size: var(--home-section-jump-target-min);
+          min-inline-size: var(--home-section-jump-target-min);
+          border-radius: var(--radius-full);
+          border: 1px solid var(--color-filter-chip-border);
+          background: var(--color-filter-chip-bg);
+          color: var(--color-text-primary);
+          padding-inline: var(--space-sm);
+          cursor: pointer;
+          transition: var(--transition-fast);
+          touch-action: manipulation;
+          text-align: start;
+        }
+
+        .home__section-jumps--inline .home__section-jump {
+          flex: 0 0 auto;
+        }
+
+        .home__section-jumps--block .home__section-jump {
+          inline-size: 100%;
+        }
+
+        .home__section-jump.is-active {
+          border-color: var(--color-filter-chip-active-bg);
+          background: color-mix(in srgb, var(--color-filter-chip-active-bg) 84%, white 16%);
+          box-shadow: var(--shadow-filter-chip-active);
+        }
+
+        .home__section-jump:focus-visible {
+          outline: 2px solid var(--color-theme-primary);
+          outline-offset: 2px;
+        }
+
+        .home__section-jump-icon {
+          inline-size: 1.1em;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+
+        .home__section-jump-label {
+          font-size: var(--font-size-xs);
+          font-weight: var(--font-weight-semibold);
+          line-height: 1.1;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .home__section-anchor {
+          scroll-margin-block-start: calc(var(--home-sticky-offset) + var(--touch-filter-chip) + var(--space-xl));
         }
 
         .home__featured-grid {
@@ -1093,6 +1590,30 @@ export default function Home() {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
           gap: var(--space-sm);
+        }
+
+        @media (min-width: 768px) {
+          .home__layout {
+            grid-template-columns: minmax(0, 1fr) auto;
+          }
+
+          .home__mobile-utility-shelf {
+            display: none;
+          }
+        }
+
+        @media (min-width: 1200px) {
+          .home__layout {
+            grid-template-columns: minmax(0, 1fr) var(--home-rail-inline-size);
+          }
+
+          .home__utility-toggle {
+            display: none;
+          }
+
+          .home__utility-panel {
+            inline-size: 100%;
+          }
         }
 
         @media (max-width: 900px) {
@@ -1113,6 +1634,18 @@ export default function Home() {
           .home__hero-stats button {
             inline-size: 100%;
             justify-content: center;
+          }
+        }
+
+        @media (max-width: 767px) {
+          .home__utility-rail {
+            display: none;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .home__section-jump {
+            transition: none;
           }
         }
       `}</style>

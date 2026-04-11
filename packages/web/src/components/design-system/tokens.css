@@ -12,12 +12,12 @@
 
   /* Text */
   --color-text-primary: #5D3A1A;     /* Brown */
-  --color-text-secondary: #8B7355;   /* Muted brown */
+  --color-text-secondary: #7C6446;   /* Muted brown (AA on warm surfaces) */
   --color-text-light: #B8A48C;       /* Placeholder / hint */
   --color-text-inverse: #FFFFFF;
 
   /* Accents */
-  --color-accent-primary: #FF8C42;   /* Warm orange */
+  --color-accent-primary: #C65309;   /* Warm orange (AA with inverse text) */
   --color-accent-secondary: #FFD166; /* Golden yellow */
   --color-accent-success: #6BCB77;   /* Friendly green */
   --color-accent-danger: #FF6B6B;    /* Soft red */
@@ -40,7 +40,7 @@
 
   /* Stars */
   --color-star-filled: #FFD166;
-  --color-star-empty: #E0D5C3;
+  --color-star-empty: #8A7D69;
 
   /* Gradient Surfaces */
   --gradient-topic-numbers: linear-gradient(140deg, #FFE08A, #FFB36B);
@@ -184,7 +184,7 @@
   --color-filter-border: color-mix(in srgb, var(--color-theme-primary) 24%, transparent);
   --color-filter-chip-bg: var(--color-bg-card);
   --color-filter-chip-border: color-mix(in srgb, var(--color-theme-primary) 20%, transparent);
-  --color-filter-chip-active-bg: var(--color-theme-primary);
+  --color-filter-chip-active-bg: var(--color-accent-primary);
   --color-filter-chip-active-text: var(--color-text-inverse);
   --color-filter-chip-active-shadow: color-mix(in srgb, var(--color-theme-primary) 36%, transparent);
 

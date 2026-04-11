@@ -1,0 +1,139 @@
+{
+  "pass": false,
+  "evaluations": [
+    {
+      "profile": "guest_shell",
+      "path": "/games",
+      "status": "ok",
+      "reason": null,
+      "pass": false,
+      "checks": {
+        "lcp_ms": false,
+        "fcp_ms": false,
+        "max_long_task_ms": false,
+        "total_transfer_bytes": true,
+        "login_chunk_requested": true,
+        "supabase_chunk_requested": true
+      }
+    },
+    {
+      "profile": "guest_shell",
+      "path": "/games/numbers/more-or-less-market",
+      "status": "ok",
+      "reason": null,
+      "pass": false,
+      "checks": {
+        "missing_budget": false
+      }
+    },
+    {
+      "profile": "guest_shell",
+      "path": "/games/numbers/number-line-jumps",
+      "status": "ok",
+      "reason": null,
+      "pass": false,
+      "checks": {
+        "missing_budget": false
+      }
+    },
+    {
+      "profile": "guest_shell",
+      "path": "/games/reading/nikud-sound-ladder",
+      "status": "ok",
+      "reason": null,
+      "pass": false,
+      "checks": {
+        "missing_budget": false
+      }
+    },
+    {
+      "profile": "guest_shell",
+      "path": "/games/reading/picture-to-word-builder",
+      "status": "ok",
+      "reason": null,
+      "pass": false,
+      "checks": {
+        "missing_budget": false
+      }
+    },
+    {
+      "profile": "guest_shell",
+      "path": "/games/reading/decodable-story-missions",
+      "status": "ok",
+      "reason": null,
+      "pass": false,
+      "checks": {
+        "missing_budget": false
+      }
+    }
+  ],
+  "failed": [
+    {
+      "profile": "guest_shell",
+      "path": "/games",
+      "status": "ok",
+      "reason": null,
+      "pass": false,
+      "checks": {
+        "lcp_ms": false,
+        "fcp_ms": false,
+        "max_long_task_ms": false,
+        "total_transfer_bytes": true,
+        "login_chunk_requested": true,
+        "supabase_chunk_requested": true
+      }
+    },
+    {
+      "profile": "guest_shell",
+      "path": "/games/numbers/more-or-less-market",
+      "status": "ok",
+      "reason": null,
+      "pass": false,
+      "checks": {
+        "missing_budget": false
+      }
+    },
+    {
+      "profile": "guest_shell",
+      "path": "/games/numbers/number-line-jumps",
+      "status": "ok",
+      "reason": null,
+      "pass": false,
+      "checks": {
+        "missing_budget": false
+      }
+    },
+    {
+      "profile": "guest_shell",
+      "path": "/games/reading/nikud-sound-ladder",
+      "status": "ok",
+      "reason": null,
+      "pass": false,
+      "checks": {
+        "missing_budget": false
+      }
+    },
+    {
+      "profile": "guest_shell",
+      "path": "/games/reading/picture-to-word-builder",
+      "status": "ok",
+      "reason": null,
+      "pass": false,
+      "checks": {
+        "missing_budget": false
+      }
+    },
+    {
+      "profile": "guest_shell",
+      "path": "/games/reading/decodable-story-missions",
+      "status": "ok",
+      "reason": null,
+      "pass": false,
+      "checks": {
+        "missing_budget": false
+      }
+    }
+  ],
+  "skipped": [],
+  "hardErrors": []
+}

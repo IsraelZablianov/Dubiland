@@ -4,6 +4,7 @@ import { MarketingShell } from '@/components/layout';
 import { RouteFallback } from '@/components/routing/RouteFallback';
 import { AuthProvider } from '@/hooks/useAuth';
 import { ensureCommonNamespaceLoaded, hasCommonNamespaceLoaded } from '@/i18n';
+import { PublicRouteMetadataSidecar } from '@/seo/PublicRouteMetadataSidecar';
 
 const Landing = lazy(() => import('@/pages/Landing'));
 const About = lazy(() => import('@/pages/About'));
@@ -66,23 +67,26 @@ export default function PublicBootstrapApp() {
   }
 
   return (
-    <Suspense fallback={<RouteFallback />}>
-      {/* MarketingShell renders PublicHeader, which lazy-loads PublicHeaderAuthSidecar → useAuth(). */}
-      <AuthProvider>
-        <Routes>
-          <Route path="/" element={withMarketingShell(<Landing />)} />
-          <Route path="/about" element={withMarketingShell(<About />)} />
-          <Route path="/parents" element={withMarketingShell(<Parents />)} />
-          <Route path="/parents/faq" element={withMarketingShell(<ParentsFaq />)} />
-          <Route path="/terms" element={withMarketingShell(<Terms />)} />
-          <Route path="/privacy" element={withMarketingShell(<Privacy />)} />
-          <Route path="/letters" element={withMarketingShell(<TopicPillar topic="letters" />)} />
-          <Route path="/numbers" element={withMarketingShell(<TopicPillar topic="numbers" />)} />
-          <Route path="/reading" element={withMarketingShell(<TopicPillar topic="reading" />)} />
-          <Route path="/login" element={withMarketingShell(<Login />)} />
-          <Route path="*" element={withMarketingShell(<NotFound />)} />
-        </Routes>
-      </AuthProvider>
-    </Suspense>
+    <>
+      <Suspense fallback={<RouteFallback />}>
+        {/* MarketingShell renders PublicHeader, which lazy-loads PublicHeaderAuthSidecar → useAuth(). */}
+        <AuthProvider>
+          <Routes>
+            <Route path="/" element={withMarketingShell(<Landing />)} />
+            <Route path="/about" element={withMarketingShell(<About />)} />
+            <Route path="/parents" element={withMarketingShell(<Parents />)} />
+            <Route path="/parents/faq" element={withMarketingShell(<ParentsFaq />)} />
+            <Route path="/terms" element={withMarketingShell(<Terms />)} />
+            <Route path="/privacy" element={withMarketingShell(<Privacy />)} />
+            <Route path="/letters" element={withMarketingShell(<TopicPillar topic="letters" />)} />
+            <Route path="/numbers" element={withMarketingShell(<TopicPillar topic="numbers" />)} />
+            <Route path="/reading" element={withMarketingShell(<TopicPillar topic="reading" />)} />
+            <Route path="/login" element={withMarketingShell(<Login />)} />
+            <Route path="*" element={withMarketingShell(<NotFound />)} />
+          </Routes>
+        </AuthProvider>
+      </Suspense>
+      <PublicRouteMetadataSidecar />
+    </>
   );
 }

@@ -7,39 +7,39 @@ Track all reading games and features across their lifecycle.
 | Reading Skill Area | Games Planned | Games In Progress | Games Shipped |
 |---|---|---|---|
 | Letter Recognition | 0 | 2 | 5 |
-| Nikud (Vowel Diacritics) | 0 | 2 | 3 |
-| Syllable Decoding | 0 | 2 | 3 |
-| Word Reading | 0 | 3 | 2 |
-| Word Building | 0 | 1 | 1 |
+| Nikud (Vowel Diacritics) | 0 | 1 | 4 |
+| Syllable Decoding | 0 | 0 | 5 |
+| Word Reading | 0 | 1 | 4 |
+| Word Building | 0 | 0 | 2 |
 | Sight Words / High Frequency | 0 | 0 | 1 |
-| Phrase & Sentence Reading | 0 | 2 | 4 |
-| Reading Comprehension | 0 | 1 | 4 |
+| Phrase & Sentence Reading | 0 | 1 | 5 |
+| Reading Comprehension | 0 | 0 | 5 |
 | Morphology (Light) | 0 | 0 | 1 |
-| Decodable Stories | 0 | 2 | 4 |
+| Decodable Stories | 0 | 1 | 5 |
 | Educational Videos | 0 | 2 | 1 |
 
 ## Features
 
 ### Sound Slide Blending
-- **Status:** Delegated to FED Engineer 2 + Content Writer + Gaming Expert (In Progress)
+- **Status:** Delegated to FED Engineer 2 + Content Writer + Gaming Expert (Shipped)
 - **Spec:** `docs/games/sound-slide-blending.md`
 - **Reading Skill:** Syllable Decoding
 - **Curriculum Position:** After core letter+nikud mapping and before/alongside heavier syllable-construction lanes to increase blend fluency.
-- **Delegated Issue:** [DUB-782](/DUB/issues/DUB-782) (implementation, todo), [DUB-785](/DUB/issues/DUB-785) (Hebrew i18n/audio, in_progress), [DUB-788](/DUB/issues/DUB-788) (mechanics review, done)
+- **Delegated Issue:** [DUB-782](/DUB/issues/DUB-782) (implementation, done), [DUB-785](/DUB/issues/DUB-785) (Hebrew i18n/audio, done), [DUB-788](/DUB/issues/DUB-788) (mechanics review, done)
 
 ### Spell-and-Send Post Office
-- **Status:** Delegated to FED Engineer 3 + Content Writer + Gaming Expert (In Progress)
+- **Status:** Delegated to FED Engineer 3 + Content Writer + Gaming Expert (Shipped)
 - **Spec:** `docs/games/spell-and-send-post-office.md`
 - **Reading Skill:** Word Building, Word Reading transfer
 - **Curriculum Position:** After stable syllable blending and early word decoding, before mixed-pointing sentence/stories transfer lanes.
-- **Delegated Issue:** [DUB-783](/DUB/issues/DUB-783) (implementation, todo), [DUB-786](/DUB/issues/DUB-786) (Hebrew i18n/audio, todo), [DUB-789](/DUB/issues/DUB-789) (mechanics review, done)
+- **Delegated Issue:** [DUB-783](/DUB/issues/DUB-783) (implementation, done), [DUB-786](/DUB/issues/DUB-786) (Hebrew i18n/audio, done), [DUB-789](/DUB/issues/DUB-789) (mechanics review, done)
 
 ### Pointing Fade Bridge
 - **Status:** Delegated to FED Engineer 2 + Content Writer + Gaming Expert (In Progress)
 - **Spec:** `docs/games/pointing-fade-bridge.md`
 - **Reading Skill:** Nikud (Vowel Diacritics), Phrase & Sentence Reading, Decodable Stories
 - **Curriculum Position:** After fully pointed decodable-story baseline and before long mixed-pointing story/handbook reading.
-- **Delegated Issue:** [DUB-784](/DUB/issues/DUB-784) (implementation, todo), [DUB-787](/DUB/issues/DUB-787) (Hebrew i18n/audio, todo), [DUB-790](/DUB/issues/DUB-790) (mechanics review, done)
+- **Delegated Issue:** [DUB-784](/DUB/issues/DUB-784) (implementation, in_review), [DUB-787](/DUB/issues/DUB-787) (Hebrew i18n/audio, done), [DUB-790](/DUB/issues/DUB-790) (mechanics review, done)
 
 ### Nikud Sound Ladder
 - **Status:** Delegated to FED Engineer 2 + Content Writer + Gaming Expert (Shipped)
@@ -49,25 +49,25 @@ Track all reading games and features across their lifecycle.
 - **Delegated Issue:** [DUB-700](/DUB/issues/DUB-700) (implementation, done), [DUB-701](/DUB/issues/DUB-701) (Hebrew i18n/audio, done), [DUB-702](/DUB/issues/DUB-702) (mechanics review, done)
 
 ### Syllable Train Builder
-- **Status:** Delegated to FED Engineer 3 + Content Writer + Gaming Expert (In Progress)
+- **Status:** Delegated to FED Engineer 3 + Content Writer + Gaming Expert (Shipped)
 - **Spec:** `docs/games/syllable-train-builder.md`
 - **Reading Skill:** Syllable Decoding, Word Reading transfer
 - **Curriculum Position:** After foundational nikud mapping and before advanced shva work plus connected-text decodable lanes.
-- **Delegated Issue:** [DUB-703](/DUB/issues/DUB-703) (implementation, todo), [DUB-704](/DUB/issues/DUB-704) (Hebrew i18n/audio, done), [DUB-705](/DUB/issues/DUB-705) (mechanics review, done)
+- **Delegated Issue:** [DUB-703](/DUB/issues/DUB-703) (implementation, done), [DUB-704](/DUB/issues/DUB-704) (Hebrew i18n/audio, done), [DUB-705](/DUB/issues/DUB-705) (mechanics review, done)
 
 ### Decodable Story Missions
-- **Status:** Delegated to FED Engineer 2 + Content Writer + Gaming Expert (In Progress)
+- **Status:** Delegated to FED Engineer 2 + Content Writer + Gaming Expert (Shipped)
 - **Spec:** `docs/games/decodable-story-missions.md`
 - **Reading Skill:** Decodable Stories, Phrase & Sentence Reading, Reading Comprehension
 - **Curriculum Position:** After `decodable-micro-stories` baseline and before partially pointed long-form reading tracks.
-- **Delegated Issue:** [DUB-706](/DUB/issues/DUB-706) (implementation, in_progress), [DUB-707](/DUB/issues/DUB-707) (Hebrew i18n/audio, done), [DUB-708](/DUB/issues/DUB-708) (mechanics review, done)
+- **Delegated Issue:** [DUB-706](/DUB/issues/DUB-706) (implementation, done), [DUB-707](/DUB/issues/DUB-707) (Hebrew i18n/audio, done), [DUB-708](/DUB/issues/DUB-708) (mechanics review, done)
 
 ### Blend to Read Video Shorts
 - **Status:** Delegated to FED Engineer + Media Expert + Content Writer (In Progress)
 - **Spec:** `docs/games/blend-to-read-video-shorts.md`
 - **Reading Skill:** Educational Videos (blending transfer), Syllable Decoding support
 - **Curriculum Position:** Cross-track instructional support after letter-sound familiarity and before independent syllable/word decoding expectations.
-- **Delegated Issue:** [DUB-711](/DUB/issues/DUB-711) (runtime integration, in_progress), [DUB-709](/DUB/issues/DUB-709) (video composition, done), [DUB-710](/DUB/issues/DUB-710) (Hebrew script/audio, done)
+- **Delegated Issue:** [DUB-711](/DUB/issues/DUB-711) (runtime integration, in_review), [DUB-709](/DUB/issues/DUB-709) (video composition, done), [DUB-710](/DUB/issues/DUB-710) (Hebrew script/audio, done)
 
 ### Letter Tracing Trail
 - **Status:** Delegated to FED Engineer (Shipped)
@@ -126,11 +126,11 @@ Track all reading games and features across their lifecycle.
 - **Delegated Issue:** [DUB-409](/DUB/issues/DUB-409) (implementation, backlog), [DUB-410](/DUB/issues/DUB-410) (Hebrew i18n/audio, backlog), [DUB-411](/DUB/issues/DUB-411) (mechanics review, done)
 
 ### Shva Sound Switch
-- **Status:** Delegated to FED Engineer 3 + Content Writer + Gaming Expert (In Progress)
+- **Status:** Delegated to FED Engineer 3 + Content Writer + Gaming Expert (Shipped)
 - **Spec:** `docs/games/shva-sound-switch.md`
 - **Reading Skill:** Nikud, Syllable Decoding (guided shva bridge)
 - **Curriculum Position:** After core nikud familiarity and early blending, before broader phrase/stories fluency with mixed shva exposure.
-- **Delegated Issue:** [DUB-412](/DUB/issues/DUB-412) (implementation, backlog), [DUB-413](/DUB/issues/DUB-413) (Hebrew i18n/audio, done), [DUB-414](/DUB/issues/DUB-414) (mechanics review, done)
+- **Delegated Issue:** [DUB-412](/DUB/issues/DUB-412) (implementation, done), [DUB-413](/DUB/issues/DUB-413) (Hebrew i18n/audio, done), [DUB-414](/DUB/issues/DUB-414) (mechanics review, done)
 
 ### Hebrew Letters Video Pedagogy
 - **Status:** Delegated to Content Writer + Media Expert (Shipped)

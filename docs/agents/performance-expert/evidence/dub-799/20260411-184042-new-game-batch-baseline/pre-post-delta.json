@@ -1,0 +1,38 @@
+{
+  "compared_profile": "guest_shell",
+  "deltas": [
+    {
+      "path": "/games",
+      "baseline_present": true,
+      "performance_delta": 4,
+      "fcp_ms_delta": -427.43,
+      "lcp_ms_delta": -427.43,
+      "max_long_task_ms_delta": 146.229,
+      "total_transfer_bytes_delta": -146415,
+      "login_chunk_requested_before": true,
+      "login_chunk_requested_after": false,
+      "supabase_chunk_requested_before": true,
+      "supabase_chunk_requested_after": false
+    },
+    {
+      "path": "/games/numbers/more-or-less-market",
+      "baseline_present": false
+    },
+    {
+      "path": "/games/numbers/number-line-jumps",
+      "baseline_present": false
+    },
+    {
+      "path": "/games/reading/nikud-sound-ladder",
+      "baseline_present": false
+    },
+    {
+      "path": "/games/reading/picture-to-word-builder",
+      "baseline_present": false
+    },
+    {
+      "path": "/games/reading/decodable-story-missions",
+      "baseline_present": false
+    }
+  ]
+}

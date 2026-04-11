@@ -352,3 +352,18 @@ When a selectable game surface also needs a secondary action (for example count 
 
 ## 2026-04-11 — Route-family lazy bootstraps reduce public startup cost without changing URL contracts
 For perf-critical route trees, keep `main.tsx` free of unconditional auth providers and split app startup into lazy `public`/`protected` bootstrap modules selected by pathname; moving protected shell + game manifest imports behind that boundary cuts anonymous `index` bootstrap bytes while preserving existing protected/public URL behavior.
+
+## 2026-04-11 — New game routes also need Home slug registration and title-key mapping
+Adding a new game route/page alone is not enough for discovery: Home cards are gated by `HomeGameSlug` + `HOME_GAME_OPTIONS` fallback mapping and catalog-to-home slug matching. For slugs whose display/audio title lives outside `games.<slug>.title` (for example `videos.blendToRead.title`), add a centralized title-key resolver in Home to keep card text and lead-audio aligned with existing manifest coverage.
+
+## 2026-04-11 — For staged game launches, Home title/audio can safely prefer v2 i18n keys with explicit fallback
+When a new game slug (for example `letterStorybookV2`) is wired before its locale/audio pack is fully merged, resolve Home card title/audio through one helper that prefers the new contract key but falls back to the stable legacy key (`games.letterStorybook.title`) so discovery ships without key-string regressions.
+
+## 2026-04-11 — Snapshot-bound runs can reject both checkout and issue PATCH on non-snapshot tasks
+When a heartbeat run is bound to a snapshot issue, attempting to checkout another assigned issue can fail with `Checkout run context is bound to a different issue`, and attempting to PATCH/comment on that other issue can fail with `Issue run ownership conflict`; treat the run as single-issue scoped and only mutate the snapshot issue in that heartbeat.
+
+## 2026-04-11 — Measurement compare games work best with one shared action-validator and retry simplifier
+For station-based compare loops (length/weight/volume), keeping drag and tap routed through one evaluator (immediate validation, no check button) plus a shared "reduce to two choices on struggle" helper makes adaptive behavior predictable, keeps confusion tags consistent, and simplifies QA verification of round transitions.
+
+## 2026-04-11 — Reading game rollout requires 3 frontend touchpoints: runtime, route manifest, and Home fallback slug map
+For DB-seeded game rows (like `pointingFadeBridge`), shipping only the runtime component is insufficient; the game is discoverable/playable only after wiring the page in `routing/gameRouteManifest.ts` and registering its slug/route in Home (`HomeGameSlug` + `HOME_GAME_OPTIONS`) so catalog merge logic can surface it.

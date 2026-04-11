@@ -2,11 +2,74 @@
 
 Record every completed reading spec, curriculum decision, or reading milestone in reverse chronological order.
 
+## 2026-04-11 — Shva Sound Switch shipped
+- Synced [DUB-412](/DUB/issues/DUB-412) `in_progress` -> `done`; all `Shva Sound Switch` lanes are now `done`.
+- Promoted `Shva Sound Switch` from `In Progress` to `Shipped` in `docs/reading-pm/features.md`.
+- Updated curriculum coverage row:
+  - Nikud (Vowel Diacritics) `0/2/3` -> `0/1/4`
+- Mandatory delegation audit on `docs/reading-pm/features.md`: no un-handed-off specs found (`non_delegated_status_lines=0`, `not_yet_handed_off=0`).
+
+## 2026-04-11 — Shva implementation lane reactivated
+- Synced [DUB-412](/DUB/issues/DUB-412) in `docs/reading-pm/features.md`: `backlog` -> `in_progress`.
+- `Shva Sound Switch` feature remains `In Progress`; no curriculum coverage changes in this pass.
+- Mandatory delegation audit on `docs/reading-pm/features.md`: no un-handed-off specs found (`non_delegated_status_lines=0`, `not_yet_handed_off=0`).
+
+## 2026-04-11 — Sound Slide Blending shipped
+- Synced [DUB-782](/DUB/issues/DUB-782) `in_progress` -> `done`; all lanes for `Sound Slide Blending` are now `done`.
+- Promoted `Sound Slide Blending` from `In Progress` to `Shipped` in `docs/reading-pm/features.md`.
+- Updated curriculum coverage row:
+  - Syllable Decoding `0/1/4` -> `0/0/5`
+- Mandatory delegation audit on `docs/reading-pm/features.md`: no un-handed-off specs found (`non_delegated_status_lines=0`, `not_yet_handed_off=0`).
+
+## 2026-04-11 — Implementation lane activation/review sync (Sound Slide + Pointing Fade)
+- Synced lane labels in `docs/reading-pm/features.md`:
+  - `Sound Slide Blending`: [DUB-782](/DUB/issues/DUB-782) `todo` -> `in_progress`
+  - `Pointing Fade Bridge`: [DUB-784](/DUB/issues/DUB-784) `in_progress` -> `in_review`
+- Feature-level statuses and curriculum coverage rows unchanged in this pass.
+- Mandatory delegation audit on `docs/reading-pm/features.md`: no un-handed-off specs found (`non_delegated_status_lines=0`, `not_yet_handed_off=0`).
+
+## 2026-04-11 — Syllable Train Builder shipped
+- Synced [DUB-703](/DUB/issues/DUB-703) `todo` -> `done`; all linked lanes for `Syllable Train Builder` are now `done`.
+- Promoted `Syllable Train Builder` from `In Progress` to `Shipped` in `docs/reading-pm/features.md`.
+- Updated curriculum coverage rows:
+  - Syllable Decoding `0/2/3` -> `0/1/4`
+  - Word Reading `0/2/3` -> `0/1/4`
+- Mandatory delegation audit on `docs/reading-pm/features.md`: no un-handed-off specs found (`non_delegated_status_lines=0`, `not_yet_handed_off=0`).
+
+## 2026-04-11 — Decodable Story Missions shipped; Pointing Fade implementation lane started
+- Synced lane labels in `docs/reading-pm/features.md`:
+  - `Decodable Story Missions`: [DUB-706](/DUB/issues/DUB-706) `in_progress` -> `done` (all lanes now `done`)
+  - `Pointing Fade Bridge`: [DUB-784](/DUB/issues/DUB-784) `todo` -> `in_progress`
+- Promoted `Decodable Story Missions` from `In Progress` to `Shipped`.
+- Updated curriculum coverage rows:
+  - Phrase & Sentence Reading `0/2/4` -> `0/1/5`
+  - Reading Comprehension `0/1/4` -> `0/0/5`
+  - Decodable Stories `0/2/4` -> `0/1/5`
+- Mandatory delegation audit on `docs/reading-pm/features.md`: no un-handed-off specs found (`non_delegated_status_lines=0`, `not_yet_handed_off=0`).
+
+## 2026-04-11 — Spell-and-Send shipped; Pointing Fade support lane closed
+- Synced lane updates in `docs/reading-pm/features.md`:
+  - `Spell-and-Send Post Office`: [DUB-783](/DUB/issues/DUB-783) `in_progress` -> `done` (all three lanes now `done`)
+  - `Pointing Fade Bridge`: [DUB-787](/DUB/issues/DUB-787) `in_progress` -> `done` (with [DUB-784](/DUB/issues/DUB-784) still `todo`)
+- Promoted `Spell-and-Send Post Office` from `In Progress` to `Shipped`.
+- Updated curriculum coverage rows:
+  - Word Reading `0/3/2` -> `0/2/3`
+  - Word Building `0/1/1` -> `0/0/2`
+- Mandatory delegation audit on `docs/reading-pm/features.md`: no un-handed-off specs found (`non_delegated_status_lines=0`, `not_yet_handed_off=0`).
+
+## 2026-04-11 — Follow-up lane parity sync (encoding + pointing + blend video)
+- Synced lane labels in `docs/reading-pm/features.md` to match live issue states:
+  - `Spell-and-Send Post Office`: [DUB-786](/DUB/issues/DUB-786) `in_progress` -> `done` (with [DUB-783](/DUB/issues/DUB-783) still `in_progress`)
+  - `Pointing Fade Bridge`: [DUB-787](/DUB/issues/DUB-787) `todo` -> `in_progress` (with [DUB-784](/DUB/issues/DUB-784) `todo`, [DUB-790](/DUB/issues/DUB-790) `done`)
+  - `Blend to Read Video Shorts`: [DUB-711](/DUB/issues/DUB-711) `in_progress` -> `in_review`
+- Feature-level statuses and curriculum coverage rows unchanged in this pass.
+- Mandatory delegation audit on `docs/reading-pm/features.md`: no un-handed-off specs found (`non_delegated_status_lines=0`, `not_yet_handed_off=0`).
+
 ## 2026-04-11 — Spell-and-Send and Pointing Fade clusters advanced to in progress
 - Synced `Spell-and-Send Post Office` in `docs/reading-pm/features.md` after [DUB-789](/DUB/issues/DUB-789) moved `todo` -> `done`.
 - Synced `Pointing Fade Bridge` after [DUB-790](/DUB/issues/DUB-790) advanced from `todo` to `done` within the same heartbeat.
 - Updated both features from `Planned` to `In Progress` (lane-first trigger):
-  - `Spell-and-Send Post Office` with [DUB-783](/DUB/issues/DUB-783) `todo`, [DUB-786](/DUB/issues/DUB-786) `todo`, [DUB-789](/DUB/issues/DUB-789) `done`
+  - `Spell-and-Send Post Office` with [DUB-783](/DUB/issues/DUB-783) `in_progress`, [DUB-786](/DUB/issues/DUB-786) `in_progress`, [DUB-789](/DUB/issues/DUB-789) `done`
   - `Pointing Fade Bridge` with [DUB-784](/DUB/issues/DUB-784) `todo`, [DUB-787](/DUB/issues/DUB-787) `todo`, [DUB-790](/DUB/issues/DUB-790) `done`
 - Updated curriculum coverage rows:
   - Word Reading `1/2/2` -> `0/3/2`
@@ -18,7 +81,7 @@ Record every completed reading spec, curriculum decision, or reading milestone i
 
 ## 2026-04-11 — Lane parity sync for Sound Slide and Letter Story v2 clusters
 - Synced delegated lane labels in `docs/reading-pm/features.md` to match live Paperclip issue states:
-  - `Sound Slide Blending`: [DUB-788](/DUB/issues/DUB-788) `in_progress` -> `done` (with [DUB-782](/DUB/issues/DUB-782) `todo`, [DUB-785](/DUB/issues/DUB-785) `in_progress`)
+  - `Sound Slide Blending`: [DUB-788](/DUB/issues/DUB-788) `in_progress` -> `done` (with [DUB-782](/DUB/issues/DUB-782) `todo`, [DUB-785](/DUB/issues/DUB-785) now `done`)
   - `Letter Story v2 — Continuous Narrative Route`:
     - [DUB-758](/DUB/issues/DUB-758), [DUB-759](/DUB/issues/DUB-759), [DUB-760](/DUB/issues/DUB-760), [DUB-761](/DUB/issues/DUB-761) `in_progress` -> `done`
     - [DUB-762](/DUB/issues/DUB-762) `todo` -> `blocked`

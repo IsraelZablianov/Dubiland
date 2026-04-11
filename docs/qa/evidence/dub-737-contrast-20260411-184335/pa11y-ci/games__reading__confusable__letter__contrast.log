@@ -1,0 +1,5 @@
+$ npx --yes pa11y-ci --config /Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-737-contrast-20260411-184335/configs/games__reading__confusable__letter__contrast.pa11y-ci.config.json
+Running Pa11y on 1 URLs:
+ > http://127.0.0.1:4187/games/reading/confusable-letter-contrast - 0 errors
+
+✔ 1/1 URLs passed

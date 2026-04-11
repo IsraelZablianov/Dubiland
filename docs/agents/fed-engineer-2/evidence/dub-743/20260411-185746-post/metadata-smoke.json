@@ -1,0 +1,298 @@
+{
+  "generatedAt": "2026-04-11T15:59:56.177Z",
+  "baseUrl": "http://127.0.0.1:4173",
+  "routes": [
+    {
+      "route": "/",
+      "expectedPath": "/",
+      "canonicalPath": "/",
+      "ogUrlPath": "/",
+      "checks": {
+        "robotsIndexable": true,
+        "canonicalPathMatch": true,
+        "ogUrlPathMatch": true,
+        "jsonLdPresent": true,
+        "jsonLdValid": true
+      },
+      "metadata": {
+        "title": "דובילנד | לומדים עברית בכיף — משחקי אותיות, מספרים וקריאה לגילאי 3-7",
+        "canonical": "http://127.0.0.1:4173/",
+        "ogUrl": "http://127.0.0.1:4173/",
+        "robots": "index,follow",
+        "jsonLdCount": 2,
+        "jsonLdScripts": [
+          {
+            "schemaId": "organization",
+            "parseValid": true
+          },
+          {
+            "schemaId": "web-application",
+            "parseValid": true
+          }
+        ]
+      },
+      "pass": true
+    },
+    {
+      "route": "/letters",
+      "expectedPath": "/letters",
+      "canonicalPath": "/letters",
+      "ogUrlPath": "/letters",
+      "checks": {
+        "robotsIndexable": true,
+        "canonicalPathMatch": true,
+        "ogUrlPathMatch": true,
+        "jsonLdPresent": true,
+        "jsonLdValid": true
+      },
+      "metadata": {
+        "title": "אותיות בעברית לילדים | דובילנד",
+        "canonical": "http://127.0.0.1:4173/letters",
+        "ogUrl": "http://127.0.0.1:4173/letters",
+        "robots": "index,follow",
+        "jsonLdCount": 3,
+        "jsonLdScripts": [
+          {
+            "schemaId": "organization",
+            "parseValid": true
+          },
+          {
+            "schemaId": "web-application",
+            "parseValid": true
+          },
+          {
+            "schemaId": "breadcrumb-list",
+            "parseValid": true
+          }
+        ]
+      },
+      "pass": true
+    },
+    {
+      "route": "/numbers",
+      "expectedPath": "/numbers",
+      "canonicalPath": "/numbers",
+      "ogUrlPath": "/numbers",
+      "checks": {
+        "robotsIndexable": true,
+        "canonicalPathMatch": true,
+        "ogUrlPathMatch": true,
+        "jsonLdPresent": true,
+        "jsonLdValid": true
+      },
+      "metadata": {
+        "title": "מספרים וחשבון לילדים | דובילנד",
+        "canonical": "http://127.0.0.1:4173/numbers",
+        "ogUrl": "http://127.0.0.1:4173/numbers",
+        "robots": "index,follow",
+        "jsonLdCount": 3,
+        "jsonLdScripts": [
+          {
+            "schemaId": "organization",
+            "parseValid": true
+          },
+          {
+            "schemaId": "web-application",
+            "parseValid": true
+          },
+          {
+            "schemaId": "breadcrumb-list",
+            "parseValid": true
+          }
+        ]
+      },
+      "pass": true
+    },
+    {
+      "route": "/reading",
+      "expectedPath": "/reading",
+      "canonicalPath": "/reading",
+      "ogUrlPath": "/reading",
+      "checks": {
+        "robotsIndexable": true,
+        "canonicalPathMatch": true,
+        "ogUrlPathMatch": true,
+        "jsonLdPresent": true,
+        "jsonLdValid": true
+      },
+      "metadata": {
+        "title": "קריאה ראשונה לילדים | דובילנד",
+        "canonical": "http://127.0.0.1:4173/reading",
+        "ogUrl": "http://127.0.0.1:4173/reading",
+        "robots": "index,follow",
+        "jsonLdCount": 3,
+        "jsonLdScripts": [
+          {
+            "schemaId": "organization",
+            "parseValid": true
+          },
+          {
+            "schemaId": "web-application",
+            "parseValid": true
+          },
+          {
+            "schemaId": "breadcrumb-list",
+            "parseValid": true
+          }
+        ]
+      },
+      "pass": true
+    },
+    {
+      "route": "/about",
+      "expectedPath": "/about",
+      "canonicalPath": "/about",
+      "ogUrlPath": "/about",
+      "checks": {
+        "robotsIndexable": true,
+        "canonicalPathMatch": true,
+        "ogUrlPathMatch": true,
+        "jsonLdPresent": true,
+        "jsonLdValid": true
+      },
+      "metadata": {
+        "title": "אודות דובילנד | הסיפור שלנו והגישה החינוכית",
+        "canonical": "http://127.0.0.1:4173/about",
+        "ogUrl": "http://127.0.0.1:4173/about",
+        "robots": "index,follow",
+        "jsonLdCount": 1,
+        "jsonLdScripts": [
+          {
+            "schemaId": "organization",
+            "parseValid": true
+          }
+        ]
+      },
+      "pass": true
+    },
+    {
+      "route": "/parents",
+      "expectedPath": "/parents",
+      "canonicalPath": "/parents",
+      "ogUrlPath": "/parents",
+      "checks": {
+        "robotsIndexable": true,
+        "canonicalPathMatch": true,
+        "ogUrlPathMatch": true,
+        "jsonLdPresent": true,
+        "jsonLdValid": true
+      },
+      "metadata": {
+        "title": "מדריך להורים | דובילנד — איך הילדים לומדים בכיף",
+        "canonical": "http://127.0.0.1:4173/parents",
+        "ogUrl": "http://127.0.0.1:4173/parents",
+        "robots": "index,follow",
+        "jsonLdCount": 2,
+        "jsonLdScripts": [
+          {
+            "schemaId": "organization",
+            "parseValid": true
+          },
+          {
+            "schemaId": "breadcrumb-list",
+            "parseValid": true
+          }
+        ]
+      },
+      "pass": true
+    },
+    {
+      "route": "/parents/faq",
+      "expectedPath": "/parents/faq",
+      "canonicalPath": "/parents/faq",
+      "ogUrlPath": "/parents/faq",
+      "checks": {
+        "robotsIndexable": true,
+        "canonicalPathMatch": true,
+        "ogUrlPathMatch": true,
+        "jsonLdPresent": true,
+        "jsonLdValid": true
+      },
+      "metadata": {
+        "title": "שאלות נפוצות להורים | דובילנד",
+        "canonical": "http://127.0.0.1:4173/parents/faq",
+        "ogUrl": "http://127.0.0.1:4173/parents/faq",
+        "robots": "index,follow",
+        "jsonLdCount": 3,
+        "jsonLdScripts": [
+          {
+            "schemaId": "organization",
+            "parseValid": true
+          },
+          {
+            "schemaId": "breadcrumb-list",
+            "parseValid": true
+          },
+          {
+            "schemaId": "faq-page",
+            "parseValid": true
+          }
+        ]
+      },
+      "pass": true
+    },
+    {
+      "route": "/terms",
+      "expectedPath": "/terms",
+      "canonicalPath": "/terms",
+      "ogUrlPath": "/terms",
+      "checks": {
+        "robotsIndexable": true,
+        "canonicalPathMatch": true,
+        "ogUrlPathMatch": true,
+        "jsonLdPresent": true,
+        "jsonLdValid": true
+      },
+      "metadata": {
+        "title": "תנאי שימוש | דובילנד",
+        "canonical": "http://127.0.0.1:4173/terms",
+        "ogUrl": "http://127.0.0.1:4173/terms",
+        "robots": "index,follow",
+        "jsonLdCount": 2,
+        "jsonLdScripts": [
+          {
+            "schemaId": "organization",
+            "parseValid": true
+          },
+          {
+            "schemaId": "breadcrumb-list",
+            "parseValid": true
+          }
+        ]
+      },
+      "pass": true
+    },
+    {
+      "route": "/privacy",
+      "expectedPath": "/privacy",
+      "canonicalPath": "/privacy",
+      "ogUrlPath": "/privacy",
+      "checks": {
+        "robotsIndexable": true,
+        "canonicalPathMatch": true,
+        "ogUrlPathMatch": true,
+        "jsonLdPresent": true,
+        "jsonLdValid": true
+      },
+      "metadata": {
+        "title": "מדיניות פרטיות | דובילנד",
+        "canonical": "http://127.0.0.1:4173/privacy",
+        "ogUrl": "http://127.0.0.1:4173/privacy",
+        "robots": "index,follow",
+        "jsonLdCount": 2,
+        "jsonLdScripts": [
+          {
+            "schemaId": "organization",
+            "parseValid": true
+          },
+          {
+            "schemaId": "breadcrumb-list",
+            "parseValid": true
+          }
+        ]
+      },
+      "pass": true
+    }
+  ],
+  "pass": true
+}

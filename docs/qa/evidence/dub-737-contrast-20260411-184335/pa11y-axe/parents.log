@@ -1,0 +1,1 @@
+$ npx --yes pa11y http://127.0.0.1:4187/parents --config /Users/israelz/Documents/dev/AI/Learning/docs/qa/evidence/dub-737-contrast-20260411-184335/configs/parents.pa11y.config.json --runner axe --reporter json

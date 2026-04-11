@@ -72,7 +72,7 @@ export default function Privacy() {
 
         .legal-page__updated {
           font-size: var(--font-size-sm);
-          color: var(--color-text-light);
+          color: var(--color-text-secondary);
         }
 
         .legal-page__content {

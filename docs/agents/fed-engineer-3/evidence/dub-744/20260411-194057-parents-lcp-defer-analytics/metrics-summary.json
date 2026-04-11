@@ -1,0 +1,15 @@
+{
+  "generatedAt": "2026-04-11T16:41:48Z",
+  "bundle": {
+    "indexFile": "packages/web/dist/assets/index-BariQLBL.js",
+    "indexRaw": 206317,
+    "indexGzip": 66116,
+    "reactRaw": 49001,
+    "i18nRaw": 49391
+  },
+  "lighthouse": {
+    "root": {"lcpMs": 2321, "performanceScore": 97},
+    "letters": {"lcpMs": 2357, "performanceScore": 96},
+    "parents": {"lcpMs": 2159, "performanceScore": 98}
+  }
+}

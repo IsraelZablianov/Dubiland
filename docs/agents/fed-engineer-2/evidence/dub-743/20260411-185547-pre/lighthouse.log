@@ -1,0 +1,5 @@
+[perf:lighthouse] / perf 94 / 80 (PASS) | LCP 2,623.538 / 4,100 (PASS) | CLS 0.000 / 0.050 (PASS)
+[perf:lighthouse] /letters perf 94 / 85 (PASS) | LCP 2,763.146 / 3,350 (PASS) | CLS 0.000 / 0.050 (PASS)
+[perf:lighthouse] /parents perf 94 / 86 (PASS) | LCP 2,610.157 / 3,300 (PASS) | CLS 0.000 / 0.050 (PASS)
+[perf:lighthouse] report: docs/agents/fed-engineer-2/evidence/dub-743/20260411-185547-pre/lighthouse-results.json
+[perf:lighthouse] PASS

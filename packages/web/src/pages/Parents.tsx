@@ -9,6 +9,7 @@ import { trackParentFunnelEvent } from '@/lib/parentFunnelInstrumentation';
 const HOW_IT_WORKS_STEPS = ['1', '2', '3', '4'] as const;
 
 const FAQ_ITEMS = ['1', '2', '3', '4', '5'] as const;
+const PARENTS_PAGE_VIEW_IDLE_TIMEOUT_MS = 3200;
 
 const PROMINENT_MARKETING_CTA_STYLE = {
   minHeight: 'var(--touch-primary-action-prominent)',
@@ -19,10 +20,48 @@ export default function Parents() {
   const { t } = useTranslation('public');
 
   useEffect(() => {
-    trackParentFunnelEvent('parents_page_view', {
-      sourcePath: '/parents',
-      targetPath: '/parents',
-    });
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    let timeoutId: number | null = null;
+    let idleId: number | null = null;
+
+    const trackParentsView = () => {
+      trackParentFunnelEvent('parents_page_view', {
+        sourcePath: '/parents',
+        targetPath: '/parents',
+      });
+    };
+
+    const idleCapableWindow = window as Window & {
+      requestIdleCallback?: (
+        callback: (deadline: { didTimeout: boolean; timeRemaining: () => number }) => void,
+        options?: { timeout?: number },
+      ) => number;
+      cancelIdleCallback?: (handle: number) => void;
+    };
+
+    if (typeof idleCapableWindow.requestIdleCallback === 'function') {
+      idleId = idleCapableWindow.requestIdleCallback(
+        () => {
+          trackParentsView();
+        },
+        { timeout: PARENTS_PAGE_VIEW_IDLE_TIMEOUT_MS },
+      );
+    } else {
+      timeoutId = window.setTimeout(trackParentsView, PARENTS_PAGE_VIEW_IDLE_TIMEOUT_MS);
+    }
+
+    return () => {
+      if (timeoutId !== null) {
+        window.clearTimeout(timeoutId);
+      }
+
+      if (idleId !== null && typeof idleCapableWindow.cancelIdleCallback === 'function') {
+        idleCapableWindow.cancelIdleCallback(idleId);
+      }
+    };
   }, []);
 
   const handleParentsLoginClick = () => {
@@ -50,7 +89,7 @@ export default function Parents() {
               <Button
                 variant="primary"
                 size="lg"
-                style={{ ...PROMINENT_MARKETING_CTA_STYLE, inlineSize: '100%', color: 'var(--color-text-primary)' }}
+                style={{ ...PROMINENT_MARKETING_CTA_STYLE, inlineSize: '100%' }}
               >
                 {t('parents.conversionCtaButton')}
               </Button>
@@ -113,7 +152,7 @@ export default function Parents() {
 
       <style>{`
         .parents__hero {
-          background: var(--color-theme-bg);
+          background: var(--color-bg-primary);
           padding: var(--space-3xl) var(--space-xl);
           text-align: center;
           display: flex;

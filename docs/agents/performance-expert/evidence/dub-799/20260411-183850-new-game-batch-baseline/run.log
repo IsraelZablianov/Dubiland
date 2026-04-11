@@ -1,0 +1,5 @@
+Error: node exited with code 1
+    at ChildProcess.<anonymous> (file:///Users/israelz/Documents/dev/AI/Learning/scripts/dub-637-protected-route-matrix.mjs:172:16)
+    at ChildProcess.emit (node:events:524:28)
+    at maybeClose (node:internal/child_process:1104:16)
+    at ChildProcess._handle.onexit (node:internal/child_process:304:5)

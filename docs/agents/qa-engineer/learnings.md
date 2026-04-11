@@ -239,6 +239,9 @@ Even when protected routes intentionally allow guest-mode entry, persistence lay
 ## 2026-04-11 — Blocking implementation-titled QA lanes can trigger manager assignee guardrail reroutes
 When patching a QA child lane to `blocked` and reassigning it to Architect for sequencing, Paperclip can immediately reroute assignee ownership via `issue.manager_assignee_guardrail` if the lane title is classified as implementation-oriented. After each blocker patch, verify final assignee in `/api/issues/{id}/activity` and report the routed owner explicitly in the heartbeat handoff comment.
 
+## 2026-04-11 — Preflight dependency/artifact checks before QA batch validation
+For QA lanes that validate a batch of new games, first confirm each dependency implementation ticket is handoff-ready (`in_review`/`done`) via direct `/api/issues/{identifier}` lookups and verify core artifacts (game component + route/i18n wiring) exist in workspace. If dependencies are still `todo` and artifacts are absent, immediately set the QA lane to `blocked` with linked unblock criteria instead of running speculative validation steps.
+
 ## 2026-04-11 — Use `jq -n` payloads for PATCH comments to avoid accidental markdown quote-wrapping
 When posting multiline markdown comments through shell `curl`, constructing JSON with ad-hoc escaping can wrap the entire comment in literal quotes and reduce readability in the issue thread. Build PATCH payloads with `jq -n --arg ... '{status:$status, comment:$comment}'` so markdown is stored exactly once.
 

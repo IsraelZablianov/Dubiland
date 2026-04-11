@@ -1,0 +1,89 @@
+vite v6.4.2 building for production...
+transforming...
+✓ 247 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/registerSW.js                                   0.13 kB
+dist/manifest.webmanifest                            0.36 kB
+dist/index.html                                      2.19 kB │ gzip:  0.95 kB
+dist/assets/index-B1GhvKfD.css                      15.83 kB │ gzip:  4.06 kB
+dist/assets/featureFlags-shgRGJ3-.js                 0.06 kB │ gzip:  0.08 kB
+dist/assets/topicSlugMap-CcNFPjS-.js                 0.10 kB │ gzip:  0.11 kB
+dist/assets/persistableChildId-JhQ7r_2a.js           0.14 kB │ gzip:  0.12 kB
+dist/assets/rtlChrome-BvN-2cvC.js                    0.21 kB │ gzip:  0.16 kB
+dist/assets/FloatingElement-GQrnI1gE.js              0.32 kB │ gzip:  0.24 kB
+dist/assets/supabase-BwGiUuyu.js                     0.37 kB │ gzip:  0.28 kB
+dist/assets/Card-DEYyr3W5.js                         0.51 kB │ gzip:  0.33 kB
+dist/assets/learningGoals-4LC3mE_s.js                0.55 kB │ gzip:  0.38 kB
+dist/assets/SuccessCelebration-B_3G8IBM.js           0.71 kB │ gzip:  0.40 kB
+dist/assets/childAvatarEmoji-a6Ibtkcd.js             1.00 kB │ gzip:  0.61 kB
+dist/assets/useGameAttemptSync-DFUO9WK8.js           1.04 kB │ gzip:  0.56 kB
+dist/assets/PublicHeaderAuthSidecar-CW5pmbdY.js      1.24 kB │ gzip:  0.60 kB
+dist/assets/concurrentChoiceLimit-B5-AQMxG.js        1.24 kB │ gzip:  0.56 kB
+dist/assets/usePublicAuthState-CmSDEzXr.js           1.30 kB │ gzip:  0.67 kB
+dist/assets/videosRepository-DsK5UuQH.js             1.38 kB │ gzip:  0.69 kB
+dist/assets/ChildRouteLayout-32vjlcGd.js             1.65 kB │ gzip:  0.69 kB
+dist/assets/lettersProgressionRouting-D2RMtQw6.js    2.02 kB │ gzip:  0.78 kB
+dist/assets/readingProgressionRouting-8ROICL8j.js    2.22 kB │ gzip:  0.85 kB
+dist/assets/readingRuntimeMatrix-DG_jtnvA.js         2.39 kB │ gzip:  0.69 kB
+dist/assets/PublicBootstrapApp-CdwcfQwz.js           3.03 kB │ gzip:  1.08 kB
+dist/assets/GameTopBar-B6YHCsM4.js                   3.54 kB │ gzip:  1.28 kB
+dist/assets/NotFound-CO1lYoO2.js                     3.80 kB │ gzip:  1.14 kB
+dist/assets/Privacy-Cpf5DtCJ.js                      3.84 kB │ gzip:  1.09 kB
+dist/assets/Terms-DgArVysL.js                        3.84 kB │ gzip:  1.09 kB
+dist/assets/ParentsFaq-gBOSrA2Y.js                   3.89 kB │ gzip:  1.16 kB
+dist/assets/FeatureIllustration-BX-HcV1F.js          5.67 kB │ gzip:  1.43 kB
+dist/assets/gameAttemptPersistence-D3MvRekW.js       7.70 kB │ gzip:  3.12 kB
+dist/assets/Login-CGzjdWOc.js                        8.76 kB │ gzip:  2.52 kB
+dist/assets/Parents-CN7PFHob.js                      8.81 kB │ gzip:  1.98 kB
+dist/assets/RouteMetadataManager-DpDBusUm.js        11.00 kB │ gzip:  3.32 kB
+dist/assets/ProtectedBootstrapApp-DS03Cw0V.js       11.14 kB │ gzip:  3.51 kB
+dist/assets/About-Td0x54v_.js                       11.45 kB │ gzip:  2.39 kB
+dist/assets/seo-DT9XaI_M.js                         11.54 kB │ gzip:  2.81 kB
+dist/assets/ProfilePicker-DHElB5lb.js               13.11 kB │ gzip:  3.63 kB
+dist/assets/Landing-BQHerluQ.js                     18.00 kB │ gzip:  3.08 kB
+dist/assets/TopicPillar-QW86BP7e.js                 19.23 kB │ gzip:  3.95 kB
+dist/assets/ParentDashboard-CQakcThu.js             22.65 kB │ gzip:  4.43 kB
+dist/assets/BlendToReadVideoShorts-BkPFSdVa.js      23.79 kB │ gzip:  6.71 kB
+dist/assets/useAuth-DLgGnn2E.js                     25.20 kB │ gzip:  6.41 kB
+dist/assets/LetterStorybookV2-jbkHopVq.js           25.94 kB │ gzip:  7.09 kB
+dist/assets/NikudSoundLadder-aAGQ_qNE.js            26.39 kB │ gzip:  6.79 kB
+dist/assets/RootFamilyStickers-6qmHaPxK.js          27.82 kB │ gzip:  7.43 kB
+dist/assets/InteractiveHandbook-Z1dpMhuG.js         30.43 kB │ gzip:  8.14 kB
+dist/assets/ShapeSafari-DAQCccXV.js                 30.49 kB │ gzip:  7.27 kB
+dist/assets/MeasureAndMatch-BVE2QG5y.js             31.66 kB │ gzip:  8.43 kB
+dist/assets/PatternTrain-phEHrooo.js                31.90 kB │ gzip:  8.35 kB
+dist/assets/Home-DV8WTIFp.js                        31.96 kB │ gzip:  8.66 kB
+dist/assets/SubtractionStreet-CQ2sajdE.js           32.66 kB │ gzip:  8.25 kB
+dist/assets/NumberLineJumps-Ci4YQX6G.js             33.86 kB │ gzip:  8.12 kB
+dist/assets/SightWordSprint-B8jJSLrX.js             34.42 kB │ gzip:  7.82 kB
+dist/assets/Build10Workshop-D2lG63dw.js             34.73 kB │ gzip:  8.69 kB
+dist/assets/PointingFadeBridge-BYmI9FCh.js          35.02 kB │ gzip:  8.93 kB
+dist/assets/MoreOrLessMarket-tZvvXZpY.js            35.26 kB │ gzip:  8.37 kB
+dist/assets/SpellAndSendPostOffice-CqOWOxxV.js      35.41 kB │ gzip:  9.18 kB
+dist/assets/LetterStorybook-9ovDEu_-.js             35.85 kB │ gzip:  8.44 kB
+dist/assets/DecodableStoryMissions-CR_JZktH.js      36.79 kB │ gzip:  8.47 kB
+dist/assets/PictureToWordBuilder-_fxr8lD6.js        37.87 kB │ gzip:  9.46 kB
+dist/assets/ConfusableLetterContrast-oC4aG1xx.js    38.66 kB │ gzip:  8.66 kB
+dist/assets/TimeAndRoutineBuilder-BSopmIid.js       39.02 kB │ gzip:  9.59 kB
+dist/assets/SyllableTrainBuilder-5IQHWQRC.js        39.04 kB │ gzip:  9.39 kB
+dist/assets/CountingPicnic-Dj7Tizxe.js              39.05 kB │ gzip:  8.54 kB
+dist/assets/LetterSkyCatcher-CDDkPkw7.js            39.97 kB │ gzip:  9.84 kB
+dist/assets/DecodableMicroStories-CZuiVlHo.js       41.32 kB │ gzip:  9.02 kB
+dist/assets/ColorGarden-DWgxwtMT.js                 42.81 kB │ gzip:  9.37 kB
+dist/assets/LetterTracingTrail-C8wUGaDL.js          43.72 kB │ gzip:  9.96 kB
+dist/assets/LetterSoundMatch-DHfvhEMW.js            47.25 kB │ gzip: 10.21 kB
+dist/assets/react-TeP_XUL0.js                       49.00 kB │ gzip: 17.11 kB
+dist/assets/i18n-Dr9B4Pzo.js                        49.39 kB │ gzip: 15.40 kB
+dist/assets/InteractiveHandbookGame-EkP-5twe.js    100.62 kB │ gzip: 22.03 kB
+dist/assets/supabase-KJ3zSVOC.js                   196.62 kB │ gzip: 51.73 kB
+dist/assets/index-BariQLBL.js                      206.32 kB │ gzip: 66.28 kB
+dist/assets/common-CeZPkJGG.js                     271.65 kB │ gzip: 65.13 kB
+✓ built in 5.08s
+
+PWA v1.2.0
+mode      generateSW
+precache  80 entries (2041.26 KiB)
+files generated
+  dist/sw.js
+  dist/workbox-80452e89.js

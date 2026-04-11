@@ -1,0 +1,171 @@
+{
+  "generated_at": "2026-04-11T15:44:28.956Z",
+  "tool": "scripts/dub-637-protected-route-matrix.mjs",
+  "base_url": "http://127.0.0.1:4196",
+  "cache_mode": "cold",
+  "route_entry_mode": "direct_document_navigation",
+  "profiles": [
+    "guest_shell"
+  ],
+  "routes": [
+    "/games",
+    "/games/numbers/more-or-less-market",
+    "/games/numbers/number-line-jumps",
+    "/games/reading/nikud-sound-ladder",
+    "/games/reading/picture-to-word-builder",
+    "/games/reading/decodable-story-missions"
+  ],
+  "baseline_source": "/Users/israelz/Documents/dev/AI/Learning/docs/agents/performance-expert/evidence/dub-506/20260411-012316-final-matrix-post-dub-610/lighthouse-summary.json",
+  "results": [
+    {
+      "profile": "guest_shell",
+      "path": "/games",
+      "status": "ok",
+      "performance": 83,
+      "fcp_ms": 3603.318,
+      "lcp_ms": 3603.318,
+      "tbt_ms": 0,
+      "cls": 0,
+      "speed_index_ms": 2930,
+      "max_potential_fid_ms": 16,
+      "max_long_task_ms": 439.945,
+      "total_transfer_bytes": 122081,
+      "login_chunk_requested": false,
+      "supabase_chunk_requested": false,
+      "final_url": "http://127.0.0.1:4196/games",
+      "metadata": {
+        "auth_profile": "guest_shell",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "guest_shell profile prepared: guest mode enabled with active child seed"
+      ]
+    },
+    {
+      "profile": "guest_shell",
+      "path": "/games/numbers/more-or-less-market",
+      "status": "ok",
+      "performance": 84,
+      "fcp_ms": 3524.222,
+      "lcp_ms": 3524.222,
+      "tbt_ms": 0,
+      "cls": 0,
+      "speed_index_ms": 2531,
+      "max_potential_fid_ms": 16,
+      "max_long_task_ms": 348.189,
+      "total_transfer_bytes": 122081,
+      "login_chunk_requested": false,
+      "supabase_chunk_requested": false,
+      "final_url": "http://127.0.0.1:4196/games/numbers/more-or-less-market",
+      "metadata": {
+        "auth_profile": "guest_shell",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "guest_shell profile prepared: guest mode enabled with active child seed"
+      ]
+    },
+    {
+      "profile": "guest_shell",
+      "path": "/games/numbers/number-line-jumps",
+      "status": "ok",
+      "performance": 68,
+      "fcp_ms": 3511.758,
+      "lcp_ms": 11694.889,
+      "tbt_ms": 0,
+      "cls": 0,
+      "speed_index_ms": 2532,
+      "max_potential_fid_ms": 16,
+      "max_long_task_ms": 334.734,
+      "total_transfer_bytes": 122081,
+      "login_chunk_requested": false,
+      "supabase_chunk_requested": false,
+      "final_url": "http://127.0.0.1:4196/games/numbers/number-line-jumps",
+      "metadata": {
+        "auth_profile": "guest_shell",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "guest_shell profile prepared: guest mode enabled with active child seed"
+      ]
+    },
+    {
+      "profile": "guest_shell",
+      "path": "/games/reading/nikud-sound-ladder",
+      "status": "ok",
+      "performance": 69,
+      "fcp_ms": 3543.686,
+      "lcp_ms": 7160.231,
+      "tbt_ms": 0,
+      "cls": 0,
+      "speed_index_ms": 2653,
+      "max_potential_fid_ms": 16,
+      "max_long_task_ms": 367.012,
+      "total_transfer_bytes": 122081,
+      "login_chunk_requested": false,
+      "supabase_chunk_requested": false,
+      "final_url": "http://127.0.0.1:4196/games/reading/nikud-sound-ladder",
+      "metadata": {
+        "auth_profile": "guest_shell",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "guest_shell profile prepared: guest mode enabled with active child seed"
+      ]
+    },
+    {
+      "profile": "guest_shell",
+      "path": "/games/reading/picture-to-word-builder",
+      "status": "ok",
+      "performance": 84,
+      "fcp_ms": 3573.374,
+      "lcp_ms": 3573.374,
+      "tbt_ms": 0,
+      "cls": 0,
+      "speed_index_ms": 2567,
+      "max_potential_fid_ms": 16,
+      "max_long_task_ms": 407.169,
+      "total_transfer_bytes": 122081,
+      "login_chunk_requested": false,
+      "supabase_chunk_requested": false,
+      "final_url": "http://127.0.0.1:4196/games/reading/picture-to-word-builder",
+      "metadata": {
+        "auth_profile": "guest_shell",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "guest_shell profile prepared: guest mode enabled with active child seed"
+      ]
+    },
+    {
+      "profile": "guest_shell",
+      "path": "/games/reading/decodable-story-missions",
+      "status": "ok",
+      "performance": 81,
+      "fcp_ms": 3768.167,
+      "lcp_ms": 3768.167,
+      "tbt_ms": 0,
+      "cls": 0,
+      "speed_index_ms": 2711,
+      "max_potential_fid_ms": 16,
+      "max_long_task_ms": 403.724,
+      "total_transfer_bytes": 122081,
+      "login_chunk_requested": false,
+      "supabase_chunk_requested": false,
+      "final_url": "http://127.0.0.1:4196/games/reading/decodable-story-missions",
+      "metadata": {
+        "auth_profile": "guest_shell",
+        "cache_mode": "cold",
+        "route_entry_mode": "direct_document_navigation"
+      },
+      "notes": [
+        "guest_shell profile prepared: guest mode enabled with active child seed"
+      ]
+    }
+  ]
+}

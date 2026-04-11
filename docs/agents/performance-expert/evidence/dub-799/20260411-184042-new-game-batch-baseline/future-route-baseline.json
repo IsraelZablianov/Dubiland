@@ -1,0 +1,147 @@
+{
+  "generated_at": "2026-04-11T15:46:33.427Z",
+  "source_matrix": "docs/agents/performance-expert/evidence/dub-799/20260411-184042-new-game-batch-baseline/matrix.json",
+  "source_lighthouse_dir": "docs/agents/performance-expert/evidence/dub-799/20260411-184042-new-game-batch-baseline/lighthouse/guest_shell",
+  "shell_baseline": {
+    "route": "/games",
+    "performance": 83,
+    "fcp_ms": 3603.318,
+    "lcp_ms": 3603.318,
+    "max_long_task_ms": 439.945,
+    "total_transfer_bytes": 122081,
+    "total_js_resource_bytes": 654974
+  },
+  "proposed_budgets": {
+    "performance_min": 80,
+    "lcp_ms_max": 4000,
+    "max_long_task_ms_max": 420,
+    "js_delta_vs_games_max": 20000
+  },
+  "routes": [
+    {
+      "issue": "DUB-779",
+      "surface": "Pattern Train",
+      "future_route": "/games/numbers/pattern-train",
+      "reference_route": "/games/numbers/more-or-less-market",
+      "reference_metrics": {
+        "performance": 84,
+        "fcp_ms": 3524.222,
+        "lcp_ms": 3524.222,
+        "cls": 0,
+        "max_long_task_ms": 348.189,
+        "total_transfer_bytes": 122081,
+        "total_js_resource_bytes": 664799,
+        "js_delta_vs_games_bytes": 9825,
+        "login_chunk_requested": false,
+        "supabase_chunk_requested": false
+      },
+      "budget_checks": {
+        "performance": true,
+        "lcp_ms": true,
+        "max_long_task_ms": true,
+        "js_delta_vs_games": true
+      },
+      "budget_pass": true
+    },
+    {
+      "issue": "DUB-781",
+      "surface": "Measure and Match",
+      "future_route": "/games/numbers/measure-and-match",
+      "reference_route": "/games/numbers/number-line-jumps",
+      "reference_metrics": {
+        "performance": 68,
+        "fcp_ms": 3511.758,
+        "lcp_ms": 11694.889,
+        "cls": 0,
+        "max_long_task_ms": 334.734,
+        "total_transfer_bytes": 122081,
+        "total_js_resource_bytes": 664640,
+        "js_delta_vs_games_bytes": 9666,
+        "login_chunk_requested": false,
+        "supabase_chunk_requested": false
+      },
+      "budget_checks": {
+        "performance": false,
+        "lcp_ms": false,
+        "max_long_task_ms": true,
+        "js_delta_vs_games": true
+      },
+      "budget_pass": false
+    },
+    {
+      "issue": "DUB-782",
+      "surface": "Sound Slide Blending",
+      "future_route": "/games/reading/sound-slide-blending",
+      "reference_route": "/games/reading/nikud-sound-ladder",
+      "reference_metrics": {
+        "performance": 69,
+        "fcp_ms": 3543.686,
+        "lcp_ms": 7160.231,
+        "cls": 0,
+        "max_long_task_ms": 367.012,
+        "total_transfer_bytes": 122081,
+        "total_js_resource_bytes": 655424,
+        "js_delta_vs_games_bytes": 450,
+        "login_chunk_requested": false,
+        "supabase_chunk_requested": false
+      },
+      "budget_checks": {
+        "performance": false,
+        "lcp_ms": false,
+        "max_long_task_ms": true,
+        "js_delta_vs_games": true
+      },
+      "budget_pass": false
+    },
+    {
+      "issue": "DUB-783",
+      "surface": "Spell-and-Send Post Office",
+      "future_route": "/games/reading/spell-and-send-post-office",
+      "reference_route": "/games/reading/picture-to-word-builder",
+      "reference_metrics": {
+        "performance": 84,
+        "fcp_ms": 3573.374,
+        "lcp_ms": 3573.374,
+        "cls": 0,
+        "max_long_task_ms": 407.169,
+        "total_transfer_bytes": 122081,
+        "total_js_resource_bytes": 673164,
+        "js_delta_vs_games_bytes": 18190,
+        "login_chunk_requested": false,
+        "supabase_chunk_requested": false
+      },
+      "budget_checks": {
+        "performance": true,
+        "lcp_ms": true,
+        "max_long_task_ms": true,
+        "js_delta_vs_games": true
+      },
+      "budget_pass": true
+    },
+    {
+      "issue": "DUB-784",
+      "surface": "Pointing Fade Bridge",
+      "future_route": "/games/reading/pointing-fade-bridge",
+      "reference_route": "/games/reading/decodable-story-missions",
+      "reference_metrics": {
+        "performance": 81,
+        "fcp_ms": 3768.167,
+        "lcp_ms": 3768.167,
+        "cls": 0,
+        "max_long_task_ms": 403.724,
+        "total_transfer_bytes": 122081,
+        "total_js_resource_bytes": 666526,
+        "js_delta_vs_games_bytes": 11552,
+        "login_chunk_requested": false,
+        "supabase_chunk_requested": false
+      },
+      "budget_checks": {
+        "performance": true,
+        "lcp_ms": true,
+        "max_long_task_ms": true,
+        "js_delta_vs_games": true
+      },
+      "budget_pass": true
+    }
+  ]
+}

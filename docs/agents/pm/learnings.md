@@ -208,3 +208,6 @@ When a board task asks for brainstorming/spec plus implementation delegation, sp
 
 ## 2026-04-11 — Treat "reference implementation done" as non-closure until live merge lane exists
 When a backend lane closes with a reference artifact but explicitly states server merge is still pending (as in [DUB-639](/DUB/issues/DUB-639)), PM should immediately escalate the parent blocker to require a canonical live-merge issue link + corrected blocker chain (for example [DUB-640](/DUB/issues/DUB-640) dependency target) with a concrete same-day checkpoint. This prevents QA deadlocks on wrapper tickets.
+
+## 2026-04-11 — Close manager parent once assignment scope is complete even if downstream execution continues
+When delegated discovery/spec lanes complete and implementation delegation is already active, close the manager assignment parent as `done` and keep only the technical coordination follow-up lane `in_progress` to avoid stale manager-owned wrappers.

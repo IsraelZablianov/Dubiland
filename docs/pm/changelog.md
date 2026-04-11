@@ -12,6 +12,11 @@ Product changelog maintained by the PM (CEO). Record significant product decisio
 
 ---
 
+### 2026-04-11 — Quality-overhaul critical path shifted to perf/control-plane blockers
+- Re-triaged [DUB-510](/DUB/issues/DUB-510) after media branch closure: [DUB-505](/DUB/issues/DUB-505) and [DUB-590](/DUB/issues/DUB-590) are now `done`; active blocker chains are [DUB-506](/DUB/issues/DUB-506) and [DUB-635](/DUB/issues/DUB-635).
+- Set PM unblock decision on [DUB-635](/DUB/issues/DUB-635): two-track access plan (grant Backend live access or fallback-reassign merge owner with access).
+- Delegated Co-Founder access-routing ownership for [DUB-795](/DUB/issues/DUB-795) by **April 11, 2026 19:45 IDT** and mirrored the decision on [DUB-510](/DUB/issues/DUB-510).
+
 ### 2026-04-11 — DUB-673 closed after spec delivery; CTO coordination lane reactivated
 - Confirmed delegated discovery/spec lanes are complete: [DUB-774](/DUB/issues/DUB-774), [DUB-775](/DUB/issues/DUB-775), and [DUB-776](/DUB/issues/DUB-776) are all `done` with published artifacts.
 - Cleared stale dependency blocker on [DUB-777](/DUB/issues/DUB-777) and moved it to `in_progress` with explicit CTO direction to publish canonical keep/merge/supersede routing across overlapping implementation lanes.

@@ -175,3 +175,9 @@ For conversion-copy follow-ups (landing + parents + onboarding), closure should 
 
 ## 2026-04-11 — Sound-slide packs should ship with event mapping + placeholder-safe parent audio
 For `soundSlideBlending` lanes, ship one synchronized bundle: `common.games.soundSlideBlending.*`, `common.parentDashboard.games.soundSlideBlending.*`, and any new linked pronunciation keys. Always add an i18n/audio map doc with a runtime event -> key table (especially `rail_swipe_blend` segmented->blended sequence) and add `audio-overrides.json` entries for placeholder-heavy parent metrics to avoid spoken template variables.
+
+## 2026-04-11 — Spell-and-Send content packs should pair segmented dual-clip keys with block-level final-form guardrails
+For `spellAndSendPostOffice`, ship one synchronized set: `common.games.spellAndSendPostOffice.*`, `common.parentDashboard.games.spellAndSendPostOffice.*`, targeted `common.words.pronunciation.*`, and `common.phrases.pronunciation.*`; keep segmented hints as two clip keys per word (`segmentedWords.<wordId>.part1/part2`) and document `L2B` block composition explicitly (one final-form family per block, 25% targets, no early back-to-back finals) in an i18n/audio map artifact so FED can wire progression deterministically.
+
+## 2026-04-11 — Pointing-fade reading lanes are more implementation-safe with a 3-layer pronunciation bundle
+For mixed-pointing games like [DUB-787](/DUB/issues/DUB-787), shipping only `games.*` prompts is not enough for stable FED wiring. A better handoff is one synchronized bundle: runtime narration under `common.games.<slug>.*`, parent metrics under `common.parentDashboard.games.<slug>.*` (with audio overrides for placeholder-heavy lines), and explicit stage narration pools in `common.{words,phrases,sentences}.pronunciation.*`. Pair it with an event->key map and per-stage sentence sets (`L1/L2A/L2B/L3A/L3B`) so mechanics and content lanes stay aligned.

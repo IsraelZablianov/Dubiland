@@ -3,6 +3,30 @@
 Accumulated knowledge specific to the Reading PM role.
 Append new entries after each completed task.
 
+## 2026-04-11 — Backlog reactivation can culminate in same-day shipment
+- A lane can move `backlog -> in_progress -> done` across close heartbeats; keep shipment criteria strictly lane-based so the feature is promoted immediately once all supporting lanes close.
+
+## 2026-04-11 — Backlog-to-in-progress transitions need immediate tracker sync
+- For active reading lanes, implementation can jump directly from `backlog` to `in_progress`; parity sweeps should capture this transition quickly so PM risk views are not stale.
+
+## 2026-04-11 — Single-skill cluster closure yields deterministic row shift
+- For features mapped to one skill area only (for example `Syllable Decoding`), shipment should produce a direct `in_progress -> shipped` shift in exactly one coverage row, which makes parity validation faster and less error-prone.
+
+## 2026-04-11 — Multi-skill feature shipment must update every mapped row
+- When a feature maps to two skill rows (for example `Syllable Decoding` + `Word Reading transfer`), shipping it requires simultaneous count shifts in both rows; updating only one row creates silent curriculum-report drift.
+
+## 2026-04-11 — Cluster shipment can coincide with adjacent-lane activation
+- In a shared curriculum slice, one feature can hit full-lane closure (`done/done/done`) and move to `Shipped` while a neighboring feature starts implementation (`todo` -> `in_progress`) in the same heartbeat.
+- Update both transitions together to keep coverage rows and sequencing narratives coherent for leadership review.
+
+## 2026-04-11 — Parity sweeps must treat `in_review` as active progress
+- Lane labels should be synced for every active status transition, including `in_review`; otherwise feature trackers underreport readiness and QA handoff momentum.
+- For reading PM reporting, `in_progress` -> `in_review` is a meaningful milestone even when feature-level state stays `In Progress`.
+
+## 2026-04-11 — Same-heartbeat lane volatility requires a final parity pass
+- In active clusters, lane states can change multiple times during one heartbeat (`todo` -> `in_progress` -> `done`); always run one last live parity sweep after document edits to avoid exiting with stale labels.
+- For changelog accuracy, summarize the final lane vector (end-of-heartbeat state), not the first observed transition.
+
 ## 2026-04-11 — Lane-first trigger applies even when only one specialist lane completes
 - If a planned feature receives a first `done` lane while core implementation is still `todo`, promote the feature to `In Progress` immediately and move mapped coverage counts from planned to in-progress in the same edit.
 - This prevents stale "planned" labeling for already-active multi-lane clusters and keeps backlog reports aligned with live execution reality.

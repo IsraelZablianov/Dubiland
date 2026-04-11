@@ -387,7 +387,6 @@ export default function Landing() {
 
         .landing__trust-rail-cta-shell button {
           inline-size: 100%;
-          color: var(--color-text-primary);
         }
 
         .landing__section--deferred {
@@ -542,7 +541,7 @@ export default function Landing() {
         }
 
         .landing__cta {
-          background: var(--color-theme-bg);
+          background: var(--color-bg-primary);
           padding: var(--space-3xl) var(--space-xl);
           text-align: center;
           display: flex;

@@ -15,6 +15,7 @@ export type RouteMetadataKey =
   | 'countingPicnicGame'
   | 'shapeSafariGame'
   | 'moreOrLessMarketGame'
+  | 'measureAndMatchGame'
   | 'numberLineJumpsGame'
   | 'build10WorkshopGame'
   | 'subtractionStreetGame'
@@ -29,10 +30,14 @@ export type RouteMetadataKey =
   | 'decodableStoryMissionsGame'
   | 'interactiveHandbookGame'
   | 'letterStorybookGame'
+  | 'letterStorybookV2Game'
   | 'rootFamilyStickersGame'
   | 'confusableLetterContrastGame'
   | 'nikudSoundLadderGame'
   | 'syllableTrainBuilderGame'
+  | 'soundSlideBlendingGame'
+  | 'shvaSoundSwitchGame'
+  | 'spellAndSendPostOfficeGame'
   | 'blendToReadVideoShortsGame'
   | 'notFound'
   | 'default';
@@ -130,6 +135,11 @@ const ROUTE_METADATA_BY_PATH: Record<string, RouteMetadataDefinition> = {
     canonicalPath: '/games/numbers/more-or-less-market',
     indexable: false,
   },
+  '/games/numbers/measure-and-match': {
+    key: 'measureAndMatchGame',
+    canonicalPath: '/games/numbers/measure-and-match',
+    indexable: false,
+  },
   '/games/numbers/number-line-jumps': {
     key: 'numberLineJumpsGame',
     canonicalPath: '/games/numbers/number-line-jumps',
@@ -200,6 +210,11 @@ const ROUTE_METADATA_BY_PATH: Record<string, RouteMetadataDefinition> = {
     canonicalPath: '/games/reading/letter-storybook',
     indexable: false,
   },
+  '/games/reading/letter-storybook-v2': {
+    key: 'letterStorybookV2Game',
+    canonicalPath: '/games/reading/letter-storybook-v2',
+    indexable: false,
+  },
   '/games/reading/root-family-stickers': {
     key: 'rootFamilyStickersGame',
     canonicalPath: '/games/reading/root-family-stickers',
@@ -218,6 +233,21 @@ const ROUTE_METADATA_BY_PATH: Record<string, RouteMetadataDefinition> = {
   '/games/reading/syllable-train-builder': {
     key: 'syllableTrainBuilderGame',
     canonicalPath: '/games/reading/syllable-train-builder',
+    indexable: false,
+  },
+  '/games/reading/sound-slide-blending': {
+    key: 'soundSlideBlendingGame',
+    canonicalPath: '/games/reading/sound-slide-blending',
+    indexable: false,
+  },
+  '/games/reading/shva-sound-switch': {
+    key: 'shvaSoundSwitchGame',
+    canonicalPath: '/games/reading/shva-sound-switch',
+    indexable: false,
+  },
+  '/games/reading/spell-and-send-post-office': {
+    key: 'spellAndSendPostOfficeGame',
+    canonicalPath: '/games/reading/spell-and-send-post-office',
     indexable: false,
   },
   '/games/reading/blend-to-read-video-shorts': {

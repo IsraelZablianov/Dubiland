@@ -25,7 +25,6 @@ const APP_NAV_LINKS = [
 const MARKETING_HEADER_CTA_STYLE = {
   minHeight: 'var(--touch-primary-action)',
   padding: 'var(--space-sm) var(--space-lg)',
-  color: 'var(--color-text-primary)',
   fontSize: 'var(--font-size-md)',
 };
 

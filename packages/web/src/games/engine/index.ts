@@ -1,4 +1,5 @@
 export type {
+  PatternAccuracyKey,
   AudioController,
   GameCompletionResult,
   GameProps,

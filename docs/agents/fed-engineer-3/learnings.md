@@ -217,3 +217,21 @@ For public bootstrap lanes, splitting `PublicHeader` into a static core plus idl
 
 ## 2026-04-11 — PR perf-gate workflows should publish summary artifacts even on gate failures
 For CI budget/lighthouse lanes, add a dedicated summary script and run it with `if: always()` so failures still produce one markdown/json report for triage instead of forcing readers to piece data from scattered logs.
+
+## 2026-04-11 — Shared spelling-core helpers reduce overlap risk across merge-contracted game lanes
+For overlap-sensitive routes (for example [DUB-780](/DUB/issues/DUB-780) + [DUB-783](/DUB/issues/DUB-783)), extracting stage evaluation, anti-guess thresholds, and final-form block builders into a dedicated `games/reading/*EncodingCore` module keeps the shipping surface independent while preserving one reusable contract for progression/hint logic and reducing duplicate-fix churn during parallel FED implementation.
+
+## 2026-04-11 — Dynamic i18n keys in game loops should use explicit cast strategy to satisfy typed `t()`
+For adaptive game UIs that compute translation keys at runtime (theme labels, misconception labels, pattern labels, rotating status keys), `react-i18next` key unions reject plain `string` arguments under strict typecheck. In these paths, use the project’s established cast pattern (`as any`/`as never`) only at dynamic call-sites, while keeping static keys strongly typed; this preserves compile safety without flattening adaptive key routing.
+
+## 2026-04-11 — Dev-smoke verification should use direct workspace port override in shared local runs
+When repo-level `yarn dev` collisions occur on default port 3000, run `yarn workspace @dubiland/web dev --port <free-port>` for heartbeat smoke checks; this validates startup deterministically without depending on root-script arg forwarding.
+
+## 2026-04-11 — Letter Story v2 runtime can ship on v1 script/audio families while scene assets are still pipeline-only
+When Letter Story v2 route scaffolding exists before v2-specific audio generation, bind gameplay prompts/status to the already-generated `games.letterStorybook.*` key families and drive scene images from the deterministic v2 manifest path contract (`/images/storybooks/letter-story-v2/scene-XX-*`) with runtime image-error fallbacks. This preserves full audio coverage and deterministic progression while media batches are still arriving.
+
+## 2026-04-11 — Defer parent-funnel telemetry off critical paint to recover route LCP headroom
+For public marketing pages, immediate `trackParentFunnelEvent()` on mount can pull Supabase/runtime chunks into the first render window and inflate LCP. On `/parents`, deferring `parents_page_view` dispatch with `requestIdleCallback` + timeout (`3200ms`) improved Lighthouse mobile LCP from `2717ms` to `2159ms` while keeping index bundle size stable (`206317` raw / `66116` gzip).
+
+## 2026-04-11 — Shva transfer lanes stay auditable when stage gates are window-based and UI remains non-punitive
+For `shvaSoundSwitch`, keeping promotion/regression tied to explicit rolling windows (L1 `10`, L2 `12`, regression `8`) plus deterministic anti-random triggers allows consistent telemetry tuning while preserving child-safe UX (`retry`/`hint`/recovery items never hard-fail a round immediately).

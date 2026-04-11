@@ -1,0 +1,73 @@
+{
+  "generatedAt": "2026-04-11T15:58:40.001Z",
+  "budgetsPath": "packages/web/perf/ci-budgets.json",
+  "baseUrl": "http://127.0.0.1:4173",
+  "reportsDirectory": "docs/agents/fed-engineer-2/evidence/dub-743/20260411-185746-post/lighthouse-raw",
+  "pass": true,
+  "routes": {
+    "/": {
+      "route": "/",
+      "targetUrl": "http://127.0.0.1:4173/",
+      "reportPath": "docs/agents/fed-engineer-2/evidence/dub-743/20260411-185746-post/lighthouse-raw/root.json",
+      "budgets": {
+        "performanceMin": 80,
+        "lcpMsMax": 4100,
+        "clsMax": 0.05
+      },
+      "metrics": {
+        "performanceScore": 94,
+        "lcpMs": 2686.5855,
+        "cls": 0
+      },
+      "checks": {
+        "performance": true,
+        "lcp": true,
+        "cls": true
+      },
+      "pass": true
+    },
+    "/letters": {
+      "route": "/letters",
+      "targetUrl": "http://127.0.0.1:4173/letters",
+      "reportPath": "docs/agents/fed-engineer-2/evidence/dub-743/20260411-185746-post/lighthouse-raw/letters.json",
+      "budgets": {
+        "performanceMin": 85,
+        "lcpMsMax": 3350,
+        "clsMax": 0.05
+      },
+      "metrics": {
+        "performanceScore": 96,
+        "lcpMs": 2576.7056000000002,
+        "cls": 0
+      },
+      "checks": {
+        "performance": true,
+        "lcp": true,
+        "cls": true
+      },
+      "pass": true
+    },
+    "/parents": {
+      "route": "/parents",
+      "targetUrl": "http://127.0.0.1:4173/parents",
+      "reportPath": "docs/agents/fed-engineer-2/evidence/dub-743/20260411-185746-post/lighthouse-raw/parents.json",
+      "budgets": {
+        "performanceMin": 86,
+        "lcpMsMax": 3300,
+        "clsMax": 0.05
+      },
+      "metrics": {
+        "performanceScore": 95,
+        "lcpMs": 2610.2065000000002,
+        "cls": 0
+      },
+      "checks": {
+        "performance": true,
+        "lcp": true,
+        "cls": true
+      },
+      "pass": true
+    }
+  },
+  "violations": []
+}

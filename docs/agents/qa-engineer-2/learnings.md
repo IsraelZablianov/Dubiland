@@ -271,3 +271,6 @@ In portrait handbook flows, `.interactive-handbook__controls` can drift to edge/
 
 ## 2026-04-11 — For heartbeat dependency checks, use `/api/issues/{identifier}` over company issue lists
 On this run, `/api/companies/{companyId}/issues` did not surface freshly created `[DUB-745](/DUB/issues/DUB-745)` and `[DUB-746](/DUB/issues/DUB-746)` lanes, while direct lookups (`/api/issues/DUB-745`, `/api/issues/DUB-746`) returned accurate status and comments immediately. For blocker verification, fetch prerequisite tickets by identifier directly before deciding whether to start QA execution.
+
+## 2026-04-11 — Merge-contract QA must block on spec-ticket drift before runtime reruns
+If architecture declares a merged shipping surface (for example [DUB-780](/DUB/issues/DUB-780) as shared core feeding [DUB-783](/DUB/issues/DUB-783)) but a child issue/spec still advertises standalone shipping (`slug`/DB row), block the QA lane immediately and require contract normalization first. Also require runtime component/route evidence; spec-level gates plus global `typecheck`/audio-manifest pass are insufficient for acceptance closure.

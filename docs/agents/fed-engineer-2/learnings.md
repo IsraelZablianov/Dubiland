@@ -280,3 +280,29 @@ For static crawler parity, `generate-seo-route-html.mjs` must not clone one `dis
 
 ## 2026-04-11 — About hero responsive-image fixes should pair srcset widths with per-format budget checks
 When adding responsive variants for `/about` hero photos, update both generator + page `picture/srcset` together and immediately run `images:optimize` then `images:budgets` sequentially (not in parallel) so budget checks read the new manifest. For this asset class, an 840px AVIF variant exceeded the `general/avif` 65 KiB cap; dropping the largest variant to 800px (and adding a 400px step) preserved responsive coverage while keeping all budgets green.
+
+## 2026-04-11 — Axe color-contrast gates are brittle on gradient-backed and gradient-filled text surfaces
+For routes validated with `pa11y --runner axe`, text over gradient hero backgrounds (and headings using `background-clip:text` with transparent fill) can trigger persistent `color-contrast` failures with `needsFurtherReview=true` even when token contrast is otherwise acceptable. A stable remediation path is to use solid surface backgrounds (`var(--color-bg-primary)`) for text-bearing hero/CTA sections and avoid transparent gradient text fills on headings that must satisfy automated contrast gates.
+
+## 2026-04-11 — Public-route metadata sidecars should gate on first commit and ship with route-matrix head checks
+For critical-path bundle work, move `RouteMetadataManager` out of root bootstrap and mount it only inside the public route family through a tiny sidecar that flips on after first commit (`useEffect` gate + `Suspense` fallback `null`). This keeps metadata off the hot path while preserving SEO correctness when paired with a deterministic route matrix check for canonical path, `og:url`, `robots`, and JSON-LD validity on all indexable public routes.
+
+## 2026-04-11 — Close verified game tickets even when global typecheck fails in unrelated WIP slices
+For heartbeat closure on a finished game, combine one runtime route smoke check (`yarn dev` + direct route load) with a scoped read of `yarn typecheck` failures by file path. If all failures are isolated to unrelated in-flight files, record that evidence in the issue comment and close the verified ticket instead of leaving ownership stale.
+
+## 2026-04-11 — Scaffolding a new game route should ship with minimal i18n and parent-summary keys in the same heartbeat
+For FED scaffold tickets that introduce a new `/games/...` route, include a compilable `GameProps` component + page + `gameRouteManifest` entry together, and immediately add the smallest required `games.<slug>.*` and `parentDashboard.games.<slug>.*` locale keys. This keeps `useGameAttemptSync` pages type-safe and prevents first-run key-miss regressions while upstream content/audio lanes fill full narrative packs.
+
+## 2026-04-11 — Merge-contract closure lanes can be completed via verification evidence when canonical runtime already shipped
+When an implementation lane is explicitly narrowed to a shared-core contract (for example [DUB-780](/DUB/issues/DUB-780)) and the canonical shipping lane has already landed (for example [DUB-783](/DUB/issues/DUB-783)), avoid duplicate edits on shared files. Close the lane by proving four facts in one heartbeat: core module is present and consumed, no duplicate route/catalog row exists, `yarn typecheck` passes, and RTL/touch runtime smoke confirms baseline behavior.
+
+## 2026-04-11 — Component prop contracts for mascot/celebration primitives
+
+- `MascotIllustration` accepts `variant` (`hero|hint|success|loading`), not a `mood` prop.
+- `SuccessCelebration` exposes only container/div props (`dense`, `className`, `style`, etc.); custom props like `triggerKey` or `icon` are invalid and should be modeled via React `key` and wrapper logic instead.
+
+## 2026-04-11 — Home hub sticky controls can ship quickly by splitting utility surfaces per breakpoint while reusing existing audio-backed keys
+For `Home.tsx` sticky/filter navigation upgrades, keep one control contract (age filter + section jumps) but render it as mobile sticky shelf (`<=767`), tablet collapsible rail (`768-1199`), and desktop persistent rail (`>=1200`). Reuse existing i18n keys that already exist in the audio manifest (`contentFilters.age.*`, `home.sections.*.title`, `home.chooseTopic`, `nav.chooseTopic/back`) to avoid blocking on new content/audio assets, and drive active section state through `IntersectionObserver` + `scrollIntoView` with reduced-motion fallback.
+
+## 2026-04-11 — Root-family polish can use transient attempt trackers to scope feedback animations
+For multi-step sorting/build games (`RootFamilyStickers`), keep board-level feedback global (`success|miss`) but scope visual motion to the exact interacted control by storing transient ids (`activeSortingRootId`, `lastSortingCardId`, `lastBuildChoice`) and deriving CSS classes from `boardFeedback + id match`. This adds clear per-action delight without changing game flow, i18n/audio contracts, or progression logic.

@@ -1,0 +1,54 @@
+{
+  "generatedAt": "2026-04-11T15:55:54.034Z",
+  "budgetsPath": "packages/web/perf/ci-budgets.json",
+  "distAssetsPath": "packages/web/dist/assets",
+  "pass": false,
+  "chunks": {
+    "index": {
+      "assetPrefix": "index-",
+      "budgetGzipBytesMax": 130000,
+      "measuredGzipBytes": 66029,
+      "measuredRawBytes": 206558,
+      "assetFile": "index-Bj4kuPyb.js",
+      "matchedFiles": [
+        "index-Bj4kuPyb.js"
+      ],
+      "pass": true
+    },
+    "react": {
+      "assetPrefix": "react-",
+      "budgetGzipBytesMax": 18000,
+      "measuredGzipBytes": 17070,
+      "measuredRawBytes": 49001,
+      "assetFile": "react-TeP_XUL0.js",
+      "matchedFiles": [
+        "react-TeP_XUL0.js"
+      ],
+      "pass": true
+    },
+    "i18n": {
+      "assetPrefix": "i18n-",
+      "budgetGzipBytesMax": 16000,
+      "measuredGzipBytes": 15333,
+      "measuredRawBytes": 49391,
+      "assetFile": "i18n-Dr9B4Pzo.js",
+      "matchedFiles": [
+        "i18n-Dr9B4Pzo.js"
+      ],
+      "pass": true
+    }
+  },
+  "totalJs": {
+    "measuredBytes": 1936076,
+    "budgetBytesMax": 1650000,
+    "fileCount": 68,
+    "pass": false
+  },
+  "violations": [
+    {
+      "kind": "total_js_over_budget",
+      "measuredBytes": 1936076,
+      "budgetBytesMax": 1650000
+    }
+  ]
+}
