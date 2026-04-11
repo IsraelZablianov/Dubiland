@@ -135,7 +135,7 @@ export function LearningVideoCheckpointGame({ game, level, onComplete, audio }: 
       return [] as BlendToReadChoice[];
     }
 
-    return hintStage >= 2 ? activeCheckpoint.reducedChoices : activeCheckpoint.choices;
+    return hintStage >= 3 ? activeCheckpoint.reducedChoices : activeCheckpoint.choices;
   }, [activeCheckpoint, hintStage]);
 
   const playAudioKey = useCallback(

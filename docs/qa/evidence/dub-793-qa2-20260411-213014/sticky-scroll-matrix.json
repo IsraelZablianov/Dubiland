@@ -1,0 +1,32 @@
+{
+  "generatedAt": "2026-04-11T18:36:23.468Z",
+  "baseUrl": "http://127.0.0.1:4315",
+  "checks": [
+    {
+      "viewport": "mobile",
+      "selector": ".home__mobile-utility-shelf",
+      "before": { "top": 647, "position": "sticky", "insetBlockStart": "16.88px", "scrollY": 0 },
+      "after": { "top": -137.66, "position": "sticky", "insetBlockStart": "16.88px", "scrollY": 2600 }
+    },
+    {
+      "viewport": "tablet",
+      "selector": ".home__utility-rail",
+      "before": { "top": 169, "position": "sticky", "insetBlockStart": "18px", "scrollY": 0 },
+      "after": { "top": 18, "position": "sticky", "insetBlockStart": "18px", "scrollY": 1447 }
+    },
+    {
+      "viewport": "desktop",
+      "selector": ".home__utility-rail",
+      "before": { "top": 109, "position": "sticky", "insetBlockStart": "18px", "scrollY": 0 },
+      "after": { "top": 18, "position": "sticky", "insetBlockStart": "18px", "scrollY": 890 }
+    }
+  ],
+  "mobileIntermediate": {
+    "at0": { "scrollY": 0, "top": 647, "bottom": 778, "position": "sticky", "insetBlockStart": "16.88px" },
+    "at600": { "scrollY": 600, "top": 47, "bottom": 178, "position": "sticky", "insetBlockStart": "16.88px" },
+    "at1000": { "scrollY": 1000, "top": 16.88, "bottom": 147.88, "position": "sticky", "insetBlockStart": "16.88px" },
+    "at1400": { "scrollY": 1400, "top": 16.88, "bottom": 147.88, "position": "sticky", "insetBlockStart": "16.88px" },
+    "at1800": { "scrollY": 1800, "top": 16.88, "bottom": 147.88, "position": "sticky", "insetBlockStart": "16.88px" },
+    "at2200": { "scrollY": 2200, "top": 16.88, "bottom": 147.88, "position": "sticky", "insetBlockStart": "16.88px" }
+  }
+}

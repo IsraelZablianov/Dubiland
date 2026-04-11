@@ -1,0 +1,43 @@
+{
+  "path": "/parent",
+  "dir": "rtl",
+  "mainCount": 1,
+  "mainClassNames": [
+    "app-shell__content"
+  ],
+  "touchRects": [
+    {
+      "className": "parent-dashboard__logout-button",
+      "text": "התנתקות",
+      "width": 125.28,
+      "height": 59.98,
+      "meets44": true
+    },
+    {
+      "className": "",
+      "text": "בחירת ילד",
+      "width": 111.76,
+      "height": 52,
+      "meets44": true
+    },
+    {
+      "className": "",
+      "text": "אזור הורים",
+      "width": 113.64,
+      "height": 52,
+      "meets44": true
+    },
+    {
+      "className": "",
+      "text": "התנתקות",
+      "width": 105.59,
+      "height": 52,
+      "meets44": true
+    }
+  ],
+  "anyTouchFailure": false,
+  "viewportWidth": 1024,
+  "documentScrollWidth": 1024,
+  "bodyScrollWidth": 1024,
+  "horizontalOverflow": false
+}

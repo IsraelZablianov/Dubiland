@@ -1,0 +1,60 @@
+TAP version 13
+# Subtest: touch token floor aliases remain defined
+ok 1 - touch token floor aliases remain defined
+  ---
+  duration_ms: 1.57525
+  ...
+# Subtest: medium button size keeps child-primary touch floor
+ok 2 - medium button size keeps child-primary touch floor
+  ---
+  duration_ms: 2.947875
+  ...
+# Subtest: child route scaffold promotes touch min to child-primary floor
+ok 3 - child route scaffold promotes touch min to child-primary floor
+  ---
+  duration_ms: 0.437583
+  ...
+# Subtest: public header shell keeps touch-floor contract
+ok 4 - public header shell keeps touch-floor contract
+  ---
+  duration_ms: 0.547834
+  ...
+# Subtest: authenticated app header keeps tablet-safe wrap contract
+ok 5 - authenticated app header keeps tablet-safe wrap contract
+  ---
+  duration_ms: 0.5505
+  ...
+# Subtest: public footer shell keeps touch-floor contract
+ok 6 - public footer shell keeps touch-floor contract
+  ---
+  duration_ms: 0.603708
+  ...
+# Subtest: app shell route transition avoids horizontal overflow bounce
+ok 7 - app shell route transition avoids horizontal overflow bounce
+  ---
+  duration_ms: 0.873791
+  ...
+# Subtest: child route scaffold avoids nested main landmarks in app shells
+ok 8 - child route scaffold avoids nested main landmarks in app shells
+  ---
+  duration_ms: 0.379583
+  ...
+# Subtest: parent dashboard route avoids nested main landmarks in app shells
+ok 9 - parent dashboard route avoids nested main landmarks in app shells
+  ---
+  duration_ms: 1.472208
+  ...
+# Subtest: legal routes avoid nested main landmarks in marketing shell
+ok 10 - legal routes avoid nested main landmarks in marketing shell
+  ---
+  duration_ms: 0.83475
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 82.935084

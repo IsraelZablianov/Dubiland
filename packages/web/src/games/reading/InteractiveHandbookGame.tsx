@@ -3451,7 +3451,10 @@ export function InteractiveHandbookGame({
               }}
               aria-label={t('games.interactiveHandbook.modes.readToMe')}
             >
-              {t('games.interactiveHandbook.modes.readToMe')}
+              <span className="interactive-handbook__mode-icon" aria-hidden="true">
+                <HandbookControlIcon kind="play" isRtl={isRtl} />
+              </span>
+              <span className="interactive-handbook__mode-label">{t('games.interactiveHandbook.modes.readToMe')}</span>
             </button>
             <button
               type="button"
@@ -3462,7 +3465,10 @@ export function InteractiveHandbookGame({
               }}
               aria-label={t('games.interactiveHandbook.modes.readAndPlay')}
             >
-              {t('games.interactiveHandbook.modes.readAndPlay')}
+              <span className="interactive-handbook__mode-icon" aria-hidden="true">
+                <HandbookControlIcon kind="complete" isRtl={isRtl} />
+              </span>
+              <span className="interactive-handbook__mode-label">{t('games.interactiveHandbook.modes.readAndPlay')}</span>
             </button>
             <button
               type="button"
@@ -3473,7 +3479,10 @@ export function InteractiveHandbookGame({
               }}
               aria-label={t('games.interactiveHandbook.modes.calmReplay')}
             >
-              {t('games.interactiveHandbook.modes.calmReplay')}
+              <span className="interactive-handbook__mode-icon" aria-hidden="true">
+                <HandbookControlIcon kind="replay" isRtl={isRtl} />
+              </span>
+              <span className="interactive-handbook__mode-label">{t('games.interactiveHandbook.modes.calmReplay')}</span>
             </button>
           </div>
         }
@@ -3709,6 +3718,10 @@ export function InteractiveHandbookGame({
         .interactive-handbook__mode-button {
           min-height: var(--handbook-control-min-height);
           min-width: max(var(--handbook-control-min-height), 104px);
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: var(--space-2xs);
           border-radius: var(--radius-md);
           border: 1px solid color-mix(in srgb, var(--color-border) 72%, transparent);
           background: var(--color-surface);
@@ -3718,6 +3731,24 @@ export function InteractiveHandbookGame({
           line-height: var(--line-height-tight);
           cursor: pointer;
           padding: 0 var(--space-sm);
+        }
+
+        .interactive-handbook__mode-icon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          inline-size: 20px;
+          block-size: 20px;
+        }
+
+        .interactive-handbook__mode-button .interactive-handbook__icon-svg {
+          inline-size: 20px;
+          block-size: 20px;
+          margin-inline: 0;
+        }
+
+        .interactive-handbook__mode-label {
+          white-space: nowrap;
         }
 
         .interactive-handbook__mode-button.is-active {

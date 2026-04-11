@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-11T15:29:37.520Z",
+  "generatedAt": "2026-04-11T19:37:03.084Z",
   "budgetsPath": "packages/web/perf/ci-budgets.json",
   "distAssetsPath": "packages/web/dist/assets",
   "pass": false,
@@ -7,11 +7,11 @@
     "index": {
       "assetPrefix": "index-",
       "budgetGzipBytesMax": 130000,
-      "measuredGzipBytes": 66234,
-      "measuredRawBytes": 206558,
-      "assetFile": "index-D31xhtau.js",
+      "measuredGzipBytes": 66167,
+      "measuredRawBytes": 206317,
+      "assetFile": "index-j2pjmjWW.js",
       "matchedFiles": [
-        "index-D31xhtau.js"
+        "index-j2pjmjWW.js"
       ],
       "pass": true
     },
@@ -39,15 +39,15 @@
     }
   },
   "totalJs": {
-    "measuredBytes": 1881884,
+    "measuredBytes": 2153462,
     "budgetBytesMax": 1650000,
-    "fileCount": 67,
+    "fileCount": 74,
     "pass": false
   },
   "violations": [
     {
       "kind": "total_js_over_budget",
-      "measuredBytes": 1881884,
+      "measuredBytes": 2153462,
       "budgetBytesMax": 1650000
     }
   ]

@@ -393,3 +393,30 @@ Why it matters:
 - prevents "22 separate cards" look and enforces narrative continuity,
 - keeps board-proxy image generation deterministic by batch,
 - lets Content/Reading revise wording without renaming media assets.
+
+## 2026-04-11 — If board wake comment is non-specific (e.g., "test"), answer with a concrete micro-batch immediately
+
+For board-proxy generation lanes, treat vague wake comments as a signal to post a smaller exact request (2 assets max) in the same heartbeat, then re-block pending file-save confirmation.
+
+Why it matters:
+- converts ambiguous pings into executable board actions,
+- improves turnaround by shrinking first delivery scope,
+- avoids stalled `in_progress` cycles without asset output.
+
+## 2026-04-11 — When board reports automation failure, restate unblock as exact file-path confirmation
+
+If board posts a technical failure report (auth/profile lock/tooling), respond in the same heartbeat with a blocked update that narrows success criteria to explicit file-path existence for the active micro-batch.
+
+Why it matters:
+- translates infra noise into a concrete completion signal,
+- avoids repeating full prompt payloads when they already exist,
+- keeps next heartbeat decision binary: files present => integrate, files absent => remain blocked.
+
+## 2026-04-12 — On `process_lost_retry` wakes without task/comment IDs, resolve scope from inbox before any mutation
+
+If retry wakes omit `PAPERCLIP_TASK_ID` and `PAPERCLIP_WAKE_COMMENT_ID`, infer the active lane from inbox-lite first, then apply blocked dedup checks before checkout/comment.
+
+Why it matters:
+- prevents accidental API calls to undefined issue routes,
+- avoids duplicate blocked comments,
+- keeps retries idempotent and low-noise.

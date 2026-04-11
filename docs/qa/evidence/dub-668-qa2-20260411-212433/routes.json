@@ -1,0 +1,8 @@
+{
+  "public": [],
+  "protected": [
+    "/profiles",
+    "/games",
+    "/games/numbers/counting-picnic"
+  ]
+}

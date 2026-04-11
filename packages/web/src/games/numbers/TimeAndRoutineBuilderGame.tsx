@@ -94,7 +94,7 @@ const TOTAL_ROUNDS = 8;
 const CHECKPOINT_ROUND = 3;
 const REMEDIATION_TRIGGER = 3;
 
-const SUCCESS_ROTATION = ['feedback.success.wellDone', 'feedback.success.amazing', 'feedback.success.celebrate'] as const;
+const SUCCESS_ROTATION = ['feedback.success', 'feedback.excellent', 'feedback.youDidIt'] as const;
 
 const ENCOURAGEMENT_ROTATION = [
   'feedback.encouragement.keepTrying',
@@ -813,6 +813,15 @@ export function TimeAndRoutineBuilderGame({ level, onComplete, audio }: GameProp
     setMessageWithAudio(resolveCurrentPromptKey(), message.tone === 'success' ? 'success' : 'neutral');
   }, [message.tone, resolveCurrentPromptKey, setMessageWithAudio]);
 
+  const handleReplayCheckpoint = useCallback(() => {
+    playAudioKey('games.timeAndRoutineBuilder.instructions.checkpoint');
+  }, [playAudioKey]);
+
+  const handleReplayCompletion = useCallback(() => {
+    playAudioKey('parentDashboard.games.timeAndRoutineBuilder.progressSummary');
+    playAudioKey('parentDashboard.games.timeAndRoutineBuilder.nextStep', false);
+  }, [playAudioKey]);
+
   const handleAssignCardToSlot = useCallback(
     (cardId: string, slotIndex: number) => {
       if (sessionComplete || showCheckpoint || round.lockedSlots[slotIndex]) {
@@ -855,7 +864,7 @@ export function TimeAndRoutineBuilderGame({ level, onComplete, audio }: GameProp
 
       const encouragementKey =
         ENCOURAGEMENT_ROTATION[(resolvedRounds + roundAttempts + slotIndex) % ENCOURAGEMENT_ROTATION.length] as string;
-      setMessage({ key: encouragementKey, tone: 'neutral' });
+      setMessageWithAudio(encouragementKey, 'neutral');
     },
     [
       round,
@@ -1045,7 +1054,6 @@ export function TimeAndRoutineBuilderGame({ level, onComplete, audio }: GameProp
 
   const completeRoundAndAdvance = useCallback(() => {
     if (!roundSolved) {
-      setMessageWithAudio('games.timeAndRoutineBuilder.instructions.solveBeforeNext', 'hint');
       return;
     }
 
@@ -1180,14 +1188,25 @@ export function TimeAndRoutineBuilderGame({ level, onComplete, audio }: GameProp
           <div className="time-routine__summary-celebration">
             <SuccessCelebration />
           </div>
-          <p className="time-routine__message time-routine__message--success" aria-live="polite">
-            {t('parentDashboard.games.timeAndRoutineBuilder.progressSummary', {
-              sequenceAccuracy: `${finalSummary.sequenceAccuracy}%`,
-              clockAccuracy: `${finalSummary.clockAccuracy}%`,
-              hintReliance: `${finalSummary.hintReliance}%`,
-              topMisconception: t(`games.timeAndRoutineBuilder.misconceptions.${finalSummary.topMisconception}` as any),
-            })}
-          </p>
+          <div className="time-routine__summary-replay-row">
+            <p className="time-routine__message time-routine__message--success" aria-live="polite">
+              {t('parentDashboard.games.timeAndRoutineBuilder.progressSummary', {
+                sequenceAccuracy: `${finalSummary.sequenceAccuracy}%`,
+                clockAccuracy: `${finalSummary.clockAccuracy}%`,
+                hintReliance: `${finalSummary.hintReliance}%`,
+                topMisconception: t(`games.timeAndRoutineBuilder.misconceptions.${finalSummary.topMisconception}` as any),
+              })}
+            </p>
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={handleReplayCompletion}
+              aria-label={t('games.timeAndRoutineBuilder.controls.replay')}
+              style={{ minWidth: 'var(--touch-min)', minHeight: 'var(--touch-min)' }}
+            >
+              {rtlReplayGlyph(isRtl)}
+            </Button>
+          </div>
           <p className="time-routine__summary-note">
             {t('parentDashboard.games.timeAndRoutineBuilder.nextStep')}
           </p>
@@ -1215,7 +1234,18 @@ export function TimeAndRoutineBuilderGame({ level, onComplete, audio }: GameProp
       <div className="time-routine time-routine--checkpoint">
         <Card padding="lg" className="time-routine__shell">
           <h2 className="time-routine__title">{t('games.timeAndRoutineBuilder.instructions.checkpoint')}</h2>
-          <p className="time-routine__summary-note">{t('games.timeAndRoutineBuilder.instructions.roundSummary', { done: resolvedRounds, total: TOTAL_ROUNDS })}</p>
+          <div className="time-routine__checkpoint-replay-row">
+            <p className="time-routine__summary-note">{t('games.timeAndRoutineBuilder.instructions.roundSummary', { done: resolvedRounds, total: TOTAL_ROUNDS })}</p>
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={handleReplayCheckpoint}
+              aria-label={t('games.timeAndRoutineBuilder.controls.replay')}
+              style={{ minWidth: 'var(--touch-min)', minHeight: 'var(--touch-min)' }}
+            >
+              {rtlReplayGlyph(isRtl)}
+            </Button>
+          </div>
           <div className="time-routine__checkpoint-actions" role="group" aria-label={t('games.timeAndRoutineBuilder.instructions.checkpoint')}>
             <Button
               variant="secondary"
@@ -1464,7 +1494,10 @@ export function TimeAndRoutineBuilderGame({ level, onComplete, audio }: GameProp
                         })}
                         disabled={!sequenceSolved}
                       >
-                        {digitalTime(choice)}
+                        <span className="time-routine__clock-option-icon" aria-hidden="true">
+                          🕒
+                        </span>
+                        <span className="time-routine__clock-option-time">{digitalTime(choice)}</span>
                       </button>
                     );
                   })}
@@ -1508,6 +1541,7 @@ export function TimeAndRoutineBuilderGame({ level, onComplete, audio }: GameProp
             onClick={completeRoundAndAdvance}
             aria-label={t('games.timeAndRoutineBuilder.controls.next')}
             style={{ minHeight: 'var(--touch-min)', minWidth: 'var(--touch-min)' }}
+            disabled={!showNextAction}
           >
             {rtlNextGlyph(isRtl)}
           </Button>
@@ -1778,13 +1812,17 @@ const timeRoutineStyles = `
     position: absolute;
     inset-inline-end: 6px;
     inset-block-start: 4px;
-    inline-size: 28px;
-    block-size: 28px;
+    inline-size: var(--touch-min);
+    block-size: var(--touch-min);
     border-radius: var(--radius-full);
     border: 1px solid color-mix(in srgb, var(--color-theme-primary) 26%, transparent);
     background: var(--color-bg-primary);
     color: var(--color-text-primary);
     cursor: pointer;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    font-size: var(--font-size-lg);
   }
 
   .time-routine__clock-card {
@@ -1904,6 +1942,20 @@ const timeRoutineStyles = `
     color: var(--color-text-primary);
     cursor: pointer;
     font-weight: var(--font-weight-bold);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2xs);
+    padding-inline: var(--space-sm);
+  }
+
+  .time-routine__clock-option-icon {
+    line-height: 1;
+  }
+
+  .time-routine__clock-option-time {
+    direction: ltr;
+    font-variant-numeric: tabular-nums;
   }
 
   .time-routine__clock-option--selected {
@@ -1944,6 +1996,14 @@ const timeRoutineStyles = `
   .time-routine__summary-tone {
     margin: 0;
     color: var(--color-text-secondary);
+  }
+
+  .time-routine__summary-replay-row,
+  .time-routine__checkpoint-replay-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
   }
 
   @media (max-width: 960px) {

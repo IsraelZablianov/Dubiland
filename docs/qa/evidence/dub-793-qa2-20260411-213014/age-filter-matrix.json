@@ -1,0 +1,57 @@
+{
+  "generatedAt": "2026-04-11T18:37:41.624Z",
+  "baseUrl": "http://127.0.0.1:4315",
+  "viewport": "960x900",
+  "notes": "For progressive-reveal age bands, sections are hidden until explicit reveal action.",
+  "matrix": [
+    {
+      "targetLabel": "3-4",
+      "selected": "3-4",
+      "gameButtonCount": 3,
+      "sectionCount": 1,
+      "sectionHeadings": ["בחרו נושא למשחק"]
+    },
+    {
+      "targetLabel": "4-5",
+      "selected": "4-5",
+      "gameButtonCount": 3,
+      "sectionCount": 1,
+      "sectionHeadings": ["בחרו נושא למשחק"]
+    },
+    {
+      "targetLabel": "5-6",
+      "selected": "5-6",
+      "gameButtonCount": 3,
+      "sectionCount": 1,
+      "sectionHeadings": ["בחרו נושא למשחק"]
+    },
+    {
+      "targetLabel": "6-7",
+      "selected": "6-7",
+      "gameButtonCount": 28,
+      "sectionCount": 4,
+      "sectionHeadings": ["🔤 אותיות", "🧠 קריאה", "🔢 חשבון ומשחקי מספרים", "📚 ספרים אינטראקטיביים"]
+    },
+    {
+      "targetLabel": "כל הגילים",
+      "selected": "כל הגילים",
+      "gameButtonCount": 3,
+      "sectionCount": 1,
+      "sectionHeadings": ["בחרו נושא למשחק"]
+    }
+  ],
+  "revealFollowup": {
+    "forBand": "5-6",
+    "before": {
+      "revealButtonLabel": "בחרו נושא למשחק",
+      "sectionHeadings": ["בחרו נושא למשחק"],
+      "sectionCount": 1
+    },
+    "afterReveal": {
+      "sectionHeadings": ["🔤 אותיות", "🧠 קריאה", "🔢 חשבון ומשחקי מספרים", "📚 ספרים אינטראקטיביים"],
+      "sectionCount": 4,
+      "jumpCount": 4,
+      "jumpLabels": ["🔤אותיות", "🧠קריאה", "🔢חשבון ומשחקי מספרים", "📚ספרים אינטראקטיביים"]
+    }
+  }
+}

@@ -7,6 +7,7 @@ import { FloatingElement } from '@/components/motion';
 import { DAILY_LEARNING_GOAL_MINUTES } from '@/constants/learningGoals';
 import type { HintTrend, StableRange } from '@/games/engine';
 import { useAuth } from '@/hooks/useAuth';
+import { assetUrl } from '@/lib/assetUrl';
 import { childAvatarToEmoji } from '@/lib/childAvatarEmoji';
 import { loadSupabaseRuntime } from '@/lib/loadSupabaseRuntime';
 import { clearActiveChildProfile, disableGuestMode, isGuestModeEnabled } from '@/lib/session';
@@ -38,6 +39,8 @@ const DOMAIN_EMOJI_BY_KEY: Record<CurriculumDomain, string> = {
   letters: '🔤',
   reading: '📖',
 };
+
+const PARENT_DASHBOARD_BACKGROUND_URL = assetUrl('/images/backgrounds/home/home-storybook.webp');
 
 const TREND_LABEL_KEY: Record<
   CurriculumTrend,
@@ -546,7 +549,7 @@ export default function ParentDashboard() {
               color-mix(in srgb, var(--color-bg-primary) 90%, white 10%) 0%,
               color-mix(in srgb, var(--color-bg-secondary) 86%, white 14%) 100%
             ),
-            url(/images/backgrounds/home/home-storybook.webp);
+            url(${PARENT_DASHBOARD_BACKGROUND_URL});
           background-size: cover;
           background-position: center;
           background-blend-mode: soft-light, normal;

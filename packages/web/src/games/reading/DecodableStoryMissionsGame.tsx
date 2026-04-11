@@ -1570,7 +1570,7 @@ export function DecodableStoryMissionsGame({ onComplete, audio }: GameProps) {
 
         .decodable-missions__status-strip p {
           margin: 0;
-          min-block-size: 44px;
+          min-block-size: 48px;
           border-radius: var(--radius-lg);
           border: 1px solid color-mix(in srgb, var(--color-theme-secondary) 28%, transparent);
           background: color-mix(in srgb, var(--color-surface-muted) 84%, white 16%);
@@ -1596,8 +1596,8 @@ export function DecodableStoryMissionsGame({ onComplete, audio }: GameProps) {
 
         .decodable-missions__audio-inline,
         .decodable-missions__icon-button {
-          min-inline-size: 44px;
-          min-block-size: 44px;
+          min-inline-size: 48px;
+          min-block-size: 48px;
           border-radius: var(--radius-full);
           border: 1px solid color-mix(in srgb, var(--color-theme-secondary) 34%, transparent);
           background: color-mix(in srgb, var(--color-bg-card) 84%, white 16%);
@@ -1676,7 +1676,7 @@ export function DecodableStoryMissionsGame({ onComplete, audio }: GameProps) {
 
         .decodable-missions__icon-controls {
           display: grid;
-          grid-template-columns: repeat(4, minmax(44px, max-content));
+          grid-template-columns: repeat(4, minmax(48px, max-content));
           justify-content: flex-start;
           gap: var(--space-xs);
         }

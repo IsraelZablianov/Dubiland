@@ -11,6 +11,7 @@ const webRoot = path.resolve(scriptDirectory, '..');
 const repoRoot = path.resolve(webRoot, '..', '..');
 
 const defaultBudgetsPath = path.join(webRoot, 'perf', 'ci-budgets.json');
+const defaultDistPath = path.join(webRoot, 'dist');
 const defaultOutputPath = path.join(
   repoRoot,
   'artifacts',
@@ -25,10 +26,17 @@ const defaultReportsDirectory = path.join(
   'raw',
 );
 const defaultBaseUrl = 'http://127.0.0.1:4173';
+const ENFORCED_NODE_ENV = 'production';
 
 function parseArgs(argv) {
   const options = {};
-  const knownFlags = new Set(['--budgets', '--base-url', '--output', '--reports-dir']);
+  const knownFlags = new Set([
+    '--budgets',
+    '--base-url',
+    '--output',
+    '--reports-dir',
+    '--dist',
+  ]);
 
   for (let index = 0; index < argv.length; index += 1) {
     const token = argv[index];
@@ -69,6 +77,11 @@ function parseArgs(argv) {
 
     if (flag === '--reports-dir') {
       options.reportsDirectory = value;
+      continue;
+    }
+
+    if (flag === '--dist') {
+      options.distPath = value;
     }
   }
 
@@ -85,6 +98,7 @@ function usage() {
     '  --base-url <url>      Dist server base URL (default: http://127.0.0.1:4173)',
     '  --output <path>       JSON output path (default: artifacts/perf/lighthouse-results.json)',
     '  --reports-dir <path>  Raw Lighthouse JSON output directory',
+    '  --dist <path>         Dist directory checked by runtime guard (default: packages/web/dist)',
   ].join('\n');
 }
 
@@ -100,11 +114,19 @@ function toAbsolutePath(candidate, fallback) {
   return path.resolve(process.cwd(), candidate);
 }
 
-async function runCommand(command, args) {
+function withProductionNodeEnv(env = process.env) {
+  return {
+    ...env,
+    NODE_ENV: ENFORCED_NODE_ENV,
+  };
+}
+
+async function runCommand(command, args, { cwd = process.cwd() } = {}) {
   await new Promise((resolve, reject) => {
     const child = spawn(command, args, {
+      cwd,
       stdio: 'inherit',
-      env: process.env,
+      env: withProductionNodeEnv(),
     });
 
     child.on('error', reject);
@@ -116,6 +138,14 @@ async function runCommand(command, args) {
       reject(new Error(`${command} exited with code ${code}`));
     });
   });
+}
+
+async function runProductionRuntimeGuard(distPath) {
+  await runCommand(
+    'node',
+    ['./scripts/assert-production-react-runtime.mjs', '--dist', distPath],
+    { cwd: webRoot },
+  );
 }
 
 function toRouteKey(routePath) {
@@ -216,7 +246,10 @@ async function main() {
     options.reportsDirectory,
     defaultReportsDirectory,
   );
+  const distPath = toAbsolutePath(options.distPath, defaultDistPath);
   const baseUrl = options.baseUrl ?? defaultBaseUrl;
+
+  await runProductionRuntimeGuard(distPath);
 
   const routeBudgets = await readBudgets(budgetsPath);
 

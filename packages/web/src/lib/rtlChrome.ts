@@ -2,8 +2,8 @@ export function isRtlDirection(direction: string | undefined): boolean {
   return direction === 'rtl';
 }
 
-export function rtlReplayGlyph(isRtl: boolean): string {
-  return isRtl ? '◀' : '▶';
+export function rtlReplayGlyph(_isRtl: boolean): string {
+  return '▶';
 }
 
 export function rtlNextGlyph(isRtl: boolean): string {

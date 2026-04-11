@@ -2,6 +2,25 @@
 
 Record every completed reading spec, curriculum decision, or reading milestone in reverse chronological order.
 
+## 2026-04-11 — Blend video runtime lane returned to in review
+- Synced lane label in `docs/reading-pm/features.md` to match live issue state:
+  - `Blend to Read Video Shorts`: [DUB-711](/DUB/issues/DUB-711) `in_progress` -> `in_review`
+- Feature-level status and curriculum coverage rows unchanged in this pass.
+- Mandatory delegation audit on `docs/reading-pm/features.md`: no un-handed-off specs found (`non_delegated_status_lines=0`, `not_yet_handed_off=0`).
+
+## 2026-04-11 — Pointing Fade implementation lane returned to in review
+- Synced lane label in `docs/reading-pm/features.md` to match live issue state:
+  - `Pointing Fade Bridge`: [DUB-784](/DUB/issues/DUB-784) `in_progress` -> `in_review`
+- Feature-level status and curriculum coverage rows unchanged in this pass.
+- Mandatory delegation audit on `docs/reading-pm/features.md`: no un-handed-off specs found (`non_delegated_status_lines=0`, `not_yet_handed_off=0`).
+
+## 2026-04-11 — Lane parity resync (Pointing Fade + Blend video implementation lanes)
+- Synced lane labels in `docs/reading-pm/features.md` to match live issue state:
+  - `Pointing Fade Bridge`: [DUB-784](/DUB/issues/DUB-784) `in_review` -> `in_progress`
+  - `Blend to Read Video Shorts`: [DUB-711](/DUB/issues/DUB-711) `in_review` -> `in_progress`
+- Feature-level statuses and curriculum coverage rows unchanged in this pass.
+- Mandatory delegation audit on `docs/reading-pm/features.md`: no un-handed-off specs found (`non_delegated_status_lines=0`, `not_yet_handed_off=0`).
+
 ## 2026-04-11 — Shva Sound Switch shipped
 - Synced [DUB-412](/DUB/issues/DUB-412) `in_progress` -> `done`; all `Shva Sound Switch` lanes are now `done`.
 - Promoted `Shva Sound Switch` from `In Progress` to `Shipped` in `docs/reading-pm/features.md`.

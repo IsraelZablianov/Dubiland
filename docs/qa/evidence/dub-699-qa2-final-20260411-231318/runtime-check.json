@@ -1,0 +1,33 @@
+{
+  "issue": "DUB-699",
+  "baseUrl": "http://127.0.0.1:4325",
+  "route": "/games/numbers/time-and-routine-builder",
+  "timestamp": "2026-04-11T20:14:26.094Z",
+  "checks": {
+    "round1InstructionText": "כל הכבוד!",
+    "round1NextEnabled": true,
+    "rawSuccessKeyLeakVisibleCount": 0,
+    "replayButtonCount": 2,
+    "slotClearButtons": [
+      {
+        "ariaLabel": "ניקוי כרטיס מהמשבצת",
+        "width": 60,
+        "height": 60
+      },
+      {
+        "ariaLabel": "ניקוי כרטיס מהמשבצת",
+        "width": 60,
+        "height": 60
+      },
+      {
+        "ariaLabel": "ניקוי כרטיס מהמשבצת",
+        "width": 60,
+        "height": 60
+      }
+    ]
+  },
+  "outcome": {
+    "status": "pass",
+    "note": "Round-1 success instruction is localized Hebrew and no raw feedback.success.* key is rendered."
+  }
+}

@@ -1,0 +1,139 @@
+$ yarn "images:pipeline"
+[images:optimize] source files processed: 12
+[images:optimize] renditions generated this run: 62
+[images:optimize] manifest assets: 83 (2012.7 KiB)
+[images:optimize] wrote public/images-manifest.json
+Rebuilt public/images/games/thumbnails/contact-sheet-16x10.webp with 6 tiles.
+ - public/images/games/thumbnails/countingPicnic/thumb-16x10.webp
+ - public/images/games/thumbnails/colorGarden/thumb-16x10.webp
+ - public/images/games/thumbnails/letterSoundMatch/thumb-16x10.webp
+ - public/images/games/thumbnails/letterTracingTrail/thumb-16x10.webp
+ - public/images/games/thumbnails/pictureToWordBuilder/thumb-16x10.webp
+ - public/images/games/thumbnails/interactiveHandbook/thumb-16x10.webp
+[images:budgets] evaluated 83 assets from public/images-manifest.json
+[images:budgets] background/webp: 1 files, total 85.8 KiB, max 85.8 KiB
+[images:budgets] general/avif: 4 files, total 147.0 KiB, max 62.8 KiB
+[images:budgets] general/png: 1 files, total 101.0 KiB, max 101.0 KiB
+[images:budgets] general/webp: 4 files, total 139.7 KiB, max 62.7 KiB
+[images:budgets] handbookCover/avif: 1 files, total 9.0 KiB, max 9.0 KiB
+[images:budgets] handbookCover/png: 1 files, total 31.7 KiB, max 31.7 KiB
+[images:budgets] handbookCover/webp: 1 files, total 17.7 KiB, max 17.7 KiB
+[images:budgets] handbookPage/avif: 10 files, total 86.1 KiB, max 9.5 KiB
+[images:budgets] handbookPage/png: 10 files, total 367.4 KiB, max 39.0 KiB
+[images:budgets] handbookPage/webp: 10 files, total 172.5 KiB, max 18.7 KiB
+[images:budgets] handbookPageCompact/avif: 10 files, total 70.8 KiB, max 7.9 KiB
+[images:budgets] handbookPageCompact/webp: 10 files, total 89.2 KiB, max 10.0 KiB
+[images:budgets] mascot/svg: 4 files, total 10.8 KiB, max 3.2 KiB
+[images:budgets] thumbnail/webp: 13 files, total 679.2 KiB, max 68.7 KiB
+[images:budgets] topic/svg: 3 files, total 4.7 KiB, max 1.7 KiB
+[images:budgets] handbook preload magic-letter-map: 32.5 KiB / 60.0 KiB
+[images:budgets] PASS — all image budgets within thresholds
+$ yarn "tsc" "-b"
+$ yarn "vite" "build" "--mode" "production"
+vite v6.4.2 building for production...
+transforming...
+✓ 252 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/registerSW.js                                   0.13 kB
+dist/manifest.webmanifest                            0.36 kB
+dist/index.html                                      2.19 kB │ gzip:  0.95 kB
+dist/assets/index-B1GhvKfD.css                      15.83 kB │ gzip:  4.06 kB
+dist/assets/featureFlags-shgRGJ3-.js                 0.06 kB │ gzip:  0.08 kB
+dist/assets/topicSlugMap-CcNFPjS-.js                 0.10 kB │ gzip:  0.11 kB
+dist/assets/persistableChildId-JhQ7r_2a.js           0.14 kB │ gzip:  0.12 kB
+dist/assets/rtlChrome-BP0VGLf1.js                    0.19 kB │ gzip:  0.16 kB
+dist/assets/FloatingElement-CN7nuaxx.js              0.32 kB │ gzip:  0.24 kB
+dist/assets/supabase-DuqMbOTu.js                     0.37 kB │ gzip:  0.28 kB
+dist/assets/Card-CkBlMSYW.js                         0.51 kB │ gzip:  0.33 kB
+dist/assets/learningGoals-CLXQU2RT.js                0.55 kB │ gzip:  0.37 kB
+dist/assets/SuccessCelebration-fC-judzi.js           0.71 kB │ gzip:  0.40 kB
+dist/assets/childAvatarEmoji-MLuAJwYf.js             1.00 kB │ gzip:  0.61 kB
+dist/assets/useGameAttemptSync-CrA7iMsY.js           1.04 kB │ gzip:  0.56 kB
+dist/assets/PublicHeaderAuthSidecar-D9Ww8tjD.js      1.24 kB │ gzip:  0.60 kB
+dist/assets/concurrentChoiceLimit-B5-AQMxG.js        1.24 kB │ gzip:  0.56 kB
+dist/assets/usePublicAuthState-Djulf1kV.js           1.30 kB │ gzip:  0.68 kB
+dist/assets/videosRepository-DaS5G-Fo.js             1.38 kB │ gzip:  0.70 kB
+dist/assets/ChildRouteLayout-0ZaFCdon.js             1.65 kB │ gzip:  0.69 kB
+dist/assets/lettersProgressionRouting-D2RMtQw6.js    2.02 kB │ gzip:  0.78 kB
+dist/assets/readingProgressionRouting-8ROICL8j.js    2.22 kB │ gzip:  0.85 kB
+dist/assets/readingRuntimeMatrix-DG_jtnvA.js         2.39 kB │ gzip:  0.69 kB
+dist/assets/PublicBootstrapApp-CIodkbCQ.js           3.03 kB │ gzip:  1.08 kB
+dist/assets/GameTopBar-BFkzdjTk.js                   3.54 kB │ gzip:  1.27 kB
+dist/assets/NotFound-72HDQ5va.js                     3.80 kB │ gzip:  1.14 kB
+dist/assets/Privacy-BfVnjq2t.js                      3.84 kB │ gzip:  1.08 kB
+dist/assets/Terms-B6CY57yP.js                        3.84 kB │ gzip:  1.09 kB
+dist/assets/ParentsFaq-C5xKDaaQ.js                   3.89 kB │ gzip:  1.16 kB
+dist/assets/FeatureIllustration-rteSAgXN.js          5.67 kB │ gzip:  1.43 kB
+dist/assets/gameAttemptPersistence-fzUGHv7q.js       7.70 kB │ gzip:  3.12 kB
+dist/assets/Login-TAZmsx8_.js                        8.76 kB │ gzip:  2.52 kB
+dist/assets/Parents-BEu0xVt6.js                      8.81 kB │ gzip:  1.98 kB
+dist/assets/RouteMetadataManager-DQy0AWAO.js        11.26 kB │ gzip:  3.36 kB
+dist/assets/About-DLO_AOzl.js                       11.45 kB │ gzip:  2.39 kB
+dist/assets/ProtectedBootstrapApp-BRxb3o0Y.js       11.60 kB │ gzip:  3.61 kB
+dist/assets/seo-CHwd_s-r.js                         12.19 kB │ gzip:  2.93 kB
+dist/assets/ProfilePicker-CIv5OOIk.js               13.11 kB │ gzip:  3.63 kB
+dist/assets/Landing-Ce7zMrFR.js                     18.00 kB │ gzip:  3.08 kB
+dist/assets/TopicPillar-DD-0NxiC.js                 19.23 kB │ gzip:  3.95 kB
+dist/assets/ParentDashboard-mbFeB-8O.js             22.67 kB │ gzip:  4.45 kB
+dist/assets/BlendToReadVideoShorts-BybeyE0x.js      23.79 kB │ gzip:  6.71 kB
+dist/assets/useAuth-BU2PMjyp.js                     25.20 kB │ gzip:  6.41 kB
+dist/assets/LetterStorybookV2-aO7iaR-w.js           25.94 kB │ gzip:  7.09 kB
+dist/assets/NikudSoundLadder-Bo6dgb3W.js            26.39 kB │ gzip:  6.80 kB
+dist/assets/ShvaSoundSwitch-jetqLE66.js             28.20 kB │ gzip:  7.56 kB
+dist/assets/SoundSlideBlending-CyD7z0CB.js          30.26 kB │ gzip:  7.62 kB
+dist/assets/InteractiveHandbook-CPsE922n.js         30.43 kB │ gzip:  8.14 kB
+dist/assets/ShapeSafari-Du4A_Q8u.js                 30.49 kB │ gzip:  7.27 kB
+dist/assets/MeasureAndMatch-4PxgRvza.js             31.66 kB │ gzip:  8.42 kB
+dist/assets/PatternTrain-BlaJGKXs.js                31.90 kB │ gzip:  8.35 kB
+dist/assets/SubtractionStreet-DF7mOrM9.js           32.66 kB │ gzip:  8.26 kB
+dist/assets/NumberLineJumps-DlrPvSLG.js             33.86 kB │ gzip:  8.12 kB
+dist/assets/SightWordSprint-B2ckew-w.js             34.42 kB │ gzip:  7.82 kB
+dist/assets/Build10Workshop-Bacd3oJ4.js             34.73 kB │ gzip:  8.69 kB
+dist/assets/RootFamilyStickers-aQaqWJL-.js          35.09 kB │ gzip:  8.24 kB
+dist/assets/MoreOrLessMarket-BUzMtKxd.js            35.26 kB │ gzip:  8.37 kB
+dist/assets/SpellAndSendPostOffice-Ci6PoaHP.js      35.41 kB │ gzip:  9.18 kB
+dist/assets/PointingFadeBridge-CbtIyhgw.js          35.84 kB │ gzip:  9.08 kB
+dist/assets/LetterStorybook-DTZBJKPq.js             35.85 kB │ gzip:  8.44 kB
+dist/assets/DecodableStoryMissions-DPthjfEK.js      36.79 kB │ gzip:  8.47 kB
+dist/assets/PictureToWordBuilder-BSueZY54.js        37.87 kB │ gzip:  9.45 kB
+dist/assets/ConfusableLetterContrast-DzgVeJZk.js    38.66 kB │ gzip:  8.66 kB
+dist/assets/TimeAndRoutineBuilder-CY20XZ0E.js       39.02 kB │ gzip:  9.59 kB
+dist/assets/SyllableTrainBuilder-BkRz3I8W.js        39.04 kB │ gzip:  9.39 kB
+dist/assets/CountingPicnic-DIMr2BSD.js              39.05 kB │ gzip:  8.54 kB
+dist/assets/LetterSkyCatcher-C7usxscM.js            39.97 kB │ gzip:  9.84 kB
+dist/assets/Home-CvUHgONM.js                        40.72 kB │ gzip: 10.60 kB
+dist/assets/ColorGarden-BA6s3vS2.js                 42.81 kB │ gzip:  9.37 kB
+dist/assets/LetterTracingTrail-yJiz48el.js          43.72 kB │ gzip:  9.96 kB
+dist/assets/DecodableMicroStories-BNJT_gQy.js       45.60 kB │ gzip:  9.52 kB
+dist/assets/LetterSoundMatch-CDz8ztXl.js            47.25 kB │ gzip: 10.21 kB
+dist/assets/react-TeP_XUL0.js                       49.00 kB │ gzip: 17.11 kB
+dist/assets/i18n-Dr9B4Pzo.js                        49.39 kB │ gzip: 15.40 kB
+dist/assets/InteractiveHandbookGame-z6lixUEU.js    101.81 kB │ gzip: 22.13 kB
+dist/assets/supabase-KJ3zSVOC.js                   196.62 kB │ gzip: 51.73 kB
+dist/assets/index-j2pjmjWW.js                      206.32 kB │ gzip: 66.28 kB
+dist/assets/common-CeZPkJGG.js                     271.65 kB │ gzip: 65.13 kB
+✓ built in 11.86s
+
+PWA v1.2.0
+mode      generateSW
+precache  82 entries (2121.45 KiB)
+files generated
+  dist/sw.js
+  dist/workbox-80452e89.js
+$ yarn "generate:crawl-assets:dist"
+Generated crawl assets in /Users/israelz/Documents/dev/AI/Learning/packages/web/dist
+Canonical site URL: https://israelzablianov.github.io/Dubiland/
+$ node "./scripts/generate-seo-route-html.mjs"
+Generated parents/faq.html for route /parents/faq
+Generated about.html for route /about
+Generated index.html for route /
+Generated letters.html for route /letters
+Generated reading.html for route /reading
+Generated parents.html for route /parents
+Generated numbers.html for route /numbers
+Generated terms.html for route /terms
+Generated privacy.html for route /privacy
+Canonical site URL: https://israelzablianov.github.io/Dubiland/
+$ node "./scripts/assert-production-react-runtime.mjs"
+Production runtime guard passed: scanned 74 JS assets in dist/assets.

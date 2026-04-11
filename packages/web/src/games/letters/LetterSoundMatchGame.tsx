@@ -79,6 +79,7 @@ type StatusKey =
   | 'feedback.keepGoing'
   | 'feedback.youDidIt'
   | 'parentDashboard.games.letterSoundMatch.progressSummary'
+  | 'parentDashboard.games.letterSoundMatch.progressSummaryPerfect'
   | 'parentDashboard.games.letterSoundMatch.nextStep';
 
 type AudioKey =
@@ -220,6 +221,8 @@ const STATIC_AUDIO_PATH_BY_KEY = {
   'feedback.keepGoing': '/audio/he/feedback/keep-going.mp3',
   'feedback.youDidIt': '/audio/he/feedback/you-did-it.mp3',
   'parentDashboard.games.letterSoundMatch.progressSummary':
+    '/audio/he/parent-dashboard/games/letter-sound-match/progress-summary.mp3',
+  'parentDashboard.games.letterSoundMatch.progressSummaryPerfect':
     '/audio/he/parent-dashboard/games/letter-sound-match/progress-summary.mp3',
   'parentDashboard.games.letterSoundMatch.nextStep': '/audio/he/parent-dashboard/games/letter-sound-match/next-step.mp3',
 } as const;
@@ -508,6 +511,29 @@ function createInitialSessionStats(): SessionStats {
   };
 }
 
+function buildLetterSoundConfusedPair(
+  pairMistakes: SessionStats['pairMistakes'],
+  translateLetter: (letterKey: LetterAudioKey) => string,
+): 'none' | string {
+  const entries = Object.entries(pairMistakes) as Array<[PairKey, number]>;
+  if (entries.length === 0) {
+    return 'none';
+  }
+
+  const sorted = [...entries].sort((left, right) => right[1] - left[1]);
+  const top = sorted[0];
+  if (!top) {
+    return 'none';
+  }
+
+  const pairKey = top[0];
+  const [first, second] = pairKey.split('|') as [LetterId, LetterId];
+  const firstGlyph = Array.from(translateLetter(toLetterAudioKey(first)))[0] ?? translateLetter(toLetterAudioKey(first));
+  const secondGlyph =
+    Array.from(translateLetter(toLetterAudioKey(second)))[0] ?? translateLetter(toLetterAudioKey(second));
+  return `${firstGlyph}/${secondGlyph}`;
+}
+
 export function LetterSoundMatchGame({ level: runtimeLevel, onComplete, audio }: GameProps) {
   const { t, i18n } = useTranslation('common');
   const isRtl = isRtlDirection(i18n.dir(i18n.language));
@@ -739,10 +765,11 @@ export function LetterSoundMatchGame({ level: runtimeLevel, onComplete, audio }:
           highestStableRange: getStableRange(reachedLevel),
           firstAttemptSuccessRate,
           hintTrend,
+          letterSoundConfusedPair: buildLetterSoundConfusedPair(stats.pairMistakes, (key) => t(key)),
         },
       });
     },
-    [onComplete, playAudioKey, setMessageWithAudio],
+    [onComplete, playAudioKey, setMessageWithAudio, t],
   );
 
   const moveToNextRound = useCallback(
@@ -1302,26 +1329,10 @@ export function LetterSoundMatchGame({ level: runtimeLevel, onComplete, audio }:
     };
   }, [audio]);
 
-  const strongestPair = useMemo(() => {
-    const entries = Object.entries(sessionStats.pairMistakes) as Array<[PairKey, number]>;
-    if (entries.length === 0) {
-      return null;
-    }
-
-    const [pairKey] = entries.sort((left, right) => right[1] - left[1])[0] as [PairKey, number];
-    return pairKey;
-  }, [sessionStats.pairMistakes]);
-
-  const strongestPairLabel = useMemo(() => {
-    if (!strongestPair) {
-      return `${currentLetterGlyph}/${currentLetterGlyph}`;
-    }
-
-    const [first, second] = strongestPair.split('|') as [LetterId, LetterId];
-    const firstGlyph = Array.from(t(toLetterAudioKey(first)))[0] ?? t(toLetterAudioKey(first));
-    const secondGlyph = Array.from(t(toLetterAudioKey(second)))[0] ?? t(toLetterAudioKey(second));
-    return `${firstGlyph}/${secondGlyph}`;
-  }, [currentLetterGlyph, strongestPair, t]);
+  const letterSoundConfusedPairSummary = useMemo(
+    () => buildLetterSoundConfusedPair(sessionStats.pairMistakes, (key) => t(key)),
+    [sessionStats.pairMistakes, t],
+  );
 
   const sessionAccuracy =
     sessionStats.roundsCompleted === 0
@@ -1372,15 +1383,25 @@ export function LetterSoundMatchGame({ level: runtimeLevel, onComplete, audio }:
           <Card padding="md" className="letter-sound-match__summary-card">
             <div className="letter-sound-match__text-row">
               <p>
-                {t('parentDashboard.games.letterSoundMatch.progressSummary', {
-                  accuracy: sessionAccuracy,
-                  confusedPair: strongestPairLabel,
-                })}
+                {letterSoundConfusedPairSummary === 'none'
+                  ? t('parentDashboard.games.letterSoundMatch.progressSummaryPerfect', {
+                      accuracy: sessionAccuracy,
+                    })
+                  : t('parentDashboard.games.letterSoundMatch.progressSummary', {
+                      accuracy: sessionAccuracy,
+                      confusedPair: letterSoundConfusedPairSummary,
+                    })}
               </p>
               <button
                 type="button"
                 className="letter-sound-match__replay-button"
-                onClick={() => playAudioKey('parentDashboard.games.letterSoundMatch.progressSummary')}
+                onClick={() =>
+                  playAudioKey(
+                    letterSoundConfusedPairSummary === 'none'
+                      ? 'parentDashboard.games.letterSoundMatch.progressSummaryPerfect'
+                      : 'parentDashboard.games.letterSoundMatch.progressSummary',
+                  )
+                }
                 aria-label={replayButtonAriaLabel}
               >
                 <span aria-hidden="true">{replayIcon}</span>
@@ -1415,10 +1436,10 @@ export function LetterSoundMatchGame({ level: runtimeLevel, onComplete, audio }:
               variant="primary"
               size="lg"
               onClick={handlePlayAgain}
-              aria-label={t('games.letterSoundMatch.hints.gentleRetry')}
+              aria-label={t('games.letterSoundMatch.instructions.intro')}
               style={{ minWidth: 'var(--touch-min)', paddingInline: 'var(--space-lg)' }}
             >
-              ↻ {t('games.letterSoundMatch.hints.gentleRetry')}
+              ↻ {t('games.letterSoundMatch.instructions.intro')}
             </Button>
           </div>
         </Card>

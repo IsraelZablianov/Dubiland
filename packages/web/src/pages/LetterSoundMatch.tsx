@@ -83,7 +83,7 @@ export default function LetterSoundMatchPage() {
     [profileAgeBand],
   );
 
-  const { completionResult, syncState, handleComplete, retryLastSync } = useGameAttemptSync({
+  const { completionResult, syncState, syncErrorMessage, handleComplete, retryLastSync } = useGameAttemptSync({
     childId: child.id,
     childAgeBand: activeProfile?.ageBand,
     game: LETTER_SOUND_MATCH_GAME,
@@ -95,6 +95,9 @@ export default function LetterSoundMatchPage() {
     const ayin = Array.from(t('letters.pronunciation.ayin'))[0] ?? t('letters.pronunciation.ayin');
     return `${alef}/${ayin}`;
   }, [t]);
+
+  const letterSoundPair = completionResult?.summaryMetrics?.letterSoundConfusedPair;
+  const summaryAccuracy = completionResult?.summaryMetrics?.firstAttemptSuccessRate ?? 0;
 
   return (
     <ChildRouteScaffold width="wide">
@@ -119,18 +122,25 @@ export default function LetterSoundMatchPage() {
         {completionResult?.summaryMetrics && (
           <Card padding="md" style={{ display: 'grid', gap: 'var(--space-xs)' }}>
             <p style={{ color: 'var(--color-text-primary)' }}>
-              {t('parentDashboard.games.letterSoundMatch.progressSummary', {
-                accuracy: completionResult.summaryMetrics.firstAttemptSuccessRate,
-                confusedPair: confusedPairFallback,
-              })}
+              {letterSoundPair === 'none'
+                ? t('parentDashboard.games.letterSoundMatch.progressSummaryPerfect', {
+                    accuracy: summaryAccuracy,
+                  })
+                : t('parentDashboard.games.letterSoundMatch.progressSummary', {
+                    accuracy: summaryAccuracy,
+                    confusedPair: letterSoundPair ?? confusedPairFallback,
+                  })}
             </p>
             <p style={{ color: 'var(--color-text-secondary)' }}>
               {syncState === 'error'
-                ? t('errors.generic')
+                ? t('errors.gameAttemptSaveFailed')
                 : syncState === 'syncing'
                   ? t('feedback.keepGoing')
                   : t('feedback.excellent')}
             </p>
+            {import.meta.env.DEV && syncState === 'error' && syncErrorMessage ? (
+              <p style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem' }}>{syncErrorMessage}</p>
+            ) : null}
             {syncState === 'error' && (
               <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
                 <Button variant="secondary" size="md" onClick={retryLastSync} aria-label={t('profile.retry')}>

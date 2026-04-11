@@ -1,0 +1,107 @@
+- generic [ref=e68]:
+  - banner [ref=e69]:
+    - generic [ref=e70]:
+      - link "דובילנד — לומדים עברית בכיף" [ref=e71] [cursor=pointer]:
+        - /url: /
+        - img
+        - generic [ref=e72]: דובילנד
+      - navigation [ref=e73]:
+        - link "נושאי לימוד" [ref=e74] [cursor=pointer]:
+          - /url: /games
+        - link "אודות" [ref=e75] [cursor=pointer]:
+          - /url: /about
+        - link "להורים" [ref=e76] [cursor=pointer]:
+          - /url: /parents
+      - generic [ref=e78]:
+        - generic [ref=e79]:
+          - generic [ref=e80]: 🧒
+          - generic [ref=e81]: אורח קטן
+        - generic [ref=e82]:
+          - button "בחירת ילד" [disabled] [ref=e83]
+          - button "אזור הורים" [ref=e84] [cursor=pointer]
+          - button "התנתקות" [ref=e85] [cursor=pointer]
+  - main [ref=e86]:
+    - generic [ref=e90]:
+      - generic [ref=e91]:
+        - generic [ref=e92]:
+          - heading "מי משחק היום?" [level=1] [ref=e93]
+          - paragraph [ref=e94]: בחרו פרופיל כדי להתחיל לשחק
+        - generic [ref=e96]:
+          - img
+      - generic [ref=e97]:
+        - button "אורח קטן" [pressed] [ref=e98] [cursor=pointer]:
+          - generic "אורח קטן" [ref=e99]:
+            - generic [ref=e100]: 🧒
+          - strong [ref=e101]: אורח קטן
+        - button "עוד פרופילים לדוגמה" [ref=e102] [cursor=pointer]
+        - generic:
+          - strong: פרופילים לדוגמה
+          - generic:
+            - generic:
+              - generic:
+                - generic: 🦊
+              - strong: מאיה
+            - generic:
+              - generic:
+                - generic: 🐯
+              - strong: נועם
+            - generic:
+              - generic:
+                - generic: 🐼
+              - strong: ליאל
+      - generic [ref=e103]:
+        - button "אזור הורים" [ref=e104] [cursor=pointer]
+        - button "יאללה, מתחילים!" [ref=e105] [cursor=pointer]
+  - contentinfo [ref=e106]:
+    - generic [ref=e107]:
+      - generic [ref=e108]:
+        - link "דובילנד" [ref=e109] [cursor=pointer]:
+          - /url: /
+          - img
+          - generic [ref=e110]: דובילנד
+        - paragraph [ref=e111]: לומדים עברית בכיף עם דובי 🧸
+      - generic [ref=e112]:
+        - generic [ref=e113]:
+          - heading "נושאי לימוד" [level=3] [ref=e114]
+          - navigation [ref=e115]:
+            - link "מספרים וחשבון" [ref=e116] [cursor=pointer]:
+              - /url: /#topics
+            - link "אותיות וצלילים" [ref=e117] [cursor=pointer]:
+              - /url: /#topics
+            - link "קריאה ראשונה" [ref=e118] [cursor=pointer]:
+              - /url: /#topics
+        - generic [ref=e119]:
+          - heading "דובילנד" [level=3] [ref=e120]
+          - navigation [ref=e121]:
+            - link "אודות" [ref=e122] [cursor=pointer]:
+              - /url: /about
+            - link "להורים" [ref=e123] [cursor=pointer]:
+              - /url: /parents
+            - link "שאלות נפוצות" [ref=e124] [cursor=pointer]:
+              - /url: /parents#faq
+        - generic [ref=e125]:
+          - heading "משפטי" [level=3] [ref=e126]
+          - navigation [ref=e127]:
+            - link "תנאי שימוש" [ref=e128] [cursor=pointer]:
+              - /url: /terms
+            - link "מדיניות פרטיות" [ref=e129] [cursor=pointer]:
+              - /url: /privacy
+    - generic [ref=e130]:
+      - paragraph [ref=e131]: © 2026 דובילנד. כל הזכויות שמורות.
+      - paragraph [ref=e132]: נבנה באהבה לילדים ישראלים
+  - status "Developer diagnostics" [ref=e133]:
+    - generic [ref=e134]:
+      - strong [ref=e135]: DEV
+      - text: "· Supabase env: VITE_* present"
+    - generic [ref=e136]:
+      - text: "Active child:"
+      - code [ref=e137]: guest
+      - text: "· persistable: no — open /profiles and select a real child (UUID)"
+    - generic [ref=e138]:
+      - button "Probe Supabase (games)" [ref=e139] [cursor=pointer]
+      - generic [ref=e140]:
+        - text: In DevTools Network, show
+        - strong [ref=e141]: All
+        - text: or
+        - strong [ref=e142]: Fetch
+        - text: — not only XHR.

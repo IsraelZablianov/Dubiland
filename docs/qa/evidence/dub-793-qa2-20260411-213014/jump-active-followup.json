@@ -1,0 +1,11 @@
+{
+  "generatedAt": "2026-04-11T18:35:xxZ",
+  "baseUrl": "http://127.0.0.1:4315",
+  "viewport": "1366x900",
+  "labelsBefore": ["אותיות", "קריאה", "חשבון ומשחקי מספרים", "ספרים אינטראקטיביים"],
+  "afterSecondJump": {
+    "activeLabel": "קריאה",
+    "scrollY": 1630,
+    "inViewSections": ["letters", "reading"]
+  }
+}

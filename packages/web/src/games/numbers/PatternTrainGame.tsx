@@ -1335,7 +1335,7 @@ export function PatternTrainGame({ level, child, onComplete, audio }: GameProps)
         }
 
         .pattern-train__icon-button {
-          min-inline-size: 44px;
+          min-inline-size: 48px;
           min-block-size: 52px;
           border-radius: var(--radius-lg);
           border: 1px solid color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
@@ -1422,7 +1422,7 @@ export function PatternTrainGame({ level, child, onComplete, audio }: GameProps)
         }
 
         .pattern-train__option {
-          min-inline-size: 44px;
+          min-inline-size: 48px;
           min-block-size: 72px;
           border-radius: var(--radius-lg);
           border: 1px solid color-mix(in srgb, var(--color-accent-primary) 25%, transparent);
@@ -1493,7 +1493,7 @@ export function PatternTrainGame({ level, child, onComplete, audio }: GameProps)
         }
 
         .pattern-train__break-button {
-          min-inline-size: 44px;
+          min-inline-size: 48px;
           min-block-size: 52px;
           padding-inline: var(--space-md);
           border-radius: var(--radius-full);

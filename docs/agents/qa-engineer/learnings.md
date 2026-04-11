@@ -242,6 +242,9 @@ When patching a QA child lane to `blocked` and reassigning it to Architect for s
 ## 2026-04-11 — Preflight dependency/artifact checks before QA batch validation
 For QA lanes that validate a batch of new games, first confirm each dependency implementation ticket is handoff-ready (`in_review`/`done`) via direct `/api/issues/{identifier}` lookups and verify core artifacts (game component + route/i18n wiring) exist in workspace. If dependencies are still `todo` and artifacts are absent, immediately set the QA lane to `blocked` with linked unblock criteria instead of running speculative validation steps.
 
+## 2026-04-11 — Use dev diagnostics + targeted network filters to verify demo-child persistence guards
+For regressions involving non-persistable demo child IDs, combine runtime dev diagnostics (`Active child`, `persistable`) with filtered network capture (`child_game_summaries|game_sessions|child_handbook_progress`) during `/profiles -> /games` flow. This gives high-confidence pass evidence when guarded queries are truly suppressed, while still surfacing unrelated telemetry failures (for example `parent_funnel_events` 404) as separate defects.
+
 ## 2026-04-11 — Use `jq -n` payloads for PATCH comments to avoid accidental markdown quote-wrapping
 When posting multiline markdown comments through shell `curl`, constructing JSON with ad-hoc escaping can wrap the entire comment in literal quotes and reduce readability in the issue thread. Build PATCH payloads with `jq -n --arg ... '{status:$status, comment:$comment}'` so markdown is stored exactly once.
 
@@ -289,3 +292,24 @@ If a blocked QA issue is assigned with no prior comments, do one checkout cycle,
 
 ## 2026-04-11 — For blocked QA reruns, include dependency status + deep-link to latest upstream progress comment
 When a QA matrix lane depends on active FED polish issues, the blocker note should include both current status (`in_review`/`in_progress`) and a direct link to the newest upstream comment proving scope is still partial. This gives Ops/Architect enough evidence to avoid premature re-wakes and preserves clear resume criteria.
+
+## 2026-04-11 — Run accessibility gates against production preview when dev-only diagnostics overlays are present
+When validating route-level WCAG in this repo, `import.meta.env.DEV` overlays (for example `DevClientDiagnosticsStrip`) can produce contrast violations unrelated to user-facing screens. Keep a dev-run for implementation debugging, then confirm signoff with `yarn workspace @dubiland/web build` + `yarn workspace @dubiland/web preview` and record both outcomes explicitly in QA evidence.
+
+## 2026-04-11 — For auth-gated game QA, pair static telemetry proof with namespace-scoped i18n/audio parity
+When protected routes redirect to `/login` in local runs, complete QA evidence by combining: (1) code-path verification that `summaryMetrics` fields survive into persisted attempt payloads, (2) namespace-scoped i18n leaf-key to audio-manifest parity checks (for example `games.subtractionStreet.*` + `parentDashboard.games.subtractionStreet.*`), and (3) explicit notation that authenticated browser playthrough remains a residual risk unless credentials are available.
+
+## 2026-04-11 — Dev smoke gate can still be satisfied on alternate Vite port when default `3000` is occupied
+For heartbeat QA signoff that requires `yarn dev` verification, if `3000` is already in use by another local process, run `yarn workspace @dubiland/web dev --port 3001` (or another free port) and record the port conflict explicitly in the issue comment rather than skipping the runtime boot check.
+
+## 2026-04-11 — Validate “mobile sticky CTA” claims with scroll-distance checkpoints, not just initial viewport snapshots
+A CTA can look correct at `scrollY=0` yet fail persistence after moderate scroll when implemented as `position: sticky; bottom` near the top of the DOM flow. For parent-funnel QA, capture at least two mobile screenshots (top + mid-scroll) and log `getBoundingClientRect()` samples at multiple scroll offsets before signoff.
+
+## 2026-04-11 — Validate video URLs as actual media assets, not just successful HTTP responses
+For interactive-video lanes, a `200/206` response is insufficient evidence: Vite SPA fallback can return `text/html` on missing `.mp4` paths and the player silently fails into non-video fallback modes. During QA, verify both `Content-Type` (must be `video/*`) and `video.error`/`readyState` in-browser after pressing play.
+
+## 2026-04-11 — Hint-stage thresholds need explicit spec-to-code assertion
+When specs define progressive hint stages, assert each stage boundary in code review (e.g., reduction to 2 choices only at stage 3). Off-by-one stage thresholds can preserve functionality while still violating pedagogy and difficulty design.
+
+## 2026-04-11 — Validate key-shape compatibility, not just key prefixes, when reviewing i18n usage
+A key path can look valid by naming convention yet still fail at runtime when locale node types differ (for example code expects `feedback.success.amazing` while locale defines `feedback.success` as a string). During QA, confirm both path and node shape against locale JSON to prevent raw key-path leakage in child-facing UI.

@@ -119,7 +119,6 @@ const WORD_POOL: WordPronunciationKey[] = [
   'words.pronunciation.kore',
   'words.pronunciation.bagan',
   'words.pronunciation.haver',
-  'words.pronunciation.shel',
   'words.pronunciation.halach',
   'words.pronunciation.shaar',
   'words.pronunciation.mila',
@@ -128,7 +127,7 @@ const WORD_POOL: WordPronunciationKey[] = [
   'words.pronunciation.katsar',
   'words.pronunciation.hasera',
   'words.pronunciation.milim',
-  'words.pronunciation.et',
+  'words.pronunciation.ets',
   'words.pronunciation.ratzef',
   'words.pronunciation.seder',
 ];
@@ -221,11 +220,11 @@ const STAGE_TEMPLATES: Record<StageId, StageRoundTemplate[]> = {
       sentenceKey: 'sentences.pronunciation.pointingFadeBridgeL3bSet2',
       targetWordKey: 'words.pronunciation.milim',
       action: 'order',
-      orderWordKeys: ['words.pronunciation.dubi', 'words.pronunciation.milim', 'words.pronunciation.et'],
+      orderWordKeys: ['words.pronunciation.dubi', 'words.pronunciation.milim', 'words.pronunciation.seder'],
     },
     {
       sentenceKey: 'sentences.pronunciation.pointingFadeBridgeL3bSet2',
-      targetWordKey: 'words.pronunciation.et',
+      targetWordKey: 'words.pronunciation.seder',
       action: 'match',
     },
   ],
@@ -265,6 +264,12 @@ const ANTI_RANDOM = {
   tier2PauseMs: 1200,
   reducedOptionsRounds: 2,
 } as const;
+
+const CHOICE_ICON: Record<ActionMode, string> = {
+  match: '🎯',
+  missing: '🧩',
+  order: '🔢',
+};
 
 const visuallyHiddenStyle: CSSProperties = {
   position: 'absolute',
@@ -1353,6 +1358,7 @@ export function PointingFadeBridgeGame({ onComplete, audio }: GameProps) {
                   const wordText = tr(wordKey);
                   const signature = normalizeSignature(wordText);
                   const isDone = orderProgress.includes(signature);
+                  const icon = isDone ? '✅' : CHOICE_ICON.order;
                   return (
                     <button
                       key={wordKey}
@@ -1361,7 +1367,10 @@ export function PointingFadeBridgeGame({ onComplete, audio }: GameProps) {
                       onClick={() => handleOrderChoice(wordKey)}
                       disabled={inputLocked || roundResolved || isDone}
                     >
-                      {wordText}
+                      <span className="pointing-bridge__choice-icon" aria-hidden="true">
+                        {icon}
+                      </span>
+                      <span className="pointing-bridge__choice-label">{wordText}</span>
                     </button>
                   );
                 })}
@@ -1373,6 +1382,7 @@ export function PointingFadeBridgeGame({ onComplete, audio }: GameProps) {
                   const plain = stripNikud(pointed);
                   const isTarget = wordKey === activeTemplate.targetWordKey;
                   const label = isTarget && targetDisplayedAsFaded ? plain : pointed;
+                  const icon = actionMode === 'missing' ? CHOICE_ICON.missing : CHOICE_ICON.match;
                   return (
                     <button
                       key={wordKey}
@@ -1381,7 +1391,10 @@ export function PointingFadeBridgeGame({ onComplete, audio }: GameProps) {
                       onClick={() => handleMatchChoice(wordKey)}
                       disabled={inputLocked || roundResolved}
                     >
-                      {label}
+                      <span className="pointing-bridge__choice-icon" aria-hidden="true">
+                        {icon}
+                      </span>
+                      <span className="pointing-bridge__choice-label">{label}</span>
                     </button>
                   );
                 })}
@@ -1503,8 +1516,8 @@ export function PointingFadeBridgeGame({ onComplete, audio }: GameProps) {
         }
 
         .pointing-bridge__audio-inline {
-          min-inline-size: 44px;
-          min-block-size: 44px;
+          min-inline-size: 48px;
+          min-block-size: 48px;
           border-radius: 999px;
           border: 1px solid color-mix(in srgb, var(--color-theme-primary) 42%, transparent);
           background: var(--color-bg-surface);
@@ -1655,6 +1668,10 @@ export function PointingFadeBridgeGame({ onComplete, audio }: GameProps) {
 
         .pointing-bridge__choice {
           min-block-size: 52px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.48rem;
           border-radius: var(--radius-lg);
           border: 1px solid color-mix(in srgb, var(--color-border) 72%, transparent);
           background: var(--color-bg-surface);
@@ -1665,6 +1682,19 @@ export function PointingFadeBridgeGame({ onComplete, audio }: GameProps) {
           cursor: pointer;
           transition: transform 130ms ease, border-color 130ms ease;
           touch-action: manipulation;
+        }
+
+        .pointing-bridge__choice-icon {
+          inline-size: 1.3rem;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          line-height: 1;
+          font-size: 1rem;
+        }
+
+        .pointing-bridge__choice-label {
+          line-height: 1.2;
         }
 
         .pointing-bridge__choice:disabled {

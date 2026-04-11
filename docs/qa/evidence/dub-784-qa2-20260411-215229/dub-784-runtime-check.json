@@ -1,0 +1,98 @@
+{
+  "url": "http://127.0.0.1:4317/games/reading/pointing-fade-bridge",
+  "dir": "rtl",
+  "keyLeaks": [
+    {
+      "className": "pointing-bridge__choice ",
+      "ariaLabel": null,
+      "text": "words.pronunciation.et",
+      "width": 545,
+      "height": 52
+    }
+  ],
+  "tooSmallCount": 0,
+  "tooSmall": [],
+  "textOnlyChoices": [
+    {
+      "text": "words.pronunciation.et",
+      "hasIconChild": false
+    },
+    {
+      "text": "דּוֹבִי",
+      "hasIconChild": false
+    }
+  ],
+  "sampleCount": 10,
+  "samples": [
+    {
+      "className": "pointing-bridge__audio-inline",
+      "ariaLabel": "השמעה חוזרת",
+      "text": "▶",
+      "width": 48,
+      "height": 48
+    },
+    {
+      "className": "pointing-bridge__audio-inline",
+      "ariaLabel": "השמעה חוזרת",
+      "text": "▶",
+      "width": 48,
+      "height": 48
+    },
+    {
+      "className": "pointing-bridge__audio-inline",
+      "ariaLabel": "השמעה חוזרת",
+      "text": "▶",
+      "width": 48,
+      "height": 48
+    },
+    {
+      "className": "pointing-bridge__audio-inline",
+      "ariaLabel": "השמעה חוזרת",
+      "text": "▶",
+      "width": 48,
+      "height": 48
+    },
+    {
+      "className": "pointing-bridge__choice ",
+      "ariaLabel": null,
+      "text": "words.pronunciation.et",
+      "width": 545,
+      "height": 52
+    },
+    {
+      "className": "pointing-bridge__choice is-target-choice",
+      "ariaLabel": null,
+      "text": "דּוֹבִי",
+      "width": 545,
+      "height": 52
+    },
+    {
+      "className": "pointing-bridge__icon-button",
+      "ariaLabel": "השמעה חוזרת",
+      "text": "▶השמעה חוזרת",
+      "width": 52,
+      "height": 52
+    },
+    {
+      "className": "pointing-bridge__icon-button",
+      "ariaLabel": "נסו שוב",
+      "text": "↻נסו שוב",
+      "width": 52,
+      "height": 52
+    },
+    {
+      "className": "pointing-bridge__icon-button",
+      "ariaLabel": "רמז",
+      "text": "💡רמז",
+      "width": 52,
+      "height": 52
+    },
+    {
+      "className": "pointing-bridge__icon-button",
+      "ariaLabel": "הבא",
+      "text": "←הבא",
+      "width": 52,
+      "height": 52
+    }
+  ]
+}

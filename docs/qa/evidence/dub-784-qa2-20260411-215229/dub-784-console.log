@@ -1,0 +1,5 @@
+Total messages: 3 (Errors: 0, Warnings: 0)
+
+[INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:4317/node_modules/.vite/deps/react-dom_client.js?v=ac403c3e:20102
+[ERROR] Failed to load resource: the server responded with a status of 404 () @ https://csyyrxgubkiqfujmuzjf.supabase.co/rest/v1/parent_funnel_events?on_conflict=client_event_id&columns=%22client_event_id%22%2C%22session_id%22%2C%22event_name%22%2C%22source_path%22%2C%22target_path%22%2C%22cta_id%22%2C%22entry_method%22%2C%22auth_mode%22%2C%22metadata%22%2C%22occurred_at%22:0
+[INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:4317/node_modules/.vite/deps/react-dom_client.js?v=ac403c3e:20102

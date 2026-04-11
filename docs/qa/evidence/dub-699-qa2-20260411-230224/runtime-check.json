@@ -1,0 +1,29 @@
+{
+  "issue": "DUB-699",
+  "baseUrl": "http://127.0.0.1:4325",
+  "route": "/games/numbers/time-and-routine-builder",
+  "timestamp": "2026-04-11T20:03:09Z",
+  "checks": {
+    "round1Message": "feedback.success.wellDone",
+    "nextEnabledAfterRound1": true,
+    "slotClearButtons": [
+      { "ariaLabel": "ניקוי כרטיס מהמשבצת", "width": 60, "height": 60 },
+      { "ariaLabel": "ניקוי כרטיס מהמשבצת", "width": 60, "height": 60 },
+      { "ariaLabel": "ניקוי כרטיס מהמשבצת", "width": 60, "height": 60 }
+    ],
+    "checkpointVisible": true,
+    "checkpointReplayCount": 1,
+    "completionVisible": true,
+    "completionReplayCount": 1,
+    "solveBeforeNextMessagePresent": false
+  },
+  "outcome": {
+    "mandatoryBlockersFixed": [
+      "slot clear touch target >= 44px",
+      "submit-style solve-before-next messaging removed",
+      "checkpoint replay affordance present",
+      "completion replay affordance present"
+    ],
+    "remainingBlocker": "Success instruction displays raw i18n key (feedback.success.wellDone) instead of localized Hebrew text"
+  }
+}

@@ -1244,7 +1244,7 @@ export function SpellAndSendPostOfficeGame({ onComplete, audio }: GameProps) {
 
         .post-office__controls {
           display: grid;
-          grid-template-columns: repeat(4, minmax(44px, 1fr));
+          grid-template-columns: repeat(4, minmax(48px, 1fr));
           gap: var(--space-sm);
         }
 

@@ -1,0 +1,86 @@
+{
+  "generatedAt": "2026-04-11T19:38:15.933Z",
+  "budgetsPath": "packages/web/perf/ci-budgets.json",
+  "baseUrl": "http://127.0.0.1:4173",
+  "reportsDirectory": "artifacts/perf/lighthouse/raw",
+  "pass": false,
+  "routes": {
+    "/": {
+      "route": "/",
+      "targetUrl": "http://127.0.0.1:4173/",
+      "reportPath": "artifacts/perf/lighthouse/raw/root.json",
+      "budgets": {
+        "performanceMin": 80,
+        "lcpMsMax": 4100,
+        "clsMax": 0.05
+      },
+      "metrics": null,
+      "checks": {
+        "performance": false,
+        "lcp": false,
+        "cls": false
+      },
+      "pass": false,
+      "error": "npx exited with code 1"
+    },
+    "/letters": {
+      "route": "/letters",
+      "targetUrl": "http://127.0.0.1:4173/letters",
+      "reportPath": "artifacts/perf/lighthouse/raw/letters.json",
+      "budgets": {
+        "performanceMin": 85,
+        "lcpMsMax": 3350,
+        "clsMax": 0.05
+      },
+      "metrics": null,
+      "checks": {
+        "performance": false,
+        "lcp": false,
+        "cls": false
+      },
+      "pass": false,
+      "error": "npx exited with code 1"
+    },
+    "/parents": {
+      "route": "/parents",
+      "targetUrl": "http://127.0.0.1:4173/parents",
+      "reportPath": "artifacts/perf/lighthouse/raw/parents.json",
+      "budgets": {
+        "performanceMin": 86,
+        "lcpMsMax": 3300,
+        "clsMax": 0.05
+      },
+      "metrics": null,
+      "checks": {
+        "performance": false,
+        "lcp": false,
+        "cls": false
+      },
+      "pass": false,
+      "error": "npx exited with code 1"
+    }
+  },
+  "violations": [
+    {
+      "route": "/",
+      "metric": "audit",
+      "measured": "error",
+      "expected": "lighthouse run succeeds",
+      "message": "npx exited with code 1"
+    },
+    {
+      "route": "/letters",
+      "metric": "audit",
+      "measured": "error",
+      "expected": "lighthouse run succeeds",
+      "message": "npx exited with code 1"
+    },
+    {
+      "route": "/parents",
+      "metric": "audit",
+      "measured": "error",
+      "expected": "lighthouse run succeeds",
+      "message": "npx exited with code 1"
+    }
+  ]
+}

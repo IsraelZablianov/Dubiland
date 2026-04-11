@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { spawn } from 'node:child_process';
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
@@ -18,6 +19,7 @@ const defaultOutputPath = path.join(
   'perf',
   'bundle-results.json',
 );
+const ENFORCED_NODE_ENV = 'production';
 
 function parseArgs(argv) {
   const options = {};
@@ -78,6 +80,43 @@ function toAbsolutePath(candidate, fallback) {
 
 function formatInteger(value) {
   return Number(value).toLocaleString('en-US');
+}
+
+function withProductionNodeEnv(env = process.env) {
+  return {
+    ...env,
+    NODE_ENV: ENFORCED_NODE_ENV,
+  };
+}
+
+async function runCommand(command, args, { cwd } = {}) {
+  await new Promise((resolve, reject) => {
+    const child = spawn(command, args, {
+      cwd,
+      stdio: 'inherit',
+      env: withProductionNodeEnv(),
+    });
+
+    child.on('error', reject);
+    child.on('close', (code) => {
+      if (code === 0) {
+        resolve();
+        return;
+      }
+
+      reject(new Error(`${command} exited with code ${code}`));
+    });
+  });
+}
+
+async function runProductionRuntimeGuard(distAssetsPath) {
+  const distDirectory = path.resolve(distAssetsPath, '..');
+
+  await runCommand(
+    'node',
+    ['./scripts/assert-production-react-runtime.mjs', '--dist', distDirectory],
+    { cwd: webRoot },
+  );
 }
 
 function usage() {
@@ -159,6 +198,8 @@ async function main() {
   const budgetsPath = toAbsolutePath(options.budgetsPath, defaultBudgetsPath);
   const distAssetsPath = toAbsolutePath(options.distAssetsPath, defaultDistAssetsPath);
   const outputPath = toAbsolutePath(options.outputPath, defaultOutputPath);
+
+  await runProductionRuntimeGuard(distAssetsPath);
 
   const bundleBudgets = await readBudgets(budgetsPath);
   const assets = await collectJsAssets(distAssetsPath);

@@ -28,6 +28,7 @@ function chipButtonStyle(active: boolean): CSSProperties {
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
+    flexShrink: 0,
     minHeight: 'var(--touch-filter-chip)',
     minWidth: 'var(--touch-filter-chip)',
     paddingInline: 'var(--space-md)',
@@ -101,12 +102,12 @@ export function AgeRangeFilterBar({
         style={{
           display: 'flex',
           flexDirection: 'row',
+          flexWrap: 'wrap',
           alignItems: 'center',
+          alignContent: 'flex-start',
           gap: 'var(--space-sm)',
-          overflowX: 'auto',
           direction: 'rtl',
           paddingBlock: 'var(--space-xs)',
-          scrollbarWidth: 'thin',
         }}
       >
         <span

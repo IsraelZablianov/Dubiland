@@ -34,6 +34,8 @@ export interface ParentSummaryMetrics {
   accuracyByPatternType?: Partial<Record<PatternAccuracyKey, number>>;
   misconceptionTrend?: Partial<Record<MisconceptionTag, number>>;
   hintUsageByLevel?: Partial<Record<HintUsageLevelKey, number>>;
+  /** Letter sound match: Hebrew pair like "ב/פ", or `none` when no pair mistakes were recorded. */
+  letterSoundConfusedPair?: 'none' | string;
 }
 
 export interface ReadingGateStatus {

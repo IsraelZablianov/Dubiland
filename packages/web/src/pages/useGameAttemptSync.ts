@@ -22,6 +22,8 @@ interface UseGameAttemptSyncParams {
 interface UseGameAttemptSyncResult {
   completionResult: GameCompletionResult | null;
   syncState: GameAttemptSyncState;
+  /** Last persistence failure detail (English from server); null when not in error. */
+  syncErrorMessage: string | null;
   handleComplete: (result: GameCompletionResult) => void;
   retryLastSync: () => void;
 }
@@ -34,6 +36,7 @@ export function useGameAttemptSync({
 }: UseGameAttemptSyncParams): UseGameAttemptSyncResult {
   const [completionResult, setCompletionResult] = useState<GameCompletionResult | null>(null);
   const [syncState, setSyncState] = useState<GameAttemptSyncState>('idle');
+  const [syncErrorMessage, setSyncErrorMessage] = useState<string | null>(null);
   const sessionStartedAtMsRef = useRef<number>(Date.now());
   const clientSessionIdRef = useRef<string>(createGameSessionId());
   const attemptIndexRef = useRef(0);
@@ -46,10 +49,12 @@ export function useGameAttemptSync({
     pendingAttemptIdRef.current = null;
     setCompletionResult(null);
     setSyncState('idle');
+    setSyncErrorMessage(null);
   }, [childId]);
 
   const syncCompletion = useCallback(
     async (result: GameCompletionResult, attemptIndex: number, attemptId: string) => {
+      setSyncErrorMessage(null);
       const persistOutcome = await persistGameAttempt({
         childId,
         childAgeBand,
@@ -64,6 +69,11 @@ export function useGameAttemptSync({
       });
 
       if (persistOutcomeRequiresErrorUi(persistOutcome)) {
+        if (persistOutcome.status === 'failed') {
+          setSyncErrorMessage(persistOutcome.errorMessage);
+        } else {
+          setSyncErrorMessage(null);
+        }
         setSyncState('error');
         return;
       }
@@ -104,6 +114,7 @@ export function useGameAttemptSync({
   return {
     completionResult,
     syncState,
+    syncErrorMessage,
     handleComplete,
     retryLastSync,
   };

@@ -948,6 +948,7 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
     accuracy: summary ? `${summary.firstAttemptAccuracy}%` : '0%',
     hintLevel: summary?.averageHintLevel ?? '0.0',
   });
+  const replayButtonAriaLabel = t('games.moreOrLessMarket.hints.useReplay');
   const coachVariant = roundMessage.tone === 'success' ? 'success' : 'hint';
   const hasRoundInteraction = selectedSide !== null || selectedBadge !== null || hintStep > 0 || mistakesThisRound > 0;
 
@@ -1060,19 +1061,59 @@ export function MoreOrLessMarketGame({ onComplete, audio }: GameProps) {
     return (
       <div className="more-less-market more-less-market--summary" style={rtlProgressCssVar}>
         <Card padding="lg" className="more-less-market__shell">
-          <h2 className="more-less-market__title">{t('feedback.youDidIt')}</h2>
+          <div className="more-less-market__text-row more-less-market__text-row--center">
+            <h2 className="more-less-market__title">{t('feedback.youDidIt')}</h2>
+            <button
+              type="button"
+              className="more-less-market__replay-button"
+              onClick={() => playAudioKey('feedback.youDidIt')}
+              aria-label={replayButtonAriaLabel}
+            >
+              <span aria-hidden="true">{replayIcon}</span>
+            </button>
+          </div>
           <div className="more-less-market__summary-celebration">
             <SuccessCelebration />
           </div>
-          <p className="more-less-market__message more-less-market__message--success" aria-live="polite">
-            {t('parentDashboard.games.moreOrLessMarket.progressSummary', {
-              comparisonType: '> / < / =',
-              accuracy: `${summary.firstAttemptAccuracy}%`,
-              hintLevel: summary.averageHintLevel,
-            })}
-          </p>
-          <p className="more-less-market__summary-note">{t('parentDashboard.games.moreOrLessMarket.nextStep')}</p>
-          <p className="more-less-market__summary-tone">{t(summary.hintToneKey)}</p>
+          <div className="more-less-market__text-row">
+            <p className="more-less-market__message more-less-market__message--success" aria-live="polite">
+              {t('parentDashboard.games.moreOrLessMarket.progressSummary', {
+                comparisonType: '> / < / =',
+                accuracy: `${summary.firstAttemptAccuracy}%`,
+                hintLevel: summary.averageHintLevel,
+              })}
+            </p>
+            <button
+              type="button"
+              className="more-less-market__replay-button"
+              onClick={() => playAudioKey('parentDashboard.games.moreOrLessMarket.progressSummary')}
+              aria-label={replayButtonAriaLabel}
+            >
+              <span aria-hidden="true">{replayIcon}</span>
+            </button>
+          </div>
+          <div className="more-less-market__text-row">
+            <p className="more-less-market__summary-note">{t('parentDashboard.games.moreOrLessMarket.nextStep')}</p>
+            <button
+              type="button"
+              className="more-less-market__replay-button"
+              onClick={() => playAudioKey('parentDashboard.games.moreOrLessMarket.nextStep')}
+              aria-label={replayButtonAriaLabel}
+            >
+              <span aria-hidden="true">{replayIcon}</span>
+            </button>
+          </div>
+          <div className="more-less-market__text-row">
+            <p className="more-less-market__summary-tone">{t(summary.hintToneKey)}</p>
+            <button
+              type="button"
+              className="more-less-market__replay-button"
+              onClick={() => playAudioKey(summary.hintToneKey)}
+              aria-label={replayButtonAriaLabel}
+            >
+              <span aria-hidden="true">{replayIcon}</span>
+            </button>
+          </div>
           <div className="more-less-market__checkpoint-actions">
             <Button
               variant="primary"
@@ -1480,6 +1521,60 @@ const moreLessMarketStyles = `
     display: flex;
     gap: var(--space-xs);
     flex-wrap: wrap;
+  }
+
+  .more-less-market__text-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xs);
+  }
+
+  .more-less-market__text-row > :first-child {
+    flex: 1;
+    margin: 0;
+  }
+
+  .more-less-market__text-row--center {
+    justify-content: center;
+  }
+
+  .more-less-market__text-row--center > :first-child {
+    flex: initial;
+  }
+
+  [dir='rtl'] .more-less-market__text-row .more-less-market__replay-button {
+    order: -1;
+  }
+
+  .more-less-market__replay-button {
+    inline-size: var(--touch-min);
+    block-size: var(--touch-min);
+    min-inline-size: var(--touch-min);
+    min-block-size: var(--touch-min);
+    border-radius: var(--radius-sm);
+    border: none;
+    background: transparent;
+    color: var(--color-theme-primary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    transition: transform var(--transition-fast), color var(--transition-fast);
+    touch-action: manipulation;
+    flex-shrink: 0;
+  }
+
+  .more-less-market__replay-button:hover {
+    color: color-mix(in srgb, var(--color-theme-primary) 75%, var(--color-text-primary));
+    transform: translateY(-1px);
+  }
+
+  .more-less-market__replay-button:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--color-accent-primary) 65%, transparent);
+    outline-offset: 2px;
   }
 
   .more-less-market__progress {

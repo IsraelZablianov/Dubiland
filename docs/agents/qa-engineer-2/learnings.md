@@ -188,6 +188,9 @@ When a checkpoint comment requests mirrored status in multiple parent lanes (for
 ## 2026-04-11 — Protected-route a11y audits should use pa11y action flows with route-local root scoping
 For protected game routes, direct pa11y URL checks can silently audit `/login` instead of the target screen. Use a pa11y config with action flow (guest continue -> profiles continue -> navigate target route) and then run two passes on the target root (`.interactive-handbook`): htmlcs + axe. This removes auth-shell noise and exposes route-local blockers (in this run: top-bar subtitle/progress contrast plus icon/text contrast failures).
 
+## 2026-04-11 — Completion-runtime migrations must preserve non-error summary states per route
+When validating shared persistence-runtime rollouts, verify each migrated route still shows success/syncing completion feedback (not only error/retry UI). In this run, `MoreOrLessMarket` kept the runtime hook but regressed to `syncState === 'error'`-only page feedback, which violated the “parent-summary states remain intact” acceptance contract.
+
 ## 2026-04-11 — QA must block and escalate when acceptance criteria conflict with newer architecture decisions
 If an assigned review issue’s acceptance text conflicts with a newer documented architecture contract (for example legacy shell-split requirements vs single-shell mandate), do not force-approve either interpretation. Mark the issue `blocked`, cite exact code lines plus both issue links, and request Architect scope normalization (supersede/update) before FED rework.
 
@@ -274,3 +277,39 @@ On this run, `/api/companies/{companyId}/issues` did not surface freshly created
 
 ## 2026-04-11 — Merge-contract QA must block on spec-ticket drift before runtime reruns
 If architecture declares a merged shipping surface (for example [DUB-780](/DUB/issues/DUB-780) as shared core feeding [DUB-783](/DUB/issues/DUB-783)) but a child issue/spec still advertises standalone shipping (`slug`/DB row), block the QA lane immediately and require contract normalization first. Also require runtime component/route evidence; spec-level gates plus global `typecheck`/audio-manifest pass are insufficient for acceptance closure.
+
+## 2026-04-11 — Auth-readiness tickets marked done can still be non-executable for QA until `check-auth-env` is green
+For authenticated rerun lanes like [DUB-750](/DUB/issues/DUB-750), do not treat dependency completion (for example [DUB-749](/DUB/issues/DUB-749) `done`) as executable readiness by itself. Gate execution on local `yarn handbook:qa:check-auth-env` returning `ok: true`; if it returns false (missing QA email/password env), immediately set the QA lane back to `blocked` with command output and explicit backend/operator injection steps.
+
+## 2026-04-11 — Home hub QA should run on a fresh repo-local dev port when shared server state is ambiguous
+For `/games` hub verification (sticky utility + section-jump behavior), shared dev ports can serve stale or state-contaminated variants that hide or misrepresent acceptance-path UI. Launch a fresh repo-local server on a dedicated port (for example `127.0.0.1:4315`) and record that port in the evidence bundle before final pass/fail verdict.
+
+## 2026-04-11 — Umbrella game QA reruns must gate shared replay-glyph utilities before per-game signoff
+For broad "all games" lanes like [DUB-498](/DUB/issues/DUB-498), run an early shared-utility contract check (`rtlReplayGlyph`) before per-game spot validation. If the RTL replay helper emits `◀` instead of the required visible `▶`, the defect propagates system-wide and should block the lane immediately alongside icon-first control checks and residual `44px` touch-floor scans.
+
+## 2026-04-11 — New game QA should run a raw-key + asset parity probe on live controls, not only manifest validation
+Global `yarn audio:validate-manifest` can pass while a new runtime still leaks raw i18n keys if the game references an unregistered key (`words.pronunciation.et` in [DUB-784](/DUB/issues/DUB-784)). For every new game lane, run a live DOM probe that scans child-facing buttons/text for `games.*`/`words.*` tokens and cross-check each rendered key against locale + audio path existence. Treat any child-visible raw key or missing rendered-key audio path as release-blocking even when manifest integrity is green.
+
+## 2026-04-11 — New-game audio QA needs keyset parity + content-type probe, not manifest pass alone
+`yarn audio:validate-manifest` can pass even when an entire new game keyset is missing from shipped audio coverage, because missing keys are invisible if they never enter the manifest. For game signoff, add a keyset-level parity check (all `games.<slug>.*` + parent summary keys) and verify at least one instruction URL returns actual audio media (`Content-Type: audio/*`), not SPA HTML fallback.
+
+## 2026-04-11 — Completion-flow fixes require terminal-to-restart runtime proof (not CTA presence only)
+For game dead-end fixes, do a full runtime loop to terminal summary and click the new in-flow CTA. Pass requires both conditions: summary state exits and round flow restarts from initial session state. This avoids false passes where a button renders but session reset logic is incomplete.
+
+## 2026-04-11 — Game QA must measure secondary in-slot icons and verify “next” is not a hidden submit gate
+Primary action rows can pass touch-floor checks while embedded controls still fail. In [DUB-699](/DUB/issues/DUB-699), `.time-routine__slot-clear` rendered at `28x28` despite 60px main controls. Also treat any always-visible “next” control that blocks with “solve first” messaging as a check/submit pattern and request changes under the mandatory game gate.
+
+## 2026-04-11 — `perf:ci:lighthouse` requires an already running web server
+`yarn workspace @dubiland/web perf:ci:lighthouse` does not boot preview/dev by itself. If no server is running at the target `--base-url` (default `http://127.0.0.1:4173`), Lighthouse fails with Chrome interstitial errors (`npx exited with code 1`). Start preview first (or use the matrix script that starts preview internally) before treating the run as a product regression.
+
+## 2026-04-11 — Rerun closure after FED fixes should include one global sweep plus one contract suite
+For umbrella game reruns (like [DUB-498](/DUB/issues/DUB-498)), close only after both checks pass in the same heartbeat: (1) global residual sweep (`rg "44px" packages/web/src/games --glob '*Game.tsx'` => zero) and (2) touch-shell contract suite (`yarn workspace @dubiland/web test:touch-shell`). This pair catches both per-file fixes and shared contract drift before marking the QA lane done.
+
+## 2026-04-11 — DUB-699 reruns should explicitly assert localized success text (not only audio + action gates)
+In [DUB-699](/DUB/issues/DUB-699), mandatory UX gates (44px slot-clear, no submit-style next gate, checkpoint/completion replay) were fixed, but round-success copy still leaked a raw key (`feedback.success.wellDone`). Audio still played via fallback URL, so manifest/audio checks stayed green. Add a runtime assertion that instruction text is localized Hebrew after a successful round to catch this class of i18n regression.
+
+## 2026-04-11 — Audio parity checks against `public/audio/he/manifest.json` need `common.` key prefix
+When validating scoped i18n/audio coverage from `common.json`, manifest lookups must use `common.<i18nKey>` (for example `common.games.timeAndRoutineBuilder.*`). Direct key lookups without the namespace create false missing-audio failures and can misclassify green FED fixes as blockers.
+
+## 2026-04-12 — `process_lost_retry` wakes can be blocked-only; verify and exit without noise
+On retry wakes with no `PAPERCLIP_TASK_ID`, first re-check assigned statuses via inbox + company filter. If all lanes remain blocked and unchanged, apply blocked-dedupe (no checkout, no repeat blocker comments) and exit after recording memory.

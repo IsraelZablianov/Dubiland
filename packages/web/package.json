@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "check:prod-runtime": "node ./scripts/assert-production-react-runtime.mjs",
+    "test:prod-runtime-guard": "node --test ./scripts/assert-production-react-runtime.test.mjs",
     "test:audio-playback-queue": "TSX_TSCONFIG_PATH=./tsconfig.json node --import tsx --test ./scripts/audio-playback-queue.test.mjs",
     "test:interactive-handbook-runtime": "TSX_TSCONFIG_PATH=./tsconfig.json node --import tsx --test ./scripts/interactive-handbook-runtime-regression.test.mjs",
     "test:handbook-runtime": "yarn test:interactive-handbook-runtime",

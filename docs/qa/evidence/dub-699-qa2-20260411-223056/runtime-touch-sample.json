@@ -1,0 +1,14 @@
+{
+  "route": "/games/numbers/time-and-routine-builder",
+  "baseUrl": "http://127.0.0.1:4325",
+  "timestamp": "2026-04-11T19:29:42Z",
+  "controls": [
+    {"ariaLabel":"השמעה חוזרת","width":261,"height":60},
+    {"ariaLabel":"ניסיון חוזר","width":261,"height":60},
+    {"ariaLabel":"רמז","width":261,"height":60},
+    {"ariaLabel":"הסבב הבא","width":261,"height":60}
+  ],
+  "slotClear": {"ariaLabel":"ניקוי כרטיס מהמשבצת","width":28,"height":28},
+  "timelineEvent": {"ariaLabel":"אוכלים ארוחת בוקר","width":120.06,"height":50},
+  "unsolvedNextMessage": "נפתור קודם את הסיבוב הזה ואז נמשיך."
+}

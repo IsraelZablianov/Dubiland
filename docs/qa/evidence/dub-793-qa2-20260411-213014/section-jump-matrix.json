@@ -1,0 +1,45 @@
+{
+  "generatedAt": "2026-04-11T18:35:21.249Z",
+  "baseUrl": "http://127.0.0.1:4315",
+  "checks": [
+    {
+      "viewport": "mobile",
+      "size": "390x844",
+      "revealClicked": true,
+      "jumpCount": 4,
+      "labels": ["🔤אותיות", "🧠קריאה", "🔢חשבון ומשחקי מספרים", "📚ספרים אינטראקטיביים"],
+      "minHeight": 48,
+      "minWidth": 83.14,
+      "inlineVisible": true,
+      "blockVisible": false,
+      "jumpAction": { "beforeY": 2117, "afterY": 3925, "moved": true },
+      "reducedBehavior": "auto"
+    },
+    {
+      "viewport": "tablet",
+      "size": "960x900",
+      "revealClicked": true,
+      "jumpCount": 4,
+      "labels": ["🔤אותיות", "🧠קריאה", "🔢חשבון ומשחקי מספרים", "📚ספרים אינטראקטיביים"],
+      "minHeight": 48,
+      "minWidth": 196.64,
+      "inlineVisible": false,
+      "blockVisible": true,
+      "jumpAction": { "beforeY": 1309, "afterY": 2188, "moved": true },
+      "reducedBehavior": "auto"
+    },
+    {
+      "viewport": "desktop",
+      "size": "1366x900",
+      "revealClicked": true,
+      "jumpCount": 4,
+      "labels": ["🔤אותיות", "🧠קריאה", "🔢חשבון ומשחקי מספרים", "📚ספרים אינטראקטיביים"],
+      "minHeight": 48,
+      "minWidth": 196.64,
+      "inlineVisible": false,
+      "blockVisible": true,
+      "jumpAction": { "beforeY": 752, "afterY": 1630, "moved": true },
+      "reducedBehavior": "auto"
+    }
+  ]
+}

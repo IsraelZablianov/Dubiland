@@ -306,3 +306,6 @@ For `Home.tsx` sticky/filter navigation upgrades, keep one control contract (age
 
 ## 2026-04-11 — Root-family polish can use transient attempt trackers to scope feedback animations
 For multi-step sorting/build games (`RootFamilyStickers`), keep board-level feedback global (`success|miss`) but scope visual motion to the exact interacted control by storing transient ids (`activeSortingRootId`, `lastSortingCardId`, `lastBuildChoice`) and deriving CSS classes from `boardFeedback + id match`. This adds clear per-action delight without changing game flow, i18n/audio contracts, or progression logic.
+
+## 2026-04-11 — Decodable story polish is safest with tone-driven panel/coach classes layered on existing checkpoints
+For `DecodableStoryReaderGame`, visual uplift can stay regression-safe by reusing existing `messageTone` + `checkpointFeedback` state to drive panel and mascot variants (`hero|hint|success`) and by adding transient micro-feedback classes (`--target`, `--success`, `--error`) on existing word/option controls. This preserves progression/audio logic while making wrong/right outcomes clearer for young learners.

@@ -1,0 +1,99 @@
+- generic [ref=e10]:
+  - banner [ref=e11]:
+    - generic [ref=e12]:
+      - link "דובילנד — לומדים עברית בכיף" [ref=e13] [cursor=pointer]:
+        - /url: /
+        - img
+        - generic [ref=e14]: דובילנד
+      - button "פתח תפריט" [ref=e15] [cursor=pointer]
+  - main [ref=e17]:
+    - generic [ref=e20]:
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - heading "רכבת הדפוסים עם דובי" [level=1] [ref=e23]
+          - paragraph [ref=e24]: מגלים חוק, משלימים קרון, ומתקנים רצפים
+        - button "חזרה" [ref=e26] [cursor=pointer]
+      - generic [ref=e27]:
+        - generic [ref=e28]:
+          - generic [ref=e29]:
+            - heading "רכבת הדפוסים עם דובי" [level=2] [ref=e30]
+            - paragraph [ref=e31]: מגלים חוק, משלימים קרון, ומתקנים רצפים
+          - generic [ref=e32]:
+            - generic [ref=e33]: 🎯 1 / 10
+            - generic [ref=e34]: ⭐ 1
+        - generic [ref=e46]:
+          - img
+          - generic [ref=e47]:
+            - paragraph [ref=e48]: feedback.success.amazing
+            - paragraph [ref=e49]: תחנת חיות
+        - generic [ref=e50]:
+          - button "השמעה חוזרת" [ref=e51] [cursor=pointer]: ▶
+          - button "ניסיון חוזר" [ref=e52] [cursor=pointer]: ↻
+          - button "רמז" [ref=e53] [cursor=pointer]: 💡
+          - button "הקרון הבא" [ref=e54] [cursor=pointer]: ←
+        - generic [ref=e56]:
+          - generic [ref=e59]: ▲
+          - generic [ref=e62]: ★
+          - generic [ref=e65]: ▲
+          - generic [ref=e68]: ★
+          - generic [ref=e71]: ▲
+          - button "משבצת דפוס מספר 6" [ref=e72]:
+            - generic [ref=e73]: "?"
+        - generic [ref=e74]:
+          - button "קרון כוכב בצבע כחול" [disabled] [ref=e75]:
+            - generic [ref=e77]: ★
+          - button "קרון כוכב בצבע אדום" [disabled] [ref=e78]:
+            - generic [ref=e80]: ★
+  - contentinfo [ref=e81]:
+    - generic [ref=e82]:
+      - generic [ref=e83]:
+        - link "דובילנד" [ref=e84] [cursor=pointer]:
+          - /url: /
+          - img
+          - generic [ref=e85]: דובילנד
+        - paragraph [ref=e86]: לומדים עברית בכיף עם דובי 🧸
+      - generic [ref=e87]:
+        - generic [ref=e88]:
+          - heading "נושאי לימוד" [level=3] [ref=e89]
+          - navigation [ref=e90]:
+            - link "מספרים וחשבון" [ref=e91] [cursor=pointer]:
+              - /url: /#topics
+            - link "אותיות וצלילים" [ref=e92] [cursor=pointer]:
+              - /url: /#topics
+            - link "קריאה ראשונה" [ref=e93] [cursor=pointer]:
+              - /url: /#topics
+        - generic [ref=e94]:
+          - heading "דובילנד" [level=3] [ref=e95]
+          - navigation [ref=e96]:
+            - link "אודות" [ref=e97] [cursor=pointer]:
+              - /url: /about
+            - link "להורים" [ref=e98] [cursor=pointer]:
+              - /url: /parents
+            - link "שאלות נפוצות" [ref=e99] [cursor=pointer]:
+              - /url: /parents#faq
+        - generic [ref=e100]:
+          - heading "משפטי" [level=3] [ref=e101]
+          - navigation [ref=e102]:
+            - link "תנאי שימוש" [ref=e103] [cursor=pointer]:
+              - /url: /terms
+            - link "מדיניות פרטיות" [ref=e104] [cursor=pointer]:
+              - /url: /privacy
+    - generic [ref=e105]:
+      - paragraph [ref=e106]: © 2026 דובילנד. כל הזכויות שמורות.
+      - paragraph [ref=e107]: נבנה באהבה לילדים ישראלים
+  - status "Developer diagnostics" [ref=e108]:
+    - generic [ref=e109]:
+      - strong [ref=e110]: DEV
+      - text: "· Supabase env: VITE_* present"
+    - generic [ref=e111]:
+      - text: "Active child:"
+      - code [ref=e112]: guest
+      - text: "· persistable: no — open /profiles and select a real child (UUID)"
+    - generic [ref=e113]:
+      - button "Probe Supabase (games)" [ref=e114] [cursor=pointer]
+      - generic [ref=e115]:
+        - text: In DevTools Network, show
+        - strong [ref=e116]: All
+        - text: or
+        - strong [ref=e117]: Fetch
+        - text: — not only XHR.

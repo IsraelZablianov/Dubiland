@@ -1,0 +1,336 @@
+{
+  "checked": 66,
+  "missingCount": 66,
+  "missing": [
+    {
+      "key": "games.measureAndMatch.confusions.perceptual-guess",
+      "path": "/audio/he/games/measure-and-match/confusions/perceptual-guess.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.confusions.term-mixup",
+      "path": "/audio/he/games/measure-and-match/confusions/term-mixup.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.confusions.tool-ignore",
+      "path": "/audio/he/games/measure-and-match/confusions/tool-ignore.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.contexts.default",
+      "path": "/audio/he/games/measure-and-match/contexts/default.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.contexts.kitchen",
+      "path": "/audio/he/games/measure-and-match/contexts/kitchen.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.contexts.market",
+      "path": "/audio/he/games/measure-and-match/contexts/market.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.contexts.playground",
+      "path": "/audio/he/games/measure-and-match/contexts/playground.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.controls.continue",
+      "path": "/audio/he/games/measure-and-match/controls/continue.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.controls.hint",
+      "path": "/audio/he/games/measure-and-match/controls/hint.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.controls.replay",
+      "path": "/audio/he/games/measure-and-match/controls/replay.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.controls.retry",
+      "path": "/audio/he/games/measure-and-match/controls/retry.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.domains.length",
+      "path": "/audio/he/games/measure-and-match/domains/length.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.domains.volume",
+      "path": "/audio/he/games/measure-and-match/domains/volume.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.domains.weight",
+      "path": "/audio/he/games/measure-and-match/domains/weight.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.feedback.encouragement.almostThere",
+      "path": "/audio/he/games/measure-and-match/feedback/encouragement/almost-there.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.feedback.encouragement.keepTrying",
+      "path": "/audio/he/games/measure-and-match/feedback/encouragement/keep-trying.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.feedback.encouragement.tryAgain",
+      "path": "/audio/he/games/measure-and-match/feedback/encouragement/try-again.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.feedback.success.lengthMax",
+      "path": "/audio/he/games/measure-and-match/feedback/success/length-max.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.feedback.success.lengthMin",
+      "path": "/audio/he/games/measure-and-match/feedback/success/length-min.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.feedback.success.volumeMax",
+      "path": "/audio/he/games/measure-and-match/feedback/success/volume-max.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.feedback.success.volumeMin",
+      "path": "/audio/he/games/measure-and-match/feedback/success/volume-min.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.feedback.success.weightMax",
+      "path": "/audio/he/games/measure-and-match/feedback/success/weight-max.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.feedback.success.weightMin",
+      "path": "/audio/he/games/measure-and-match/feedback/success/weight-min.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.hintTrend.improving",
+      "path": "/audio/he/games/measure-and-match/hint-trend/improving.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.hintTrend.needs_support",
+      "path": "/audio/he/games/measure-and-match/hint-trend/needs-support.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.hintTrend.steady",
+      "path": "/audio/he/games/measure-and-match/hint-trend/steady.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.hints.compareOneByOne",
+      "path": "/audio/he/games/measure-and-match/hints/compare-one-by-one.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.hints.focusAttributeWord",
+      "path": "/audio/he/games/measure-and-match/hints/focus-attribute-word.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.hints.useReplay",
+      "path": "/audio/he/games/measure-and-match/hints/use-replay.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.hints.useToolFirst",
+      "path": "/audio/he/games/measure-and-match/hints/use-tool-first.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.instructions.breakCard",
+      "path": "/audio/he/games/measure-and-match/instructions/break-card.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.instructions.dragToStation",
+      "path": "/audio/he/games/measure-and-match/instructions/drag-to-station.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.instructions.iconControls",
+      "path": "/audio/he/games/measure-and-match/instructions/icon-controls.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.instructions.intro",
+      "path": "/audio/he/games/measure-and-match/instructions/intro.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.instructions.listenAndCompare",
+      "path": "/audio/he/games/measure-and-match/instructions/listen-and-compare.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.levelLabel.1",
+      "path": "/audio/he/games/measure-and-match/level-label/1.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.levelLabel.2",
+      "path": "/audio/he/games/measure-and-match/level-label/2.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.levelLabel.3",
+      "path": "/audio/he/games/measure-and-match/level-label/3.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.objects.length.ladder",
+      "path": "/audio/he/games/measure-and-match/objects/length/ladder.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.objects.length.pencil",
+      "path": "/audio/he/games/measure-and-match/objects/length/pencil.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.objects.length.ribbon",
+      "path": "/audio/he/games/measure-and-match/objects/length/ribbon.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.objects.length.rope",
+      "path": "/audio/he/games/measure-and-match/objects/length/rope.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.objects.length.stick",
+      "path": "/audio/he/games/measure-and-match/objects/length/stick.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.objects.volume.bottle",
+      "path": "/audio/he/games/measure-and-match/objects/volume/bottle.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.objects.volume.bucket",
+      "path": "/audio/he/games/measure-and-match/objects/volume/bucket.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.objects.volume.cup",
+      "path": "/audio/he/games/measure-and-match/objects/volume/cup.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.objects.volume.glass",
+      "path": "/audio/he/games/measure-and-match/objects/volume/glass.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.objects.volume.pot",
+      "path": "/audio/he/games/measure-and-match/objects/volume/pot.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.objects.weight.apple",
+      "path": "/audio/he/games/measure-and-match/objects/weight/apple.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.objects.weight.feather",
+      "path": "/audio/he/games/measure-and-match/objects/weight/feather.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.objects.weight.melon",
+      "path": "/audio/he/games/measure-and-match/objects/weight/melon.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.objects.weight.rock",
+      "path": "/audio/he/games/measure-and-match/objects/weight/rock.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.objects.weight.teddy",
+      "path": "/audio/he/games/measure-and-match/objects/weight/teddy.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.prompts.length.longer",
+      "path": "/audio/he/games/measure-and-match/prompts/length/longer.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.prompts.length.shorter",
+      "path": "/audio/he/games/measure-and-match/prompts/length/shorter.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.prompts.volume.emptier",
+      "path": "/audio/he/games/measure-and-match/prompts/volume/emptier.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.prompts.volume.fuller",
+      "path": "/audio/he/games/measure-and-match/prompts/volume/fuller.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.prompts.weight.heavier",
+      "path": "/audio/he/games/measure-and-match/prompts/weight/heavier.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.prompts.weight.lighter",
+      "path": "/audio/he/games/measure-and-match/prompts/weight/lighter.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.recovery.gentleRetry",
+      "path": "/audio/he/games/measure-and-match/recovery/gentle-retry.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.recovery.guidedDemo",
+      "path": "/audio/he/games/measure-and-match/recovery/guided-demo.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.recovery.simplifyChoices",
+      "path": "/audio/he/games/measure-and-match/recovery/simplify-choices.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.subtitle",
+      "path": "/audio/he/games/measure-and-match/subtitle.mp3",
+      "exists": false
+    },
+    {
+      "key": "games.measureAndMatch.title",
+      "path": "/audio/he/games/measure-and-match/title.mp3",
+      "exists": false
+    },
+    {
+      "key": "parentDashboard.games.measureAndMatch.nextStep",
+      "path": "/audio/he/parent-dashboard/games/measure-and-match/next-step.mp3",
+      "exists": false
+    },
+    {
+      "key": "parentDashboard.games.measureAndMatch.progressSummary",
+      "path": "/audio/he/parent-dashboard/games/measure-and-match/progress-summary.mp3",
+      "exists": false
+    }
+  ]
+}

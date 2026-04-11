@@ -1,0 +1,105 @@
+- generic [ref=e10]:
+  - banner [ref=e11]:
+    - generic [ref=e12]:
+      - link "דובילנד — לומדים עברית בכיף" [ref=e13] [cursor=pointer]:
+        - /url: /
+        - img
+        - generic [ref=e14]: דובילנד
+      - navigation [ref=e15]:
+        - link "נושאי לימוד" [ref=e16] [cursor=pointer]:
+          - /url: /games
+        - link "אודות" [ref=e17] [cursor=pointer]:
+          - /url: /about
+        - link "להורים" [ref=e18] [cursor=pointer]:
+          - /url: /parents
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - generic [ref=e22]: 🧒
+          - generic [ref=e23]: אורח קטן
+        - generic [ref=e24]:
+          - button "בחירת ילד" [ref=e25] [cursor=pointer]
+          - button "אזור הורים" [ref=e26] [cursor=pointer]
+          - button "התנתקות" [ref=e27] [cursor=pointer]
+  - main [ref=e28]:
+    - generic [ref=e31]:
+      - generic [ref=e32]:
+        - generic [ref=e33]:
+          - heading "סרטוני חיבור לקריאה עם דובי" [level=1] [ref=e34]
+          - paragraph [ref=e35]: עכשיו תורכם. מקשיבים ובוחרים.
+        - button "חזרה" [ref=e37] [cursor=pointer]
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - heading "סרטוני חיבור לקריאה עם דובי" [level=2] [ref=e41]
+          - paragraph [ref=e42]: "פרק 1: מַ עם פתח"
+        - generic [ref=e43]:
+          - 'generic "פרק 1: מַ עם פתח" [ref=e44]'
+          - dialog [ref=e87]:
+            - generic [ref=e88]:
+              - paragraph [ref=e89]: איזה צליל הוא מַ? לחצו והקשיבו.
+              - generic [ref=e90]:
+                - button "מַ" [ref=e91] [cursor=pointer]:
+                  - generic [ref=e92]: מַ
+                - button "לֶ" [ref=e93] [cursor=pointer]:
+                  - generic [ref=e94]: לֶ
+                - button "שִ" [ref=e95] [cursor=pointer]:
+                  - generic [ref=e96]: שִ
+              - group "עכשיו תורכם. מקשיבים ובוחרים." [ref=e97]:
+                - button "אם רוצים לשמוע שוב, לוחצים על כפתור הניגון." [ref=e98] [cursor=pointer]: ▶
+                - button "נקשיב שוב לחלק הקטן." [ref=e99] [cursor=pointer]: ↻
+                - button "שימו לב איך האותיות מתחברות יחד." [ref=e100] [cursor=pointer]: 💡
+        - generic [ref=e47]:
+          - paragraph [ref=e48]: איזה צליל הוא מַ? לחצו והקשיבו.
+          - paragraph [ref=e49]: עכשיו תורכם. מקשיבים ובוחרים.
+  - contentinfo [ref=e50]:
+    - generic [ref=e51]:
+      - generic [ref=e52]:
+        - link "דובילנד" [ref=e53] [cursor=pointer]:
+          - /url: /
+          - img
+          - generic [ref=e54]: דובילנד
+        - paragraph [ref=e55]: לומדים עברית בכיף עם דובי 🧸
+      - generic [ref=e56]:
+        - generic [ref=e57]:
+          - heading "נושאי לימוד" [level=3] [ref=e58]
+          - navigation [ref=e59]:
+            - link "מספרים וחשבון" [ref=e60] [cursor=pointer]:
+              - /url: /#topics
+            - link "אותיות וצלילים" [ref=e61] [cursor=pointer]:
+              - /url: /#topics
+            - link "קריאה ראשונה" [ref=e62] [cursor=pointer]:
+              - /url: /#topics
+        - generic [ref=e63]:
+          - heading "דובילנד" [level=3] [ref=e64]
+          - navigation [ref=e65]:
+            - link "אודות" [ref=e66] [cursor=pointer]:
+              - /url: /about
+            - link "להורים" [ref=e67] [cursor=pointer]:
+              - /url: /parents
+            - link "שאלות נפוצות" [ref=e68] [cursor=pointer]:
+              - /url: /parents#faq
+        - generic [ref=e69]:
+          - heading "משפטי" [level=3] [ref=e70]
+          - navigation [ref=e71]:
+            - link "תנאי שימוש" [ref=e72] [cursor=pointer]:
+              - /url: /terms
+            - link "מדיניות פרטיות" [ref=e73] [cursor=pointer]:
+              - /url: /privacy
+    - generic [ref=e74]:
+      - paragraph [ref=e75]: © 2026 דובילנד. כל הזכויות שמורות.
+      - paragraph [ref=e76]: נבנה באהבה לילדים ישראלים
+  - status "Developer diagnostics" [ref=e77]:
+    - generic [ref=e78]:
+      - strong [ref=e79]: DEV
+      - text: "· Supabase env: VITE_* present"
+    - generic [ref=e80]:
+      - text: "Active child:"
+      - code [ref=e81]: guest
+      - text: "· persistable: no — open /profiles and select a real child (UUID)"
+    - generic [ref=e82]:
+      - button "Probe Supabase (games)" [ref=e83] [cursor=pointer]
+      - generic [ref=e84]:
+        - text: In DevTools Network, show
+        - strong [ref=e85]: All
+        - text: or
+        - strong [ref=e86]: Fetch
+        - text: — not only XHR.

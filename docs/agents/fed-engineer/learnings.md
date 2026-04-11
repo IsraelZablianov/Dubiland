@@ -367,3 +367,27 @@ For station-based compare loops (length/weight/volume), keeping drag and tap rou
 
 ## 2026-04-11 — Reading game rollout requires 3 frontend touchpoints: runtime, route manifest, and Home fallback slug map
 For DB-seeded game rows (like `pointingFadeBridge`), shipping only the runtime component is insufficient; the game is discoverable/playable only after wiring the page in `routing/gameRouteManifest.ts` and registering its slug/route in Home (`HomeGameSlug` + `HOME_GAME_OPTIONS`) so catalog merge logic can surface it.
+
+## 2026-04-11 — Perf gate scripts should invoke the React production-runtime guard, not rely only on build wrappers
+Even when `build` enforces `NODE_ENV=production`, standalone perf entrypoints (`perf:ci:bundle`, `perf:ci:lighthouse`) can be run separately in dev shells. Run `assert-production-react-runtime.mjs` inside those scripts and cover it with a dedicated Node test so leakage is caught regardless of invocation path.
+
+## 2026-04-11 — QA replay/icon gates should be enforced by shared primitives, not per-game RTL assumptions
+When a child-facing replay affordance must stay `▶` across locales, keep that invariant in `rtlReplayGlyph` and add icon+label affordances on mode toggles instead of text-only controls; this resolves RTL regressions once for all games that consume shared replay chrome.
+
+## 2026-04-11 — Reading choice pools must be validated against pronunciation key+audio coverage, not only active targets
+In staged reading games, non-target distractors can still surface missing i18n/audio at runtime; validate every `words.pronunciation.*` key used by templates and option pools so QA does not find fallback key leaks during random-choice rounds.
+
+## 2026-04-11 — `yarn workspace ... render` output paths are resolved from the workspace cwd
+When rendering Remotion episodes from the root with `yarn workspace @dubiland/remotion render`, relative output targets like `packages/web/...` land under `packages/remotion/packages/web/...`. Use absolute destinations (or move artifacts immediately) so runtime media checks do not fail on missing files.
+
+## 2026-04-11 — Audio manifest validation must be paired with slug-level parity for new game lanes
+`yarn audio:validate-manifest` only validates keys already present in `manifest.json`; it cannot detect an entire new game key family that was never generated. For release gates on new games, run `yarn generate-audio`, then do a targeted parity check over `games.<slug>.*` plus `parentDashboard.games.<slug>.*`, and confirm at least one served instruction clip returns `Content-Type: audio/mpeg` (not SPA HTML fallback).
+
+## 2026-04-11 — Completion summaries in kid games should render per-line replay controls, not only a generic retry CTA
+When QA enforces the replay-affordance gate, terminal summary states need a visible replay icon button next to each child-facing text line (title + summary copy + guidance tone), using RTL-aware icon ordering and `var(--touch-min)` sizing; a single “play again” button is not a substitute for line-level audio replay.
+
+## 2026-04-11 — Pre-literate “next” controls should stay disabled until action-complete, never act as validators
+For child-first game loops, treat the next-arrow control as progression only after the interactive task is solved; do not use it as a check/submit gate that emits “solve first” errors. Keep feedback action-driven (drag/tap/clock move), and surface readiness with state (`showNextAction`) plus enabled/disabled next control.
+
+## 2026-04-11 — Success microcopy keys must resolve to real locale leaves (no implicit dotted variants)
+If a game rotates affirmation prompts, each key must point to an actual translated leaf (for example `feedback.success`, `feedback.excellent`, `feedback.youDidIt`) rather than assumed subpaths like `feedback.success.wellDone`; otherwise kid-facing instruction rows can render raw key strings even when the namespace exists.

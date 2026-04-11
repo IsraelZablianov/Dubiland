@@ -1247,7 +1247,7 @@ const measureAndMatchStyles = `
   }
 
   .measure-match__pill {
-    min-block-size: 44px;
+    min-block-size: 48px;
     padding-inline: var(--space-sm);
     border-radius: var(--radius-full);
     border: 1px solid color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
