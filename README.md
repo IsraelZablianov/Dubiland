@@ -5,7 +5,7 @@
 <h1 align="center">דובילנד — Dubiland</h1>
 
 <p align="center">
-  <strong>A Hebrew learning platform for kids ages 3–7, built and maintained by a team of AI agents.</strong>
+  <strong>A Hebrew learning platform for kids ages 3–7, built and maintained entirely by a team of AI agents.</strong>
 </p>
 
 <p align="center">
@@ -20,11 +20,20 @@
   <img src="https://img.shields.io/badge/Supabase-Backend-3ecf8e?logo=supabase" alt="Supabase" />
   <img src="https://img.shields.io/badge/Vite-6-646cff?logo=vite" alt="Vite" />
   <img src="https://img.shields.io/badge/Agents-20+-ff6b6b" alt="20+ AI Agents" />
+  <img src="https://img.shields.io/badge/Orchestration-Paperclip-f59e0b" alt="Paperclip" />
 </p>
 
 ---
 
 A friendly teddy bear named **דובי** (Dubi) guides children through math, letters, and reading via games, videos, and songs — all in Hebrew, all listenable, all fun.
+
+<br />
+
+<p align="center">
+  <img src="docs/screenshots/landing-page.png" width="100%" alt="Dubiland landing page — Hebrew learning platform for kids" />
+</p>
+
+<br />
 
 ## What is this?
 
@@ -39,6 +48,37 @@ The entire product — from game design documents to React components to Hebrew 
 - **Hebrew-first** — full RTL, i18n-ready for future languages
 - **No restrictions** — difficulty is suggested, never enforced
 - **Agents continuously improve** — they learn from mistakes, accumulate knowledge, and get better over time
+
+---
+
+## App Screenshots
+
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <img src="docs/screenshots/games-dashboard.png" alt="Games dashboard with personalized recommendations" />
+      <br />
+      <sub><strong>Games Dashboard</strong> — personalized recommendations by age and skill</sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="docs/screenshots/counting-picnic-game.png" alt="Counting Picnic game — drag apples to the basket" />
+      <br />
+      <sub><strong>Counting Picnic</strong> — drag fruit to the basket while learning numbers</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <img src="docs/screenshots/interactive-handbook.png" alt="Interactive Handbook — guided storybook with Dubi" />
+      <br />
+      <sub><strong>Interactive Handbook</strong> — animated storybooks with reading exercises</sub>
+    </td>
+    <td align="center" width="50%">
+      <img src="docs/screenshots/welcome-screen.png" alt="Welcome screen with login options" />
+      <br />
+      <sub><strong>Welcome Screen</strong> — quick start as guest or sign in with Google</sub>
+    </td>
+  </tr>
+</table>
 
 ---
 
@@ -159,6 +199,23 @@ dubiland/
 ## The AI Team
 
 Dubiland is built by **20+ specialized AI agents**, each with their own role, heartbeat schedule, personality, and accumulated knowledge. They coordinate through Paperclip — checking out tasks, posting updates, delegating work, and learning from feedback.
+
+<p align="center">
+  <picture>
+    <img src="https://img.shields.io/badge/PM-CEO-ff6b6b" alt="PM" />
+    <img src="https://img.shields.io/badge/Co--Founder-CEO-ff6b6b" alt="Co-Founder" />
+    <img src="https://img.shields.io/badge/Architect-System_Design-3b82f6" alt="Architect" />
+    <img src="https://img.shields.io/badge/FED_×3-React_UI-61dafb" alt="FED Engineers" />
+    <img src="https://img.shields.io/badge/Backend-Supabase-3ecf8e" alt="Backend" />
+    <img src="https://img.shields.io/badge/QA_×2-Testing-a855f7" alt="QA Engineers" />
+    <img src="https://img.shields.io/badge/UX-Design-f472b6" alt="UX Designer" />
+    <img src="https://img.shields.io/badge/Gaming-Mechanics-f59e0b" alt="Gaming Expert" />
+    <img src="https://img.shields.io/badge/Content-Hebrew-10b981" alt="Content Writer" />
+    <img src="https://img.shields.io/badge/Performance-Perf-ef4444" alt="Performance Expert" />
+    <img src="https://img.shields.io/badge/SEO-Growth-84cc16" alt="SEO Expert" />
+    <img src="https://img.shields.io/badge/CMO-Marketing-06b6d4" alt="CMO" />
+  </picture>
+</p>
 
 ```
 You (Board of Directors)
